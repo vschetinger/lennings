@@ -167,6 +167,7 @@ To <b>pan around</b>, click and drag, or zoom with with your scroll wheel. <br>
 To <b>capture a creature</b> and save it in your Zoo, press space bar, click and drag to select particles, and space-bar again to complete the save.<br>
 To <b>herd particles</b>, click and hold in the same spot for one second.<br>
 To <b>spawn new particles</b>, double click and hold.<br>
+To <b>load a resource image</b>, use the Resources panel or <b>shift+drag</b> an image onto the canvas. Particles will be attracted to colors based on their preferences!<br>
 <span id="resetvi"><u>(click to show visual instructions)</u></span>
 </details>
 <!-- <p><a href="https://colab.research.google.com/drive/1e4dVTsZHcVyEzZe6k9atY41Yk0DIzTVH?resourcekey=0-OeCOX1DD1zcn_orSywTrNg&usp=sharing">Colab version</a></p> -->
@@ -223,6 +224,31 @@ gui.add(params, 'toggle sound');
 gui.add(params, 'init circle');
 gui.add(params, 'fullscreen');
 gui.add(params, 'oscillogram');
+
+// Resource management
+const resourceFolder = gui.addFolder('Resources');
+params['load resource'] = () => resourceInput.click();
+params['clear resources'] = () => lenia.clearResources();
+params.consumeEnabled = true;
+resourceFolder.add(params, 'load resource');
+resourceFolder.add(params, 'clear resources');
+resourceFolder.add(params, 'consumeEnabled').name('consume resources');
+resourceFolder.open();
+
+// Hidden file input for resource images
+const resourceInput = document.createElement('input');
+resourceInput.type = 'file';
+resourceInput.accept = 'image/*';
+resourceInput.style.display = 'none';
+document.body.appendChild(resourceInput);
+resourceInput.addEventListener('change', async (e) => {
+    if (resourceInput.files.length > 0) {
+        const file = resourceInput.files[0];
+        const dataUrl = await asyncReadAsDataURL(file);
+        await lenia.loadResourceImage(dataUrl);
+        console.log('Loaded resource image:', file.name);
+    }
+});
 
 
 let onair = false;
@@ -370,6 +396,11 @@ function animate() {
         } else {
             simFrame(stepArgs, null);
             if (recording) { record_log.push({stepArgs, renderArgs});}
+        }
+        
+        // Consume resources where particles are located
+        if (params.consumeEnabled) {
+            lenia.consumeResources();
         }
     }
     lenia.render(null, renderArgs);
@@ -876,10 +907,36 @@ async function handlePasteOrDrop(incomingData, x, y) {
 
 canvas.ondragenter = canvas.ondragover = e=>e.preventDefault();
 canvas.ondrop = async (e) =>{
-    // TODO(DONE): read from PNG pixels
     e.preventDefault();
     const [x, y] = event2wld([e.offsetX, e.offsetY]);
-    await handlePasteOrDrop(e.dataTransfer, x, y);
+    
+    // Check if shift key is held - if so, load as resource image instead of creature
+    if (e.shiftKey) {
+        // Load as resource image
+        try {
+            for (let i = 0; i < e.dataTransfer.files.length; i++) {
+                const file = e.dataTransfer.files[i];
+                if (file.type.startsWith('image/')) {
+                    const dataUrl = await asyncReadAsDataURL(file);
+                    await lenia.loadResourceImage(dataUrl);
+                    console.log('Loaded resource image:', file.name);
+                    return;
+                }
+            }
+            // Try URL
+            const url = e.dataTransfer.getData('URL');
+            if (url) {
+                await lenia.loadResourceImage(url);
+                console.log('Loaded resource image from URL');
+                return;
+            }
+        } catch (err) {
+            console.log('Failed to load as resource:', err);
+        }
+    } else {
+        // Try to load as creature first
+        await handlePasteOrDrop(e.dataTransfer, x, y);
+    }
     return;
 }
 

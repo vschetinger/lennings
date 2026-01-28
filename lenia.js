@@ -13,8 +13,12 @@ uniform sampler2D state1;     //! this.src.attachments[1]
 uniform sampler2D fieldU;     //! this.fieldU.attachments[0]
 uniform sampler2D fieldR;     //! this.fieldR.attachments[0]
 uniform sampler2D selectBuf;  //! this.selectBuf.attachments[0]
+uniform sampler2D resourceTex;    //! this.resourceTex.attachments[0]
+uniform sampler2D prefBuf;        //! this.prefBuf.attachments[0]
 uniform float dishR;          //! 75.0
 uniform float fieldScale;     //! 1.0
+uniform float resourceAttraction; //! slider(1.0, [0.0, 5.0], 0.1)
+uniform float resourceDecay;      //! slider(0.01, [0.0, 0.1], 0.001)
 
 uniform float baseFreq;       //! slider(100.0, [20.0, 1000.0], 1.0)
 uniform float clockExp;       //! slider(4.0, [1.0, 10.0], 0.1)
@@ -68,19 +72,22 @@ struct Particle {
   vec2 pos;
   float radius;
   float clock;
+  vec3 pref;  // RGB resource preferences
 };
 
 Particle getParticle() {
     Particle res;
     vec4 p = texelFetch(state, idx, 0);
     vec4 p1 = texelFetch(state1, idx, 0);
+    vec4 pref = texelFetch(prefBuf, idx, 0);
     float repulsionPotential = p1.x;
     bool selected = texelFetch(selectBuf, idx, 0).x > 0.0;
     res.visible = selectedOnly ? selected : isAlive(p);
     if (!res.visible) 
       return res;
     res.pos = p.xy;
-    res.color = vec3(0.8);
+    res.pref = normalize(abs(pref.rgb) + 0.01);
+    res.color = res.pref;  // Color by preference
     res.clock = p1.w;
     if (!selectedOnly) {
         if (selected) {res.color = vec3(1.5, 0.1, 0.1);}
@@ -133,6 +140,14 @@ class ParticleLenia {
         this.fieldU = twgl.createFramebufferInfo(gl, this.fieldFormat, 256, 256);
         this.fieldR = twgl.createFramebufferInfo(gl, this.fieldFormat, 512, 512);
         this.selectBuf = twgl.createFramebufferInfo(gl, [{}], sx, sy);
+        
+        // Preferences buffer for RGB resource preferences per particle (static)
+        this.prefBuf = twgl.createFramebufferInfo(gl, [{internalFormat: gl.RGBA32F}], sx, sy);
+        
+        // Resource texture for RGBA environmental fields (double-buffered for consumption)
+        this.resourceFormat = [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}];
+        this.resourceTex = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
+        this.resourceTexDst = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
 
         this.setupUniforms(gui);
     }
@@ -252,6 +267,29 @@ class ParticleLenia {
             out0 = vec4(p, p);
         }`, {dst:this.dst}, {n});
         this.flipBuffers();
+        
+        // Initialize random RGB preferences for each particle
+        this.runProgram(`
+        uniform int n;
+        void main() {
+            ivec2 ij = ivec2(gl_FragCoord.xy);
+            ivec2 sz = textureSize(state, 0);
+            int idx = ij.y*sz.x+ij.x;
+            if (idx>=n) {
+                out0 = vec4(0.0);
+                return;
+            }
+            // Generate pseudo-random RGB preferences
+            float fi = float(idx);
+            vec3 pref = vec3(
+                fract(sin(fi*12.9898)*43758.5453),
+                fract(sin(fi*78.233)*43758.5453),
+                fract(sin(fi*45.164)*43758.5453)
+            );
+            // Normalize to ensure sum is meaningful
+            pref = normalize(pref + 0.1);
+            out0 = vec4(pref, 1.0);
+        }`, {dst:this.prefBuf}, {n});
     }
 
     setPoint(i, xy) {
@@ -280,6 +318,14 @@ class ParticleLenia {
             float clock = mod(s.w + clockRate*rate, 1.0);
             return vec4(s.xyz, clock);
         }
+        
+        // Sample resource field value weighted by particle preferences
+        float sampleResource(vec2 wldPos, vec3 pref) {
+            vec2 resUV = (wldPos / dishR) * 0.5 + 0.5;
+            vec4 res = texture(resourceTex, resUV);
+            return dot(pref, res.rgb) * res.a;
+        }
+        
         void main() {
             ivec2 ij = ivec2(gl_FragCoord.xy);
             ivec2 sz = textureSize(state, 0);
@@ -329,6 +375,18 @@ class ParticleLenia {
             field *= w1; gv *= w1;
             vec2 a_da = kernel(field, m2, s2);
             vec2 dpos = repDir*repulsion-a_da.y*gv;
+            
+            // Resource field attraction - compute gradient via finite differences
+            vec3 myPref = normalize(abs(texelFetch(prefBuf, ij, 0).rgb) + 0.01);
+            float texelSize = dishR / 256.0;  // World-space size of gradient sample
+            float rC = sampleResource(pos, myPref);
+            float rL = sampleResource(pos - vec2(texelSize, 0.0), myPref);
+            float rR = sampleResource(pos + vec2(texelSize, 0.0), myPref);
+            float rD = sampleResource(pos - vec2(0.0, texelSize), myPref);
+            float rU = sampleResource(pos + vec2(0.0, texelSize), myPref);
+            vec2 resourceGrad = vec2(rR - rL, rU - rD) / (2.0 * texelSize);
+            dpos += resourceGrad * resourceAttraction;
+            
             vec2 prevPos = out0.zw;
             pos += (pos - prevPos)*0.5 + dpos*0.5*dt;
             pos /= max(1.0, length(pos)/dishR);
@@ -394,6 +452,99 @@ class ParticleLenia {
         twgl.bindFramebufferInfo(gl, this.selectBuf);
         gl.clear(gl.COLOR_BUFFER_BIT); 
         twgl.bindFramebufferInfo(gl, null);
+    }
+
+    clearResources() {
+        const gl = this.gl;
+        twgl.bindFramebufferInfo(gl, this.resourceTex);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        twgl.bindFramebufferInfo(gl, this.resourceTexDst);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        twgl.bindFramebufferInfo(gl, null);
+    }
+
+    async loadResourceImage(imageSource) {
+        const gl = this.gl;
+        let img;
+        
+        if (imageSource instanceof HTMLImageElement || imageSource instanceof HTMLCanvasElement) {
+            img = imageSource;
+        } else {
+            // It's a URL string
+            img = new Image();
+            img.crossOrigin = "anonymous";
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = imageSource;
+            });
+        }
+        
+        // Create a canvas to process the image and extract RGBA
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, 512, 512);
+        const imageData = ctx.getImageData(0, 0, 512, 512);
+        
+        // Convert to float array for RGBA16F texture
+        const floatData = new Float32Array(512 * 512 * 4);
+        for (let i = 0; i < imageData.data.length; i++) {
+            floatData[i] = imageData.data[i] / 255.0;
+        }
+        
+        // Upload to resource texture
+        gl.bindTexture(gl.TEXTURE_2D, this.resourceTex.attachments[0]);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, 512, 512, 0, gl.RGBA, gl.FLOAT, floatData);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+        
+        // Also initialize the dst buffer
+        gl.bindTexture(gl.TEXTURE_2D, this.resourceTexDst.attachments[0]);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, 512, 512, 0, gl.RGBA, gl.FLOAT, floatData);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+
+    consumeResources() {
+        const gl = this.gl;
+        // Render particle consumption as gaussian splats
+        // Each particle depletes alpha in a small radius around it
+        this.runProgram(`
+        uniform float consumeRadius;  // World-space consumption radius
+        void main() {
+            // Position particle at its world position, scaled to resource texture UV space
+            vec4 p = texelFetch(state, idx, 0);
+            if (!isAlive(p)) {
+                gl_Position = vec4(0.0);
+                return;
+            }
+            // Map world position to clip space for resource texture
+            vec2 resUV = (p.xy / dishR) * 0.5 + 0.5;
+            vec2 clipPos = resUV * 2.0 - 1.0;
+            // Expand quad for consumption radius
+            float radiusUV = consumeRadius / dishR;
+            uv = quad * radiusUV;
+            gl_Position = vec4(clipPos + quad * radiusUV, 0.0, 1.0);
+        }
+        //FRAG
+        void main() {
+            float r = length(uv) * dishR;  // Convert back to world space
+            // Gaussian consumption profile
+            float consumption = exp(-r*r / 4.0) * resourceDecay;
+            // Output negative alpha for subtractive blending
+            out0 = vec4(0.0, 0.0, 0.0, consumption);
+        }`, {n: this.max_point_n, clear: true, dst: this.resourceTexDst, 
+             blend: [gl.ONE, gl.ONE]}, {consumeRadius: 3.0});
+        
+        // Subtract consumption from resource texture
+        this.runProgram(`
+        uniform sampler2D consumptionTex;
+        void main() {
+            vec4 res = texture(resourceTex, uv);
+            vec4 consumption = texture(consumptionTex, uv);
+            // Deplete only alpha, keep RGB intact
+            out0 = vec4(res.rgb, max(0.0, res.a - consumption.a));
+        }`, {dst: this.resourceTex}, {consumptionTex: this.resourceTexDst.attachments[0]});
     }
 
     adjustFB(fb, width, height, attachments) {
@@ -466,6 +617,14 @@ class ParticleLenia {
             colorUG = mix(colorUG, vec3(0.9, 0.7, 0.1), G_dG.x*min(c*2.0, 1.0));
             vec3 bg = vec3(1.0);
             vec3 color = fieldGE>0.0? mix(bg, colorE, fieldGE) : mix( bg, colorUG, -fieldGE);
+
+            // Blend resource texture - sample at world position mapped to resource UV
+            vec2 resUV = (wldPos / dishR) * 0.5 + 0.5;
+            vec4 resource = texture(resourceTex, resUV);
+            vec3 resourceColor = resource.rgb;
+            float resourceAlpha = resource.a;
+            // Blend resource color with terrain based on alpha
+            color = mix(color, resourceColor * light, resourceAlpha * 0.8);
 
             out0 = vec4(vec3(light)*color, 1.0);
             if (isTouched(wldPos)) {
