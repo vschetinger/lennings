@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=8"> </script>
+<script src="lenia.js?v=9"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -167,27 +167,28 @@
     }
 
     /* Left-side Life Cycle panel */
-    .dg.ac.life-panel {
+    .life-panel {
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         z-index: 1000;
     }
     
-    .dg.ac.life-panel .dg.main {
-        background: rgba(0, 10, 30, 0.85) !important;
+    .life-panel .dg.main {
+        background: rgba(0, 20, 40, 0.9) !important;
     }
     
-    .dg.ac.life-panel .dg li {
-        background: rgba(0, 20, 50, 0.6) !important;
+    .life-panel .dg .cr {
+        background: rgba(0, 30, 60, 0.7) !important;
     }
     
-    .dg.ac.life-panel .dg li.folder {
-        border-left: 3px solid #4a9eff !important;
+    .life-panel .dg .title {
+        background: #2a5a8a !important;
+        color: #fff !important;
     }
     
-    .dg.ac.life-panel .title {
-        background: linear-gradient(90deg, #2a5a8a, #1a3a5a) !important;
+    .life-panel .dg .property-name {
+        color: #ccc !important;
     }
 
 
@@ -686,6 +687,9 @@ window.addEventListener('keydown', e=>{
     }
     if (e.key == 'R') {
         toggleRecord();
+    }
+    if (e.key == 'r') {
+        lenia.reset();
     }
 });
 
