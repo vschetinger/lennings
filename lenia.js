@@ -761,10 +761,12 @@ class ParticleLenia {
             
             // Check if ready to reproduce (energy >= threshold AND age >= minimum)
             float age = out1.z;
-            if (out1.y >= reproThreshold && age >= reproMinAge) {
+            float energy = out1.y;
+            // Enforce minimum age requirement - particles must be old enough
+            if (energy >= reproThreshold && age >= reproMinAge) {
                 // Mark for reproduction by setting high w value (temporary flag)
                 // and deduct energy cost
-                out1 = vec4(out1.x, out1.y - reproCost, out1.z, 999.0);
+                out1 = vec4(out1.x, energy - reproCost, age, 999.0);
             }
         }`, {dst: this.dst});
         this.flipBuffers();
