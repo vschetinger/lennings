@@ -27,6 +27,7 @@ uniform float hungerMultiplier;   //! 2.0
 uniform float reproThreshold;     //! 0.8
 uniform float reproCost;          //! 0.4
 uniform float reproMinAge;        //! 100.0
+uniform float currentStep;        //! 0.0  // Global simulation step counter
 uniform float deathDissolveRadius; //! 5.0
 uniform float deathEnergyAmount;  //! 0.3
 uniform float deathEnergyFalloff; //! 2.0
@@ -192,6 +193,9 @@ class ParticleLenia {
         this.trailTex = twgl.createFramebufferInfo(gl, 
             [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}], 1024, 1024);
 
+        // Global step counter for birthStep-based age calculation
+        this.stepCount = 0;
+
         this.setupUniforms(gui);
     }
 
@@ -309,6 +313,9 @@ class ParticleLenia {
         if (n=='max')
             n = this.max_point_n;
         n = Math.min(n, this.max_point_n);
+        // Reset step counter when resetting simulation
+        this.stepCount = 0;
+        this.U.currentStep = 0;
         this.clearSelection();
         this.runProgram(`
         uniform int n;
@@ -326,9 +333,9 @@ class ParticleLenia {
             float a = 2.4*float(idx);
             vec2 p = center + vec2(sin(a)*r, cos(a)*r);
             out0 = vec4(p, p);
-            // Initialize state1: (rep, energy, age, clock)
-            // Start with full energy (1.0), age 0
-            out1 = vec4(0.5, 1.0, 0.0, 0.0);
+            // Initialize state1: (rep, energy, birthStep, clock)
+            // Store current step as birthStep - age calculated as currentStep - birthStep
+            out1 = vec4(0.5, 1.0, currentStep, 0.0);
         }`, {dst:this.dst}, {n, center});
         this.flipBuffers();
         
@@ -365,7 +372,8 @@ class ParticleLenia {
             ivec2 sz = textureSize(state, 0);
             int idx = ij.y*sz.x+ij.x;
             out0 = idx==i ? vec4(xy, xy) : texelFetch(state, ij, 0);
-            out1 = idx==i ? vec4(0.0)    : texelFetch(state1, ij, 0);
+            // When creating new particle, set birthStep to currentStep
+            out1 = idx==i ? vec4(0.5, 1.0, currentStep, 0.0) : texelFetch(state1, ij, 0);
         }`, {dst:this.dst}, {i, xy});
         this.flipBuffers();
     }
@@ -373,6 +381,11 @@ class ParticleLenia {
     step({clockRate=0.0, paused=false, attractPos=[0, 0], attractRadius=0}={}) {
         this.U.touchPos = attractPos;
         this.U.touchRadius = attractRadius;
+        // Increment global step counter (only when not paused)
+        if (!paused) {
+            this.stepCount++;
+            this.U.currentStep = this.stepCount;
+        }
         this.runProgram(`
         uniform float clockRate;
         uniform bool paused;
@@ -419,17 +432,16 @@ class ParticleLenia {
             }
             out1 = texelFetch(state1, ij, 0);
             
-            // Read life cycle state: state1 = (rep, energy, age, clock)
+            // Read life cycle state: state1 = (rep, energy, birthStep, clock)
             float myEnergy = out1.y;
-            float myAge = out1.z;
+            float birthStep = out1.z;  // Store birth step, calculate age when needed
             
             if (paused) {
                 out1 = updateClock(out1);
                 return;
             }
             
-            // Increment age
-            myAge += 1.0;
+            // No need to increment age - we calculate it from birthStep when needed
             
             // Passive energy decay
             myEnergy -= energyDecay;
@@ -500,8 +512,9 @@ class ParticleLenia {
             float clock = mod(out1.w + clockRate * exp2(myEnergy * clockExp), 1.0);
             
             out0 = vec4(pos, out0.xy);
-            // Store: (repulsion, energy, age, clock)
-            out1 = vec4(rep, myEnergy, myAge, clock);
+            // Store: (repulsion, energy, birthStep, clock)
+            // birthStep stays constant - age calculated as currentStep - birthStep when needed
+            out1 = vec4(rep, myEnergy, birthStep, clock);
         }`, {dst:this.dst}, {clockRate, paused});
         this.flipBuffers();
     }
@@ -701,7 +714,8 @@ class ParticleLenia {
                 vec4 p = texelFetch(state, ivec2(j, i), 0);
                 vec4 s1 = texelFetch(state1, ivec2(j, i), 0);
                 float particleEnergy = s1.y;
-                float age = s1.z;
+                float birthStep = s1.z;
+                float age = currentStep - birthStep;  // Calculate age from birthStep
                 
                 if (!isAlive(p)) continue;
                 if (particleEnergy > 0.0) continue;  // Not dying
@@ -760,13 +774,14 @@ class ParticleLenia {
             if (!isAlive(out0)) return;
             
             // Check if ready to reproduce (energy >= threshold AND age >= minimum)
-            float age = out1.z;
+            float birthStep = out1.z;
+            float age = currentStep - birthStep;  // Calculate age from birthStep
             float energy = out1.y;
             // Enforce minimum age requirement - particles must be old enough
             if (energy >= reproThreshold && age >= reproMinAge) {
                 // Mark for reproduction by setting high w value (temporary flag)
                 // and deduct energy cost
-                out1 = vec4(out1.x, energy - reproCost, age, 999.0);
+                out1 = vec4(out1.x, energy - reproCost, birthStep, 999.0);
             }
         }`, {dst: this.dst});
         this.flipBuffers();
@@ -831,7 +846,8 @@ class ParticleLenia {
                 
                 out0 = vec4(childPos, childPos);  // Position
                 // Child starts with half of parent's reproduction cost worth of energy
-                out1 = vec4(0.5, reproCost * 0.5, 0.0, 0.0);  // (rep, energy, age, clock)
+                // Store currentStep as birthStep - age calculated as currentStep - birthStep
+                out1 = vec4(0.5, reproCost * 0.5, currentStep, 0.0);  // (rep, energy, birthStep, clock)
             }
         }`, {dst: this.dst});
         this.flipBuffers();
@@ -851,8 +867,10 @@ class ParticleLenia {
             vec4 p = texelFetch(state, ij, 0);
             vec4 s1 = texelFetch(state1, ij, 0);
             
-            // If this is a new particle (age == 0 and energy > 0), give it mutated preferences
-            if (isAlive(p) && s1.z < 1.0 && s1.y > 0.0) {
+            // If this is a new particle (birthStep == currentStep, meaning just born), give it mutated preferences
+            float birthStep = s1.z;
+            float age = currentStep - birthStep;
+            if (isAlive(p) && age < 1.0 && s1.y > 0.0) {
                 // Find closest particle to inherit preferences from (likely parent)
                 vec3 inheritedPref = vec3(0.5);
                 float closestDist = 1e10;
