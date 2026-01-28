@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=14"> </script>
+<script src="lenia.js?v=15"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -223,6 +223,7 @@ const fps = 60.0;
 
 const params = {
     stepN: 1,
+    targetFPS: 60,
     viewCenter: [0.0, 0.0],
     viewExtent: 50.0,
     mousePos: [-10000.0, 0.0],
@@ -238,6 +239,7 @@ const params = {
     'init circle': ()=>lenia.reset(),
     'toggle sound': ()=>audioSystem.toggle(),
 };
+gui.add(params, 'targetFPS', 1, 120, 1).name('target FPS');
 gui.add(params, 'stepN', 0, 10, 1).name('steps/frame');
 
 const lenia = new ParticleLenia(gl, gui);
@@ -419,18 +421,27 @@ async function toggleRecord() {
     console.log('recording:', recording)
 }
 
-// FPS tracking
+// FPS tracking and limiting
 let fpsFrameCount = 0;
 let fpsLastTime = performance.now();
+let lastFrameTime = 0;
 
-function animate() {
+function animate(currentTime) {
     if (onair) return;
+    
+    // FPS limiting - skip frame if too soon
+    const targetInterval = 1000 / params.targetFPS;
+    if (currentTime - lastFrameTime < targetInterval) {
+        requestAnimationFrame(animate);
+        return;
+    }
+    lastFrameTime = currentTime;
     
     // Update FPS counter
     fpsFrameCount++;
     const now = performance.now();
     if (now - fpsLastTime >= 1000) {
-        document.getElementById('fps').textContent = `${fpsFrameCount} FPS | steps: ${params.stepN}`;
+        document.getElementById('fps').textContent = `${fpsFrameCount} FPS | target: ${params.targetFPS} | steps: ${params.stepN}`;
         fpsFrameCount = 0;
         fpsLastTime = now;
     }
