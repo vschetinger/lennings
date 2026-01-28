@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js"> </script>
+<script src="lenia.js?v=2"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -976,7 +976,6 @@ $("#resetvi").onclick = () => {
 // add a "upload creature" special entry
 var uploadInput = document.createElement('input');
 uploadInput.type = 'file';
-uploadInput.click();
 uploadButton = document.createElement('div'); uploadButton.className = "previewContainer"; uploadButton.id = "uploadButton";
 uploadButton.innerHTML = "<span id='pluspan'>+</span>";
 $('#zoo').appendChild(uploadButton);
