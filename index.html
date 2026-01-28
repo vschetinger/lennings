@@ -1,0 +1,942 @@
+﻿<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Particle Lenia</title>
+<meta property="article:author" content="Alexander Mordvintsev">
+<meta property="article:author" content="Eyvind Niklasson">
+
+<!--  https://dev.twitter.com/cards/types/summary -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Particle Lenia Demo">
+<meta name="twitter:description" content="Simple particle-based artificial life-form">
+<meta name="twitter:url" content="https://znah.net/lenia">
+<meta name="twitter:image" content="lenia_card.jpg">
+<meta name="twitter:image:width" content="600">
+<meta name="twitter:image:height" content="600">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NXJWS6Y0G1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', 'G-NXJWS6Y0G1');
+</script>
+
+<script src="twgl.min.js"> </script>
+<script src="dat.gui.min.js"> </script>
+<script src="zoo.js"> </script>
+<script src="serialize.js"> </script>
+<script src="PNGView.js"> </script>
+<script src="lenia.js"> </script>
+<script src="audiosys.js"> </script>
+<script src="names.js"> </script>
+<script src="webm-writer2.js"> </script>
+<script src="videowriter.js"> </script>
+<!-- <script src="anims.js"> </script> -->
+
+<style>
+    /* input {width:300px} */
+    label {display:inline-block; width:80px}
+    body { 
+        scroll-snap-type: y mandatory;
+        font-family:Verdana, Geneva, Tahoma, sans-serif; margin: 5px; user-select: none; -webkit-touch-callout: none; -webkit-user-select:none;}
+
+    .preview {
+        width: 128px;
+/*        padding: 2px;*/
+/*        border: 5px blue;*/
+/*        border: 10px blue;*/
+    }
+    #c {
+        scroll-snap-align: start;
+        width: 100%; height: 50vh; touch-action: none; user-select: none; -webkit-touch-callout: none; -webkit-user-select:none;}
+    .previewContainer { 
+        scroll-snap-align: start;
+        display: inline-block; position: relative; 
+/*        border: 10px blue;*/
+
+    }
+    .previewOverlay {
+      position: absolute;
+      color: white;
+      bottom: 7px;
+      left: 5px;
+      width: auto;
+      height: auto;
+      z-index: 1;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    h1, p {margin: 10px}
+    a:link {font-size: larger; text-decoration: none; }
+
+    #container {
+        position: relative;
+        touch-action: none; user-select: none; -webkit-touch-callout: none; -webkit-user-select:none;
+    }
+
+    .canvasOverlay {
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        vertical-align: middle;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        opacity: 0.0;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0, 0.5);
+        overflow-x: hidden;
+        transition: opacity 1s 0.5s;
+        color: white;
+        font-size: 35px;
+/*        animation-delay: 1s;*/
+/*        display: none;*/
+    }
+
+    .canvasOverlay img {
+        height: 50%;
+        max-width: 100%;
+    }
+
+    #touch {
+/*        display: block;*/
+        opacity: 1.0;
+        pointer-events: auto;
+    }
+
+    .dbimg {
+        max-width: 50%!important;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    details {
+        margin: 10px; 
+    }
+
+    #zoo {
+        scroll-snap-align: end;
+        width: 90%;
+        height: 320px;
+        margin: 0 auto;
+        overflow: scroll;
+        text-align: center;
+        scroll-snap-type: y mandatory;
+    }
+
+
+    #title{
+        scroll-snap-align: start;
+    }
+
+    #uploadButton{
+        background-color: #15163f;
+        width: 128px;
+        height: 128px;
+        text-align: center;
+        line-height: 115px;
+        font-size: 100px;
+        color: aliceblue;
+        vertical-align: top;
+    }
+
+
+</style>
+
+<h1 id="title">Particle Lenia</h1>
+<p>
+    <a href="https://znah.net">Alexander Mordvintsev</a> |
+    <a href="https://eyvind.me/">Eyvind Niklasson</a> |
+    <a href="https://oteret.github.io/">Ettore Randazzo</a> <br>
+<p>
+<a href="https://google-research.github.io/self-organising-systems/particle-lenia/">📝 Read article</a>
+</p>
+
+<details>
+<summary> Instructions </summary>
+To <b>save creatures</b>, press the download icon or drag them to your desktop. <br> 
+To <b>bring them back to life</b>, <b>drag and drop</b> them into the demo from most places (e.g. Twitter).<br>
+To <b>pan around</b>, click and drag, or zoom with with your scroll wheel. <br>
+To <b>capture a creature</b> and save it in your Zoo, press space bar, click and drag to select particles, and space-bar again to complete the save.<br>
+To <b>herd particles</b>, click and hold in the same spot for one second.<br>
+To <b>spawn new particles</b>, double click and hold.<br>
+<span id="resetvi"><u>(click to show visual instructions)</u></span>
+</details>
+<!-- <p><a href="https://colab.research.google.com/drive/1e4dVTsZHcVyEzZe6k9atY41Yk0DIzTVH?resourcekey=0-OeCOX1DD1zcn_orSywTrNg&usp=sharing">Colab version</a></p> -->
+<!-- <p>Related work: <a href="https://chakazul.github.io/lenia.html">Lenia</a>, <a href="https://sites.google.com/corp/view/flowlenia/">FlowLenia</a> </p> -->
+
+<div id="container">
+<div class="canvasOverlay" id="touch"><img src="touch.svg"></img><br>touch / click and drag to pan</div>
+<div class="canvasOverlay" id="herd"><img src="herd.svg"></img><br><b>long</b> touch / click to herd particles</div>
+<div class="canvasOverlay" id="doubleclick"><img src="doubleclick.svg"></img><br><b>double</b> touch / click and <b>hold</b> to spawn new particles</div>
+<div class="canvasOverlay" id="mouse"><img class="dbimg" src="mouse.svg"></img><img class="dbimg" src="pinch.svg"></img><br><b>scroll</b> or <b>pinch</b> to zoom</div>
+<div class="canvasOverlay" id="space"><img src="space.svg"></img><img src="touch.svg"></img><br><b>space-bar</b> and <b>drag</b> to capture creatures</div>
+<canvas id="c" width="800" height="800"></canvas>
+<br>
+</div>
+<div id="zoo"></div>
+<pre id="stat"></pre>
+
+<script>
+
+const $ = s=>document.querySelector(s);
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2', {alpha:false});
+gl.getExtension("EXT_color_buffer_float");
+gl.getExtension("OES_texture_float_linear");
+
+const gui = new dat.GUI();
+gui.close();
+const fps = 60.0;
+
+const params = {
+    stepN: 1,
+    viewCenter: [0.0, 0.0],
+    viewExtent: 50.0,
+    mousePos: [-10000.0, 0.0],
+    mouseDown: false,
+    touchRadius: 0.05,
+    captureMode: false,
+    shiftKey: false,
+    pointAddI: 0,
+    oscillogram: false,
+
+    'benchmark': bench,
+    'fullscreen': fullscreen,
+    'init circle': ()=>lenia.reset(),
+    'toggle sound': ()=>audioSystem.toggle(),
+};
+gui.add(params, 'stepN', 0, 30, 1);
+
+const lenia = new ParticleLenia(gl, gui);
+const audioSystem = new AudioSystem(gl, fps);
+
+gui.add(params, 'benchmark');
+gui.add(params, 'toggle sound');
+gui.add(params, 'init circle');
+gui.add(params, 'fullscreen');
+gui.add(params, 'oscillogram');
+
+
+let onair = false;
+
+const nextFrame = () => new Promise(requestAnimationFrame);
+
+
+function fullscreen() {
+  if (!document.fullscreenElement) {
+    canvas.requestFullscreen();
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen();
+  }
+}
+
+const previewSize = 256 ;
+const previewFB = twgl.createFramebufferInfo(gl, null, previewSize, previewSize);
+previewFB.canvas = document.createElement('canvas');
+previewFB.canvas.width = previewFB.canvas.height = previewSize;
+previewFB.ctx = previewFB.canvas.getContext('2d');
+previewFB.im = previewFB.ctx.getImageData(0, 0, previewSize, previewSize);
+
+
+function bench() {
+    lenia.reset();
+    const t=Date.now(), n=1000;
+    for (let i=0; i<n; ++i) lenia.step();
+    lenia.fetchState();
+    const dt = (Date.now()-t)/n;
+    document.getElementById('stat').innerText = `${dt.toFixed(2)} ms/step`;
+}
+bench();
+
+
+function simFrame(stepArgs, audioFB, sampleRate=48000) {
+    const samplesPerFrame = sampleRate/fps;
+    if (audioFB) {
+        console.assert(sampleRate%fps == 0);
+        console.assert(audioFB.width >= samplesPerFrame);
+    }
+    const {stepN} = stepArgs;
+    for (let i=0, p0=0; i<stepN; ++i) {
+        const p1 = Math.round((i+1)*samplesPerFrame/stepN);
+        lenia.step({...stepArgs, clockRate:(p1-p0)/sampleRate});
+        if (audioFB) {
+            lenia.renderAudio(audioFB, [p0, 0, p1-p0, 1]);
+        }
+        p0 = p1;
+    }
+    if (audioFB) {
+        twgl.bindFramebufferInfo(gl, audioFB);
+        gl.readPixels(0, 0, samplesPerFrame, 1, gl.RG, gl.FLOAT, audioFB.cpu);
+    }
+}
+
+let recording = false;
+let record_log = [];
+
+async function saveRecord() {
+    const rec = new VideoWriter('rec');
+    await rec.start();
+    for (const r of record_log) {
+        if ('state' in r) {
+            lenia.pushState(r.state);
+        }
+        if ('setPoint' in r) {
+            const {i, xy} = r.setPoint;
+            lenia.setPoint(i, xy);
+        }
+        if ('stepArgs' in r) {
+            simFrame(r.stepArgs, rec.audioFB, rec.sampleRate);
+        }
+        if ('renderArgs' in r) {
+            lenia.render(rec.fb, {...r.renderArgs, flipUD:true});
+            await rec.frame();
+            if (rec.frameCount%10==0) {
+                lenia.render(null, r.renderArgs);
+                lenia.visAudio(null, rec.audioFB.attachments[0]);
+                await nextFrame();
+            }
+        }
+    }
+    await rec.close();
+}
+
+async function toggleRecord() {
+    if (!recording) {
+        record_log = [{state:lenia.fetchState()}];
+        recording = true;
+    } else {
+        recording = false;
+        try {
+            onair = true;
+            await saveRecord();
+        } finally {
+            onair = false;
+            requestAnimationFrame(animate);
+        }
+    }
+    console.log('recording:', recording)
+}
+
+function animate() {
+    if (onair) return;
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
+    // for very small viewports or mobile devices, render at native res
+    if (canvas.width < 768) {
+        canvas.width = canvas.clientWidth * window.devicePixelRatio;
+        canvas.height = canvas.clientHeight * window.devicePixelRatio;;
+    }
+
+    const touchRadius = params.touchRadius * params.viewExtent;
+    const renderArgs = {touchPos: params.mousePos, touchRadius,
+        viewCenter: params.viewCenter,
+        viewExtent: params.viewExtent};
+
+    if (params.captureMode) {
+        if (params.mouseDown && !params.shiftKey)
+            lenia.select(params.mousePos, touchRadius);
+    } else {
+        let action = '';
+        if (params.mouseDown) {
+            action = params.shiftKey ? 'add' : 'attract';
+        }
+        if (action == 'add') {
+            lenia.setPoint(params.pointAddI, params.mousePos);
+            if (recording) { record_log.push(
+                {setPoint: {i:params.pointAddI, xy:params.mousePos}});}
+            params.pointAddI = (params.pointAddI+1)%lenia.max_point_n;
+        }
+        const stepArgs = {
+            attractPos: params.mousePos,
+            attractRadius:action=='attract'?touchRadius:0.0,
+            stepN: params.stepN,
+        };
+        if (audioSystem.playing && audioSystem.audioQueueLen<5) {
+            const k = 1+(audioSystem.audioQueueLen < 3);
+            for (let i=0; i<k; ++i) {
+                simFrame(stepArgs, audioSystem.audioFB, audioSystem.sampleRate);
+                audioSystem.push();
+                if (recording) { record_log.push({stepArgs, renderArgs});}
+            }
+        } else {
+            simFrame(stepArgs, null);
+            if (recording) { record_log.push({stepArgs, renderArgs});}
+        }
+    }
+    lenia.render(null, renderArgs);
+    if (audioSystem.playing && params.oscillogram) {
+         lenia.visAudio(null, audioSystem.audioFB.attachments[0])
+    }
+    requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+
+function event2wld(XY) {
+    const w=canvas.clientWidth, h=canvas.clientHeight;
+    const ext = params.viewExtent;
+    const aspect = w/Math.max(h, 1);
+    const [cx, cy] = params.viewCenter;
+    return [ext*(XY[0]/w-0.5)+cx, ext*(0.5/aspect-XY[1]/w)+cy];
+}
+
+// dontSave prevents us adding back to zoo
+function captureCreature(dontSave = false, existingData = {}, preTextImg, container, append = false) {
+    // we already have an image so no need to recapture
+    data = existingData;
+    if (preTextImg == undefined) {
+        c = lenia.captureCreature();
+        if (!c) return;
+        data = Object.assign(data, c.data, existingData); // existingData should always overwrite
+    } 
+
+    if (!data.name || data.name.trim() == "") {
+        let conflict = true;
+        let idx = Math.floor(Math.random() * NAMES.length);
+        let attempts = 0;
+        while(conflict && (attempts < 20)){
+            idx = Math.floor(Math.random() * NAMES.length);
+            conflict = localZoo.some(c => c.name == NAMES[idx]);
+            attempts += 1;
+        }
+        if (attempts == 20) console.log("unable to find unique name for new creature");
+        data.name = NAMES[idx]; 
+    }
+
+    // add url
+    if (preTextImg == undefined) {
+        lenia.render(previewFB, {viewCenter: c.center, viewExtent: c.extent, selectedOnly: true, flipUD: true});
+        gl.readPixels(0, 0, previewSize, previewSize, gl.RGBA, gl.UNSIGNED_BYTE, previewFB.im.data);
+        for (let i=3; i<previewFB.im.data.length; i+=4) {previewFB.im.data[i] = 255}
+        preTextImg = previewFB.im; // previewFB.ctx.getImageData(0, 0, previewSize, previewSize); //previewFB.canvas.toDataURL("image/png");
+        previewFB.ctx.putImageData(previewFB.im, 0, 0);
+    } else {
+        previewFB.ctx.putImageData(preTextImg, 0, 0); //drawImage(preTextImg, 0, 0);
+    }
+
+    const textOffsetX = 8;
+    const textOffsetY = 7;
+
+    // safari from earlier this year still doesn't have roundrect (funnily enough, for Apple who loves rounded rects)
+    if (!("roundRect" in previewFB.ctx)){
+        previewFB.ctx.roundRect = previewFB.ctx.rect;
+    }
+
+    previewFB.ctx.resetTransform();
+    previewFB.ctx.beginPath();
+    previewFB.ctx.font = '20px sans-serif';
+    previewFB.ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    let tWidth = previewFB.ctx.measureText(data.name).width
+    previewFB.ctx.roundRect(-10, -10, tWidth + 10 + textOffsetX*2, 30 + 10, 10);
+    previewFB.ctx.fill();
+
+    previewFB.ctx.beginPath();
+    previewFB.ctx.font = '20px sans-serif';
+    previewFB.ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    tWidth = previewFB.ctx.measureText('znah.net/lenia').width
+    previewFB.ctx.roundRect(256 + 10, 256 + 10, -(tWidth + 10 + textOffsetX*2), -(30 + 10), 10);
+    previewFB.ctx.fill();
+
+    previewFB.ctx.resetTransform();
+    previewFB.ctx.font = '20px sans-serif';
+    previewFB.ctx.fillStyle = "#d4d4d4"; 
+    // previewFB.ctx.shadowBlur = 8;
+    // previewFB.ctx.shadowColor = 'black';
+    previewFB.ctx.fillText('znah.net/lenia', 256 - (122 + textOffsetX), 256 - textOffsetY);
+    previewFB.ctx.fillText(data.name, textOffsetX, textOffsetY + 15);
+
+    previewFB.im = previewFB.ctx.getImageData(0, 0, previewSize, previewSize);
+
+    // TODO(DONE): this is the right place to inject the data
+    previewPNGView = new PNGView(previewFB.im.data.buffer);
+    const enc_some_creature = serialize(data, 0x2, previewPNGView);
+    previewFB.ctx.putImageData(previewFB.im, 0, 0);
+
+
+    // a elements allow custom filenames for download
+    if (container == undefined){
+        container = document.createElement('div'); container.className = "previewContainer";
+        if (append) {
+            $('#zoo').insertBefore(container, $('#uploadButton'));
+        } else {
+            $('#zoo').prepend(container);
+        }
+    }
+
+    const overlay = document.createElement('div'); overlay.className = "previewOverlay"; 
+    overlay.innerHTML = "<span id='download'>⬇️ </span><span id='pencil'>✏️ </span><span id='eraser'>❌ </span>";
+    overlay.onclick = ((e) => {
+        var localData = data;
+        return (event) => {
+            if (event.target.id == "eraser"){
+                // remove from zoo?
+                localZoo.find
+                var index = localZoo.indexOf(localData);
+                if (index !== -1) {
+                  localZoo.splice(index, 1);
+                } else {
+                    console.log("can't delete creature. not found in zoo.")
+                }
+                localStorage["ZOO"] = JSON.stringify(localZoo);
+                // remove DOM element
+                container.remove()
+            } else if (event.target.id == "pencil") {
+                event.preventDefault(); 
+                overlay.style.top = "0px";
+                overlay.style.bottom = "auto";
+                overlay.style.right = "0px"
+                overlay.style.left = "auto"
+                overlay.style.width = "100%";
+                overlay.style.backgroundColor = "rgb(19, 21, 59)";
+                overlay.innerHTML = localData.name;
+                overlay.setAttribute('contenteditable', true); 
+                document.body.style["user-select"] = "text";
+                document.body.style["-webkit-touch-callout"] = "text";
+                document.body.style["-webkit-user-select"] = "text";
+                overlay.focus(); 
+            } else if (event.target.id == "download") {
+                link = document.createElement("a");
+                link.setAttribute("href", previewFB.canvas.toDataURL("image/png"));
+                link.setAttribute("download", localData.name + ".png");
+                link.click();
+            }
+        }
+    })();
+    overlay.addEventListener('focusout', (() => {
+        var localData = data;
+        return (event) => {
+            // data should be a reference still to the same object in localZoo, so we can dump it back in.
+            localData.name = overlay.innerText;
+            overlay.innerHTML = "✏️";
+            overlay.style.bottom = "7px";
+            overlay.style.top = "auto";
+            overlay.style.left = "5px";
+            overlay.style.right = "auto"
+            overlay.style.width = "auto";
+            overlay.style.backgroundColor = "none";
+            overlay.setAttribute('contenteditable', false); 
+            document.body.style["user-select"] = "none";
+            document.body.style["-webkit-touch-callout"] = "none";
+            document.body.style["-webkit-user-select"] = "none";
+            captureCreature(true, localData, preTextImg, container);
+            localStorage["ZOO"] = JSON.stringify(localZoo);
+        }
+    })()
+    );
+    const img_a = document.createElement('a');
+    const img = document.createElement('img');
+    img.src = img_a.href = previewFB.canvas.toDataURL("image/png");
+    img_a.download = data.name + ".png"; 
+    img.classList.add('preview');
+    img_a.appendChild(img);
+    img_a.onclick = (() => { 
+        var localData = data;
+        return (e) => {
+            e.preventDefault();
+            pasteCreature(localData, 0.0, 0.0);
+        };
+    })();
+
+    if (!container.hasChildNodes()){
+        container.appendChild(img_a)
+        container.appendChild(overlay);
+    } else {
+        container.replaceChild(img_a, container.firstChild)
+        container.replaceChild(overlay, container.lastChild)
+    }
+
+    // TODO(DONE): data should be stored in pixels
+    // can't actually check for DownloadURL support, directly, so unfortunately browser detection 
+    if (!(/^((?!chrome|android).)*safari/i.test(navigator.userAgent))) {
+        img.ondragstart = img_a.ondragstart = (() => {
+            var localData = data;
+            return ((e) => {
+                // undocumented chrome feature to set filename when drag and dropping to file browser
+                e.dataTransfer.setData("DownloadURL", "image/png:" + localData.name + ".png:" + img.src)
+            });
+        })();
+    }
+
+    // save to local zoo
+    if (!dontSave){
+        if (append) {
+            localZoo.unshift(data);
+        } else {
+            localZoo.push(data);
+        }
+        localStorage["ZOO"] = JSON.stringify(localZoo);
+    }
+
+    return data;
+}
+
+window.addEventListener('keydown', e=>{
+    if (e.key == ' ') {
+        e.preventDefault();
+        if (params.captureMode) {
+            const c = captureCreature();
+            lenia.clearSelection();
+            navigator.clipboard.writeText(JSON.stringify(c));
+        } 
+        params. captureMode = !params.captureMode;
+    }
+    if (e.key == 'R') {
+        toggleRecord();
+    }
+});
+
+let pointerCache = [];
+let lastTapTime = 0;
+let lastTapLoc = null;
+
+/* multi-touch intended behaviour
+
+- one touch changes to panning icon, moves canvas around in space
+- two touch points moves around in space, pinch distance changes zoomo
+- long-touch of a single point picks up particles till they are dropped 
+- any more pointers in addition to the single one do zoom/pan
+
+*/
+canvas.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    if (e.shiftKey || (lastTapTime != null && (Date.now() - lastTapTime < 600) &&  
+        (Math.sqrt((e.offsetX - lastTapLoc[0])**2 + (e.offsetY - lastTapLoc[1])**2) <= canvas.width * 0.05)) ) params.shiftKey = true;
+    if (e.shiftKey || (lastTapTime != null && (Date.now() - lastTapTime < 600) &&  
+        (Math.sqrt((e.offsetX - lastTapLoc[0])**2 + (e.offsetY - lastTapLoc[1])**2) <= canvas.width * 0.05)) ||
+        params.captureMode) {
+        params.mouseDown = true;
+        params.mousePos = event2wld([e.offsetX, e.offsetY]);
+        return;
+    }
+
+    lastTapLoc = [e.offsetX, e.offsetY];
+    lastTapTime = new Date().getTime();
+
+    const pointer = {
+        "pId": e.pointerId,
+        "startXY": [e.offsetX, e.offsetY], 
+        "lastXY": [e.offsetX, e.offsetY], 
+        "state": "init" // state machine of "init", "move", "interact" 
+    };
+
+    pointer.timeOutId = setTimeout(() => {
+        pointer.state = "interact";
+        params.mousePos = event2wld([e.offsetX, e.offsetY]);
+        params.mouseDown = true;
+    }, 500),
+
+    pointerCache.push(pointer);
+});
+
+// document.addEventListener('selectionchange', (event) => {
+//     event.preventDefault();
+//     document.getSelection().removeAllRanges();
+// });
+
+canvas.addEventListener("pointermove", e => {
+    e.preventDefault();
+
+    if (params.shiftKey || params.captureMode) {
+        params.mousePos = event2wld([e.offsetX, e.offsetY]);
+        return;
+    } 
+
+    const index = pointerCache.findIndex((pointer) => pointer.pId === e.pointerId);
+    if (e.buttons <= 0 || index == -1) return;
+    const p = pointerCache[index]; 
+
+    const moveFar = () => (Math.sqrt((e.offsetX - p.startXY[0])**2 + (e.offsetY - p.startXY[1])**2) > canvas.width * 0.02);
+
+    if (p.state == "init" && moveFar()) {
+        clearTimeout(p.timeOutId); 
+        p.state = "move"; 
+    }
+
+    if (p.state == "move" || p.state == "init") {
+        let lXY = p.lastXY;
+        let cXY = [e.offsetX, e.offsetY];
+        let s = 1.0;
+
+        // incorporate second touch if available
+        const otherTouch = pointerCache.findIndex(op => (op.state == "move" && op.pId != e.pointerId));
+        if (otherTouch > -1) {
+            let oXY = pointerCache[otherTouch].lastXY;  
+
+            // zoom extent
+            ldiff = Math.sqrt((lXY[0] - oXY[0])**2 + (lXY[1] - oXY[1])**2); 
+            ndiff = Math.sqrt((cXY[0] - oXY[0])**2 + (cXY[1] - oXY[1])**2); 
+            s = ldiff/ndiff;
+
+            // movement
+            lXY = [((lXY[0] + oXY[0]) / 2), ((lXY[1] + oXY[1]) / 2)]
+            cXY = [((cXY[0] + oXY[0]) / 2), ((cXY[1] + oXY[1]) / 2)]
+        }
+
+        let [x, y] = params.viewCenter;
+        let [deltaX, deltaY] = [lXY[0] - cXY[0], lXY[1] - cXY[1]]; 
+        deltaX *= (params.viewExtent/canvas.clientWidth)
+        deltaY *= (params.viewExtent/canvas.clientWidth)
+        x = x + deltaX; y = y - deltaY;
+        const d = Math.sqrt(x*x+y*y);
+        if (d>lenia.dishR) {
+            x *= lenia.dishR/d; y *= lenia.dishR/d;
+        }
+        params.viewCenter = [x, y]
+
+        // pinch to zoom if needed
+        if (otherTouch > -1){
+            const [x, y] = event2wld(cXY);
+            const ext = params.viewExtent*s;
+            params.viewExtent = Math.max(6.0, Math.min(ext, lenia.dishR*2.0+10.0));
+            if (params.viewExtent == ext) {
+                const [cx, cy] = params.viewCenter;
+                params.viewCenter = [x+(cx-x)*s, y+(cy-y)*s];
+            }
+        }
+
+        // if we are holding particles with another touch, update their pos
+        const grabTouch = pointerCache.findIndex(op => (op.state == "interact"));
+        if (grabTouch > -1) {
+            params.mousePos = event2wld(pointerCache[grabTouch].lastXY);
+        }
+
+        p.lastXY = [e.offsetX, e.offsetY]; 
+    }
+
+    if (p.state == "interact") {
+        params.mousePos = event2wld([e.offsetX, e.offsetY]);
+    }
+});
+
+["pointerup", "pointerout"].forEach(listenerName => {
+    canvas.addEventListener(listenerName, e => {
+        e.preventDefault();
+        lastTapLoc = [e.offsetX, e.offsetY];
+        if (params.shiftKey || params.captureMode) {
+            params.mousePos = event2wld([e.offsetX, e.offsetY]);
+            params.mousePos = [-10000, -10000];
+            params.shiftKey = false;
+            params.mouseDown = false;
+            return;
+        }
+        params.shiftKey = false;
+        const index = pointerCache.findIndex((pointer) => pointer.pId === e.pointerId);
+        if (index == -1) return;
+        const p = pointerCache[index]; 
+        if (p.state == "interact") {
+            params.mouseDown = false;
+            params.mousePos = [-10000, -10000];
+        }
+        pointerCache.splice(index, 1); 
+        clearTimeout(p.timeOutId);
+    });
+});
+
+canvas.addEventListener('mouseleave', e => {
+    params.mousePos = [-10000, -10000];
+});
+
+canvas.addEventListener('wheel', e=>{
+    e.preventDefault();
+    const [x, y] = event2wld([e.offsetX, e.offsetY]);
+    const s = Math.exp(e.deltaY*0.01);
+    const ext = params.viewExtent*s;
+    params.viewExtent = Math.max(6.0, Math.min(ext, lenia.dishR*2.0+10.0));
+    if (params.viewExtent == ext) {
+        const [cx, cy] = params.viewCenter;
+        params.viewCenter = [x+(cx-x)*s, y+(cy-y)*s];
+    }
+}, {passive: false});
+
+
+function pasteCreature(c, x, y, selected=0) {
+    lenia.pasteCreature(c, x, y, selected);
+    gui.updateDisplay()
+    // for (const name of 'dt m1 s1 m2 s2 repulsion'.split(' ')) {
+    //     $(`#controls #${name}`).value = c[name];
+    // }
+}
+
+// TODO(DONE): remove when PNG-based creature storage is implemented
+// pre-load a few creatures from ZOO into local storage if they aren't already there.
+// if the local storage is already initialized, then we don't load these creatures
+// assume that if a user removed them, they don't want them back. we can provide
+// a "reset zoo" button if necessary.
+if (localStorage.getItem("ZOO") === null || JSON.parse(localStorage.getItem("ZOO")).length == 0) {
+    localStorage.setItem("ZOO", JSON.stringify(ZOO));
+} 
+const localZoo = JSON.parse(localStorage.getItem("ZOO"))
+localZoo.forEach(c=>{
+    pasteCreature(c, 0.0, 0.0, 1.0);
+    captureCreature(true, c);
+});
+
+pasteCreature(localZoo[0], 0.0, 0.0, 1.0);
+lenia.reset();
+
+// largely inspired by approch from https://blog.shovonhasan.com/using-promises-with-filereader/
+const asyncReadAsDataURL = (inputFile) => {
+  const fr = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    fr.onerror = () => {
+      fr.abort();
+      reject(new DOMException("can't read dropped/pasted file"));
+    };
+
+    fr.onload = () => {
+      resolve(fr.result);
+    };
+
+    fr.readAsDataURL(inputFile);
+  });
+};
+
+async function pasteFromURI(URI) {
+    var img = new Image;
+    img.crossOrigin = "Anonymous";
+    img.src = URI;
+    await img.decode();
+    previewFB.ctx.drawImage(img, 0, 0); 
+    const imData = previewFB.ctx.getImageData(0, 0, previewSize, previewSize);
+    const imDataPNGView = new PNGView(imData.data.buffer);
+    const c = deserialize(imDataPNGView);
+    return c;
+}
+
+async function pasteFromFile(dataTransferFile) {
+    let result = await asyncReadAsDataURL(dataTransferFile);
+    let c = await pasteFromURI(result);
+    return c;
+}
+
+function failureToRead(msg){
+    //TODO add a message if we fail to load the image.
+    if (msg == undefined){
+        msg = "internal error!"
+    }
+    //TODO: show this to user
+    console.log(msg);
+    return;
+}
+
+// TODO:
+// paste function handle everything - DONE
+// user error message
+// upload to zoo button
+// add names - DONE
+// add name editing function
+// use localstorage - DONE
+async function handlePasteOrDrop(incomingData, x, y) {
+
+    parsePromises = []
+
+    for (let i = 0; i < incomingData.types.length; i++) {
+        try {
+            if (incomingData.types[i] == "Files") {
+                for (let j = 0; j < incomingData.files.length; j++) {
+                    parsePromises.push(pasteFromFile(incomingData.files[j]));
+                }
+            } else if (incomingData.types[i] == "text/uri-list"){
+                parsePromises.push(pasteFromURI(incomingData.getData('URL'))); // 'text/uri-list' returns multiple urls, 'URL' returns first valid one.
+            } else if (incomingData.types[i] == "text/html"){
+                const parser = new DOMParser().parseFromString(incomingData.getData("text/html"), "text/html");
+                const imgSrc = parser.documentElement.querySelector("img")?.src;
+                parsePromises.push(pasteFromURI(imgSrc));
+            } else if (incomingData.types[i] == "application/json"){
+                // TODO(DONE) json paste
+                // in reality we'll probably not (never?) an "application/json" unless we have our own application supply this format.
+                let jc = JSON.parse(incomingData.getData("application/json"))
+                parsePromises.push(Promise.resolve(jc))
+            }
+        } catch (e) {
+            console.log(`format string {incomingData.types[i]} failed with exception {e}`);
+        }
+    }
+
+    // handle promises after collecting all of them. if we `await` in loop, we lose the eventData as drop event ends.
+    try {
+        const c = await Promise.any(parsePromises);
+        console.log("picked up creature!", c.name);
+        pasteCreature(c, x, y);
+    } catch (e) {
+        failureToRead("unreadable file! your creature may be corrupted.")
+        console.log(e);
+    }
+}
+
+
+canvas.ondragenter = canvas.ondragover = e=>e.preventDefault();
+canvas.ondrop = async (e) =>{
+    // TODO(DONE): read from PNG pixels
+    e.preventDefault();
+    const [x, y] = event2wld([e.offsetX, e.offsetY]);
+    await handlePasteOrDrop(e.dataTransfer, x, y);
+    return;
+}
+
+window.addEventListener('paste', async (e) => {
+    e.preventDefault();
+    await handlePasteOrDrop(e.clipboardData, 0, 0);
+    return;
+
+});
+
+document.querySelectorAll(".canvasOverlay").forEach((telem) => {
+    if (localStorage.getItem("seenIntro")) {
+        telem.style["pointer-events"] = "none";
+        telem.style["transition"] = "opacity 1s 0s";
+        telem.style["opacity"] = "0.0";
+    }
+
+    telem.addEventListener("pointerdown", (e) =>{
+        e.preventDefault();
+        telem.style["pointer-events"] = "none";
+        telem.style["transition"] = "opacity 1s 0s";
+        telem.style["opacity"] = "0.0";
+        if (telem.nextSibling.nextSibling.className == "canvasOverlay")  {
+            telem.nextSibling.nextSibling.style["opacity"] = "1.0";
+            telem.nextSibling.nextSibling.style["pointer-events"] = "auto";
+        } else {
+            localStorage["seenIntro"] = true;
+        }
+    });
+});
+
+$("#resetvi").onclick = () => {
+    $("#touch").style.opacity = "1.0";
+    $("#touch").style["pointer-events"] = "auto";
+};
+
+// add a "upload creature" special entry
+var uploadInput = document.createElement('input');
+uploadInput.type = 'file';
+uploadInput.click();
+uploadButton = document.createElement('div'); uploadButton.className = "previewContainer"; uploadButton.id = "uploadButton";
+uploadButton.innerHTML = "<span id='pluspan'>+</span>";
+$('#zoo').appendChild(uploadButton);
+uploadButton.onclick = (e) => {
+    uploadInput.click();
+}
+uploadInput.addEventListener("change", async (e) => {
+    console.log(uploadInput.files);
+    let c = await pasteFromFile(uploadInput.files[0]);
+    console.log("picked up creature!", c.name);
+    try {
+        pasteCreature(c, 0.0, 0.0, 1.0);
+        captureCreature(false, c, undefined, undefined, true);
+        lenia.clearSelection();
+    } catch (e) {
+        console.log("failed?");
+        console.log(e);
+    }
+}, false);
+</script>
