@@ -26,6 +26,7 @@ uniform float feedRate;           //! 0.1
 uniform float hungerMultiplier;   //! 2.0
 uniform float reproThreshold;     //! 0.8
 uniform float reproCost;          //! 0.4
+uniform float reproMinAge;        //! 100.0
 uniform float deathDissolveRadius; //! 5.0
 uniform float deathEnergyAmount;  //! 0.3
 uniform float deathEnergyFalloff; //! 2.0
@@ -758,8 +759,9 @@ class ParticleLenia {
             
             if (!isAlive(out0)) return;
             
-            // Check if ready to reproduce (energy >= threshold)
-            if (out1.y >= reproThreshold) {
+            // Check if ready to reproduce (energy >= threshold AND age >= minimum)
+            float age = out1.z;
+            if (out1.y >= reproThreshold && age >= reproMinAge) {
                 // Mark for reproduction by setting high w value (temporary flag)
                 // and deduct energy cost
                 out1 = vec4(out1.x, out1.y - reproCost, out1.z, 999.0);

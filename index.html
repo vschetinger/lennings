@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=17"> </script>
+<script src="lenia.js?v=18"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -303,6 +303,7 @@ resourceInteractionFolder.open();
 const reproFolder = lifeGui.addFolder('🔄 Reproduction');
 reproFolder.add(lenia.U, 'reproThreshold', 0.5, 1.0, 0.05).name('energy threshold');
 reproFolder.add(lenia.U, 'reproCost', 0.1, 0.5, 0.05).name('cost');
+reproFolder.add(lenia.U, 'reproMinAge', 0, 500, 10).name('min age');
 reproFolder.open();
 
 // Death parameters
@@ -462,8 +463,6 @@ function updateCellGraph() {
     const maxCount = lenia.max_point_n;
 
     cellCtx.clearRect(0, 0, w, h);
-    cellCtx.fillStyle = 'rgba(0,0,0,0.6)';
-    cellCtx.fillRect(0, 0, w, h);
 
     // Axes
     cellCtx.strokeStyle = 'rgba(255,255,255,0.1)';
