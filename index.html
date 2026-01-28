@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=4"> </script>
+<script src="lenia.js?v=5"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -266,7 +266,7 @@ const previewSize = 256 ;
 const previewFB = twgl.createFramebufferInfo(gl, null, previewSize, previewSize);
 previewFB.canvas = document.createElement('canvas');
 previewFB.canvas.width = previewFB.canvas.height = previewSize;
-previewFB.ctx = previewFB.canvas.getContext('2d');
+previewFB.ctx = previewFB.canvas.getContext('2d', { willReadFrequently: true });
 previewFB.im = previewFB.ctx.getImageData(0, 0, previewSize, previewSize);
 
 
@@ -953,12 +953,14 @@ document.querySelectorAll(".canvasOverlay").forEach((telem) => {
     telem.style["opacity"] = "0.0";
 });
 
-$("#resetvi").onclick = () => {
-    // Re-enable intro if user clicks to show instructions
-    localStorage.removeItem("seenIntro");
-    $("#touch").style.opacity = "1.0";
-    $("#touch").style["pointer-events"] = "auto";
-};
+// resetvi element removed - intro disabled
+if ($("#resetvi")) {
+    $("#resetvi").onclick = () => {
+        localStorage.removeItem("seenIntro");
+        $("#touch").style.opacity = "1.0";
+        $("#touch").style["pointer-events"] = "auto";
+    };
+}
 
 // add a "upload creature" special entry
 var uploadInput = document.createElement('input');

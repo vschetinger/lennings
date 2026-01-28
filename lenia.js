@@ -507,44 +507,38 @@ class ParticleLenia {
 
     consumeResources() {
         const gl = this.gl;
-        // Render particle consumption as gaussian splats
-        // Each particle depletes alpha in a small radius around it
-        this.runProgram(`
-        uniform float consumeRadius;  // World-space consumption radius
-        void main() {
-            // Position particle at its world position, scaled to resource texture UV space
-            vec4 p = texelFetch(state, idx, 0);
-            if (!isAlive(p)) {
-                gl_Position = vec4(0.0);
-                return;
-            }
-            // Map world position to clip space for resource texture
-            vec2 resUV = (p.xy / dishR) * 0.5 + 0.5;
-            vec2 clipPos = resUV * 2.0 - 1.0;
-            // Expand quad for consumption radius
-            float radiusUV = consumeRadius / dishR;
-            uv = quad * radiusUV;
-            gl_Position = vec4(clipPos + quad * radiusUV, 0.0, 1.0);
-        }
-        //FRAG
-        void main() {
-            float r = length(uv) * dishR;  // Convert back to world space
-            // Gaussian consumption profile
-            float consumption = exp(-r*r / 4.0) * resourceDecay;
-            // Output negative alpha for subtractive blending
-            out0 = vec4(0.0, 0.0, 0.0, consumption);
-        }`, {n: this.max_point_n, clear: true, dst: this.resourceTexDst, 
-             blend: [gl.ONE, gl.ONE]}, {consumeRadius: 3.0});
         
-        // Subtract consumption from resource texture
+        // Step 1: Copy current resource texture to dst buffer
         this.runProgram(`
-        uniform sampler2D consumptionTex;
         void main() {
-            vec4 res = texture(resourceTex, uv);
-            vec4 consumption = texture(consumptionTex, uv);
+            out0 = texture(resourceTex, uv);
+        }`, {dst: this.resourceTexDst});
+        
+        // Step 2: Render consumption + subtraction in one pass to resourceTex
+        // Reading from resourceTexDst, writing to resourceTex
+        this.runProgram(`
+        uniform sampler2D srcResourceTex;
+        void main() {
+            vec4 res = texture(srcResourceTex, uv);
+            
+            // Accumulate consumption from all particles
+            float consumption = 0.0;
+            ivec2 sz = textureSize(state, 0);
+            vec2 wldPos = (uv - 0.5) * 2.0 * dishR;  // Map UV to world position
+            
+            for (int i = 0; i < sz.y; ++i)
+            for (int j = 0; j < sz.x; ++j) {
+                vec4 p = texelFetch(state, ivec2(j, i), 0);
+                if (!isAlive(p)) continue;
+                float d = length(wldPos - p.xy);
+                if (d < 5.0) {
+                    consumption += exp(-d*d / 4.0) * resourceDecay;
+                }
+            }
+            
             // Deplete only alpha, keep RGB intact
-            out0 = vec4(res.rgb, max(0.0, res.a - consumption.a));
-        }`, {dst: this.resourceTex}, {consumptionTex: this.resourceTexDst.attachments[0]});
+            out0 = vec4(res.rgb, max(0.0, res.a - consumption));
+        }`, {dst: this.resourceTex}, {srcResourceTex: this.resourceTexDst.attachments[0]});
     }
 
     adjustFB(fb, width, height, attachments) {
