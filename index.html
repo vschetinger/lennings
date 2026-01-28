@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=15"> </script>
+<script src="lenia.js?v=16"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -224,6 +224,7 @@ const fps = 60.0;
 const params = {
     stepN: 1,
     targetFPS: 60,
+    renderMode: 1,  // 1=Main, 2=Trails
     viewCenter: [0.0, 0.0],
     viewExtent: 50.0,
     mousePos: [-10000.0, 0.0],
@@ -440,8 +441,10 @@ function animate(currentTime) {
     // Update FPS counter
     fpsFrameCount++;
     const now = performance.now();
+    const modeNames = ['', 'Main', 'Trails'];
+    const modeName = modeNames[params.renderMode] || `Mode ${params.renderMode}`;
     if (now - fpsLastTime >= 1000) {
-        document.getElementById('fps').textContent = `${fpsFrameCount} FPS | target: ${params.targetFPS} | steps: ${params.stepN}`;
+        document.getElementById('fps').textContent = `${fpsFrameCount} FPS | [${params.renderMode}] ${modeName} | steps: ${params.stepN}`;
         fpsFrameCount = 0;
         fpsLastTime = now;
     }
@@ -506,7 +509,19 @@ function animate(currentTime) {
             }
         }
     }
-    lenia.render(null, renderArgs);
+    
+    // Always accumulate trails (even when not viewing them)
+    lenia.accumulateTrails();
+    
+    // Render based on current mode
+    if (params.renderMode === 1) {
+        lenia.render(null, renderArgs);  // Main view
+    } else if (params.renderMode === 2) {
+        lenia.renderTrails(null, renderArgs);  // Trail view
+    } else {
+        lenia.render(null, renderArgs);  // Default to main
+    }
+    
     if (audioSystem.playing && params.oscillogram) {
          lenia.visAudio(null, audioSystem.audioFB.attachments[0])
     }
@@ -729,6 +744,11 @@ window.addEventListener('keydown', e=>{
         // If a texture was loaded, reload it; otherwise just reset particles
         lenia.reloadResourceImage(); // Reloads original texture if one exists
         lenia.reset();
+        lenia.clearTrails(); // Also clear trail accumulation
+    }
+    // Render mode switching (1-9)
+    if (e.key >= '1' && e.key <= '9') {
+        params.renderMode = parseInt(e.key);
     }
 });
 

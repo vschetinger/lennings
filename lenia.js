@@ -15,6 +15,7 @@ uniform sampler2D fieldR;     //! this.fieldR.attachments[0]
 uniform sampler2D selectBuf;  //! this.selectBuf.attachments[0]
 uniform sampler2D resourceTex;    //! this.resourceTex.attachments[0]
 uniform sampler2D prefBuf;        //! this.prefBuf.attachments[0]
+uniform sampler2D trailTex;       //! this.trailTex.attachments[0]
 uniform float dishR;          //! 75.0
 uniform float fieldScale;     //! 1.0
 // Life cycle parameters (controlled via left panel, not auto-sliders)
@@ -185,6 +186,10 @@ class ParticleLenia {
         this.resourceFormat = [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}];
         this.resourceTex = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
         this.resourceTexDst = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
+        
+        // Trail accumulation texture for particle path visualization
+        this.trailTex = twgl.createFramebufferInfo(gl, 
+            [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}], 1024, 1024);
 
         this.setupUniforms(gui);
     }
@@ -991,6 +996,73 @@ class ParticleLenia {
             vec3 brightColor = color * 1.2;
             out0 = vec4(brightColor * v * a, a) * pointsAlpha;
         }`, {dst:target, n:this.max_point_n, blend:[gl.ONE, gl.ONE_MINUS_SRC_ALPHA]}, {flipUD});
+    }
+
+    // ========== TRAIL VISUALIZATION METHODS ==========
+    
+    accumulateTrails() {
+        const gl = this.gl;
+        // Render each particle as a small colored dot into trailTex
+        // Using additive blending so trails build up over time
+        this.runProgram(`
+        out vec3 color;
+        void main() {
+            uv = quad * 0.5;  // Small dot size
+            Particle p = getParticle();
+            if (!p.visible) { 
+                gl_Position = vec4(0.0); 
+                return; 
+            }
+            // Map world position to trail texture clip space
+            vec2 texPos = (p.pos / dishR) * 0.5 + 0.5;
+            vec2 clipPos = texPos * 2.0 - 1.0;
+            float dotSize = 0.008;  // Size of trail dot
+            gl_Position = vec4(clipPos + uv * dotSize, 0.0, 1.0);
+            color = p.color;
+        }
+        //FRAG
+        in vec3 color;
+        void main() {
+            float r = length(uv);
+            float a = smoothstep(1.0, 0.0, r) * 0.05;  // Subtle paint accumulation
+            out0 = vec4(color * a, a);
+        }`, {n: this.max_point_n, dst: this.trailTex, blend: [gl.ONE, gl.ONE]});
+    }
+    
+    clearTrails() {
+        // Clear trail texture to black
+        this.runProgram(`
+        void main() { 
+            out0 = vec4(0.0, 0.0, 0.0, 0.0); 
+        }`, {dst: this.trailTex, clear: true});
+    }
+    
+    renderTrails(target, {viewCenter=[0,0], viewExtent=50.0, flipUD=false}={}) {
+        const {width, height} = target || this.gl.canvas;
+        const viewAspect = width / Math.max(1.0, height);
+        Object.assign(this.U, {viewCenter, viewExtent, viewAspect});
+        
+        // Render trail texture to screen with view transform
+        this.runProgram(`
+        uniform bool flipUD;
+        void main() {
+            vec2 p = flipUD ? vec2(uv.x, 1.0-uv.y) : uv;
+            vec2 wldPos = scr2wld(p * 2.0 - 1.0);
+            vec2 trailUV = (wldPos / dishR) * 0.5 + 0.5;
+            
+            // Sample trail texture
+            vec4 trail = texture(trailTex, trailUV);
+            
+            // Dark background with trail colors
+            vec3 bg = vec3(0.02, 0.02, 0.05);
+            vec3 color = bg + trail.rgb;
+            
+            // Boundary indicator
+            float d = length(wldPos) / dishR;
+            if (d > 1.0) color *= 0.3;
+            
+            out0 = vec4(color, 1.0);
+        }`, {dst: target}, {flipUD});
     }
 
     flipBuffers() {
