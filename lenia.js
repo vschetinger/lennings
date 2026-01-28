@@ -245,6 +245,100 @@ class ParticleLenia {
         gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, sx, sy, gl.RGBA, gl.UNSIGNED_BYTE, s.select);
     }
 
+    // CPU-side reproduction step with per-parent child cap.
+    // This is called infrequently (e.g. every K simulation steps) to avoid
+    // heavy GPU readbacks every frame, and to guarantee that each parent
+    // can produce at most `maxChildrenPerParent` offspring per reproduction step.
+    cpuReproductionStep(maxChildrenPerParent = 2) {
+        const { reproThreshold, reproMinAge, reproCost, dishR } = this.U;
+        const currentStep = this.stepCount || 0;
+        const { state0, state1, select } = this.fetchState();
+        const [sx, sy] = this.state_size;
+        const N = sx * sy;
+
+        const parents = [];
+        const empties = [];
+
+        for (let i = 0; i < N; ++i) {
+            const base = i * 4;
+            const x = state0[base + 0];
+            const energy = state1[base + 1];
+            const birthStep = state1[base + 2];
+            const alive = x > -10000.0; // same isAlive criterion as shaders
+
+            if (alive) {
+                const age = currentStep - birthStep;
+                if (energy >= reproThreshold && age >= reproMinAge) {
+                    parents.push(i);
+                }
+            } else {
+                empties.push(i);
+            }
+        }
+
+        if (!parents.length || !empties.length || maxChildrenPerParent <= 0) {
+            // Nothing to do; push state back unchanged so caller doesn't
+            // have to special-case.
+            this.pushState({ state0, state1, select });
+            return;
+        }
+
+        // For each parent, assign up to maxChildrenPerParent empty slots.
+        for (let pi = 0; pi < parents.length; ++pi) {
+            if (!empties.length) break;
+            const pIdx = parents[pi];
+            const pBase = pIdx * 4;
+            const px = state0[pBase + 0];
+            const py = state0[pBase + 1];
+
+            let childrenForParent = 0;
+
+            while (childrenForParent < maxChildrenPerParent && empties.length) {
+                const emptyIdx = empties.pop();
+                const cBase = emptyIdx * 4;
+
+                // Sample a random offset around the parent, similar to the GPU logic.
+                const angle = Math.random() * Math.PI * 2.0;
+                const dist = 1.0 + Math.random() * 2.0;
+                let cx = px + Math.cos(angle) * dist;
+                let cy = py + Math.sin(angle) * dist;
+
+                // Keep child within dish radius.
+                const len = Math.hypot(cx, cy);
+                if (len > dishR) {
+                    const scale = dishR / len;
+                    cx *= scale;
+                    cy *= scale;
+                }
+
+                // Write child position (same layout as shaders: (pos, pos))
+                state0[cBase + 0] = cx;
+                state0[cBase + 1] = cy;
+                state0[cBase + 2] = cx;
+                state0[cBase + 3] = cy;
+
+                // Initialize child life state:
+                // (repulsion, energy, birthStep, clock)
+                state1[cBase + 0] = 0.5;
+                state1[cBase + 1] = reproCost * 0.5;
+                state1[cBase + 2] = currentStep;
+                state1[cBase + 3] = 0.0;
+
+                childrenForParent++;
+            }
+
+            if (childrenForParent > 0) {
+                // Charge the parent a single reproduction cost for this step,
+                // matching the original GPU semantics (one cost even if
+                // multiple children are spawned).
+                const b = pBase;
+                state1[b + 1] = Math.max(0.0, state1[b + 1] - reproCost);
+            }
+        }
+
+        this.pushState({ state0, state1, select });
+    }
+
     captureCreature() {
         const {dim_n} = this;
         const {state0, select} = this.fetchState();

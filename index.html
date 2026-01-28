@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=20"> </script>
+    <script src="lenia.js?v=21"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -304,6 +304,12 @@ const reproFolder = lifeGui.addFolder('🔄 Reproduction');
 reproFolder.add(lenia.U, 'reproThreshold', 0.5, 1.0, 0.05).name('energy threshold');
 reproFolder.add(lenia.U, 'reproCost', 0.1, 0.5, 0.05).name('cost');
 reproFolder.add(lenia.U, 'reproMinAge', 0, 500, 10).name('min age');
+params.useCpuRepro = true;
+params.maxChildrenPerParent = 2;
+params.reproInterval = 50;
+reproFolder.add(params, 'useCpuRepro').name('CPU reproduction');
+reproFolder.add(params, 'maxChildrenPerParent', 1, 8, 1).name('max children/parent');
+reproFolder.add(params, 'reproInterval', 5, 200, 5).name('interval (steps)');
 reproFolder.open();
 
 // Death parameters
@@ -564,7 +570,15 @@ function animate(currentTime) {
                 lenia.processDeaths();
             }
             if (params.enableReproduction) {
-                lenia.processReproduction();
+                if (params.useCpuRepro) {
+                    // CPU-side reproduction: check only every K steps
+                    if ((lenia.stepCount || 0) % params.reproInterval === 0) {
+                        lenia.cpuReproductionStep(params.maxChildrenPerParent);
+                    }
+                } else {
+                    // Original GPU-only reproduction (can create large bursts)
+                    lenia.processReproduction();
+                }
             }
         }
     }
