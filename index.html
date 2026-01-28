@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=3"> </script>
+<script src="lenia.js?v=4"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -40,7 +40,13 @@
     label {display:inline-block; width:80px}
     body { 
         scroll-snap-type: y mandatory;
-        font-family:Verdana, Geneva, Tahoma, sans-serif; margin: 5px; user-select: none; -webkit-touch-callout: none; -webkit-user-select:none;}
+        font-family:Verdana, Geneva, Tahoma, sans-serif; 
+        margin: 0; 
+        padding: 0;
+        overflow: hidden;
+        user-select: none; -webkit-touch-callout: none; -webkit-user-select:none;
+        background: #111;
+    }
 
     .preview {
         width: 128px;
@@ -50,7 +56,11 @@
     }
     #c {
         scroll-snap-align: start;
-        width: 100%; height: 50vh; touch-action: none; user-select: none; -webkit-touch-callout: none; -webkit-user-select:none;}
+        width: 100vw; 
+        height: 100vh; 
+        display: block;
+        touch-action: none; user-select: none; -webkit-touch-callout: none; -webkit-user-select:none;
+    }
     .previewContainer { 
         scroll-snap-align: start;
         display: inline-block; position: relative; 
@@ -69,12 +79,20 @@
       cursor: pointer;
     }
 
-    h1, p {margin: 10px}
+    h1, p {margin: 0; display: none;}
     a:link {font-size: larger; text-decoration: none; }
 
     #container {
-        position: relative;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
         touch-action: none; user-select: none; -webkit-touch-callout: none; -webkit-user-select:none;
+    }
+    
+    #stat {
+        display: none;
     }
 
     .canvasOverlay {
@@ -122,6 +140,7 @@
     }
 
     #zoo {
+        display: none; /* Hidden for now - will be a popup later */
         scroll-snap-align: end;
         width: 90%;
         height: 320px;
@@ -150,28 +169,7 @@
 
 </style>
 
-<h1 id="title">Particle Lenia</h1>
-<p>
-    <a href="https://znah.net">Alexander Mordvintsev</a> |
-    <a href="https://eyvind.me/">Eyvind Niklasson</a> |
-    <a href="https://oteret.github.io/">Ettore Randazzo</a> <br>
-<p>
-<a href="https://google-research.github.io/self-organising-systems/particle-lenia/">📝 Read article</a>
-</p>
-
-<details>
-<summary> Instructions </summary>
-To <b>save creatures</b>, press the download icon or drag them to your desktop. <br> 
-To <b>bring them back to life</b>, <b>drag and drop</b> them into the demo from most places (e.g. Twitter).<br>
-To <b>pan around</b>, click and drag, or zoom with with your scroll wheel. <br>
-To <b>capture a creature</b> and save it in your Zoo, press space bar, click and drag to select particles, and space-bar again to complete the save.<br>
-To <b>herd particles</b>, click and hold in the same spot for one second.<br>
-To <b>spawn new particles</b>, double click and hold.<br>
-To <b>load a resource image</b>, use the Resources panel or <b>shift+drag</b> an image onto the canvas. Particles will be attracted to colors based on their preferences!<br>
-<span id="resetvi"><u>(click to show visual instructions)</u></span>
-</details>
-<!-- <p><a href="https://colab.research.google.com/drive/1e4dVTsZHcVyEzZe6k9atY41Yk0DIzTVH?resourcekey=0-OeCOX1DD1zcn_orSywTrNg&usp=sharing">Colab version</a></p> -->
-<!-- <p>Related work: <a href="https://chakazul.github.io/lenia.html">Lenia</a>, <a href="https://sites.google.com/corp/view/flowlenia/">FlowLenia</a> </p> -->
+<!-- Header and instructions hidden for cleaner view -->
 
 <div id="container">
 <div class="canvasOverlay" id="touch"><img src="touch.svg"></img><br>touch / click and drag to pan</div>
@@ -726,7 +724,7 @@ canvas.addEventListener("pointermove", e => {
         if (otherTouch > -1){
             const [x, y] = event2wld(cXY);
             const ext = params.viewExtent*s;
-            params.viewExtent = Math.max(6.0, Math.min(ext, lenia.dishR*2.0+10.0));
+            params.viewExtent = Math.max(4.0, Math.min(ext, lenia.dishR*4.0));
             if (params.viewExtent == ext) {
                 const [cx, cy] = params.viewCenter;
                 params.viewCenter = [x+(cx-x)*s, y+(cy-y)*s];
@@ -780,7 +778,7 @@ canvas.addEventListener('wheel', e=>{
     const [x, y] = event2wld([e.offsetX, e.offsetY]);
     const s = Math.exp(e.deltaY*0.01);
     const ext = params.viewExtent*s;
-    params.viewExtent = Math.max(6.0, Math.min(ext, lenia.dishR*2.0+10.0));
+    params.viewExtent = Math.max(4.0, Math.min(ext, lenia.dishR*4.0));
     if (params.viewExtent == ext) {
         const [cx, cy] = params.viewCenter;
         params.viewCenter = [x+(cx-x)*s, y+(cy-y)*s];
