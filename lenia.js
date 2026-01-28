@@ -213,6 +213,22 @@ class ParticleLenia {
         return {state0, state1, select};
     }
     
+    getAliveCount() {
+        const gl = this.gl;
+        const [sx, sy] = this.state_size;
+        const buf = new Float32Array(sx * sy * 4);
+        twgl.bindFramebufferInfo(gl, this.src);
+        gl.readBuffer(gl.COLOR_ATTACHMENT0);
+        gl.readPixels(0, 0, sx, sy, gl.RGBA, gl.FLOAT, buf);
+        twgl.bindFramebufferInfo(gl, null);
+        let count = 0;
+        for (let i = 0; i < sx * sy; ++i) {
+            const x = buf[i * 4];
+            if (x > -10000.0) count++;  // same isAlive criterion
+        }
+        return count;
+    }
+    
     pushState(s) {
         const gl = this.gl;
         const [sx, sy] = this.state_size;

@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=16"> </script>
+<script src="lenia.js?v=17"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -208,6 +208,7 @@
 <div id="zoo"></div>
 <pre id="stat"></pre>
 <div id="fps" style="position:fixed; bottom:10px; left:10px; color:#666; font-family:monospace; font-size:12px; z-index:1000; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:4px;"></div>
+<canvas id="cellGraph" style="position:fixed; left:0; bottom:0; width:100vw; height:80px; z-index:900; display:none; pointer-events:none;"></canvas>
 
 <script>
 
@@ -225,6 +226,7 @@ const params = {
     stepN: 1,
     targetFPS: 60,
     renderMode: 1,  // 1=Main, 2=Trails
+    showCellGraph: false,
     // Spawn controls
     spawnCount: 512,
     spawnCenter: [0.0, 0.0],
@@ -431,6 +433,58 @@ async function toggleRecord() {
 let fpsFrameCount = 0;
 let fpsLastTime = performance.now();
 let lastFrameTime = 0;
+let lastCellCount = 0;
+
+// Cell count graph
+const cellGraph = document.getElementById('cellGraph');
+const cellCtx = cellGraph.getContext('2d');
+let cellHistory = [];
+const maxCellSamples = 600;  // last 10 seconds at 60 FPS
+
+function updateCellGraph() {
+    if (!params.showCellGraph) {
+        cellGraph.style.display = 'none';
+        return;
+    }
+    cellGraph.style.display = 'block';
+
+    // Push current count every frame
+    const count = lenia.getAliveCount();
+    cellHistory.push(count);
+    if (cellHistory.length > maxCellSamples) cellHistory.shift();
+
+    // Resize to current viewport
+    cellGraph.width = cellGraph.clientWidth;
+    cellGraph.height = cellGraph.clientHeight;
+
+    const w = cellGraph.width;
+    const h = cellGraph.height;
+    const maxCount = lenia.max_point_n;
+
+    cellCtx.clearRect(0, 0, w, h);
+    cellCtx.fillStyle = 'rgba(0,0,0,0.6)';
+    cellCtx.fillRect(0, 0, w, h);
+
+    // Axes
+    cellCtx.strokeStyle = 'rgba(255,255,255,0.1)';
+    cellCtx.beginPath();
+    cellCtx.moveTo(0, h-0.5);
+    cellCtx.lineTo(w, h-0.5);
+    cellCtx.stroke();
+
+    // Line
+    if (cellHistory.length > 0) {
+        cellCtx.strokeStyle = '#4af2a1';
+        cellCtx.lineWidth = 2;
+        cellCtx.beginPath();
+        cellHistory.forEach((c, i) => {
+            const x = (i / Math.max(1, cellHistory.length - 1)) * w;
+            const y = h - (c / maxCount) * (h - 4) - 2;
+            if (i === 0) cellCtx.moveTo(x, y); else cellCtx.lineTo(x, y);
+        });
+        cellCtx.stroke();
+    }
+}
 
 function animate(currentTime) {
     if (onair) return;
@@ -449,7 +503,8 @@ function animate(currentTime) {
     const modeNames = ['', 'Main', 'Trails'];
     const modeName = modeNames[params.renderMode] || `Mode ${params.renderMode}`;
     if (now - fpsLastTime >= 1000) {
-        document.getElementById('fps').textContent = `${fpsFrameCount} FPS | [${params.renderMode}] ${modeName} | steps: ${params.stepN}`;
+        lastCellCount = lenia.getAliveCount();
+        document.getElementById('fps').textContent = `${fpsFrameCount} FPS | [${params.renderMode}] ${modeName} | cells: ${lastCellCount} | steps: ${params.stepN}`;
         fpsFrameCount = 0;
         fpsLastTime = now;
     }
@@ -526,6 +581,9 @@ function animate(currentTime) {
     } else {
         lenia.render(null, renderArgs);  // Default to main
     }
+    
+    // Update cell count graph
+    updateCellGraph();
     
     if (audioSystem.playing && params.oscillogram) {
          lenia.visAudio(null, audioSystem.audioFB.attachments[0])
@@ -759,6 +817,10 @@ window.addEventListener('keydown', e=>{
     // Render mode switching (1-9)
     if (e.key >= '1' && e.key <= '9') {
         params.renderMode = parseInt(e.key);
+    }
+    // Toggle cell count graph
+    if (e.key === 'q' || e.key === 'Q') {
+        params.showCellGraph = !params.showCellGraph;
     }
 });
 
