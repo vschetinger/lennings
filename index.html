@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=11"> </script>
+<script src="lenia.js?v=12"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -280,6 +280,12 @@ energyFolder.add(lenia.U, 'energyDecay', 0, 0.01, 0.0001).name('decay rate');
 energyFolder.add(lenia.U, 'feedRate', 0, 0.5, 0.01).name('feed rate');
 energyFolder.add(lenia.U, 'hungerMultiplier', 0, 5, 0.1).name('hunger boost');
 energyFolder.open();
+
+// Resource interaction parameters
+const resourceInteractionFolder = lifeGui.addFolder('🍎 Resources');
+resourceInteractionFolder.add(lenia.U, 'resourceAttraction', 0, 5, 0.1).name('attraction');
+resourceInteractionFolder.add(lenia.U, 'resourceDecay', 0, 0.1, 0.001).name('consumption rate');
+resourceInteractionFolder.open();
 
 // Reproduction parameters  
 const reproFolder = lifeGui.addFolder('🔄 Reproduction');

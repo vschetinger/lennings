@@ -17,19 +17,18 @@ uniform sampler2D resourceTex;    //! this.resourceTex.attachments[0]
 uniform sampler2D prefBuf;        //! this.prefBuf.attachments[0]
 uniform float dishR;          //! 75.0
 uniform float fieldScale;     //! 1.0
-uniform float resourceAttraction; //! slider(1.0, [0.0, 5.0], 0.1)
-uniform float resourceDecay;      //! slider(0.01, [0.0, 0.1], 0.001)
-
-// Life cycle parameters
-uniform float energyDecay;        //! slider(0.001, [0.0, 0.01], 0.0001)
-uniform float feedRate;           //! slider(0.1, [0.0, 0.5], 0.01)
-uniform float hungerMultiplier;   //! slider(2.0, [0.0, 5.0], 0.1)
-uniform float reproThreshold;     //! slider(0.8, [0.5, 1.0], 0.05)
-uniform float reproCost;          //! slider(0.4, [0.1, 0.5], 0.05)
-uniform float deathDissolveRadius; //! slider(5.0, [1.0, 20.0], 1.0)
-uniform float deathEnergyAmount;  //! slider(0.3, [0.0, 1.0], 0.05)
-uniform float deathEnergyFalloff; //! slider(2.0, [0.5, 10.0], 0.5)
-uniform float deathAgeScale;      //! slider(0.002, [0.0, 0.01], 0.001)
+// Life cycle parameters (controlled via left panel, not auto-sliders)
+uniform float resourceAttraction; //! 1.0
+uniform float resourceDecay;      //! 0.01
+uniform float energyDecay;        //! 0.001
+uniform float feedRate;           //! 0.1
+uniform float hungerMultiplier;   //! 2.0
+uniform float reproThreshold;     //! 0.8
+uniform float reproCost;          //! 0.4
+uniform float deathDissolveRadius; //! 5.0
+uniform float deathEnergyAmount;  //! 0.3
+uniform float deathEnergyFalloff; //! 2.0
+uniform float deathAgeScale;      //! 0.002
 
 uniform float baseFreq;       //! slider(100.0, [20.0, 1000.0], 1.0)
 uniform float clockExp;       //! slider(4.0, [1.0, 10.0], 0.1)
