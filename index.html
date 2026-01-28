@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=9"> </script>
+<script src="lenia.js?v=10"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -290,6 +290,10 @@ reproFolder.open();
 // Death parameters
 const deathFolder = lifeGui.addFolder('💀 Death');
 deathFolder.add(lenia.U, 'deathDissolveRadius', 1, 20, 1).name('dissolve radius');
+deathFolder.add(lenia.U, 'deathEnergyAmount', 0, 1, 0.05).name('energy amount');
+deathFolder.add(lenia.U, 'deathEnergyFalloff', 0.5, 10, 0.5).name('falloff (2=gauss)');
+deathFolder.add(lenia.U, 'deathAgeScale', 0, 0.01, 0.001).name('age scaling');
+deathFolder.open();
 
 // Hidden file input for resource images
 const resourceInput = document.createElement('input');
@@ -690,6 +694,7 @@ window.addEventListener('keydown', e=>{
     }
     if (e.key == 'r') {
         lenia.reset();
+        lenia.clearResources();
     }
 });
 

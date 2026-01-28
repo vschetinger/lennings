@@ -27,6 +27,9 @@ uniform float hungerMultiplier;   //! slider(2.0, [0.0, 5.0], 0.1)
 uniform float reproThreshold;     //! slider(0.8, [0.5, 1.0], 0.05)
 uniform float reproCost;          //! slider(0.4, [0.1, 0.5], 0.05)
 uniform float deathDissolveRadius; //! slider(5.0, [1.0, 20.0], 1.0)
+uniform float deathEnergyAmount;  //! slider(0.3, [0.0, 1.0], 0.05)
+uniform float deathEnergyFalloff; //! slider(2.0, [0.5, 10.0], 0.5)
+uniform float deathAgeScale;      //! slider(0.002, [0.0, 0.01], 0.001)
 
 uniform float baseFreq;       //! slider(100.0, [20.0, 1000.0], 1.0)
 uniform float clockExp;       //! slider(4.0, [1.0, 10.0], 0.1)
@@ -626,11 +629,17 @@ class ParticleLenia {
                 
                 // This particle is dying - calculate dissolution
                 float d = length(wldPos - p.xy);
-                float radius = deathDissolveRadius * (1.0 + age * 0.001);
+                
+                // Parametric radius: base + age contribution
+                float radius = deathDissolveRadius * (1.0 + age * deathAgeScale);
                 
                 if (d < radius * 2.0) {
-                    // Gaussian brush centered on death location
-                    float intensity = exp(-d*d / (radius * radius * 0.5)) * min(age * 0.002, 0.5);
+                    // Parametric falloff distribution: exp(-d^falloff / radius^falloff)
+                    // falloff=2 is Gaussian, <2 is softer/wider, >2 is sharper/more concentrated
+                    float normalizedDist = d / radius;
+                    float falloffTerm = pow(normalizedDist, deathEnergyFalloff);
+                    float intensity = exp(-falloffTerm) * deathEnergyAmount * min(age * deathAgeScale, 0.5);
+                    
                     vec3 pref = texelFetch(prefBuf, ivec2(j, i), 0).rgb;
                     addedColor += pref * intensity;
                     addedAlpha += intensity;
@@ -638,7 +647,7 @@ class ParticleLenia {
             }
             
             // Blend new dissolution with existing resources
-            out0 = vec4(res.rgb + addedColor * 0.3, min(res.a + addedAlpha * 0.3, 1.0));
+            out0 = vec4(res.rgb + addedColor, min(res.a + addedAlpha, 1.0));
         }`, {dst: this.resourceTex}, {srcResourceTex: this.resourceTexDst.attachments[0]});
         
         // Step 3: Mark dead particles (energy <= 0) as inactive
