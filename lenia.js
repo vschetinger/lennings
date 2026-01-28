@@ -256,6 +256,13 @@ class ParticleLenia {
         const [sx, sy] = this.state_size;
         const N = sx * sy;
 
+        // Also fetch preference buffer so children can inherit/mutate parent color.
+        const gl = this.gl;
+        const prefBufData = new Float32Array(sx * sy * 4);
+        twgl.bindFramebufferInfo(gl, this.prefBuf);
+        gl.readPixels(0, 0, sx, sy, gl.RGBA, gl.FLOAT, prefBufData);
+        twgl.bindFramebufferInfo(gl, null);
+
         const parents = [];
         const empties = [];
 
@@ -290,6 +297,10 @@ class ParticleLenia {
             const pBase = pIdx * 4;
             const px = state0[pBase + 0];
             const py = state0[pBase + 1];
+            const prefBase = pBase;
+            const parentR = prefBufData[prefBase + 0];
+            const parentG = prefBufData[prefBase + 1];
+            const parentB = prefBufData[prefBase + 2];
 
             let childrenForParent = 0;
 
@@ -324,6 +335,22 @@ class ParticleLenia {
                 state1[cBase + 2] = currentStep;
                 state1[cBase + 3] = 0.0;
 
+                // Inherit and slightly mutate parent preference color
+                const childPrefBase = cBase;
+                const mutation = 0.1;
+                const mutate = () => (Math.random() - 0.5) * mutation;
+                let cr = parentR + mutate();
+                let cg = parentG + mutate();
+                let cb = parentB + mutate();
+                // Keep within [0,1] to avoid weird artifacts
+                cr = Math.min(1.0, Math.max(0.0, cr));
+                cg = Math.min(1.0, Math.max(0.0, cg));
+                cb = Math.min(1.0, Math.max(0.0, cb));
+                prefBufData[childPrefBase + 0] = cr;
+                prefBufData[childPrefBase + 1] = cg;
+                prefBufData[childPrefBase + 2] = cb;
+                prefBufData[childPrefBase + 3] = 1.0;
+
                 childrenForParent++;
             }
 
@@ -337,6 +364,10 @@ class ParticleLenia {
         }
 
         this.pushState({ state0, state1, select });
+
+        // Push updated preferences back to GPU
+        gl.bindTexture(gl.TEXTURE_2D, this.prefBuf.attachments[0]);
+        gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, sx, sy, gl.RGBA, gl.FLOAT, prefBufData);
     }
 
     captureCreature() {
