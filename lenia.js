@@ -29,6 +29,7 @@ uniform float deathDissolveRadius; //! 5.0
 uniform float deathEnergyAmount;  //! 0.3
 uniform float deathEnergyFalloff; //! 2.0
 uniform float deathAgeScale;      //! 0.002
+uniform float hueThreshold;       //! 30.0
 
 uniform float baseFreq;       //! slider(100.0, [20.0, 1000.0], 1.0)
 uniform float clockExp;       //! slider(4.0, [1.0, 10.0], 0.1)
@@ -69,6 +70,22 @@ bool isTouched(vec2 pos) {
 }
 bool isAlive(vec4 state) { 
     return state.x > -10000.0;
+}
+
+// RGB to HSV conversion - returns vec3(hue, saturation, value) where hue is 0-1
+vec3 rgb2hsv(vec3 c) {
+    vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+// Calculate angular distance between two hues (handles wraparound)
+float hueDistance(float h1, float h2) {
+    float diff = abs(h1 - h2);
+    return min(diff, 1.0 - diff);  // Hue is circular, so wrap at 1.0
 }
 `;
 const vp_prefix = prefix+`
@@ -342,11 +359,30 @@ class ParticleLenia {
             return vec4(s.xyz, clock);
         }
         
-        // Sample resource field value weighted by particle preferences
+        // Sample resource field value using HSV hue matching
         float sampleResource(vec2 wldPos, vec3 pref) {
             vec2 resUV = (wldPos / dishR) * 0.5 + 0.5;
             vec4 res = texture(resourceTex, resUV);
-            return dot(pref, res.rgb) * res.a;
+            
+            // Convert both colors to HSV
+            vec3 prefHSV = rgb2hsv(pref);
+            vec3 resHSV = rgb2hsv(res.rgb);
+            
+            float myHue = prefHSV.x;
+            float resHue = resHSV.x;
+            float resSat = resHSV.y;  // Use saturation to ignore gray pixels
+            
+            // Calculate angular hue distance (0-0.5 range due to wraparound)
+            float hueDiff = hueDistance(myHue, resHue);
+            float threshold = hueThreshold / 360.0;  // Convert degrees to 0-1 range
+            
+            // Attraction falls off linearly as hue difference approaches threshold
+            // Multiply by saturation so gray pixels don't attract
+            float attraction = hueDiff < threshold 
+                ? (1.0 - hueDiff / threshold) * resSat 
+                : 0.0;
+            
+            return attraction * res.a;
         }
         
         void main() {
