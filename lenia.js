@@ -158,8 +158,9 @@ class ParticleLenia {
         this.fieldR = twgl.createFramebufferInfo(gl, this.fieldFormat, 512, 512);
         this.selectBuf = twgl.createFramebufferInfo(gl, [{}], sx, sy);
         
-        // Preferences buffer for RGB resource preferences per particle (static)
+        // Preferences buffer for RGB resource preferences per particle (double-buffered for reproduction)
         this.prefBuf = twgl.createFramebufferInfo(gl, [{internalFormat: gl.RGBA32F}], sx, sy);
+        this.prefBufDst = twgl.createFramebufferInfo(gl, [{internalFormat: gl.RGBA32F}], sx, sy);
         
         // Resource texture for RGBA environmental fields (double-buffered for consumption)
         this.resourceFormat = [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}];
@@ -745,9 +746,9 @@ class ParticleLenia {
         this.flipBuffers();
         
         // Pass 3: Initialize child preferences (mutation from parent)
-        // Note: This is a limitation - we need a separate prefBuf update
-        // For now, children inherit some mutation from their spawned position
+        // Use double-buffer: read from prefBuf, write to prefBufDst
         this.runProgram(`
+        uniform sampler2D srcPrefBuf;
         float hash(float n) { return fract(sin(n) * 43758.5453); }
         
         void main() {
@@ -755,7 +756,7 @@ class ParticleLenia {
             ivec2 sz = textureSize(state, 0);
             int idx = ij.y * sz.x + ij.x;
             
-            vec4 currentPref = texelFetch(prefBuf, ij, 0);
+            vec4 currentPref = texelFetch(srcPrefBuf, ij, 0);
             vec4 p = texelFetch(state, ij, 0);
             vec4 s1 = texelFetch(state1, ij, 0);
             
@@ -776,7 +777,7 @@ class ParticleLenia {
                     float d = length(other.xy - p.xy);
                     if (d < closestDist) {
                         closestDist = d;
-                        inheritedPref = texelFetch(prefBuf, ivec2(j, i), 0).rgb;
+                        inheritedPref = texelFetch(srcPrefBuf, ivec2(j, i), 0).rgb;
                     }
                 }
                 
@@ -793,7 +794,14 @@ class ParticleLenia {
             } else {
                 out0 = currentPref;
             }
-        }`, {dst: this.prefBuf});
+        }`, {dst: this.prefBufDst}, {srcPrefBuf: this.prefBuf.attachments[0]});
+        
+        // Pass 4: Copy prefBufDst back to prefBuf
+        this.runProgram(`
+        uniform sampler2D srcPref;
+        void main() {
+            out0 = texelFetch(srcPref, ivec2(gl_FragCoord.xy), 0);
+        }`, {dst: this.prefBuf}, {srcPref: this.prefBufDst.attachments[0]});
     }
 
     adjustFB(fb, width, height, attachments) {
