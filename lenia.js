@@ -20,6 +20,14 @@ uniform float fieldScale;     //! 1.0
 uniform float resourceAttraction; //! slider(1.0, [0.0, 5.0], 0.1)
 uniform float resourceDecay;      //! slider(0.01, [0.0, 0.1], 0.001)
 
+// Life cycle parameters
+uniform float energyDecay;        //! slider(0.001, [0.0, 0.01], 0.0001)
+uniform float feedRate;           //! slider(0.1, [0.0, 0.5], 0.01)
+uniform float hungerMultiplier;   //! slider(2.0, [0.0, 5.0], 0.1)
+uniform float reproThreshold;     //! slider(0.8, [0.5, 1.0], 0.05)
+uniform float reproCost;          //! slider(0.4, [0.1, 0.5], 0.05)
+uniform float deathDissolveRadius; //! slider(5.0, [1.0, 20.0], 1.0)
+
 uniform float baseFreq;       //! slider(100.0, [20.0, 1000.0], 1.0)
 uniform float clockExp;       //! slider(4.0, [1.0, 10.0], 0.1)
 uniform float audioVolume;    //! slider(0.1, [0.0, 3.0], 0.1)
@@ -81,19 +89,28 @@ Particle getParticle() {
     vec4 p1 = texelFetch(state1, idx, 0);
     vec4 pref = texelFetch(prefBuf, idx, 0);
     float repulsionPotential = p1.x;
+    float particleEnergy = p1.y;  // Life energy (0 to 1)
     bool selected = texelFetch(selectBuf, idx, 0).x > 0.0;
     res.visible = selectedOnly ? selected : isAlive(p);
     if (!res.visible) 
       return res;
     res.pos = p.xy;
     res.pref = normalize(abs(pref.rgb) + 0.01);
-    res.color = res.pref;  // Color by preference
+    
+    // Color by preference, dimmed by energy level
+    float energyBrightness = 0.4 + 0.6 * clamp(particleEnergy, 0.0, 1.0);
+    res.color = res.pref * energyBrightness;
+    
     res.clock = p1.w;
     if (!selectedOnly) {
         if (selected) {res.color = vec3(1.5, 0.1, 0.1);}
         else if (isTouched(res.pos)) {res.color = vec3(1.5, 0.5, 0.5);}
     }
-    res.radius = (0.25 + 0.75/(repulsionPotential*2.0))*0.5;
+    
+    // Radius based on repulsion and energy - smaller when hungry
+    float baseRadius = (0.25 + 0.75/(repulsionPotential*2.0))*0.5;
+    float energyScale = 0.6 + 0.4 * clamp(particleEnergy, 0.0, 1.0);
+    res.radius = baseRadius * energyScale;
     //res.radius *= cos(res.clock*tau)*0.5+0.5;
     return res;
 }
@@ -253,18 +270,21 @@ class ParticleLenia {
         this.runProgram(`
         uniform int n;
         void main() {
-            out1 = vec4(0.0);
             ivec2 ij = ivec2(gl_FragCoord.xy);
             ivec2 sz = textureSize(state, 0);
             int idx = ij.y*sz.x+ij.x;
             if (idx>=n) {
                 out0 = vec4(-20000);
+                out1 = vec4(0.0);
                 return;
             }
             float r = sqrt(float(idx)*0.5+0.25);
             float a = 2.4*float(idx);
             vec2 p = vec2(sin(a)*r, cos(a)*r);
             out0 = vec4(p, p);
+            // Initialize state1: (rep, energy, age, clock)
+            // Start with full energy (1.0), age 0
+            out1 = vec4(0.5, 1.0, 0.0, 0.0);
         }`, {dst:this.dst}, {n});
         this.flipBuffers();
         
@@ -313,8 +333,8 @@ class ParticleLenia {
         uniform float clockRate;
         uniform bool paused;
         vec4 updateClock(vec4 s) {
-            float energy = s.y;
-            float rate = exp2(energy*clockExp);
+            float myEnergy = s.y;
+            float rate = exp2(myEnergy*clockExp);
             float clock = mod(s.w + clockRate*rate, 1.0);
             return vec4(s.xyz, clock);
         }
@@ -335,10 +355,22 @@ class ParticleLenia {
                 return;
             }
             out1 = texelFetch(state1, ij, 0);
+            
+            // Read life cycle state: state1 = (rep, energy, age, clock)
+            float myEnergy = out1.y;
+            float myAge = out1.z;
+            
             if (paused) {
                 out1 = updateClock(out1);
                 return;
             }
+            
+            // Increment age
+            myAge += 1.0;
+            
+            // Passive energy decay
+            myEnergy -= energyDecay;
+            
             vec2 pos=out0.xy;
             if (isTouched(pos)) {
                 vec2 d = normalize(touchPos-pos);
@@ -385,15 +417,28 @@ class ParticleLenia {
             float rD = sampleResource(pos - vec2(0.0, texelSize), myPref);
             float rU = sampleResource(pos + vec2(0.0, texelSize), myPref);
             vec2 resourceGrad = vec2(rR - rL, rU - rD) / (2.0 * texelSize);
-            dpos += resourceGrad * resourceAttraction;
+            
+            // Feed on resources - gain energy from current position
+            float foodValue = rC;
+            myEnergy += foodValue * feedRate;
+            
+            // Hunger multiplier - low energy = stronger attraction to food
+            float hungerFactor = 1.0 + (1.0 - clamp(myEnergy, 0.0, 1.0)) * hungerMultiplier;
+            dpos += resourceGrad * resourceAttraction * hungerFactor;
+            
+            // Clamp energy to valid range
+            myEnergy = clamp(myEnergy, 0.0, 1.0);
             
             vec2 prevPos = out0.zw;
             pos += (pos - prevPos)*0.5 + dpos*0.5*dt;
             pos /= max(1.0, length(pos)/dishR);
-            float energy = rep*repulsion-field;
-            float force = length(dpos);
+            
+            // Update clock based on energy
+            float clock = mod(out1.w + clockRate * exp2(myEnergy * clockExp), 1.0);
+            
             out0 = vec4(pos, out0.xy);
-            out1 = updateClock(vec4(rep, energy, force, out1.w));
+            // Store: (repulsion, energy, age, clock)
+            out1 = vec4(rep, myEnergy, myAge, clock);
         }`, {dst:this.dst}, {clockRate, paused});
         this.flipBuffers();
     }
@@ -542,6 +587,213 @@ class ParticleLenia {
             // Deplete only alpha, keep RGB intact
             out0 = vec4(res.rgb, max(0.0, res.a - consumption));
         }`, {dst: this.resourceTex}, {srcResourceTex: this.resourceTexDst.attachments[0]});
+    }
+
+    processDeaths() {
+        const gl = this.gl;
+        
+        // Step 1: Copy current resource texture to dst buffer (used as source)
+        this.runProgram(`
+        void main() {
+            out0 = texture(resourceTex, uv);
+        }`, {dst: this.resourceTexDst});
+        
+        // Step 2: Render death dissolution from dying particles (energy <= 0) to resourceTex
+        // This adds the particle's color to the resource field where it dies
+        this.runProgram(`
+        uniform sampler2D srcResourceTex;
+        void main() {
+            // Start with existing resource
+            vec4 res = texture(srcResourceTex, uv);
+            
+            // Add dissolution from dying particles
+            ivec2 sz = textureSize(state, 0);
+            vec2 wldPos = (uv - 0.5) * 2.0 * dishR;  // Map UV to world position
+            
+            vec3 addedColor = vec3(0.0);
+            float addedAlpha = 0.0;
+            
+            for (int i = 0; i < sz.y; ++i)
+            for (int j = 0; j < sz.x; ++j) {
+                vec4 p = texelFetch(state, ivec2(j, i), 0);
+                vec4 s1 = texelFetch(state1, ivec2(j, i), 0);
+                float particleEnergy = s1.y;
+                float age = s1.z;
+                
+                if (!isAlive(p)) continue;
+                if (particleEnergy > 0.0) continue;  // Not dying
+                
+                // This particle is dying - calculate dissolution
+                float d = length(wldPos - p.xy);
+                float radius = deathDissolveRadius * (1.0 + age * 0.001);
+                
+                if (d < radius * 2.0) {
+                    // Gaussian brush centered on death location
+                    float intensity = exp(-d*d / (radius * radius * 0.5)) * min(age * 0.002, 0.5);
+                    vec3 pref = texelFetch(prefBuf, ivec2(j, i), 0).rgb;
+                    addedColor += pref * intensity;
+                    addedAlpha += intensity;
+                }
+            }
+            
+            // Blend new dissolution with existing resources
+            out0 = vec4(res.rgb + addedColor * 0.3, min(res.a + addedAlpha * 0.3, 1.0));
+        }`, {dst: this.resourceTex}, {srcResourceTex: this.resourceTexDst.attachments[0]});
+        
+        // Step 3: Mark dead particles (energy <= 0) as inactive
+        this.runProgram(`
+        void main() {
+            ivec2 ij = ivec2(gl_FragCoord.xy);
+            out0 = texelFetch(state, ij, 0);
+            out1 = texelFetch(state1, ij, 0);
+            
+            // Check if particle should die (energy <= 0)
+            if (isAlive(out0) && out1.y <= 0.0) {
+                out0 = vec4(-20000.0);  // Mark as dead
+                out1 = vec4(0.0);
+            }
+        }`, {dst: this.dst});
+        this.flipBuffers();
+    }
+
+    processReproduction() {
+        // GPU-based reproduction:
+        // 1. First pass: Mark particles ready to reproduce and reduce their energy
+        // 2. Second pass: Empty slots look for nearby reproducing parents
+        
+        // Pass 1: Mark parents and deduct energy
+        this.runProgram(`
+        void main() {
+            ivec2 ij = ivec2(gl_FragCoord.xy);
+            out0 = texelFetch(state, ij, 0);
+            out1 = texelFetch(state1, ij, 0);
+            
+            if (!isAlive(out0)) return;
+            
+            // Check if ready to reproduce (energy >= threshold)
+            if (out1.y >= reproThreshold) {
+                // Mark for reproduction by setting high w value (temporary flag)
+                // and deduct energy cost
+                out1 = vec4(out1.x, out1.y - reproCost, out1.z, 999.0);
+            }
+        }`, {dst: this.dst});
+        this.flipBuffers();
+        
+        // Pass 2: Empty slots become children of nearby reproducing parents
+        this.runProgram(`
+        // Simple hash function for pseudo-random
+        float hash(float n) { return fract(sin(n) * 43758.5453); }
+        
+        void main() {
+            ivec2 ij = ivec2(gl_FragCoord.xy);
+            ivec2 sz = textureSize(state, 0);
+            int myIdx = ij.y * sz.x + ij.x;
+            
+            out0 = texelFetch(state, ij, 0);
+            out1 = texelFetch(state1, ij, 0);
+            
+            // Only process empty slots
+            if (isAlive(out0)) {
+                // Clear reproduction flag if set
+                if (out1.w > 900.0) {
+                    out1 = vec4(out1.xyz, 0.0);
+                }
+                return;
+            }
+            
+            // Find a reproducing parent
+            vec4 bestParent = vec4(0.0);
+            vec4 bestParentState = vec4(0.0);
+            vec3 bestPref = vec3(0.0);
+            int bestParentIdx = -1;
+            float bestDist = 1e10;
+            
+            for (int i = 0; i < sz.y; ++i)
+            for (int j = 0; j < sz.x; ++j) {
+                int idx = i * sz.x + j;
+                vec4 p = texelFetch(state, ivec2(j, i), 0);
+                vec4 s1 = texelFetch(state1, ivec2(j, i), 0);
+                
+                if (!isAlive(p)) continue;
+                if (s1.w < 900.0) continue;  // Not reproducing
+                
+                // Pseudo-random selection based on slot index
+                float selectionScore = hash(float(idx) + float(myIdx) * 0.1);
+                if (selectionScore < bestDist) {
+                    bestDist = selectionScore;
+                    bestParent = p;
+                    bestParentState = s1;
+                    bestParentIdx = idx;
+                    bestPref = texelFetch(prefBuf, ivec2(j, i), 0).rgb;
+                }
+            }
+            
+            // If found a parent, become its child
+            if (bestParentIdx >= 0) {
+                // Spawn near parent with small random offset
+                float angle = hash(float(myIdx) * 12.34) * 6.283;
+                float dist = 1.0 + hash(float(myIdx) * 56.78) * 2.0;
+                vec2 offset = vec2(cos(angle), sin(angle)) * dist;
+                vec2 childPos = bestParent.xy + offset;
+                childPos /= max(1.0, length(childPos) / dishR);  // Keep in bounds
+                
+                out0 = vec4(childPos, childPos);  // Position
+                // Child starts with half of parent's reproduction cost worth of energy
+                out1 = vec4(0.5, reproCost * 0.5, 0.0, 0.0);  // (rep, energy, age, clock)
+            }
+        }`, {dst: this.dst});
+        this.flipBuffers();
+        
+        // Pass 3: Initialize child preferences (mutation from parent)
+        // Note: This is a limitation - we need a separate prefBuf update
+        // For now, children inherit some mutation from their spawned position
+        this.runProgram(`
+        float hash(float n) { return fract(sin(n) * 43758.5453); }
+        
+        void main() {
+            ivec2 ij = ivec2(gl_FragCoord.xy);
+            ivec2 sz = textureSize(state, 0);
+            int idx = ij.y * sz.x + ij.x;
+            
+            vec4 currentPref = texelFetch(prefBuf, ij, 0);
+            vec4 p = texelFetch(state, ij, 0);
+            vec4 s1 = texelFetch(state1, ij, 0);
+            
+            // If this is a new particle (age == 0 and energy > 0), give it mutated preferences
+            if (isAlive(p) && s1.z < 1.0 && s1.y > 0.0) {
+                // Find closest particle to inherit preferences from (likely parent)
+                vec3 inheritedPref = vec3(0.5);
+                float closestDist = 1e10;
+                
+                for (int i = 0; i < sz.y; ++i)
+                for (int j = 0; j < sz.x; ++j) {
+                    if (i == ij.y && j == ij.x) continue;
+                    vec4 other = texelFetch(state, ivec2(j, i), 0);
+                    vec4 otherS1 = texelFetch(state1, ivec2(j, i), 0);
+                    if (!isAlive(other)) continue;
+                    if (otherS1.z < 1.0) continue;  // Skip other newborns
+                    
+                    float d = length(other.xy - p.xy);
+                    if (d < closestDist) {
+                        closestDist = d;
+                        inheritedPref = texelFetch(prefBuf, ivec2(j, i), 0).rgb;
+                    }
+                }
+                
+                // Apply mutation
+                float mutation = 0.1;
+                vec3 noise = vec3(
+                    hash(float(idx) * 11.11) - 0.5,
+                    hash(float(idx) * 22.22) - 0.5,
+                    hash(float(idx) * 33.33) - 0.5
+                ) * mutation;
+                
+                vec3 childPref = normalize(max(inheritedPref + noise, vec3(0.01)));
+                out0 = vec4(childPref, 1.0);
+            } else {
+                out0 = currentPref;
+            }
+        }`, {dst: this.prefBuf});
     }
 
     adjustFB(fb, width, height, attachments) {

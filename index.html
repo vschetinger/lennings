@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=6"> </script>
+<script src="lenia.js?v=7"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -166,6 +166,30 @@
         vertical-align: top;
     }
 
+    /* Left-side Life Cycle panel */
+    .dg.ac.life-panel {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 1000;
+    }
+    
+    .dg.ac.life-panel .dg.main {
+        background: rgba(0, 10, 30, 0.85) !important;
+    }
+    
+    .dg.ac.life-panel .dg li {
+        background: rgba(0, 20, 50, 0.6) !important;
+    }
+    
+    .dg.ac.life-panel .dg li.folder {
+        border-left: 3px solid #4a9eff !important;
+    }
+    
+    .dg.ac.life-panel .title {
+        background: linear-gradient(90deg, #2a5a8a, #1a3a5a) !important;
+    }
+
 
 </style>
 
@@ -232,6 +256,39 @@ resourceFolder.add(params, 'load resource');
 resourceFolder.add(params, 'clear resources');
 resourceFolder.add(params, 'consumeEnabled').name('consume resources');
 resourceFolder.open();
+
+// ======== LEFT-SIDE LIFE CYCLE PANEL ========
+const lifeGui = new dat.GUI({ autoPlace: false });
+lifeGui.domElement.classList.add('life-panel');
+document.body.appendChild(lifeGui.domElement);
+
+// Life Cycle toggles
+params.enableLifeCycle = true;
+params.enableDeaths = true;
+params.enableReproduction = true;
+
+const lifeFolder = lifeGui.addFolder('🧬 Life Cycle');
+lifeFolder.add(params, 'enableLifeCycle').name('enable life cycle');
+lifeFolder.add(params, 'enableDeaths').name('enable deaths');
+lifeFolder.add(params, 'enableReproduction').name('enable reproduction');
+lifeFolder.open();
+
+// Energy parameters
+const energyFolder = lifeGui.addFolder('⚡ Energy');
+energyFolder.add(lenia.U, 'energyDecay', 0, 0.01, 0.0001).name('decay rate');
+energyFolder.add(lenia.U, 'feedRate', 0, 0.5, 0.01).name('feed rate');
+energyFolder.add(lenia.U, 'hungerMultiplier', 0, 5, 0.1).name('hunger boost');
+energyFolder.open();
+
+// Reproduction parameters  
+const reproFolder = lifeGui.addFolder('🔄 Reproduction');
+reproFolder.add(lenia.U, 'reproThreshold', 0.5, 1.0, 0.05).name('energy threshold');
+reproFolder.add(lenia.U, 'reproCost', 0.1, 0.5, 0.05).name('cost');
+reproFolder.open();
+
+// Death parameters
+const deathFolder = lifeGui.addFolder('💀 Death');
+deathFolder.add(lenia.U, 'deathDissolveRadius', 1, 20, 1).name('dissolve radius');
 
 // Hidden file input for resource images
 const resourceInput = document.createElement('input');
@@ -399,6 +456,16 @@ function animate() {
         // Consume resources where particles are located
         if (params.consumeEnabled) {
             lenia.consumeResources();
+        }
+        
+        // Life cycle processing
+        if (params.enableLifeCycle) {
+            if (params.enableDeaths) {
+                lenia.processDeaths();
+            }
+            if (params.enableReproduction) {
+                lenia.processReproduction();
+            }
         }
     }
     lenia.render(null, renderArgs);
