@@ -485,6 +485,9 @@ class ParticleLenia {
         canvas.width = 512;
         canvas.height = 512;
         const ctx = canvas.getContext('2d');
+        // Flip vertically to match WebGL coordinate system
+        ctx.translate(0, 512);
+        ctx.scale(1, -1);
         ctx.drawImage(img, 0, 0, 512, 512);
         const imageData = ctx.getImageData(0, 0, 512, 512);
         
