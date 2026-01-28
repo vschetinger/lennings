@@ -620,11 +620,11 @@ class ParticleLenia {
 
             // Blend resource texture - sample at world position mapped to resource UV
             vec2 resUV = (wldPos / dishR) * 0.5 + 0.5;
-            vec4 resource = texture(resourceTex, resUV);
-            vec3 resourceColor = resource.rgb;
-            float resourceAlpha = resource.a;
+            vec4 resTex = texture(resourceTex, resUV);
+            vec3 resColor = resTex.rgb;
+            float resAlpha = resTex.a;
             // Blend resource color with terrain based on alpha
-            color = mix(color, resourceColor * light, resourceAlpha * 0.8);
+            color = mix(color, resColor * light, resAlpha * 0.8);
 
             out0 = vec4(vec3(light)*color, 1.0);
             if (isTouched(wldPos)) {

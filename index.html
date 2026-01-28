@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=2"> </script>
+<script src="lenia.js?v=3"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -105,8 +105,8 @@
 
     #touch {
 /*        display: block;*/
-        opacity: 1.0;
-        pointer-events: auto;
+        opacity: 0.0;
+        pointer-events: none;
     }
 
     .dbimg {
@@ -947,28 +947,17 @@ window.addEventListener('paste', async (e) => {
 
 });
 
+// Disable intro overlays - set seenIntro to skip the tutorial
+localStorage["seenIntro"] = true;
 document.querySelectorAll(".canvasOverlay").forEach((telem) => {
-    if (localStorage.getItem("seenIntro")) {
-        telem.style["pointer-events"] = "none";
-        telem.style["transition"] = "opacity 1s 0s";
-        telem.style["opacity"] = "0.0";
-    }
-
-    telem.addEventListener("pointerdown", (e) =>{
-        e.preventDefault();
-        telem.style["pointer-events"] = "none";
-        telem.style["transition"] = "opacity 1s 0s";
-        telem.style["opacity"] = "0.0";
-        if (telem.nextSibling.nextSibling.className == "canvasOverlay")  {
-            telem.nextSibling.nextSibling.style["opacity"] = "1.0";
-            telem.nextSibling.nextSibling.style["pointer-events"] = "auto";
-        } else {
-            localStorage["seenIntro"] = true;
-        }
-    });
+    telem.style["pointer-events"] = "none";
+    telem.style["transition"] = "none";
+    telem.style["opacity"] = "0.0";
 });
 
 $("#resetvi").onclick = () => {
+    // Re-enable intro if user clicks to show instructions
+    localStorage.removeItem("seenIntro");
     $("#touch").style.opacity = "1.0";
     $("#touch").style["pointer-events"] = "auto";
 };
