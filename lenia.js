@@ -934,10 +934,12 @@ class ParticleLenia {
             float Es = E+kernel(0.0, m2, s2).x;
             vec3 colorE = mix(vec3(1.0), Es>0.0?vec3(0.7,0,0):vec3(0.2,0.8,0.2), abs(Es));
             float c = sqrt(U.z);
-            vec3 colorUG = mix(vec3(0.1, 0.1, 0.3), vec3(0.2, 0.7, 1.0), c);
-            colorUG = mix(colorUG, vec3(0.9, 0.7, 0.1), G_dG.x*min(c*2.0, 1.0));
-            vec3 bg = vec3(1.0);
-            vec3 color = fieldGE>0.0? mix(bg, colorE, fieldGE) : mix( bg, colorUG, -fieldGE);
+            // Dark blue/purple background for better particle color contrast
+            vec3 colorUG = mix(vec3(0.05, 0.05, 0.12), vec3(0.15, 0.2, 0.35), c);
+            // Connection glow: subtle white instead of yellow, lets particle colors show
+            colorUG = mix(colorUG, vec3(0.4, 0.45, 0.5), G_dG.x*min(c*2.0, 1.0) * 0.6);
+            vec3 bg = vec3(0.08, 0.08, 0.15);  // Dark background
+            vec3 color = fieldGE>0.0? mix(bg, colorE, fieldGE) : mix(bg, colorUG, -fieldGE);
 
             // Blend resource texture - sample at world position mapped to resource UV
             vec2 resUV = (wldPos / dishR) * 0.5 + 0.5;
@@ -974,11 +976,20 @@ class ParticleLenia {
         in vec2 wldPos;
         void main() {
             float r = length(uv);
-            float a = smoothstep(0.9, 0.7, r);
-            vec3 n = normalize(vec3(uv, 1.0));
-            float v = max(dot(n, getLightDir(wldPos)),0.0)*0.9+0.1;
-            float alpha = a*r*r;
-            out0 = vec4(color*v*alpha, kernel(r, 0.8, 0.15)*0.2)*pointsAlpha;
+            
+            // Solid core (inner 60% is fully opaque)
+            float core = smoothstep(1.0, 0.6, r);
+            // Subtle outer glow
+            float glow = max(0.0, 1.0 - r) * 0.25;
+            float a = max(core, glow);
+            
+            // Slight 3D shading on the core
+            vec3 n = normalize(vec3(uv * 0.5, 1.0));
+            float v = max(dot(n, getLightDir(wldPos)), 0.0) * 0.4 + 0.6;
+            
+            // Brighter, more saturated color for visibility
+            vec3 brightColor = color * 1.2;
+            out0 = vec4(brightColor * v * a, a) * pointsAlpha;
         }`, {dst:target, n:this.max_point_n, blend:[gl.ONE, gl.ONE_MINUS_SRC_ALPHA]}, {flipUD});
     }
 

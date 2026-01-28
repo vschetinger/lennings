@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=13"> </script>
+<script src="lenia.js?v=14"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -207,6 +207,7 @@
 </div>
 <div id="zoo"></div>
 <pre id="stat"></pre>
+<div id="fps" style="position:fixed; bottom:10px; left:10px; color:#666; font-family:monospace; font-size:12px; z-index:1000; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:4px;"></div>
 
 <script>
 
@@ -237,7 +238,7 @@ const params = {
     'init circle': ()=>lenia.reset(),
     'toggle sound': ()=>audioSystem.toggle(),
 };
-gui.add(params, 'stepN', 0, 30, 1);
+gui.add(params, 'stepN', 0, 10, 1).name('steps/frame');
 
 const lenia = new ParticleLenia(gl, gui);
 const audioSystem = new AudioSystem(gl, fps);
@@ -418,8 +419,22 @@ async function toggleRecord() {
     console.log('recording:', recording)
 }
 
+// FPS tracking
+let fpsFrameCount = 0;
+let fpsLastTime = performance.now();
+
 function animate() {
     if (onair) return;
+    
+    // Update FPS counter
+    fpsFrameCount++;
+    const now = performance.now();
+    if (now - fpsLastTime >= 1000) {
+        document.getElementById('fps').textContent = `${fpsFrameCount} FPS | steps: ${params.stepN}`;
+        fpsFrameCount = 0;
+        fpsLastTime = now;
+    }
+    
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
