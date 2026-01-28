@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-<script src="lenia.js?v=10"> </script>
+<script src="lenia.js?v=11"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -693,8 +693,9 @@ window.addEventListener('keydown', e=>{
         toggleRecord();
     }
     if (e.key == 'r') {
+        // If a texture was loaded, reload it; otherwise just reset particles
+        lenia.reloadResourceImage(); // Reloads original texture if one exists
         lenia.reset();
-        lenia.clearResources();
     }
 });
 

@@ -546,15 +546,35 @@ class ParticleLenia {
             floatData[i] = imageData.data[i] / 255.0;
         }
         
+        // Store the original float data for reloading later
+        this.originalResourceData = floatData.slice(); // Make a copy
+        
         // Upload to resource texture
+        this._uploadResourceData(floatData);
+    }
+    
+    _uploadResourceData(floatData) {
+        const gl = this.gl;
         gl.bindTexture(gl.TEXTURE_2D, this.resourceTex.attachments[0]);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, 512, 512, 0, gl.RGBA, gl.FLOAT, floatData);
         gl.bindTexture(gl.TEXTURE_2D, null);
         
-        // Also initialize the dst buffer
         gl.bindTexture(gl.TEXTURE_2D, this.resourceTexDst.attachments[0]);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, 512, 512, 0, gl.RGBA, gl.FLOAT, floatData);
         gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+    
+    reloadResourceImage() {
+        // Reload the original resource image if one was loaded
+        if (this.originalResourceData) {
+            this._uploadResourceData(this.originalResourceData);
+            return true;
+        }
+        return false;
+    }
+    
+    hasLoadedResource() {
+        return !!this.originalResourceData;
     }
 
     consumeResources() {
