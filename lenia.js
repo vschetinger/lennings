@@ -288,12 +288,14 @@ class ParticleLenia {
         }
     }
 
-    reset(n='max') {
+    reset(n='max', center=[0,0]) {
         if (n=='max')
             n = this.max_point_n;
+        n = Math.min(n, this.max_point_n);
         this.clearSelection();
         this.runProgram(`
         uniform int n;
+        uniform vec2 center;
         void main() {
             ivec2 ij = ivec2(gl_FragCoord.xy);
             ivec2 sz = textureSize(state, 0);
@@ -305,12 +307,12 @@ class ParticleLenia {
             }
             float r = sqrt(float(idx)*0.5+0.25);
             float a = 2.4*float(idx);
-            vec2 p = vec2(sin(a)*r, cos(a)*r);
+            vec2 p = center + vec2(sin(a)*r, cos(a)*r);
             out0 = vec4(p, p);
             // Initialize state1: (rep, energy, age, clock)
             // Start with full energy (1.0), age 0
             out1 = vec4(0.5, 1.0, 0.0, 0.0);
-        }`, {dst:this.dst}, {n});
+        }`, {dst:this.dst}, {n, center});
         this.flipBuffers();
         
         // Initialize random RGB preferences for each particle

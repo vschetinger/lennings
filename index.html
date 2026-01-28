@@ -225,6 +225,10 @@ const params = {
     stepN: 1,
     targetFPS: 60,
     renderMode: 1,  // 1=Main, 2=Trails
+    // Spawn controls
+    spawnCount: 512,
+    spawnCenter: [0.0, 0.0],
+    // View state
     viewCenter: [0.0, 0.0],
     viewExtent: 50.0,
     mousePos: [-10000.0, 0.0],
@@ -237,11 +241,12 @@ const params = {
 
     'benchmark': bench,
     'fullscreen': fullscreen,
-    'init circle': ()=>lenia.reset(),
+    'init circle': ()=>lenia.reset(params.spawnCount, params.spawnCenter),
     'toggle sound': ()=>audioSystem.toggle(),
 };
 gui.add(params, 'targetFPS', 1, 120, 1).name('target FPS');
 gui.add(params, 'stepN', 0, 10, 1).name('steps/frame');
+gui.add(params, 'spawnCount', 16, 2048, 16).name('spawn count');
 
 const lenia = new ParticleLenia(gl, gui);
 const audioSystem = new AudioSystem(gl, fps);
@@ -344,7 +349,7 @@ previewFB.im = previewFB.ctx.getImageData(0, 0, previewSize, previewSize);
 
 
 function bench() {
-    lenia.reset();
+    lenia.reset(params.spawnCount, params.spawnCenter);
     const t=Date.now(), n=1000;
     for (let i=0; i<n; ++i) lenia.step();
     lenia.fetchState();
@@ -743,7 +748,12 @@ window.addEventListener('keydown', e=>{
     if (e.key == 'r') {
         // If a texture was loaded, reload it; otherwise just reset particles
         lenia.reloadResourceImage(); // Reloads original texture if one exists
-        lenia.reset();
+        // Clamp spawnCount to max_point_n to avoid overflow
+        if (params.spawnCount > lenia.max_point_n) {
+            console.warn('spawnCount clamped to max_point_n:', lenia.max_point_n);
+        }
+        const n = Math.min(params.spawnCount, lenia.max_point_n);
+        lenia.reset(n, params.spawnCenter);
         lenia.clearTrails(); // Also clear trail accumulation
     }
     // Render mode switching (1-9)
@@ -793,6 +803,14 @@ canvas.addEventListener("pointerdown", e => {
     }, 500),
 
     pointerCache.push(pointer);
+});
+
+// Double-click to set spawn center for next reset
+canvas.addEventListener('dblclick', e => {
+    e.preventDefault();
+    const [x, y] = event2wld([e.offsetX, e.offsetY]);
+    params.spawnCenter = [x, y];
+    console.log('Spawn center set to', params.spawnCenter);
 });
 
 // document.addEventListener('selectionchange', (event) => {
@@ -939,7 +957,7 @@ localZoo.forEach(c=>{
 });
 
 pasteCreature(localZoo[0], 0.0, 0.0, 1.0);
-lenia.reset();
+lenia.reset(params.spawnCount, params.spawnCenter);
 
 // largely inspired by approch from https://blog.shovonhasan.com/using-promises-with-filereader/
 const asyncReadAsDataURL = (inputFile) => {
