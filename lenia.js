@@ -206,6 +206,7 @@ class ParticleLenia {
         this.eatenPixelsCache = null;
         this.lastEatenCount = 0;
         this.lastReconstructionDims = null;
+        this.reconstructionUpdateFrame = 0;  // Frame counter for periodic updates
 
         this.setupUniforms(gui);
     }
@@ -1517,7 +1518,8 @@ class ParticleLenia {
         // Only update reconstruction periodically, not every frame (too expensive!)
         // Update every 180 frames (3 seconds at 60fps) to reduce GPU readback frequency
         const updateInterval = 180;
-        const currentFrame = this.reconstructionUpdateFrame || 0;
+        this.reconstructionUpdateFrame = (this.reconstructionUpdateFrame || 0) + 1;
+        const currentFrame = this.reconstructionUpdateFrame;
         const shouldUpdate = !this.compressedReconstruction || 
                             (currentFrame % updateInterval === 0);
         
