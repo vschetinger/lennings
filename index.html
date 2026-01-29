@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-    <script src="lenia.js?v=22"> </script>
+    <script src="lenia.js?v=28"> </script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -505,7 +505,7 @@ function animate(currentTime) {
     // Update FPS counter
     fpsFrameCount++;
     const now = performance.now();
-    const modeNames = ['', 'Main', 'Trails'];
+    const modeNames = ['', 'Main', 'Trails', 'Compressed'];
     const modeName = modeNames[params.renderMode] || `Mode ${params.renderMode}`;
     if (now - fpsLastTime >= 1000) {
         lastCellCount = lenia.getAliveCount();
@@ -591,6 +591,8 @@ function animate(currentTime) {
         lenia.render(null, renderArgs);  // Main view
     } else if (params.renderMode === 2) {
         lenia.renderTrails(null, renderArgs);  // Trail view
+    } else if (params.renderMode === 3) {
+        lenia.renderCompressedReconstruction(null, renderArgs);  // Compressed reconstruction
     } else {
         lenia.render(null, renderArgs);  // Default to main
     }
@@ -830,6 +832,16 @@ window.addEventListener('keydown', e=>{
     // Render mode switching (1-9)
     if (e.key >= '1' && e.key <= '9') {
         params.renderMode = parseInt(e.key);
+        // When switching to mode 3 (compressed reconstruction), set reasonable view extent
+        if (params.renderMode === 3) {
+            const reconstruction = lenia.createCompressedReconstruction(true);
+            if (reconstruction && reconstruction.width > 0) {
+                // Set viewExtent to show the image at a reasonable size (about 1.5x the image size)
+                params.viewExtent = Math.max(reconstruction.width, reconstruction.height) * 1.5;
+                params.viewCenter = [0, 0];  // Center the view
+                console.log('[DEBUG] Set initial view for mode 3:', {viewExtent: params.viewExtent, viewCenter: params.viewCenter});
+            }
+        }
     }
     // Toggle cell count graph
     if (e.key === 'q' || e.key === 'Q') {

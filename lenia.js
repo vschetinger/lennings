@@ -193,8 +193,18 @@ class ParticleLenia {
         this.trailTex = twgl.createFramebufferInfo(gl, 
             [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}], 1024, 1024);
 
+        // Compressed reconstruction texture (will be created on demand)
+        this.compressedReconstructionTex = null;
+        this.compressedReconstructionProgram = null;  // Cached shader program
+
         // Global step counter for birthStep-based age calculation
         this.stepCount = 0;
+        
+        // Compressed reconstruction cache state
+        this.compressedReconstruction = null;
+        this.eatenPixelsCache = null;
+        this.lastEatenCount = 0;
+        this.lastReconstructionDims = null;
 
         this.setupUniforms(gui);
     }
@@ -726,6 +736,11 @@ class ParticleLenia {
             });
         }
         
+        // Store original image dimensions before resizing
+        this.originalWidth = img.naturalWidth || img.width || 512;
+        this.originalHeight = img.naturalHeight || img.height || 512;
+        this.originalAspectRatio = this.originalWidth / this.originalHeight;
+        
         // Create a canvas to process the image and extract RGBA
         const canvas = document.createElement('canvas');
         canvas.width = 512;
@@ -745,6 +760,11 @@ class ParticleLenia {
         
         // Store the original float data for reloading later
         this.originalResourceData = floatData.slice(); // Make a copy
+        
+        // Reset compressed reconstruction cache when new image is loaded
+        this.compressedReconstruction = null;
+        this.eatenPixelsCache = null;
+        this.lastEatenCount = 0;
         
         // Upload to resource texture
         this._uploadResourceData(floatData);
@@ -772,6 +792,258 @@ class ParticleLenia {
     
     hasLoadedResource() {
         return !!this.originalResourceData;
+    }
+
+    getEatenPixels(forceRefresh = false) {
+        // Always refresh when requested or when we have no cache yet
+        if (!forceRefresh && this.eatenPixelsCache !== null) {
+            return this.eatenPixelsCache;
+        }
+        
+        const gl = this.gl;
+        const width = 512;
+        const height = 512;
+        
+        // Read back resource texture
+        const pixels = new Float32Array(width * height * 4);
+        twgl.bindFramebufferInfo(gl, this.resourceTex);
+        gl.readPixels(0, 0, width, height, gl.RGBA, gl.FLOAT, pixels);
+        twgl.bindFramebufferInfo(gl, null);
+        
+        // Find all pixels with alpha < 0.1 (mostly eaten)
+        const eatenPixels = [];
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                const idx = (y * width + x) * 4;
+                const alpha = pixels[idx + 3];
+                if (alpha < 0.1) {  // Use 0.1 threshold as specified
+                    eatenPixels.push({
+                        x: x,
+                        y: y,
+                        r: pixels[idx + 0],
+                        g: pixels[idx + 1],
+                        b: pixels[idx + 2]
+                    });
+                }
+            }
+        }
+        
+        // Cache the result
+        this.eatenPixelsCache = eatenPixels;
+        
+        return eatenPixels;
+    }
+
+    computeOptimalDimensions(eatenCount, aspectRatio) {
+        if (eatenCount === 0) {
+            return { width: 0, height: 0, pixelCount: 0 };
+        }
+        
+        // Find the largest valid dimensions that fit within eatenCount
+        // Try increasing widths until we find the maximum that fits
+        let bestWidth = 1;
+        let bestHeight = 1;
+        let bestPixelCount = 1;
+        
+        // Start from small and work up to find maximum valid size
+        for (let w = 1; w <= Math.ceil(Math.sqrt(eatenCount * aspectRatio)); w++) {
+            const h = Math.floor(w / aspectRatio);
+            if (h < 1) continue;
+            const pixelCount = w * h;
+            if (pixelCount <= eatenCount && pixelCount > bestPixelCount) {
+                bestWidth = w;
+                bestHeight = h;
+                bestPixelCount = pixelCount;
+            }
+        }
+        
+        return {
+            width: bestWidth,
+            height: bestHeight,
+            pixelCount: bestPixelCount
+        };
+    }
+
+    createCompressedReconstruction(forceUpdate = false) {
+        console.log('[DEBUG] createCompressedReconstruction called', {forceUpdate});
+        if (!this.originalResourceData || !this.originalAspectRatio) {
+            console.log('[DEBUG] Missing resource data:', {
+                hasOriginalData: !!this.originalResourceData,
+                hasAspectRatio: !!this.originalAspectRatio,
+                aspectRatio: this.originalAspectRatio
+            });
+            return null;
+        }
+        console.log('[DEBUG] Resource data exists:', {
+            aspectRatio: this.originalAspectRatio,
+            dataLength: this.originalResourceData ? this.originalResourceData.length : 0
+        });
+        
+        // Always refresh eaten pixels when creating reconstruction
+        this.eatenPixelsCache = null;  // Force fresh read
+        const eatenPixels = this.getEatenPixels(true);
+        const eatenCount = eatenPixels.length;
+        console.log('[DEBUG] Eaten pixels found:', eatenCount);
+        
+        if (eatenCount === 0) {
+            console.log('[DEBUG] No eaten pixels, returning null');
+            this.compressedReconstruction = null;
+            return null;
+        }
+        
+        // Compute optimal dimensions
+        const dims = this.computeOptimalDimensions(eatenCount, this.originalAspectRatio);
+        console.log('[DEBUG] Computed dimensions:', {
+            eatenCount,
+            aspectRatio: this.originalAspectRatio,
+            dims
+        });
+        
+        if (dims.pixelCount === 0) {
+            console.log('[DEBUG] Invalid dimensions (pixelCount=0), returning null');
+            this.compressedReconstruction = null;
+            return null;
+        }
+        
+        // Only recompute when the achievable image size (pixelCount) grows.
+        const prevPixelCount = this.lastReconstructionDims
+            ? this.lastReconstructionDims.width * this.lastReconstructionDims.height
+            : 0;
+        const needsUpdate = !this.compressedReconstruction ||
+                            dims.pixelCount > prevPixelCount ||
+                            forceUpdate;
+        
+        console.log('[DEBUG] Update check:', {
+            hasReconstruction: !!this.compressedReconstruction,
+            prevPixelCount,
+            newPixelCount: dims.pixelCount,
+            needsUpdate
+        });
+        
+        if (!needsUpdate && this.compressedReconstruction) {
+            console.log('[DEBUG] Using cached reconstruction');
+            return this.compressedReconstruction;
+        }
+        
+        console.log('[DEBUG] Creating new reconstruction...');
+        
+        // Rescale original image to target compressed size
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.createImageData(512, 512);
+        
+        // Reconstruct original image data from float array
+        for (let i = 0; i < this.originalResourceData.length; i += 4) {
+            const idx = i / 4;
+            const x = idx % 512;
+            const y = Math.floor(idx / 512);
+            const pixelIdx = (y * 512 + x) * 4;
+            imageData.data[pixelIdx + 0] = Math.round(this.originalResourceData[i + 0] * 255);
+            imageData.data[pixelIdx + 1] = Math.round(this.originalResourceData[i + 1] * 255);
+            imageData.data[pixelIdx + 2] = Math.round(this.originalResourceData[i + 2] * 255);
+            imageData.data[pixelIdx + 3] = 255;
+        }
+        ctx.putImageData(imageData, 0, 0);
+        
+        // Create target canvas for compressed size
+        const targetCanvas = document.createElement('canvas');
+        targetCanvas.width = dims.width;
+        targetCanvas.height = dims.height;
+        const targetCtx = targetCanvas.getContext('2d');
+        
+        // Draw original rescaled to target size
+        targetCtx.drawImage(canvas, 0, 0, dims.width, dims.height);
+        const targetImageData = targetCtx.getImageData(0, 0, dims.width, dims.height);
+        
+        // Greedy pixel placement: assign each eaten pixel to best-matching target position
+        const resultImageData = targetCtx.createImageData(dims.width, dims.height);
+        const usedPixels = new Set();
+        
+        // For each target position, find best matching eaten pixel
+        for (let ty = 0; ty < dims.height; ty++) {
+            for (let tx = 0; tx < dims.width; tx++) {
+                const targetIdx = (ty * dims.width + tx) * 4;
+                const tr = targetImageData.data[targetIdx + 0] / 255.0;
+                const tg = targetImageData.data[targetIdx + 1] / 255.0;
+                const tb = targetImageData.data[targetIdx + 2] / 255.0;
+                
+                // Find unused eaten pixel with minimum chi-square distance
+                let bestPixel = null;
+                let bestDistance = Infinity;
+                let bestIndex = -1;
+                
+                for (let i = 0; i < eatenPixels.length; i++) {
+                    if (usedPixels.has(i)) continue;
+                    
+                    const pixel = eatenPixels[i];
+                    const dr = pixel.r - tr;
+                    const dg = pixel.g - tg;
+                    const db = pixel.b - tb;
+                    const distance = dr * dr + dg * dg + db * db;
+                    
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
+                        bestPixel = pixel;
+                        bestIndex = i;
+                    }
+                }
+                
+                // Assign best pixel to this position
+                if (bestPixel && bestIndex >= 0) {
+                    resultImageData.data[targetIdx + 0] = Math.round(bestPixel.r * 255);
+                    resultImageData.data[targetIdx + 1] = Math.round(bestPixel.g * 255);
+                    resultImageData.data[targetIdx + 2] = Math.round(bestPixel.b * 255);
+                    resultImageData.data[targetIdx + 3] = 255;
+                    usedPixels.add(bestIndex);
+                } else {
+                    // Fallback: use target color if no pixel available
+                    resultImageData.data[targetIdx + 0] = targetImageData.data[targetIdx + 0];
+                    resultImageData.data[targetIdx + 1] = targetImageData.data[targetIdx + 1];
+                    resultImageData.data[targetIdx + 2] = targetImageData.data[targetIdx + 2];
+                    resultImageData.data[targetIdx + 3] = 255;
+                }
+            }
+        }
+        
+        targetCtx.putImageData(resultImageData, 0, 0);
+        
+        // Upload to WebGL texture
+        const gl = this.gl;
+        if (!this.compressedReconstructionTex || 
+            this.compressedReconstructionTex.width !== dims.width ||
+            this.compressedReconstructionTex.height !== dims.height) {
+            // Create or recreate texture
+            if (this.compressedReconstructionTex) {
+                gl.deleteTexture(this.compressedReconstructionTex);
+            }
+            this.compressedReconstructionTex = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, this.compressedReconstructionTex);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);  // Pixel art - no resampling
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);  // Pixel art - no resampling
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        }
+        
+        gl.bindTexture(gl.TEXTURE_2D, this.compressedReconstructionTex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, targetCanvas);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+        
+        // Store dimensions on texture for reference
+        this.compressedReconstructionTex.width = dims.width;
+        this.compressedReconstructionTex.height = dims.height;
+        
+        // Cache the result
+        this.compressedReconstruction = {
+            texture: this.compressedReconstructionTex,
+            width: dims.width,
+            height: dims.height
+        };
+        this.lastEatenCount = eatenCount;
+        this.lastReconstructionDims = dims;
+        
+        return this.compressedReconstruction;
     }
 
     consumeResources() {
@@ -1202,6 +1474,79 @@ class ParticleLenia {
         }`, {dst: this.trailTex, clear: true});
     }
     
+    renderCompressedReconstruction(target, {viewCenter=[0,0], viewExtent=50.0}={}) {
+        // Only update reconstruction periodically, not every frame (too expensive!)
+        // Check if we need to update based on frame counter
+        const shouldUpdate = !this.compressedReconstruction || 
+                            (this.reconstructionUpdateFrame || 0) % 60 === 0;
+        
+        if (shouldUpdate) {
+            const reconstruction = this.createCompressedReconstruction(false);  // Don't force update
+            if (!reconstruction || !reconstruction.texture) {
+                // No reconstruction available - render black screen
+                const gl = this.gl;
+                const {width, height} = target || gl.canvas;
+                gl.viewport(0, 0, width, height);
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                return;
+            }
+        }
+        
+        const reconstruction = this.compressedReconstruction;
+        if (!reconstruction || !reconstruction.texture) {
+            const gl = this.gl;
+            const {width, height} = target || gl.canvas;
+            gl.viewport(0, 0, width, height);
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            return;
+        }
+        
+        // SIMPLE TEST: Render a fullscreen colored quad to verify basic rendering works
+        // Uncomment this to test if the issue is in texture/view transform
+        /*
+        const gl = this.gl;
+        const {width, height} = target || gl.canvas;
+        gl.viewport(0, 0, width, height);
+        gl.clearColor(0.2, 0.5, 0.8, 1.0);  // Blue background
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        console.log('[DEBUG] TEST: Rendered simple colored background');
+        return;
+        */
+        
+        // Render using the same approach as renderTrails - simple and direct
+        const {width, height} = target || gl.canvas;
+        const viewAspect = width / Math.max(1.0, height);
+        Object.assign(this.U, {viewCenter, viewExtent, viewAspect});
+        
+        const imgWidth = reconstruction.width;
+        const imgHeight = reconstruction.height;
+        
+        // Render texture directly to screen with view transform (like trails mode)
+        this.runProgram(`
+        uniform sampler2D compressedTex;
+        uniform vec2 imgSize;
+        void main() {
+            // Convert screen UV to world position
+            vec2 wldPos = scr2wld(uv * 2.0 - 1.0);
+            
+            // Image is centered at origin, spans from -imgSize/2 to +imgSize/2
+            // Convert world position to texture UV (0 to 1)
+            vec2 imgUV = (wldPos + imgSize * 0.5) / imgSize;
+            
+            // Clamp to valid UV range
+            imgUV = clamp(imgUV, 0.0, 1.0);
+            
+            // Sample the compressed reconstruction texture
+            vec4 color = texture(compressedTex, imgUV);
+            
+            // Dark background
+            vec3 bg = vec3(0.0, 0.0, 0.0);
+            out0 = vec4(bg + color.rgb, 1.0);
+        }`, {dst: target || null}, {compressedTex: reconstruction.texture, imgSize: [imgWidth, imgHeight]});
+    }
+
     renderTrails(target, {viewCenter=[0,0], viewExtent=50.0, flipUD=false}={}) {
         const {width, height} = target || this.gl.canvas;
         const viewAspect = width / Math.max(1.0, height);
