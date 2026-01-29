@@ -1,0 +1,404 @@
+{
+  "description": "Centralized parameter configuration for Particle Lenia web demo",
+  "version": "1.0.0",
+  
+  "simulation": {
+    "description": "Core simulation parameters",
+    "params": {
+      "stepN": {
+        "value": 1,
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "name": "steps/frame",
+        "description": "Number of simulation steps per frame"
+      },
+      "targetFPS": {
+        "value": 60,
+        "min": 1,
+        "max": 120,
+        "step": 1,
+        "name": "target FPS",
+        "description": "Target frames per second (FPS limiter)"
+      },
+      "dt": {
+        "value": 0.1,
+        "min": 0.01,
+        "max": 2.0,
+        "step": 0.01,
+        "name": "dt",
+        "description": "Time step for particle movement"
+      },
+      "repulsion": {
+        "value": 1.0,
+        "min": 0.0,
+        "max": 3.0,
+        "step": 0.1,
+        "name": "repulsion",
+        "description": "Particle repulsion strength"
+      },
+      "m1": {
+        "value": 1.27,
+        "min": 0.0,
+        "max": 10.0,
+        "step": 0.01,
+        "name": "m1",
+        "description": "Field kernel mean (distance)",
+        "callback": "updateW1"
+      },
+      "s1": {
+        "value": 1.0,
+        "min": 0.5,
+        "max": 3.0,
+        "step": 0.01,
+        "name": "s1",
+        "description": "Field kernel standard deviation",
+        "callback": "updateW1"
+      },
+      "m2": {
+        "value": 0.6,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.01,
+        "name": "m2",
+        "description": "Response kernel mean (field value)"
+      },
+      "s2": {
+        "value": 0.2,
+        "min": 0.01,
+        "max": 0.5,
+        "step": 0.01,
+        "name": "s2",
+        "description": "Response kernel standard deviation"
+      },
+      "fieldScale": {
+        "value": 1.0,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.1,
+        "name": "field scale",
+        "description": "Scaling factor for field visualization"
+      },
+      "fieldGE": {
+        "value": -1.0,
+        "min": -1.0,
+        "max": 1.0,
+        "step": 0.1,
+        "name": "fieldGE",
+        "description": "Field gradient effect"
+      }
+    }
+  },
+  
+  "spawn": {
+    "description": "Particle spawning parameters",
+    "params": {
+      "spawnCount": {
+        "value": 512,
+        "min": 16,
+        "max": 2048,
+        "step": 16,
+        "name": "spawn count",
+        "description": "Number of particles to spawn on reset"
+      },
+      "spawnCenter": {
+        "value": [0.0, 0.0],
+        "name": "spawn center",
+        "description": "World coordinates for particle spawn location (set via double-click)"
+      }
+    }
+  },
+  
+  "view": {
+    "description": "View/camera parameters",
+    "params": {
+      "viewCenter": {
+        "value": [0.0, 0.0],
+        "name": "view center",
+        "description": "World coordinates of view center"
+      },
+      "viewExtent": {
+        "value": 50.0,
+        "min": 4.0,
+        "max": 300.0,
+        "step": 1.0,
+        "name": "view extent",
+        "description": "Zoom level (larger = more zoomed out)"
+      },
+      "renderMode": {
+        "value": 1,
+        "min": 1,
+        "max": 9,
+        "step": 1,
+        "name": "render mode",
+        "description": "Rendering mode: 1=Main, 2=Trails, 3=Compressed Reconstruction"
+      },
+      "showCellGraph": {
+        "value": false,
+        "name": "show cell graph",
+        "description": "Toggle cell count history graph (key: 'q')"
+      }
+    }
+  },
+  
+  "lifeCycle": {
+    "description": "Life cycle system toggles",
+    "params": {
+      "enableLifeCycle": {
+        "value": true,
+        "name": "enable life cycle",
+        "description": "Master toggle for life cycle system"
+      },
+      "enableDeaths": {
+        "value": true,
+        "name": "enable deaths",
+        "description": "Enable particle death and dissolution"
+      },
+      "enableReproduction": {
+        "value": true,
+        "name": "enable reproduction",
+        "description": "Enable particle reproduction"
+      }
+    }
+  },
+  
+  "energy": {
+    "description": "Energy system parameters",
+    "params": {
+      "energyDecay": {
+        "value": 0.001,
+        "min": 0.0,
+        "max": 0.01,
+        "step": 0.0001,
+        "name": "decay rate",
+        "description": "Energy decay per step"
+      },
+      "feedRate": {
+        "value": 0.1,
+        "min": 0.0,
+        "max": 0.5,
+        "step": 0.01,
+        "name": "feed rate",
+        "description": "Energy gained per step when feeding on resources"
+      },
+      "hungerMultiplier": {
+        "value": 2.0,
+        "min": 0.0,
+        "max": 5.0,
+        "step": 0.1,
+        "name": "hunger boost",
+        "description": "Multiplier for resource attraction when energy is low"
+      }
+    }
+  },
+  
+  "resources": {
+    "description": "Resource interaction parameters",
+    "params": {
+      "resourceAttraction": {
+        "value": 1.0,
+        "min": 0.0,
+        "max": 5.0,
+        "step": 0.1,
+        "name": "attraction",
+        "description": "Strength of attraction to matching resources"
+      },
+      "resourceDecay": {
+        "value": 0.01,
+        "min": 0.0,
+        "max": 0.1,
+        "step": 0.001,
+        "name": "consumption rate",
+        "description": "Rate at which resources are consumed (alpha depletion)"
+      },
+      "hueThreshold": {
+        "value": 30.0,
+        "min": 5.0,
+        "max": 180.0,
+        "step": 5.0,
+        "name": "hue range (deg)",
+        "description": "Hue matching threshold in degrees (HSV color space)"
+      },
+      "consumeEnabled": {
+        "value": true,
+        "name": "consume resources",
+        "description": "Enable resource consumption"
+      }
+    }
+  },
+  
+  "reproduction": {
+    "description": "Reproduction system parameters",
+    "params": {
+      "reproThreshold": {
+        "value": 0.8,
+        "min": 0.5,
+        "max": 1.0,
+        "step": 0.05,
+        "name": "energy threshold",
+        "description": "Minimum energy required for reproduction"
+      },
+      "reproCost": {
+        "value": 0.4,
+        "min": 0.1,
+        "max": 0.5,
+        "step": 0.05,
+        "name": "cost",
+        "description": "Energy cost of reproduction"
+      },
+      "reproMinAge": {
+        "value": 100.0,
+        "min": 0.0,
+        "max": 500.0,
+        "step": 10.0,
+        "name": "min age",
+        "description": "Minimum age (in steps) before reproduction is allowed"
+      },
+      "useCpuRepro": {
+        "value": true,
+        "name": "CPU reproduction",
+        "description": "Use CPU-side reproduction (allows max children limit)"
+      },
+      "maxChildrenPerParent": {
+        "value": 2,
+        "min": 1,
+        "max": 8,
+        "step": 1,
+        "name": "max children/parent",
+        "description": "Maximum children per parent per reproduction cycle"
+      },
+      "reproInterval": {
+        "value": 50,
+        "min": 5,
+        "max": 200,
+        "step": 5,
+        "name": "interval (steps)",
+        "description": "Steps between CPU reproduction checks"
+      }
+    }
+  },
+  
+  "death": {
+    "description": "Death and dissolution parameters",
+    "params": {
+      "deathDissolveRadius": {
+        "value": 5.0,
+        "min": 1.0,
+        "max": 20.0,
+        "step": 1.0,
+        "name": "dissolve radius",
+        "description": "Radius of color dissolution when particle dies"
+      },
+      "deathEnergyAmount": {
+        "value": 0.3,
+        "min": 0.0,
+        "max": 1.0,
+        "step": 0.05,
+        "name": "energy amount",
+        "description": "Amount of energy released on death"
+      },
+      "deathEnergyFalloff": {
+        "value": 2.0,
+        "min": 0.5,
+        "max": 10.0,
+        "step": 0.5,
+        "name": "falloff (2=gauss)",
+        "description": "Energy falloff exponent (2.0 = Gaussian)"
+      },
+      "deathAgeScale": {
+        "value": 0.002,
+        "min": 0.0,
+        "max": 0.01,
+        "step": 0.001,
+        "name": "age scaling",
+        "description": "Scaling factor for age-based death probability"
+      }
+    }
+  },
+  
+  "audio": {
+    "description": "Audio system parameters",
+    "params": {
+      "baseFreq": {
+        "value": 100.0,
+        "min": 20.0,
+        "max": 1000.0,
+        "step": 1.0,
+        "name": "baseFreq",
+        "description": "Base frequency for particle audio"
+      },
+      "clockExp": {
+        "value": 4.0,
+        "min": 1.0,
+        "max": 10.0,
+        "step": 0.1,
+        "name": "clockExp",
+        "description": "Clock exponent for audio modulation"
+      },
+      "audioVolume": {
+        "value": 0.1,
+        "min": 0.0,
+        "max": 3.0,
+        "step": 0.1,
+        "name": "audioVolume",
+        "description": "Audio output volume"
+      },
+      "oscillogram": {
+        "value": false,
+        "name": "oscillogram",
+        "description": "Show audio oscillogram visualization"
+      }
+    }
+  },
+  
+  "rendering": {
+    "description": "Rendering parameters",
+    "params": {
+      "pointsAlpha": {
+        "value": 1.0,
+        "min": 0.0,
+        "max": 1.0,
+        "step": 0.1,
+        "name": "pointsAlpha",
+        "description": "Alpha transparency for particle rendering"
+      }
+    }
+  },
+  
+  "interaction": {
+    "description": "Mouse/touch interaction parameters",
+    "params": {
+      "touchRadius": {
+        "value": 0.05,
+        "min": 0.01,
+        "max": 0.5,
+        "step": 0.01,
+        "name": "touch radius",
+        "description": "Radius of touch interaction (relative to view extent)"
+      },
+      "captureMode": {
+        "value": false,
+        "name": "capture mode",
+        "description": "Enable creature capture mode"
+      }
+    }
+  },
+  
+  "constants": {
+    "description": "Fixed constants (not user-configurable)",
+    "params": {
+      "dishR": {
+        "value": 75.0,
+        "description": "World radius of the simulation dish"
+      },
+      "max_point_n": {
+        "value": 2048,
+        "description": "Maximum number of particles"
+      },
+      "reconstructionUpdateInterval": {
+        "value": 180,
+        "description": "Frames between compressed reconstruction updates"
+      }
+    }
+  }
+}
