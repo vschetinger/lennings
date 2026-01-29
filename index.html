@@ -385,8 +385,27 @@ const asyncReadAsDataURL = (inputFile) => {
             // Parameters with min/max/step (sliders)
             else if (paramData.min !== undefined && paramData.max !== undefined && paramData.step !== undefined) {
                 params[paramName] = paramData.value;
-                const slider = folder.add(params, paramName, paramData.min, paramData.max, paramData.step);
-                slider.name(paramData.name || paramName);
+                
+                // List of life cycle parameters that are uniforms (need to sync to lenia.U)
+                const lifeCycleUniforms = ['resourceAttraction', 'resourceDecay', 'energyDecay', 'feedRate', 
+                    'hungerMultiplier', 'reproThreshold', 'reproCost', 'reproMinAge', 'deathDissolveRadius', 
+                    'deathEnergyAmount', 'deathEnergyFalloff', 'deathAgeScale', 'hueThreshold'];
+                
+                // If this is a life cycle uniform, sync it to lenia.U
+                if (lifeCycleUniforms.includes(paramName)) {
+                    lenia.U[paramName] = paramData.value;  // Initialize uniform from JSON
+                    // Create slider that updates both params and lenia.U
+                    const slider = folder.add(lenia.U, paramName, paramData.min, paramData.max, paramData.step);
+                    slider.name(paramData.name || paramName);
+                    // Also keep params in sync for consistency
+                    slider.onChange((value) => {
+                        params[paramName] = value;
+                    });
+                } else {
+                    // Regular param slider
+                    const slider = folder.add(params, paramName, paramData.min, paramData.max, paramData.step);
+                    slider.name(paramData.name || paramName);
+                }
             }
             // Other parameters (just set the value)
             else {
@@ -437,6 +456,14 @@ const asyncReadAsDataURL = (inputFile) => {
         }
     });
 
+    // Load default resource image on startup
+    try {
+        await lenia.loadResourceImage('zenarnie.jpg');
+        console.log('Loaded default resource image: zenarnie.jpg');
+    } catch (err) {
+        console.log('Could not load default resource image:', err);
+        // Continue without default image if it fails
+    }
 
 let onair = false;
 

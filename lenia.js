@@ -156,10 +156,11 @@ function calcNormCoef(m, s) {
 
 class ParticleLenia {
 
-    constructor(gl, gui) {
+    constructor(gl, gui, paramMap = {}) {
         this.gl = gl;
         this.U = {};
         this.programs = {};
+        this.paramMap = paramMap;  // Store paramMap for use in setupUniforms
         this.dim_n = 2;
         this.state_size = [32, 16];
         const [sx, sy] = this.state_size;
@@ -425,21 +426,36 @@ class ParticleLenia {
     
     setupUniforms(gui) {
         const U = this.U;
+        const paramMap = this.paramMap || {};
+        
+        // Helper to get parameter value from JSON with fallback
+        function getParamValue(paramName, defaultValue) {
+            const param = paramMap[paramName];
+            if (param && param.value !== undefined) {
+                return param.value;
+            }
+            return defaultValue;
+        }
+        
         function updateW1() {
             return U.w1 = calcNormCoef(U.m1, U.s1);
         }
         let name;
         function slider(value, range, step, cb=()=>{}) {
-            U[name] = value;
+            // Use value from paramMap if available, otherwise use default
+            const paramValue = getParamValue(name, value);
+            U[name] = paramValue;
             const [lo, hi] = range;
             gui.add(U, name, lo, hi, step).onChange(cb);
-            return value;
+            return paramValue;
         }
         for (const s of prefix.split('\n')) {
             const [decl, js_line] = s.split('//!');
             if (js_line) {
                 name = decl.match(/\w+\s+\w+\s+(\w+)/)[1];
-                U[name] = eval(js_line);
+                // Initialize from paramMap if available, otherwise use default from comment
+                const defaultValue = eval(js_line);
+                U[name] = getParamValue(name, defaultValue);
             }
         }
     }
