@@ -446,7 +446,11 @@ class ParticleLenia {
             const paramValue = getParamValue(name, value);
             U[name] = paramValue;
             const [lo, hi] = range;
-            gui.add(U, name, lo, hi, step).onChange(cb);
+            // Only create slider if this parameter is NOT in paramMap (JSON will create it)
+            // Parameters in JSON will be handled by the dynamic GUI creation in index.html
+            if (!paramMap[name]) {
+                gui.add(U, name, lo, hi, step).onChange(cb);
+            }
             return paramValue;
         }
         for (const s of prefix.split('\n')) {
