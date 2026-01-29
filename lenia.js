@@ -1524,7 +1524,10 @@ class ParticleLenia {
                             (currentFrame % updateInterval === 0);
         
         if (shouldUpdate) {
-            const reconstruction = this.createCompressedReconstruction(false);  // Don't force update
+            // Force refresh of eaten pixels to get latest data, but don't force full reconstruction
+            // (createCompressedReconstruction will still use its own logic to decide if reconstruction needs update)
+            this.eatenPixelsCache = null;  // Clear cache to force fresh read
+            const reconstruction = this.createCompressedReconstruction(false);
             if (!reconstruction || !reconstruction.texture) {
                 // No reconstruction available - render black screen
                 const gl = this.gl;
