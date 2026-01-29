@@ -765,6 +765,14 @@ class ParticleLenia {
         this.compressedReconstruction = null;
         this.eatenPixelsCache = null;
         this.lastEatenCount = 0;
+        this.lastReconstructionDims = null;  // Reset dimensions for new image
+        
+        // Delete old reconstruction texture if it exists (will be recreated with new dimensions)
+        if (this.compressedReconstructionTex) {
+            const gl = this.gl;
+            gl.deleteTexture(this.compressedReconstructionTex);
+            this.compressedReconstructionTex = null;
+        }
         
         // Upload to resource texture
         this._uploadResourceData(floatData);
@@ -795,7 +803,8 @@ class ParticleLenia {
     }
 
     getEatenPixels(forceRefresh = false) {
-        // Always refresh when requested or when we have no cache yet
+        // Return cached result if available and not forcing refresh
+        // GPU readbacks are expensive, so cache aggressively
         if (!forceRefresh && this.eatenPixelsCache !== null) {
             return this.eatenPixelsCache;
         }
@@ -804,7 +813,7 @@ class ParticleLenia {
         const width = 512;
         const height = 512;
         
-        // Read back resource texture
+        // Read back resource texture (expensive GPU operation)
         const pixels = new Float32Array(width * height * 4);
         twgl.bindFramebufferInfo(gl, this.resourceTex);
         gl.readPixels(0, 0, width, height, gl.RGBA, gl.FLOAT, pixels);
@@ -828,7 +837,7 @@ class ParticleLenia {
             }
         }
         
-        // Cache the result
+        // Cache the result to avoid repeated expensive readbacks
         this.eatenPixelsCache = eatenPixels;
         
         return eatenPixels;
@@ -865,42 +874,28 @@ class ParticleLenia {
     }
 
     createCompressedReconstruction(forceUpdate = false) {
-        console.log('[DEBUG] createCompressedReconstruction called', {forceUpdate});
         if (!this.originalResourceData || !this.originalAspectRatio) {
-            console.log('[DEBUG] Missing resource data:', {
-                hasOriginalData: !!this.originalResourceData,
-                hasAspectRatio: !!this.originalAspectRatio,
-                aspectRatio: this.originalAspectRatio
-            });
             return null;
         }
-        console.log('[DEBUG] Resource data exists:', {
-            aspectRatio: this.originalAspectRatio,
-            dataLength: this.originalResourceData ? this.originalResourceData.length : 0
-        });
         
-        // Always refresh eaten pixels when creating reconstruction
-        this.eatenPixelsCache = null;  // Force fresh read
-        const eatenPixels = this.getEatenPixels(true);
+        // Performance timing (optional, can be removed after optimization)
+        const perfStart = performance.now();
+        
+        // Only refresh eaten pixels if cache is invalid or forced
+        // This avoids expensive GPU readbacks
+        const eatenPixels = this.getEatenPixels(forceUpdate);
         const eatenCount = eatenPixels.length;
-        console.log('[DEBUG] Eaten pixels found:', eatenCount);
+        const perfAfterRead = performance.now();
         
         if (eatenCount === 0) {
-            console.log('[DEBUG] No eaten pixels, returning null');
             this.compressedReconstruction = null;
             return null;
         }
         
         // Compute optimal dimensions
         const dims = this.computeOptimalDimensions(eatenCount, this.originalAspectRatio);
-        console.log('[DEBUG] Computed dimensions:', {
-            eatenCount,
-            aspectRatio: this.originalAspectRatio,
-            dims
-        });
         
         if (dims.pixelCount === 0) {
-            console.log('[DEBUG] Invalid dimensions (pixelCount=0), returning null');
             this.compressedReconstruction = null;
             return null;
         }
@@ -913,19 +908,9 @@ class ParticleLenia {
                             dims.pixelCount > prevPixelCount ||
                             forceUpdate;
         
-        console.log('[DEBUG] Update check:', {
-            hasReconstruction: !!this.compressedReconstruction,
-            prevPixelCount,
-            newPixelCount: dims.pixelCount,
-            needsUpdate
-        });
-        
         if (!needsUpdate && this.compressedReconstruction) {
-            console.log('[DEBUG] Using cached reconstruction');
             return this.compressedReconstruction;
         }
-        
-        console.log('[DEBUG] Creating new reconstruction...');
         
         // Rescale original image to target compressed size
         const canvas = document.createElement('canvas');
@@ -957,11 +942,34 @@ class ParticleLenia {
         targetCtx.drawImage(canvas, 0, 0, dims.width, dims.height);
         const targetImageData = targetCtx.getImageData(0, 0, dims.width, dims.height);
         
-        // Greedy pixel placement: assign each eaten pixel to best-matching target position
+        // Safety check: if computation would be too expensive, use simpler algorithm
+        const totalTargets = dims.width * dims.height;
+        const maxOperations = 50 * 1000 * 1000;  // 50M operations max to avoid freeze
+        const estimatedOps = totalTargets * eatenPixels.length;
+        
+        // Optimized greedy pixel placement: use spatial sampling to avoid O(n*m) complexity
+        // For large sets, limit search to a random sample of eaten pixels per target
         const resultImageData = targetCtx.createImageData(dims.width, dims.height);
         const usedPixels = new Set();
         
-        // For each target position, find best matching eaten pixel
+        // Calculate max samples per target to keep under operation limit
+        let maxSearchPerTarget;
+        if (estimatedOps > maxOperations) {
+            // Limit search to keep total operations reasonable
+            maxSearchPerTarget = Math.max(10, Math.floor(maxOperations / totalTargets));
+        } else {
+            // Use reasonable sample size (10% of eaten pixels, min 100, max all)
+            maxSearchPerTarget = Math.min(eatenPixels.length, Math.max(100, Math.floor(eatenPixels.length / 10)));
+        }
+        
+        // Pre-shuffle eaten pixels for random sampling
+        const shuffledIndices = Array.from({length: eatenPixels.length}, (_, i) => i);
+        for (let i = shuffledIndices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
+        }
+        
+        // For each target position, find best matching eaten pixel from sample
         for (let ty = 0; ty < dims.height; ty++) {
             for (let tx = 0; tx < dims.width; tx++) {
                 const targetIdx = (ty * dims.width + tx) * 4;
@@ -970,12 +978,16 @@ class ParticleLenia {
                 const tb = targetImageData.data[targetIdx + 2] / 255.0;
                 
                 // Find unused eaten pixel with minimum chi-square distance
+                // Limit search to maxSearchPerTarget random samples to avoid O(n*m)
                 let bestPixel = null;
                 let bestDistance = Infinity;
                 let bestIndex = -1;
+                let samplesChecked = 0;
                 
-                for (let i = 0; i < eatenPixels.length; i++) {
+                for (let si = 0; si < shuffledIndices.length && samplesChecked < maxSearchPerTarget; si++) {
+                    const i = shuffledIndices[si];
                     if (usedPixels.has(i)) continue;
+                    samplesChecked++;
                     
                     const pixel = eatenPixels[i];
                     const dr = pixel.r - tr;
@@ -1009,12 +1021,12 @@ class ParticleLenia {
         
         targetCtx.putImageData(resultImageData, 0, 0);
         
-        // Upload to WebGL texture
+        // Upload to WebGL texture - reuse texture object if dimensions match
         const gl = this.gl;
         if (!this.compressedReconstructionTex || 
             this.compressedReconstructionTex.width !== dims.width ||
             this.compressedReconstructionTex.height !== dims.height) {
-            // Create or recreate texture
+            // Create or recreate texture only if dimensions changed
             if (this.compressedReconstructionTex) {
                 gl.deleteTexture(this.compressedReconstructionTex);
             }
@@ -1026,6 +1038,7 @@ class ParticleLenia {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         }
         
+        // Update texture data (reuse existing texture object)
         gl.bindTexture(gl.TEXTURE_2D, this.compressedReconstructionTex);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, targetCanvas);
         gl.bindTexture(gl.TEXTURE_2D, null);
@@ -1042,6 +1055,12 @@ class ParticleLenia {
         };
         this.lastEatenCount = eatenCount;
         this.lastReconstructionDims = dims;
+        
+        // Performance timing (optional, can be removed after optimization)
+        const perfEnd = performance.now();
+        if (perfEnd - perfStart > 16) {  // Only log if > 16ms (one frame at 60fps)
+            console.log(`[PERF] Reconstruction: ${(perfEnd - perfStart).toFixed(2)}ms (read: ${(perfAfterRead - perfStart).toFixed(2)}ms, compute: ${(perfEnd - perfAfterRead).toFixed(2)}ms)`);
+        }
         
         return this.compressedReconstruction;
     }
@@ -1476,9 +1495,11 @@ class ParticleLenia {
     
     renderCompressedReconstruction(target, {viewCenter=[0,0], viewExtent=50.0}={}) {
         // Only update reconstruction periodically, not every frame (too expensive!)
-        // Check if we need to update based on frame counter
+        // Update every 180 frames (3 seconds at 60fps) to reduce GPU readback frequency
+        const updateInterval = 180;
+        const currentFrame = this.reconstructionUpdateFrame || 0;
         const shouldUpdate = !this.compressedReconstruction || 
-                            (this.reconstructionUpdateFrame || 0) % 60 === 0;
+                            (currentFrame % updateInterval === 0);
         
         if (shouldUpdate) {
             const reconstruction = this.createCompressedReconstruction(false);  // Don't force update
@@ -1502,18 +1523,6 @@ class ParticleLenia {
             gl.clear(gl.COLOR_BUFFER_BIT);
             return;
         }
-        
-        // SIMPLE TEST: Render a fullscreen colored quad to verify basic rendering works
-        // Uncomment this to test if the issue is in texture/view transform
-        /*
-        const gl = this.gl;
-        const {width, height} = target || gl.canvas;
-        gl.viewport(0, 0, width, height);
-        gl.clearColor(0.2, 0.5, 0.8, 1.0);  // Blue background
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        console.log('[DEBUG] TEST: Rendered simple colored background');
-        return;
-        */
         
         // Render using the same approach as renderTrails - simple and direct
         const {width, height} = target || gl.canvas;

@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-    <script src="lenia.js?v=28"> </script>
+    <script src="lenia.js?v=31"></script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -833,13 +833,13 @@ window.addEventListener('keydown', e=>{
     if (e.key >= '1' && e.key <= '9') {
         params.renderMode = parseInt(e.key);
         // When switching to mode 3 (compressed reconstruction), set reasonable view extent
+        // Don't force update on switch - use cached version if available to avoid freeze
         if (params.renderMode === 3) {
-            const reconstruction = lenia.createCompressedReconstruction(true);
+            const reconstruction = lenia.createCompressedReconstruction(false);  // Use cache if available
             if (reconstruction && reconstruction.width > 0) {
                 // Set viewExtent to show the image at a reasonable size (about 1.5x the image size)
                 params.viewExtent = Math.max(reconstruction.width, reconstruction.height) * 1.5;
                 params.viewCenter = [0, 0];  // Center the view
-                console.log('[DEBUG] Set initial view for mode 3:', {viewExtent: params.viewExtent, viewCenter: params.viewCenter});
             }
         }
     }
