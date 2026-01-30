@@ -814,6 +814,11 @@ class ParticleLenia {
         // Reload the original resource image if one was loaded
         if (this.originalResourceData) {
             this._uploadResourceData(this.originalResourceData);
+            // Clear compressed reconstruction cache so it rebuilds from scratch
+            this.compressedReconstruction = null;
+            this.eatenPixelsCache = null;
+            this.lastReconstructionDims = null;
+            this.reconstructionUpdateFrame = 0;
             return true;
         }
         return false;
@@ -990,53 +995,87 @@ class ParticleLenia {
             [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
         }
         
-        // For each target position, find best matching eaten pixel from sample
+        // Improved matching: Sort target pixels by importance (distance from average color)
+        // This helps prioritize matching important/different pixels first
+        const targetPixels = [];
+        let avgR = 0, avgG = 0, avgB = 0;
         for (let ty = 0; ty < dims.height; ty++) {
             for (let tx = 0; tx < dims.width; tx++) {
                 const targetIdx = (ty * dims.width + tx) * 4;
                 const tr = targetImageData.data[targetIdx + 0] / 255.0;
                 const tg = targetImageData.data[targetIdx + 1] / 255.0;
                 const tb = targetImageData.data[targetIdx + 2] / 255.0;
+                targetPixels.push({tx, ty, idx: targetIdx, r: tr, g: tg, b: tb});
+                avgR += tr;
+                avgG += tg;
+                avgB += tb;
+            }
+        }
+        avgR /= targetPixels.length;
+        avgG /= targetPixels.length;
+        avgB /= targetPixels.length;
+        
+        // Sort by distance from average (prioritize distinctive pixels)
+        targetPixels.sort((a, b) => {
+            const distA = Math.sqrt((a.r - avgR)**2 + (a.g - avgG)**2 + (a.b - avgB)**2);
+            const distB = Math.sqrt((b.r - avgR)**2 + (b.g - avgG)**2 + (b.b - avgB)**2);
+            return distB - distA;  // Higher distance first (more distinctive)
+        });
+        
+        // For each target position (in priority order), find best matching eaten pixel
+        for (const target of targetPixels) {
+            const tr = target.r;
+            const tg = target.g;
+            const tb = target.b;
+            const targetIdx = target.idx;
+            
+            // Find unused eaten pixel with minimum perceptual distance
+            // Use weighted distance that accounts for luminance and chrominance
+            let bestPixel = null;
+            let bestDistance = Infinity;
+            let bestIndex = -1;
+            let samplesChecked = 0;
+            
+            for (let si = 0; si < shuffledIndices.length && samplesChecked < maxSearchPerTarget; si++) {
+                const i = shuffledIndices[si];
+                if (usedPixels.has(i)) continue;
+                samplesChecked++;
                 
-                // Find unused eaten pixel with minimum chi-square distance
-                // Limit search to maxSearchPerTarget random samples to avoid O(n*m)
-                let bestPixel = null;
-                let bestDistance = Infinity;
-                let bestIndex = -1;
-                let samplesChecked = 0;
+                const pixel = eatenPixels[i];
+                // Perceptual distance: weight luminance more than chrominance
+                const dr = pixel.r - tr;
+                const dg = pixel.g - tg;
+                const db = pixel.b - tb;
                 
-                for (let si = 0; si < shuffledIndices.length && samplesChecked < maxSearchPerTarget; si++) {
-                    const i = shuffledIndices[si];
-                    if (usedPixels.has(i)) continue;
-                    samplesChecked++;
-                    
-                    const pixel = eatenPixels[i];
-                    const dr = pixel.r - tr;
-                    const dg = pixel.g - tg;
-                    const db = pixel.b - tb;
-                    const distance = dr * dr + dg * dg + db * db;
-                    
-                    if (distance < bestDistance) {
-                        bestDistance = distance;
-                        bestPixel = pixel;
-                        bestIndex = i;
-                    }
+                // Calculate luminance for both colors
+                const targetLum = 0.299 * tr + 0.587 * tg + 0.114 * tb;
+                const pixelLum = 0.299 * pixel.r + 0.587 * pixel.g + 0.114 * pixel.b;
+                const lumDiff = Math.abs(targetLum - pixelLum);
+                
+                // Weighted distance: 70% luminance, 30% chrominance
+                const chromaDist = Math.sqrt(dr * dr + dg * dg + db * db);
+                const distance = 0.7 * lumDiff + 0.3 * chromaDist;
+                
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    bestPixel = pixel;
+                    bestIndex = i;
                 }
-                
-                // Assign best pixel to this position
-                if (bestPixel && bestIndex >= 0) {
-                    resultImageData.data[targetIdx + 0] = Math.round(bestPixel.r * 255);
-                    resultImageData.data[targetIdx + 1] = Math.round(bestPixel.g * 255);
-                    resultImageData.data[targetIdx + 2] = Math.round(bestPixel.b * 255);
-                    resultImageData.data[targetIdx + 3] = 255;
-                    usedPixels.add(bestIndex);
-                } else {
-                    // Fallback: use target color if no pixel available
-                    resultImageData.data[targetIdx + 0] = targetImageData.data[targetIdx + 0];
-                    resultImageData.data[targetIdx + 1] = targetImageData.data[targetIdx + 1];
-                    resultImageData.data[targetIdx + 2] = targetImageData.data[targetIdx + 2];
-                    resultImageData.data[targetIdx + 3] = 255;
-                }
+            }
+            
+            // Assign best pixel to this position
+            if (bestPixel && bestIndex >= 0) {
+                resultImageData.data[targetIdx + 0] = Math.round(bestPixel.r * 255);
+                resultImageData.data[targetIdx + 1] = Math.round(bestPixel.g * 255);
+                resultImageData.data[targetIdx + 2] = Math.round(bestPixel.b * 255);
+                resultImageData.data[targetIdx + 3] = 255;
+                usedPixels.add(bestIndex);
+            } else {
+                // Fallback: use target color if no pixel available
+                resultImageData.data[targetIdx + 0] = targetImageData.data[targetIdx + 0];
+                resultImageData.data[targetIdx + 1] = targetImageData.data[targetIdx + 1];
+                resultImageData.data[targetIdx + 2] = targetImageData.data[targetIdx + 2];
+                resultImageData.data[targetIdx + 3] = 255;
             }
         }
         

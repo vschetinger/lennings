@@ -967,7 +967,7 @@ window.addEventListener('keydown', e=>{
     }
     if (e.key == 'r') {
         // If a texture was loaded, reload it; otherwise just reset particles
-        lenia.reloadResourceImage(); // Reloads original texture if one exists
+        lenia.reloadResourceImage(); // Reloads original texture if one exists (also clears reconstruction cache)
         // Clamp spawnCount to max_point_n to avoid overflow
         if (params.spawnCount > lenia.max_point_n) {
             console.warn('spawnCount clamped to max_point_n:', lenia.max_point_n);
