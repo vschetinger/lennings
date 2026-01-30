@@ -211,6 +211,7 @@ class ParticleLenia {
         this.reconstructionSSIM = 0;  // SSIM value (0-1, higher is better)
         this.reconstructionScore = 0;  // Normalized score (0-100, higher = better, for future use)
         this.reconstructionCount = 0;  // Number of reconstructions created (increments when dimensions change)
+        this.reconstructionGeneration = 0;  // Increments on reset to invalidate stale worker results
         
         // Web Worker for reconstruction computation
         this.reconstructionWorker = null;
@@ -222,6 +223,13 @@ class ParticleLenia {
                 const {id, success, result, rgbdError, ssimValue, ssimDistance, score, error, dims} = e.data;
                 const request = this.reconstructionPendingRequests.get(id);
                 if (request) {
+                    // Check if this result is still valid (not cancelled by reset)
+                    // Compare the generation when request was made vs current generation
+                    if (request.generation !== this.reconstructionGeneration) {
+                        // This is a stale result from before reset, ignore it
+                        this.reconstructionPendingRequests.delete(id);
+                        return;
+                    }
                     this.reconstructionPendingRequests.delete(id);
                     if (success) {
                         request.resolve({result, rgbdError, ssimValue, ssimDistance, score, dims});
@@ -874,6 +882,52 @@ class ParticleLenia {
                 this.reconstructionPendingRequests.clear();
             }
             
+            // Terminate and recreate the worker to kill any in-progress computations
+            // This is especially important for large reconstructions that take a long time
+            if (this.reconstructionWorker) {
+                try {
+                    this.reconstructionWorker.terminate();
+                    this.reconstructionWorker = null;
+                } catch (error) {
+                    console.warn('[Worker] Error terminating worker:', error);
+                }
+            }
+            
+            // Recreate the worker for future reconstructions
+            try {
+                this.reconstructionWorker = new Worker('reconstruction-worker.js');
+                this.reconstructionWorker.onmessage = (e) => {
+                    const {id, success, result, rgbdError, ssimValue, ssimDistance, score, error, dims} = e.data;
+                    const request = this.reconstructionPendingRequests.get(id);
+                    if (request) {
+                        // Check if this result is still valid (not cancelled by reset)
+                        // Compare the generation when request was made vs current generation
+                        if (request.generation !== this.reconstructionGeneration) {
+                            // This is a stale result from before reset, ignore it
+                            this.reconstructionPendingRequests.delete(id);
+                            return;
+                        }
+                        this.reconstructionPendingRequests.delete(id);
+                        if (success) {
+                            request.resolve({result, rgbdError, ssimValue, ssimDistance, score, dims});
+                        } else {
+                            request.reject(new Error(error || 'Worker computation failed'));
+                        }
+                    }
+                };
+                this.reconstructionWorker.onerror = (error) => {
+                    console.error('[Worker] Error:', error);
+                    // Reject all pending requests
+                    for (const [id, request] of this.reconstructionPendingRequests.entries()) {
+                        request.reject(error);
+                    }
+                    this.reconstructionPendingRequests.clear();
+                };
+            } catch (error) {
+                console.warn('[Worker] Failed to recreate worker, falling back to main thread:', error);
+                this.reconstructionWorker = null;
+            }
+            
             this._uploadResourceData(this.originalResourceData);
             // Clear compressed reconstruction cache so it rebuilds from scratch
             this.compressedReconstruction = null;
@@ -885,6 +939,7 @@ class ParticleLenia {
             this.reconstructionSSIM = 0;  // Reset SSIM when reloading
             this.reconstructionScore = 0;  // Reset score when reloading
             this.reconstructionCount = 0;  // Reset reconstruction count when reloading
+            this.reconstructionGeneration++;  // Increment generation to invalidate any pending worker results
             // Also delete the texture if it exists
             if (this.compressedReconstructionTex) {
                 const gl = this.gl;
@@ -893,7 +948,12 @@ class ParticleLenia {
             }
             // Ensure reconstruction object is also cleared (in case it still references the deleted texture)
             if (this.compressedReconstruction) {
-                this.compressedReconstruction.texture = null;  // Clear texture reference
+                // Delete texture if it exists in the reconstruction object
+                if (this.compressedReconstruction.texture) {
+                    const gl = this.gl;
+                    gl.deleteTexture(this.compressedReconstruction.texture);
+                }
+                this.compressedReconstruction = null;  // Clear entire object, not just texture reference
             }
             return true;
         }
@@ -1002,24 +1062,35 @@ class ParticleLenia {
             return null;
         }
         
-        // Only recompute when the achievable image size (pixelCount) grows.
-        // Also check if eaten count changed significantly (>10%) to rebuild histogram
+        // Update when:
+        // 1. No reconstruction exists yet (always update to show progress)
+        // 2. Dimensions can grow (more pixels eaten, can make larger image)
+        // 3. Eaten count changed (even slightly) - even if dimensions don't change, quality improves
+        // 4. Force update requested
         const prevPixelCount = this.lastReconstructionDims
             ? this.lastReconstructionDims.width * this.lastReconstructionDims.height
             : 0;
-        const eatenCountChanged = Math.abs(eatenCount - this.lastEatenCount) / Math.max(1, this.lastEatenCount) > 0.1;
+        // After reset (lastReconstructionDims is null or lastEatenCount is 0), always update
+        // This ensures we show progress immediately after reset, even if dimensions don't change
+        const isFreshStartAfterReset = this.lastReconstructionDims === null || this.lastEatenCount === 0;
+        // Update if eaten count changed at all (even 1 pixel) - shows progress even when dimensions don't change
+        const eatenCountChanged = isFreshStartAfterReset || eatenCount !== this.lastEatenCount;
+        const dimensionsCanGrow = dims.pixelCount > prevPixelCount;
         const needsUpdate = !this.compressedReconstruction ||
-                            dims.pixelCount > prevPixelCount ||
+                            isFreshStartAfterReset ||
+                            dimensionsCanGrow ||
                             eatenCountChanged ||
                             forceUpdate;
         
-        // Always recalculate metrics when eaten count changes significantly (>10%) or on force update
-        // (pixels might have been eaten, changing the reconstruction quality)
+        // Always recalculate metrics when eaten count changes (even slightly) or on force update
+        // (pixels might have been eaten, changing the reconstruction quality, even if dimensions don't change)
         const shouldRecalcMetrics = eatenCountChanged || forceUpdate || !this.compressedReconstruction;
         
         // If reconstruction exists and dimensions haven't changed AND metrics don't need recalculation,
         // we can return the cached reconstruction
-        if (!needsUpdate && this.compressedReconstruction && !shouldRecalcMetrics) {
+        // BUT: never return cached reconstruction if this is a fresh start (after reset)
+        // This ensures we always rebuild after reset, even if dimensions happen to match
+        if (!isFreshStartAfterReset && !needsUpdate && this.compressedReconstruction && !shouldRecalcMetrics) {
             return this.compressedReconstruction;
         }
         
@@ -1065,9 +1136,11 @@ class ParticleLenia {
         if (this.reconstructionWorker) {
             try {
                 // Send data to worker
+                // Store the current generation so we can detect stale results after reset
                 const id = ++this.reconstructionPendingId;
+                const currentGeneration = this.reconstructionGeneration;
                 const promise = new Promise((resolve, reject) => {
-                    this.reconstructionPendingRequests.set(id, {resolve, reject, dims});
+                    this.reconstructionPendingRequests.set(id, {resolve, reject, dims, generation: currentGeneration});
                 });
                 
                 this.reconstructionWorker.postMessage({
@@ -1089,11 +1162,14 @@ class ParticleLenia {
                 // Wait for worker to complete
                 const {result: resultArray, rgbdError, ssimValue, ssimDistance, score: reconstructionScore} = await promise;
                 
-                // Check if this result is still valid (image might have been reloaded)
+                // Check if this result is still valid (image might have been reloaded or reset)
                 if (!this.originalResourceData) {
                     // Image was reloaded, ignore this result
                     return null;
                 }
+                
+                // Note: We don't need to check lastReconstructionDims here because the onmessage handler
+                // already filters out stale results based on generation. If we get here, the result is valid.
                 
                 resultImageData = new Uint8ClampedArray(resultArray);
                 this.reconstructionRGBd = (rgbdError != null && rgbdError !== undefined) ? rgbdError : 0;
@@ -1132,15 +1208,19 @@ class ParticleLenia {
         const resultImageDataObj = new ImageData(resultImageData, dims.width, dims.height);
         targetCtx.putImageData(resultImageDataObj, 0, 0);
         
-        // Upload to WebGL texture - reuse texture object if dimensions match
+        // Upload to WebGL texture - always recreate if this is a fresh start after reset
+        // This ensures clean state and prevents stale texture issues
         const gl = this.gl;
-        if (!this.compressedReconstructionTex || 
+        const isFreshStartForTexture = this.lastReconstructionDims === null;
+        if (isFreshStartForTexture || !this.compressedReconstructionTex || 
             this.compressedReconstructionTex.width !== dims.width ||
             this.compressedReconstructionTex.height !== dims.height) {
-            // Create or recreate texture only if dimensions changed
+            // Delete old texture if it exists (especially important after reset)
             if (this.compressedReconstructionTex) {
                 gl.deleteTexture(this.compressedReconstructionTex);
+                this.compressedReconstructionTex = null;
             }
+            // Always create new texture for fresh start or dimension change
             this.compressedReconstructionTex = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, this.compressedReconstructionTex);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);  // Pixel art - no resampling
@@ -1167,10 +1247,18 @@ class ParticleLenia {
         this.lastEatenCount = eatenCount;
         
         // Increment reconstruction count if dimensions changed (new reconstruction)
+        // BUT: Only if we're not in a reset state (prevDims should not be null at this point if not reset)
+        // This prevents stale worker results from incrementing the count after reset
         const prevDims = this.lastReconstructionDims;
-        if (!prevDims || prevDims.width !== dims.width || prevDims.height !== dims.height) {
+        if (prevDims && (prevDims.width !== dims.width || prevDims.height !== dims.height)) {
+            // Dimensions changed, increment count
             this.reconstructionCount++;
+        } else if (!prevDims) {
+            // This is the first reconstruction after reset, count should be 1
+            // But we already reset it to 0 in reloadResourceImage, so increment to 1
+            this.reconstructionCount = 1;
         }
+        // Always update lastReconstructionDims to mark that we're no longer in reset state
         this.lastReconstructionDims = dims;
         
         // Performance timing
@@ -1971,22 +2059,23 @@ class ParticleLenia {
         
         // Progressive update strategy: more frequent updates for small images, less frequent for large ones
         // This allows real-time evolution at the start, then throttles as complexity grows
+        // Track if this is the first frame after switching to mode 3 (or after a long pause)
+        const wasFirstFrame = (this.reconstructionUpdateFrame === undefined || this.reconstructionUpdateFrame === 0);
         this.reconstructionUpdateFrame = (this.reconstructionUpdateFrame || 0) + 1;
         const currentFrame = this.reconstructionUpdateFrame;
         
         // Calculate dynamic update interval based on eaten pixel count (more accurate than reconstruction size)
-        // Use cached count if available, otherwise estimate from reconstruction size
-        let eatenCount = this.lastEatenCount || 0;
-        if (!eatenCount && this.compressedReconstruction) {
-            // Estimate from reconstruction size (rough approximation)
-            eatenCount = this.compressedReconstruction.width * this.compressedReconstruction.height;
-        }
+        // After reset (lastReconstructionDims === null), always force frequent updates regardless of eaten count
+        // This ensures we show progress immediately after reset, even if many pixels were already eaten
+        const isAfterReset = this.lastReconstructionDims === null;
         
-        // If no reconstruction exists yet, try to update frequently (every 5 frames)
-        // This ensures we start building as soon as pixels are eaten after reload
-        if (!this.compressedReconstruction) {
-            // Try to update every 5 frames when no reconstruction exists
-            if (currentFrame % 5 === 0) {
+        // If no reconstruction exists yet OR after reset, try to update frequently (every 5 frames)
+        // This ensures we start building as soon as pixels are eaten after reload/reset
+        // After reset, we need to show progress immediately, not wait for a long interval
+        if (!this.compressedReconstruction || isAfterReset) {
+            // Try to update every 5 frames when no reconstruction exists, or immediately on first frame
+            // After reset, always try to update frequently to show fresh start
+            if (wasFirstFrame || isAfterReset || currentFrame % 5 === 0) {
                 // Force refresh of eaten pixels to get latest data
                 this.eatenPixelsCache = null;  // Clear cache to force fresh read
                 
@@ -2068,44 +2157,51 @@ class ParticleLenia {
             return;
         }
         
+        // Get current eaten count for interval calculation
+        // After reset, force frequent updates regardless of count to show progress immediately
+        const currentEatenPixels = this.getEatenPixels(false);  // Get current count (may use cache)
+        let eatenCountForInterval = currentEatenPixels.length;
+        if (!eatenCountForInterval && this.compressedReconstruction) {
+            // Fallback: estimate from reconstruction size (rough approximation)
+            eatenCountForInterval = this.compressedReconstruction.width * this.compressedReconstruction.height;
+        }
+        
         // Progressive intervals based on eaten pixel count:
-        // < 100 pixels: every 15 frames (0.25s at 60fps) - very responsive for tiny images
-        // 100-500 pixels: every 30 frames (0.5s) - real-time evolution
-        // 500-2000 pixels: every 60 frames (1s)
-        // 2000-5000 pixels: every 120 frames (2s)
-        // 5000-10000 pixels: every 180 frames (3s)
-        // 10000-20000 pixels: every 240 frames (4s)
-        // 20000-50000 pixels: every 300 frames (5s)
-        // > 50000 pixels: every 360 frames (6s)
+        // BUT: After reset (lastReconstructionDims === null), always use fast interval (every 5 frames)
+        // This prevents the issue where reset with many pixels causes long wait before update
+        // Without this, if you reset when 10000 pixels are eaten, it would wait 180 frames (3s) before updating
         let updateInterval;
-        if (eatenCount < 100) {
+        if (isAfterReset) {
+            updateInterval = 5;  // Always fast after reset to show progress immediately, regardless of pixel count
+        } else if (eatenCountForInterval < 100) {
             updateInterval = 15;  // Very responsive for tiny images
-        } else if (eatenCount < 500) {
+        } else if (eatenCountForInterval < 500) {
             updateInterval = 30;  // Real-time evolution
-        } else if (eatenCount < 2000) {
+        } else if (eatenCountForInterval < 2000) {
             updateInterval = 60;
-        } else if (eatenCount < 5000) {
+        } else if (eatenCountForInterval < 5000) {
             updateInterval = 120;
-        } else if (eatenCount < 10000) {
+        } else if (eatenCountForInterval < 10000) {
             updateInterval = 180;
-        } else if (eatenCount < 20000) {
+        } else if (eatenCountForInterval < 20000) {
             updateInterval = 240;
-        } else if (eatenCount < 50000) {
+        } else if (eatenCountForInterval < 50000) {
             updateInterval = 300;
         } else {
             updateInterval = 360;  // Throttled for very large images
         }
         
-        // Update based on interval
-        const shouldUpdate = (currentFrame % updateInterval === 0);
+        // Update based on interval, or force update on first frame after switching to mode 3
+        // After reset, always update frequently to show progress immediately
+        const shouldUpdate = wasFirstFrame || isAfterReset || (currentFrame % updateInterval === 0);
         
         if (shouldUpdate) {
-            // Force refresh of eaten pixels to get latest data, but don't force full reconstruction
-            // (createCompressedReconstruction will still use its own logic to decide if reconstruction needs update)
+            // Force refresh of eaten pixels to get latest data
             this.eatenPixelsCache = null;  // Clear cache to force fresh read
             
-            // If no reconstruction exists, force update to ensure fresh start
-            const forceUpdate = !this.compressedReconstruction;
+            // Force update if no reconstruction exists, or if we're on first frame (to show progress immediately)
+            // Otherwise let createCompressedReconstruction decide based on eaten count changes
+            const forceUpdate = !this.compressedReconstruction || wasFirstFrame;
             
             // Start async reconstruction (won't block rendering)
             this.createCompressedReconstruction(forceUpdate).then(reconstruction => {
@@ -2139,7 +2235,29 @@ class ParticleLenia {
         }
         
         const reconstruction = this.compressedReconstruction;
+        // Validate reconstruction exists and texture is valid
+        // If texture is null or invalid, clear reconstruction and try to rebuild
         if (!reconstruction || !reconstruction.texture) {
+            // Clear invalid reconstruction to trigger rebuild
+            if (reconstruction && !reconstruction.texture) {
+                this.compressedReconstruction = null;
+                // Reset frame counter to force immediate retry
+                this.reconstructionUpdateFrame = 0;
+                // Clear cache to force fresh read
+                this.eatenPixelsCache = null;
+            }
+            // Try to rebuild immediately if we have an invalid reconstruction
+            // This handles the case where texture was deleted but object still exists
+            if (!this.compressedReconstruction) {
+                // Force immediate update attempt
+                this.eatenPixelsCache = null;
+                this.createCompressedReconstruction(true).catch(error => {
+                    // Ignore errors, will retry on next frame
+                    if (error.message && !error.message.includes('cancelling reconstruction')) {
+                        console.error('[Reconstruction] Failed to rebuild:', error);
+                    }
+                });
+            }
             const gl = this.gl;
             const {width, height} = target || gl.canvas;
             gl.viewport(0, 0, width, height);

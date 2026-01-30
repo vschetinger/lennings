@@ -728,7 +728,9 @@ class MobileControls {
         label: 'Reconstruction',
         action: () => {
             params.renderMode = 3;
-            lenia.createCompressedReconstruction(false).then(reconstruction => {
+            lenia.reconstructionUpdateFrame = 0;  // Reset to force immediate update on next render
+            lenia.eatenPixelsCache = null;  // Clear cache to force fresh read of eaten pixels
+            lenia.createCompressedReconstruction(true).then(reconstruction => {  // Force update
                 if (reconstruction && reconstruction.width > 0) {
                     params.viewExtent = Math.max(reconstruction.width, reconstruction.height) * 1.5;
                     params.viewCenter = [0, 0];
@@ -1374,9 +1376,11 @@ window.addEventListener('keydown', e=>{
     if (e.key >= '1' && e.key <= '9') {
         params.renderMode = parseInt(e.key);
         // When switching to mode 3 (compressed reconstruction), set reasonable view extent
-        // Don't force update on switch - use cached version if available to avoid freeze
+        // Clear caches and reset frame counter to force fresh update (handles case where user switches after long delay)
         if (params.renderMode === 3) {
-            lenia.createCompressedReconstruction(false).then(reconstruction => {
+            lenia.reconstructionUpdateFrame = 0;  // Reset to force immediate update on next render
+            lenia.eatenPixelsCache = null;  // Clear cache to force fresh read of eaten pixels
+            lenia.createCompressedReconstruction(true).then(reconstruction => {  // Force update
                 if (reconstruction && reconstruction.width > 0) {
                     // Set viewExtent to show the image at a reasonable size (about 1.5x the image size)
                     params.viewExtent = Math.max(reconstruction.width, reconstruction.height) * 1.5;
