@@ -338,7 +338,7 @@
     "gui": "main",
     "params": {
       "baseFreq": {
-        "value": 100.0,
+        "value": 41.2034,
         "min": 20.0,
         "max": 1000.0,
         "step": 1.0,

@@ -207,6 +207,37 @@ class ParticleLenia {
         this.lastEatenCount = 0;
         this.lastReconstructionDims = null;
         this.reconstructionUpdateFrame = 0;  // Frame counter for periodic updates
+        
+        // Web Worker for reconstruction computation
+        this.reconstructionWorker = null;
+        this.reconstructionPendingId = 0;
+        this.reconstructionPendingRequests = new Map(); // id -> {resolve, reject, dims}
+        try {
+            this.reconstructionWorker = new Worker('reconstruction-worker.js');
+            this.reconstructionWorker.onmessage = (e) => {
+                const {id, success, result, dims, error} = e.data;
+                const request = this.reconstructionPendingRequests.get(id);
+                if (request) {
+                    this.reconstructionPendingRequests.delete(id);
+                    if (success) {
+                        request.resolve({result, dims});
+                    } else {
+                        request.reject(new Error(error || 'Worker computation failed'));
+                    }
+                }
+            };
+            this.reconstructionWorker.onerror = (error) => {
+                console.error('[Worker] Error:', error);
+                // Reject all pending requests
+                for (const [id, request] of this.reconstructionPendingRequests.entries()) {
+                    request.reject(error);
+                }
+                this.reconstructionPendingRequests.clear();
+            };
+        } catch (error) {
+            console.warn('[Worker] Failed to create worker, falling back to main thread:', error);
+            this.reconstructionWorker = null;
+        }
 
         this.setupUniforms(gui);
     }
@@ -899,12 +930,12 @@ class ParticleLenia {
         };
     }
 
-    createCompressedReconstruction(forceUpdate = false) {
+    async createCompressedReconstruction(forceUpdate = false) {
         if (!this.originalResourceData || !this.originalAspectRatio) {
             return null;
         }
         
-        // Performance timing (optional, can be removed after optimization)
+        // Performance timing
         const perfStart = performance.now();
         
         // Only refresh eaten pixels if cache is invalid or forced
@@ -927,11 +958,14 @@ class ParticleLenia {
         }
         
         // Only recompute when the achievable image size (pixelCount) grows.
+        // Also check if eaten count changed significantly (>10%) to rebuild histogram
         const prevPixelCount = this.lastReconstructionDims
             ? this.lastReconstructionDims.width * this.lastReconstructionDims.height
             : 0;
+        const eatenCountChanged = Math.abs(eatenCount - this.lastEatenCount) / Math.max(1, this.lastEatenCount) > 0.1;
         const needsUpdate = !this.compressedReconstruction ||
                             dims.pixelCount > prevPixelCount ||
+                            eatenCountChanged ||
                             forceUpdate;
         
         if (!needsUpdate && this.compressedReconstruction) {
@@ -968,118 +1002,43 @@ class ParticleLenia {
         targetCtx.drawImage(canvas, 0, 0, dims.width, dims.height);
         const targetImageData = targetCtx.getImageData(0, 0, dims.width, dims.height);
         
-        // Safety check: if computation would be too expensive, use simpler algorithm
-        const totalTargets = dims.width * dims.height;
-        const maxOperations = 50 * 1000 * 1000;  // 50M operations max to avoid freeze
-        const estimatedOps = totalTargets * eatenPixels.length;
-        
-        // Optimized greedy pixel placement: use spatial sampling to avoid O(n*m) complexity
-        // For large sets, limit search to a random sample of eaten pixels per target
-        const resultImageData = targetCtx.createImageData(dims.width, dims.height);
-        const usedPixels = new Set();
-        
-        // Calculate max samples per target to keep under operation limit
-        let maxSearchPerTarget;
-        if (estimatedOps > maxOperations) {
-            // Limit search to keep total operations reasonable
-            maxSearchPerTarget = Math.max(10, Math.floor(maxOperations / totalTargets));
+        // Use Web Worker if available, otherwise fall back to synchronous computation
+        let resultImageData;
+        if (this.reconstructionWorker) {
+            try {
+                // Send data to worker
+                const id = ++this.reconstructionPendingId;
+                const promise = new Promise((resolve, reject) => {
+                    this.reconstructionPendingRequests.set(id, {resolve, reject, dims});
+                });
+                
+                this.reconstructionWorker.postMessage({
+                    id,
+                    eatenPixels,
+                    targetImageData: {
+                        data: Array.from(targetImageData.data),
+                        width: targetImageData.width,
+                        height: targetImageData.height
+                    },
+                    dims
+                });
+                
+                // Wait for worker to complete
+                const {result: resultArray} = await promise;
+                resultImageData = new Uint8ClampedArray(resultArray);
+            } catch (error) {
+                console.error('[Reconstruction] Worker failed, falling back to main thread:', error);
+                // Fall through to synchronous computation
+                resultImageData = this.computeReconstructionSync(eatenPixels, targetImageData, dims);
+            }
         } else {
-            // Use reasonable sample size (10% of eaten pixels, min 100, max all)
-            maxSearchPerTarget = Math.min(eatenPixels.length, Math.max(100, Math.floor(eatenPixels.length / 10)));
+            // Fallback: synchronous computation on main thread
+            resultImageData = this.computeReconstructionSync(eatenPixels, targetImageData, dims);
         }
         
-        // Pre-shuffle eaten pixels for random sampling
-        const shuffledIndices = Array.from({length: eatenPixels.length}, (_, i) => i);
-        for (let i = shuffledIndices.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
-        }
-        
-        // Improved matching: Sort target pixels by importance (distance from average color)
-        // This helps prioritize matching important/different pixels first
-        const targetPixels = [];
-        let avgR = 0, avgG = 0, avgB = 0;
-        for (let ty = 0; ty < dims.height; ty++) {
-            for (let tx = 0; tx < dims.width; tx++) {
-                const targetIdx = (ty * dims.width + tx) * 4;
-                const tr = targetImageData.data[targetIdx + 0] / 255.0;
-                const tg = targetImageData.data[targetIdx + 1] / 255.0;
-                const tb = targetImageData.data[targetIdx + 2] / 255.0;
-                targetPixels.push({tx, ty, idx: targetIdx, r: tr, g: tg, b: tb});
-                avgR += tr;
-                avgG += tg;
-                avgB += tb;
-            }
-        }
-        avgR /= targetPixels.length;
-        avgG /= targetPixels.length;
-        avgB /= targetPixels.length;
-        
-        // Sort by distance from average (prioritize distinctive pixels)
-        targetPixels.sort((a, b) => {
-            const distA = Math.sqrt((a.r - avgR)**2 + (a.g - avgG)**2 + (a.b - avgB)**2);
-            const distB = Math.sqrt((b.r - avgR)**2 + (b.g - avgG)**2 + (b.b - avgB)**2);
-            return distB - distA;  // Higher distance first (more distinctive)
-        });
-        
-        // For each target position (in priority order), find best matching eaten pixel
-        for (const target of targetPixels) {
-            const tr = target.r;
-            const tg = target.g;
-            const tb = target.b;
-            const targetIdx = target.idx;
-            
-            // Find unused eaten pixel with minimum perceptual distance
-            // Use weighted distance that accounts for luminance and chrominance
-            let bestPixel = null;
-            let bestDistance = Infinity;
-            let bestIndex = -1;
-            let samplesChecked = 0;
-            
-            for (let si = 0; si < shuffledIndices.length && samplesChecked < maxSearchPerTarget; si++) {
-                const i = shuffledIndices[si];
-                if (usedPixels.has(i)) continue;
-                samplesChecked++;
-                
-                const pixel = eatenPixels[i];
-                // Perceptual distance: weight luminance more than chrominance
-                const dr = pixel.r - tr;
-                const dg = pixel.g - tg;
-                const db = pixel.b - tb;
-                
-                // Calculate luminance for both colors
-                const targetLum = 0.299 * tr + 0.587 * tg + 0.114 * tb;
-                const pixelLum = 0.299 * pixel.r + 0.587 * pixel.g + 0.114 * pixel.b;
-                const lumDiff = Math.abs(targetLum - pixelLum);
-                
-                // Weighted distance: 70% luminance, 30% chrominance
-                const chromaDist = Math.sqrt(dr * dr + dg * dg + db * db);
-                const distance = 0.7 * lumDiff + 0.3 * chromaDist;
-                
-                if (distance < bestDistance) {
-                    bestDistance = distance;
-                    bestPixel = pixel;
-                    bestIndex = i;
-                }
-            }
-            
-            // Assign best pixel to this position
-            if (bestPixel && bestIndex >= 0) {
-                resultImageData.data[targetIdx + 0] = Math.round(bestPixel.r * 255);
-                resultImageData.data[targetIdx + 1] = Math.round(bestPixel.g * 255);
-                resultImageData.data[targetIdx + 2] = Math.round(bestPixel.b * 255);
-                resultImageData.data[targetIdx + 3] = 255;
-                usedPixels.add(bestIndex);
-            } else {
-                // Fallback: use target color if no pixel available
-                resultImageData.data[targetIdx + 0] = targetImageData.data[targetIdx + 0];
-                resultImageData.data[targetIdx + 1] = targetImageData.data[targetIdx + 1];
-                resultImageData.data[targetIdx + 2] = targetImageData.data[targetIdx + 2];
-                resultImageData.data[targetIdx + 3] = 255;
-            }
-        }
-        
-        targetCtx.putImageData(resultImageData, 0, 0);
+        // Create ImageData from result
+        const resultImageDataObj = new ImageData(resultImageData, dims.width, dims.height);
+        targetCtx.putImageData(resultImageDataObj, 0, 0);
         
         // Upload to WebGL texture - reuse texture object if dimensions match
         const gl = this.gl;
@@ -1116,13 +1075,68 @@ class ParticleLenia {
         this.lastEatenCount = eatenCount;
         this.lastReconstructionDims = dims;
         
-        // Performance timing (optional, can be removed after optimization)
+        // Performance timing
         const perfEnd = performance.now();
         if (perfEnd - perfStart > 16) {  // Only log if > 16ms (one frame at 60fps)
             console.log(`[PERF] Reconstruction: ${(perfEnd - perfStart).toFixed(2)}ms (read: ${(perfAfterRead - perfStart).toFixed(2)}ms, compute: ${(perfEnd - perfAfterRead).toFixed(2)}ms)`);
         }
         
         return this.compressedReconstruction;
+    }
+    
+    // Fallback synchronous computation (simplified version for when worker is unavailable)
+    computeReconstructionSync(eatenPixels, targetImageData, dims) {
+        const resultImageData = new Uint8ClampedArray(targetImageData.data.length);
+        const usedPixels = new Set();
+        
+        // Simple greedy matching: for each target pixel, find closest unused eaten pixel
+        for (let ty = 0; ty < dims.height; ty++) {
+            for (let tx = 0; tx < dims.width; tx++) {
+                const targetIdx = (ty * dims.width + tx) * 4;
+                const tr = targetImageData.data[targetIdx + 0] / 255.0;
+                const tg = targetImageData.data[targetIdx + 1] / 255.0;
+                const tb = targetImageData.data[targetIdx + 2] / 255.0;
+                
+                // Find best unused eaten pixel (limited search to avoid freeze)
+                let bestPixel = null;
+                let bestIndex = -1;
+                let bestDistance = Infinity;
+                const maxSearch = Math.min(eatenPixels.length, 1000); // Limit search
+                
+                for (let i = 0; i < maxSearch; i++) {
+                    const pixIdx = (i * 7919) % eatenPixels.length; // Pseudo-random sampling
+                    if (usedPixels.has(pixIdx)) continue;
+                    
+                    const pixel = eatenPixels[pixIdx];
+                    const dr = pixel.r - tr;
+                    const dg = pixel.g - tg;
+                    const db = pixel.b - tb;
+                    const distance = dr * dr + dg * dg + db * db;
+                    
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
+                        bestPixel = pixel;
+                        bestIndex = pixIdx;
+                    }
+                }
+                
+                if (bestPixel && bestIndex >= 0) {
+                    resultImageData[targetIdx + 0] = Math.round(bestPixel.r * 255);
+                    resultImageData[targetIdx + 1] = Math.round(bestPixel.g * 255);
+                    resultImageData[targetIdx + 2] = Math.round(bestPixel.b * 255);
+                    resultImageData[targetIdx + 3] = 255;
+                    usedPixels.add(bestIndex);
+                } else {
+                    // Fallback: use target color
+                    resultImageData[targetIdx + 0] = targetImageData.data[targetIdx + 0];
+                    resultImageData[targetIdx + 1] = targetImageData.data[targetIdx + 1];
+                    resultImageData[targetIdx + 2] = targetImageData.data[targetIdx + 2];
+                    resultImageData[targetIdx + 3] = 255;
+                }
+            }
+        }
+        
+        return resultImageData;
     }
 
     consumeResources() {
@@ -1554,11 +1568,47 @@ class ParticleLenia {
     }
     
     renderCompressedReconstruction(target, {viewCenter=[0,0], viewExtent=50.0}={}) {
-        // Only update reconstruction periodically, not every frame (too expensive!)
-        // Update every 180 frames (3 seconds at 60fps) to reduce GPU readback frequency
-        const updateInterval = 180;
+        // Progressive update strategy: more frequent updates for small images, less frequent for large ones
+        // This allows real-time evolution at the start, then throttles as complexity grows
         this.reconstructionUpdateFrame = (this.reconstructionUpdateFrame || 0) + 1;
         const currentFrame = this.reconstructionUpdateFrame;
+        
+        // Calculate dynamic update interval based on eaten pixel count (more accurate than reconstruction size)
+        // Use cached count if available, otherwise estimate from reconstruction size
+        let eatenCount = this.lastEatenCount || 0;
+        if (!eatenCount && this.compressedReconstruction) {
+            // Estimate from reconstruction size (rough approximation)
+            eatenCount = this.compressedReconstruction.width * this.compressedReconstruction.height;
+        }
+        
+        // Progressive intervals based on eaten pixel count:
+        // < 100 pixels: every 15 frames (0.25s at 60fps) - very responsive for tiny images
+        // 100-500 pixels: every 30 frames (0.5s) - real-time evolution
+        // 500-2000 pixels: every 60 frames (1s)
+        // 2000-5000 pixels: every 120 frames (2s)
+        // 5000-10000 pixels: every 180 frames (3s)
+        // 10000-20000 pixels: every 240 frames (4s)
+        // 20000-50000 pixels: every 300 frames (5s)
+        // > 50000 pixels: every 360 frames (6s)
+        let updateInterval;
+        if (eatenCount < 100) {
+            updateInterval = 15;  // Very responsive for tiny images
+        } else if (eatenCount < 500) {
+            updateInterval = 30;  // Real-time evolution
+        } else if (eatenCount < 2000) {
+            updateInterval = 60;
+        } else if (eatenCount < 5000) {
+            updateInterval = 120;
+        } else if (eatenCount < 10000) {
+            updateInterval = 180;
+        } else if (eatenCount < 20000) {
+            updateInterval = 240;
+        } else if (eatenCount < 50000) {
+            updateInterval = 300;
+        } else {
+            updateInterval = 360;  // Throttled for very large images
+        }
+        
         const shouldUpdate = !this.compressedReconstruction || 
                             (currentFrame % updateInterval === 0);
         
@@ -1566,16 +1616,15 @@ class ParticleLenia {
             // Force refresh of eaten pixels to get latest data, but don't force full reconstruction
             // (createCompressedReconstruction will still use its own logic to decide if reconstruction needs update)
             this.eatenPixelsCache = null;  // Clear cache to force fresh read
-            const reconstruction = this.createCompressedReconstruction(false);
-            if (!reconstruction || !reconstruction.texture) {
-                // No reconstruction available - render black screen
-                const gl = this.gl;
-                const {width, height} = target || gl.canvas;
-                gl.viewport(0, 0, width, height);
-                gl.clearColor(0.0, 0.0, 0.0, 1.0);
-                gl.clear(gl.COLOR_BUFFER_BIT);
-                return;
-            }
+            // Start async reconstruction (won't block rendering)
+            this.createCompressedReconstruction(false).then(reconstruction => {
+                // Reconstruction completed, will be visible on next render
+                if (!reconstruction || !reconstruction.texture) {
+                    this.compressedReconstruction = null;
+                }
+            }).catch(error => {
+                console.error('[Reconstruction] Failed to update:', error);
+            });
         }
         
         const reconstruction = this.compressedReconstruction;

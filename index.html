@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-    <script src="lenia.js?v=31"></script>
+    <script src="lenia.js?v=32"></script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -719,7 +719,12 @@ class MobileControls {
         label: 'Reconstruction',
         action: () => {
             params.renderMode = 3;
-            const reconstruction = lenia.createCompressedReconstruction(false);
+            lenia.createCompressedReconstruction(false).then(reconstruction => {
+                if (reconstruction && reconstruction.width > 0) {
+                    params.viewExtent = Math.max(reconstruction.width, reconstruction.height) * 1.5;
+                    params.viewCenter = [0, 0];
+                }
+            }).catch(err => console.error('Reconstruction failed:', err));
             if (reconstruction && reconstruction.width > 0) {
                 params.viewExtent = Math.max(reconstruction.width, reconstruction.height) * 1.5;
                 params.viewCenter = [0, 0];
@@ -1328,12 +1333,13 @@ window.addEventListener('keydown', e=>{
         // When switching to mode 3 (compressed reconstruction), set reasonable view extent
         // Don't force update on switch - use cached version if available to avoid freeze
         if (params.renderMode === 3) {
-            const reconstruction = lenia.createCompressedReconstruction(false);  // Use cache if available
-            if (reconstruction && reconstruction.width > 0) {
-                // Set viewExtent to show the image at a reasonable size (about 1.5x the image size)
-                params.viewExtent = Math.max(reconstruction.width, reconstruction.height) * 1.5;
-                params.viewCenter = [0, 0];  // Center the view
-            }
+            lenia.createCompressedReconstruction(false).then(reconstruction => {
+                if (reconstruction && reconstruction.width > 0) {
+                    // Set viewExtent to show the image at a reasonable size (about 1.5x the image size)
+                    params.viewExtent = Math.max(reconstruction.width, reconstruction.height) * 1.5;
+                    params.viewCenter = [0, 0];  // Center the view
+                }
+            }).catch(err => console.error('Reconstruction failed:', err));
         }
         // Update mobile control button states for render mode buttons
         if (window.mobileControls) {
