@@ -207,6 +207,10 @@ class ParticleLenia {
         this.lastEatenCount = 0;
         this.lastReconstructionDims = null;
         this.reconstructionUpdateFrame = 0;  // Frame counter for periodic updates
+        this.reconstructionRGBd = 0;  // RGB distance (large discrete number)
+        this.reconstructionSSIM = 0;  // SSIM value (0-1, higher is better)
+        this.reconstructionScore = 0;  // Normalized score (0-100, higher = better, for future use)
+        this.reconstructionCount = 0;  // Number of reconstructions created (increments when dimensions change)
         
         // Web Worker for reconstruction computation
         this.reconstructionWorker = null;
@@ -215,12 +219,12 @@ class ParticleLenia {
         try {
             this.reconstructionWorker = new Worker('reconstruction-worker.js');
             this.reconstructionWorker.onmessage = (e) => {
-                const {id, success, result, dims, error} = e.data;
+                const {id, success, result, rgbdError, ssimValue, ssimDistance, score, error, dims} = e.data;
                 const request = this.reconstructionPendingRequests.get(id);
                 if (request) {
                     this.reconstructionPendingRequests.delete(id);
                     if (success) {
-                        request.resolve({result, dims});
+                        request.resolve({result, rgbdError, ssimValue, ssimDistance, score, dims});
                     } else {
                         request.reject(new Error(error || 'Worker computation failed'));
                     }
@@ -813,17 +817,35 @@ class ParticleLenia {
         // Store the original float data for reloading later
         this.originalResourceData = floatData.slice(); // Make a copy
         
+        // Cancel all pending reconstruction worker requests (they're for the old image)
+        if (this.reconstructionPendingRequests && this.reconstructionPendingRequests.size > 0) {
+            for (const [id, request] of this.reconstructionPendingRequests.entries()) {
+                request.reject(new Error('Image reloaded, cancelling reconstruction'));
+            }
+            this.reconstructionPendingRequests.clear();
+        }
+        
         // Reset compressed reconstruction cache when new image is loaded
         this.compressedReconstruction = null;
         this.eatenPixelsCache = null;
         this.lastEatenCount = 0;
         this.lastReconstructionDims = null;  // Reset dimensions for new image
+        this.reconstructionCount = 0;  // Reset reconstruction count for new image
+        this.reconstructionUpdateFrame = 0;  // Reset update frame counter
+        this.reconstructionRGBd = 0;  // Reset metrics
+        this.reconstructionSSIM = 0;
+        this.reconstructionScore = 0;
         
         // Delete old reconstruction texture if it exists (will be recreated with new dimensions)
         if (this.compressedReconstructionTex) {
             const gl = this.gl;
             gl.deleteTexture(this.compressedReconstructionTex);
             this.compressedReconstructionTex = null;
+        }
+        
+        // Ensure reconstruction object is also cleared
+        if (this.compressedReconstruction) {
+            this.compressedReconstruction.texture = null;  // Clear texture reference
         }
         
         // Upload to resource texture
@@ -844,12 +866,35 @@ class ParticleLenia {
     reloadResourceImage() {
         // Reload the original resource image if one was loaded
         if (this.originalResourceData) {
+            // Cancel all pending reconstruction worker requests
+            if (this.reconstructionPendingRequests && this.reconstructionPendingRequests.size > 0) {
+                for (const [id, request] of this.reconstructionPendingRequests.entries()) {
+                    request.reject(new Error('Image reloaded, cancelling reconstruction'));
+                }
+                this.reconstructionPendingRequests.clear();
+            }
+            
             this._uploadResourceData(this.originalResourceData);
             // Clear compressed reconstruction cache so it rebuilds from scratch
             this.compressedReconstruction = null;
             this.eatenPixelsCache = null;
             this.lastReconstructionDims = null;
+            this.lastEatenCount = 0;  // Reset eaten count so update interval recalculates
             this.reconstructionUpdateFrame = 0;
+            this.reconstructionRGBd = 0;  // Reset RGBd when reloading
+            this.reconstructionSSIM = 0;  // Reset SSIM when reloading
+            this.reconstructionScore = 0;  // Reset score when reloading
+            this.reconstructionCount = 0;  // Reset reconstruction count when reloading
+            // Also delete the texture if it exists
+            if (this.compressedReconstructionTex) {
+                const gl = this.gl;
+                gl.deleteTexture(this.compressedReconstructionTex);
+                this.compressedReconstructionTex = null;
+            }
+            // Ensure reconstruction object is also cleared (in case it still references the deleted texture)
+            if (this.compressedReconstruction) {
+                this.compressedReconstruction.texture = null;  // Clear texture reference
+            }
             return true;
         }
         return false;
@@ -968,38 +1013,51 @@ class ParticleLenia {
                             eatenCountChanged ||
                             forceUpdate;
         
-        if (!needsUpdate && this.compressedReconstruction) {
+        // Always recalculate metrics when eaten count changes significantly (>10%) or on force update
+        // (pixels might have been eaten, changing the reconstruction quality)
+        const shouldRecalcMetrics = eatenCountChanged || forceUpdate || !this.compressedReconstruction;
+        
+        // If reconstruction exists and dimensions haven't changed AND metrics don't need recalculation,
+        // we can return the cached reconstruction
+        if (!needsUpdate && this.compressedReconstruction && !shouldRecalcMetrics) {
             return this.compressedReconstruction;
         }
         
-        // Rescale original image to target compressed size
-        const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 512;
-        const ctx = canvas.getContext('2d');
-        const imageData = ctx.createImageData(512, 512);
+        // Otherwise, we need to rebuild the reconstruction (which will also recalculate metrics)
+        // This happens when:
+        // - Reconstruction doesn't exist yet
+        // - Dimensions changed (more pixels eaten, can make larger image)
+        // - Eaten count changed significantly (need to recalculate metrics)
+        // - Force update requested
         
-        // Reconstruct original image data from float array
+        // Get original image at full resolution (512x512) for error calculation
+        const originalCanvas = document.createElement('canvas');
+        originalCanvas.width = 512;
+        originalCanvas.height = 512;
+        const originalCtx = originalCanvas.getContext('2d');
+        const originalImageData = originalCtx.createImageData(512, 512);
+        
+        // Reconstruct original image data from float array (512x512)
         for (let i = 0; i < this.originalResourceData.length; i += 4) {
             const idx = i / 4;
             const x = idx % 512;
             const y = Math.floor(idx / 512);
             const pixelIdx = (y * 512 + x) * 4;
-            imageData.data[pixelIdx + 0] = Math.round(this.originalResourceData[i + 0] * 255);
-            imageData.data[pixelIdx + 1] = Math.round(this.originalResourceData[i + 1] * 255);
-            imageData.data[pixelIdx + 2] = Math.round(this.originalResourceData[i + 2] * 255);
-            imageData.data[pixelIdx + 3] = 255;
+            originalImageData.data[pixelIdx + 0] = Math.round(this.originalResourceData[i + 0] * 255);
+            originalImageData.data[pixelIdx + 1] = Math.round(this.originalResourceData[i + 1] * 255);
+            originalImageData.data[pixelIdx + 2] = Math.round(this.originalResourceData[i + 2] * 255);
+            originalImageData.data[pixelIdx + 3] = 255;
         }
-        ctx.putImageData(imageData, 0, 0);
+        originalCtx.putImageData(originalImageData, 0, 0);
         
-        // Create target canvas for compressed size
+        // Create target canvas for compressed size (for matching algorithm)
         const targetCanvas = document.createElement('canvas');
         targetCanvas.width = dims.width;
         targetCanvas.height = dims.height;
         const targetCtx = targetCanvas.getContext('2d');
         
-        // Draw original rescaled to target size
-        targetCtx.drawImage(canvas, 0, 0, dims.width, dims.height);
+        // Draw original rescaled to target size (for matching)
+        targetCtx.drawImage(originalCanvas, 0, 0, dims.width, dims.height);
         const targetImageData = targetCtx.getImageData(0, 0, dims.width, dims.height);
         
         // Use Web Worker if available, otherwise fall back to synchronous computation
@@ -1020,20 +1078,54 @@ class ParticleLenia {
                         width: targetImageData.width,
                         height: targetImageData.height
                     },
+                    originalImageData: {
+                        data: Array.from(originalImageData.data),
+                        width: originalImageData.width,
+                        height: originalImageData.height
+                    },
                     dims
                 });
                 
                 // Wait for worker to complete
-                const {result: resultArray} = await promise;
+                const {result: resultArray, rgbdError, ssimValue, ssimDistance, score: reconstructionScore} = await promise;
+                
+                // Check if this result is still valid (image might have been reloaded)
+                if (!this.originalResourceData) {
+                    // Image was reloaded, ignore this result
+                    return null;
+                }
+                
                 resultImageData = new Uint8ClampedArray(resultArray);
+                this.reconstructionRGBd = (rgbdError != null && rgbdError !== undefined) ? rgbdError : 0;
+                this.reconstructionSSIM = (ssimValue != null && ssimValue !== undefined) ? ssimValue : 0;  // SSIM value (0-1, higher is better)
+                this.reconstructionScore = (reconstructionScore != null && reconstructionScore !== undefined) ? reconstructionScore : 0;
             } catch (error) {
+                // Check if error is due to cancellation (image reloaded)
+                if (error.message && error.message.includes('cancelling reconstruction')) {
+                    // Image was reloaded, ignore this error
+                    return null;
+                }
+                
+                // Check if image was reloaded during computation
+                if (!this.originalResourceData) {
+                    return null;
+                }
+                
                 console.error('[Reconstruction] Worker failed, falling back to main thread:', error);
                 // Fall through to synchronous computation
-                resultImageData = this.computeReconstructionSync(eatenPixels, targetImageData, dims);
+                const syncResult = this.computeReconstructionSync(eatenPixels, targetImageData, originalImageData, dims);
+                resultImageData = syncResult.result;
+                this.reconstructionRGBd = (syncResult.rgbdError != null && syncResult.rgbdError !== undefined) ? syncResult.rgbdError : 0;
+                this.reconstructionSSIM = (syncResult.ssimValue != null && syncResult.ssimValue !== undefined) ? syncResult.ssimValue : 0;
+                this.reconstructionScore = (syncResult.score != null && syncResult.score !== undefined) ? syncResult.score : 0;
             }
         } else {
             // Fallback: synchronous computation on main thread
-            resultImageData = this.computeReconstructionSync(eatenPixels, targetImageData, dims);
+            const syncResult = this.computeReconstructionSync(eatenPixels, targetImageData, originalImageData, dims);
+            resultImageData = syncResult.result;
+            this.reconstructionRGBd = syncResult.rgbdError || 0;
+            this.reconstructionSSIM = syncResult.ssimValue || 0;
+            this.reconstructionScore = syncResult.score || 0;
         }
         
         // Create ImageData from result
@@ -1073,6 +1165,12 @@ class ParticleLenia {
             height: dims.height
         };
         this.lastEatenCount = eatenCount;
+        
+        // Increment reconstruction count if dimensions changed (new reconstruction)
+        const prevDims = this.lastReconstructionDims;
+        if (!prevDims || prevDims.width !== dims.width || prevDims.height !== dims.height) {
+            this.reconstructionCount++;
+        }
         this.lastReconstructionDims = dims;
         
         // Performance timing
@@ -1084,12 +1182,103 @@ class ParticleLenia {
         return this.compressedReconstruction;
     }
     
-    // Fallback synchronous computation (simplified version for when worker is unavailable)
-    computeReconstructionSync(eatenPixels, targetImageData, dims) {
-        const resultImageData = new Uint8ClampedArray(targetImageData.data.length);
-        const usedPixels = new Set();
+    // Fallback synchronous computation using k-d tree (for when worker is unavailable)
+    computeReconstructionSync(eatenPixels, targetImageData, originalImageData, dims) {
+        // Simple k-d tree implementation for main thread fallback
+        class SimpleKDNode {
+            constructor(pixel, index, depth) {
+                this.pixel = pixel;
+                this.index = index;
+                this.depth = depth;
+                this.left = null;
+                this.right = null;
+                this.used = false;
+            }
+            getCoordinate() {
+                const dim = this.depth % 3;
+                if (dim === 0) return this.pixel.r;
+                if (dim === 1) return this.pixel.g;
+                return this.pixel.b;
+            }
+        }
         
-        // Simple greedy matching: for each target pixel, find closest unused eaten pixel
+        class SimpleKDTree {
+            constructor(pixels) {
+                this.root = this.buildTree(pixels, 0);
+            }
+            
+            buildTree(pixels, depth) {
+                if (pixels.length === 0) return null;
+                if (pixels.length === 1) {
+                    return new SimpleKDNode(pixels[0].pixel, pixels[0].index, depth);
+                }
+                
+                const dim = depth % 3;
+                pixels.sort((a, b) => {
+                    const aVal = dim === 0 ? a.pixel.r : (dim === 1 ? a.pixel.g : a.pixel.b);
+                    const bVal = dim === 0 ? b.pixel.r : (dim === 1 ? b.pixel.g : b.pixel.b);
+                    return aVal - bVal;
+                });
+                
+                const medianIdx = Math.floor(pixels.length / 2);
+                const node = new SimpleKDNode(pixels[medianIdx].pixel, pixels[medianIdx].index, depth);
+                node.left = this.buildTree(pixels.slice(0, medianIdx), depth + 1);
+                node.right = this.buildTree(pixels.slice(medianIdx + 1), depth + 1);
+                return node;
+            }
+            
+            findNearestUnused(targetR, targetG, targetB) {
+                let bestNode = null;
+                let bestDistance = Infinity;
+                
+                const search = (node, depth) => {
+                    if (!node) return;
+                    if (node.used) {
+                        search(node.left, depth + 1);
+                        search(node.right, depth + 1);
+                        return;
+                    }
+                    
+                    const dr = node.pixel.r - targetR;
+                    const dg = node.pixel.g - targetG;
+                    const db = node.pixel.b - targetB;
+                    const dist = dr * dr + dg * dg + db * db;
+                    
+                    if (dist < bestDistance) {
+                        bestDistance = dist;
+                        bestNode = node;
+                    }
+                    
+                    const dim = depth % 3;
+                    const targetVal = dim === 0 ? targetR : (dim === 1 ? targetG : targetB);
+                    const nodeVal = node.getCoordinate();
+                    
+                    const primary = targetVal < nodeVal ? node.left : node.right;
+                    const secondary = targetVal < nodeVal ? node.right : node.left;
+                    
+                    search(primary, depth + 1);
+                    
+                    const dimDiff = targetVal - nodeVal;
+                    if (dimDiff * dimDiff < bestDistance) {
+                        search(secondary, depth + 1);
+                    }
+                };
+                
+                search(this.root, 0);
+                return bestNode;
+            }
+        }
+        
+        // Build k-d tree from eaten pixels
+        const pixelsWithIndices = eatenPixels.map((pixel, index) => ({
+            pixel: pixel,
+            index: index
+        }));
+        const tree = new SimpleKDTree(pixelsWithIndices);
+        
+        const resultImageData = new Uint8ClampedArray(targetImageData.data.length);
+        
+        // For each target pixel, find nearest unused eaten pixel
         for (let ty = 0; ty < dims.height; ty++) {
             for (let tx = 0; tx < dims.width; tx++) {
                 const targetIdx = (ty * dims.width + tx) * 4;
@@ -1097,46 +1286,248 @@ class ParticleLenia {
                 const tg = targetImageData.data[targetIdx + 1] / 255.0;
                 const tb = targetImageData.data[targetIdx + 2] / 255.0;
                 
-                // Find best unused eaten pixel (limited search to avoid freeze)
-                let bestPixel = null;
-                let bestIndex = -1;
-                let bestDistance = Infinity;
-                const maxSearch = Math.min(eatenPixels.length, 1000); // Limit search
+                // Find nearest unused pixel using k-d tree
+                const nearestNode = tree.findNearestUnused(tr, tg, tb);
                 
-                for (let i = 0; i < maxSearch; i++) {
-                    const pixIdx = (i * 7919) % eatenPixels.length; // Pseudo-random sampling
-                    if (usedPixels.has(pixIdx)) continue;
-                    
-                    const pixel = eatenPixels[pixIdx];
-                    const dr = pixel.r - tr;
-                    const dg = pixel.g - tg;
-                    const db = pixel.b - tb;
-                    const distance = dr * dr + dg * dg + db * db;
-                    
-                    if (distance < bestDistance) {
-                        bestDistance = distance;
-                        bestPixel = pixel;
-                        bestIndex = pixIdx;
-                    }
-                }
-                
-                if (bestPixel && bestIndex >= 0) {
-                    resultImageData[targetIdx + 0] = Math.round(bestPixel.r * 255);
-                    resultImageData[targetIdx + 1] = Math.round(bestPixel.g * 255);
-                    resultImageData[targetIdx + 2] = Math.round(bestPixel.b * 255);
+                if (nearestNode && !nearestNode.used) {
+                    // Use actual eaten pixel color
+                    resultImageData[targetIdx + 0] = Math.round(nearestNode.pixel.r * 255);
+                    resultImageData[targetIdx + 1] = Math.round(nearestNode.pixel.g * 255);
+                    resultImageData[targetIdx + 2] = Math.round(nearestNode.pixel.b * 255);
                     resultImageData[targetIdx + 3] = 255;
-                    usedPixels.add(bestIndex);
+                    nearestNode.used = true;  // Mark as used
                 } else {
-                    // Fallback: use target color
-                    resultImageData[targetIdx + 0] = targetImageData.data[targetIdx + 0];
-                    resultImageData[targetIdx + 1] = targetImageData.data[targetIdx + 1];
-                    resultImageData[targetIdx + 2] = targetImageData.data[targetIdx + 2];
-                    resultImageData[targetIdx + 3] = 255;
+                    // No unused eaten pixel available - leave as black/transparent (only use eaten pixels!)
+                    resultImageData[targetIdx + 0] = 0;
+                    resultImageData[targetIdx + 1] = 0;
+                    resultImageData[targetIdx + 2] = 0;
+                    resultImageData[targetIdx + 3] = 0;  // Transparent/empty
                 }
             }
         }
         
-        return resultImageData;
+        // Calculate reconstruction error using error metric system
+        // Use same error metric classes as worker (duplicated for main thread)
+        class ErrorMetric {
+            calculate(targetData, resultData, width, height) {
+                throw new Error('Must implement calculate()');
+            }
+            getName() {
+                return 'BaseErrorMetric';
+            }
+        }
+        
+        class RGBDistanceErrorMetric extends ErrorMetric {
+            calculate(targetData, resultData, resultWidth, resultHeight, originalData, originalWidth, originalHeight) {
+                // Scale up reconstruction to original resolution using nearest neighbor (pixel art style)
+                const upscaledResult = new Uint8ClampedArray(originalWidth * originalHeight * 4);
+                
+                for (let oy = 0; oy < originalHeight; oy++) {
+                    for (let ox = 0; ox < originalWidth; ox++) {
+                        // Map original pixel to reconstruction pixel (nearest neighbor)
+                        const rx = Math.floor((ox / originalWidth) * resultWidth);
+                        const ry = Math.floor((oy / originalHeight) * resultHeight);
+                        const rIdx = (ry * resultWidth + rx) * 4;
+                        const oIdx = (oy * originalWidth + ox) * 4;
+                        
+                        // Copy pixel from reconstruction (upscaled)
+                        upscaledResult[oIdx + 0] = resultData[rIdx + 0];
+                        upscaledResult[oIdx + 1] = resultData[rIdx + 1];
+                        upscaledResult[oIdx + 2] = resultData[rIdx + 2];
+                        upscaledResult[oIdx + 3] = resultData[rIdx + 3];
+                    }
+                }
+                
+                // Now compare upscaled reconstruction to original at full resolution
+                let totalError = 0;
+                let pixelCount = 0;
+                
+                for (let i = 0; i < originalWidth * originalHeight; i++) {
+                    const idx = i * 4;
+                    // Use raw RGB values (0-255 range), not normalized
+                    const dr = originalData[idx + 0] - upscaledResult[idx + 0];
+                    const dg = originalData[idx + 1] - upscaledResult[idx + 1];
+                    const db = originalData[idx + 2] - upscaledResult[idx + 2];
+                    
+                    // Squared differences per channel, summed
+                    const error = dr * dr + dg * dg + db * db;
+                    totalError += error;
+                    pixelCount++;
+                }
+                
+                // Max possible error: if every pixel was completely different (255 diff in each channel)
+                // For 512x512: 512*512*3*255*255 = 51,117,158,400 (about 51 billion)
+                // JavaScript safe integer limit: 2^53 - 1 = 9,007,199,254,740,991 (9 quadrillion)
+                // So we're well within safe integer range
+                const maxPossibleError = pixelCount * 3 * 255 * 255;
+                
+                return {
+                    error: totalError,  // Large number (e.g., billions) that decreases over time
+                    metadata: {
+                        pixelCount,
+                        averageError: totalError / pixelCount,
+                        maxPossibleError: maxPossibleError,
+                        originalResolution: `${originalWidth}x${originalHeight}`,
+                        reconstructionResolution: `${resultWidth}x${resultHeight}`
+                    }
+                };
+            }
+            getName() {
+                return 'RGBd';
+            }
+        }
+        
+        class SSIMErrorMetric extends ErrorMetric {
+            calculate(targetData, resultData, resultWidth, resultHeight, originalData, originalWidth, originalHeight) {
+                // Scale up reconstruction to original resolution using nearest neighbor (pixel art style)
+                const upscaledResult = new Uint8ClampedArray(originalWidth * originalHeight * 4);
+                
+                for (let oy = 0; oy < originalHeight; oy++) {
+                    for (let ox = 0; ox < originalWidth; ox++) {
+                        // Map original pixel to reconstruction pixel (nearest neighbor)
+                        const rx = Math.floor((ox / originalWidth) * resultWidth);
+                        const ry = Math.floor((oy / originalHeight) * resultHeight);
+                        const rIdx = (ry * resultWidth + rx) * 4;
+                        const oIdx = (oy * originalWidth + ox) * 4;
+                        
+                        // Copy pixel from reconstruction (upscaled)
+                        upscaledResult[oIdx + 0] = resultData[rIdx + 0];
+                        upscaledResult[oIdx + 1] = resultData[rIdx + 1];
+                        upscaledResult[oIdx + 2] = resultData[rIdx + 2];
+                        upscaledResult[oIdx + 3] = resultData[rIdx + 3];
+                    }
+                }
+                
+                // Convert RGB to luminance (grayscale) for SSIM calculation
+                const originalLum = new Float32Array(originalWidth * originalHeight);
+                const resultLum = new Float32Array(originalWidth * originalHeight);
+                
+                for (let i = 0; i < originalWidth * originalHeight; i++) {
+                    const idx = i * 4;
+                    // Standard luminance weights: 0.299*R + 0.587*G + 0.114*B
+                    originalLum[i] = 0.299 * originalData[idx + 0] + 
+                                    0.587 * originalData[idx + 1] + 
+                                    0.114 * originalData[idx + 2];
+                    resultLum[i] = 0.299 * upscaledResult[idx + 0] + 
+                                  0.587 * upscaledResult[idx + 1] + 
+                                  0.114 * upscaledResult[idx + 2];
+                }
+                
+                // Calculate mean luminance
+                let meanX = 0, meanY = 0;
+                for (let i = 0; i < originalLum.length; i++) {
+                    meanX += originalLum[i];
+                    meanY += resultLum[i];
+                }
+                meanX /= originalLum.length;
+                meanY /= originalLum.length;
+                
+                // Calculate variance and covariance
+                let varX = 0, varY = 0, covXY = 0;
+                for (let i = 0; i < originalLum.length; i++) {
+                    const diffX = originalLum[i] - meanX;
+                    const diffY = resultLum[i] - meanY;
+                    varX += diffX * diffX;
+                    varY += diffY * diffY;
+                    covXY += diffX * diffY;
+                }
+                varX /= originalLum.length;
+                varY /= originalLum.length;
+                covXY /= originalLum.length;
+                
+                // SSIM constants (typical values)
+                const C1 = (0.01 * 255) * (0.01 * 255);  // Luminance stability constant
+                const C2 = (0.03 * 255) * (0.03 * 255);  // Contrast stability constant
+                
+                // SSIM formula: (2μxμy + C1)(2σxy + C2) / ((μx² + μy² + C1)(σx² + σy² + C2))
+                const numerator = (2 * meanX * meanY + C1) * (2 * covXY + C2);
+                const denominator = (meanX * meanX + meanY * meanY + C1) * (varX + varY + C2);
+                
+                const ssim = numerator / denominator;
+                const ssimDistance = 1.0 - ssim;  // Distance from perfect (0 = perfect, 1 = worst)
+                
+                return {
+                    error: ssimDistance,  // Distance from perfect (0-1, lower is better)
+                    ssim: ssim,  // SSIM value (0-1, higher is better)
+                    metadata: {
+                        pixelCount: originalLum.length,
+                        meanX: meanX,
+                        meanY: meanY,
+                        varX: varX,
+                        varY: varY,
+                        covXY: covXY,
+                        originalResolution: `${originalWidth}x${originalHeight}`,
+                        reconstructionResolution: `${resultWidth}x${resultHeight}`
+                    }
+                };
+            }
+            
+            getName() {
+                return 'SSIM';
+            }
+        }
+        
+        class ScoreDecorator {
+            constructor(metric, maxError = null) {
+                this.metric = metric;
+                this.maxError = maxError;
+            }
+            calculate(targetData, resultData, resultWidth, resultHeight, originalData, originalWidth, originalHeight) {
+                const result = this.metric.calculate(targetData, resultData, resultWidth, resultHeight, originalData, originalWidth, originalHeight);
+                let score = null;
+                const maxPossible = this.maxError || result.metadata?.maxPossibleError;
+                if (maxPossible && maxPossible > 0) {
+                    score = Math.max(0, Math.min(100, 100 * (1 - result.error / maxPossible)));
+                }
+                return {
+                    ...result,
+                    score: score,
+                    scoreFormatted: score !== null ? score.toFixed(1) : 'N/A'
+                };
+            }
+            getName() {
+                return `${this.metric.getName()}_Score`;
+            }
+        }
+        
+        // Calculate RGB distance (RGBd)
+        const rgbdMetric = new RGBDistanceErrorMetric();
+        const rgbdResult = rgbdMetric.calculate(
+            originalImageData.data,  // Original image at full resolution
+            resultImageData,  // Reconstruction at compressed size
+            dims.width,  // Reconstruction width
+            dims.height,  // Reconstruction height
+            originalImageData.data,  // Original data (for comparison)
+            originalImageData.width,  // Original width (512)
+            originalImageData.height  // Original height (512)
+        );
+        
+        // Calculate SSIM
+        const ssimMetric = new SSIMErrorMetric();
+        const ssimResult = ssimMetric.calculate(
+            originalImageData.data,  // Original image at full resolution
+            resultImageData,  // Reconstruction at compressed size
+            dims.width,  // Reconstruction width
+            dims.height,  // Reconstruction height
+            originalImageData.data,  // Original data (for comparison)
+            originalImageData.width,  // Original width (512)
+            originalImageData.height  // Original height (512)
+        );
+        
+        // Calculate score for metadata (not used for display, but available)
+        const scoreDecorator = new ScoreDecorator(rgbdMetric);
+        const scoreResult = scoreDecorator.calculate(
+            originalImageData.data, resultImageData, dims.width, dims.height,
+            originalImageData.data, originalImageData.width, originalImageData.height
+        );
+        
+        return { 
+            result: resultImageData, 
+            rgbdError: rgbdResult.error,  // RGB distance (large number, calculated at original resolution)
+            ssimValue: ssimResult.ssim || 0,  // SSIM value (0-1, higher is better)
+            ssimDistance: ssimResult.error || 0,  // SSIM distance (0-1, lower is better)
+            score: scoreResult.score   // Normalized score (0-100, for future use)
+        };
     }
 
     consumeResources() {
@@ -1568,6 +1959,16 @@ class ParticleLenia {
     }
     
     renderCompressedReconstruction(target, {viewCenter=[0,0], viewExtent=50.0}={}) {
+        // Safety check: don't render if no image is loaded
+        if (!this.originalResourceData) {
+            const gl = this.gl;
+            const {width, height} = target || gl.canvas;
+            gl.viewport(0, 0, width, height);
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            return;
+        }
+        
         // Progressive update strategy: more frequent updates for small images, less frequent for large ones
         // This allows real-time evolution at the start, then throttles as complexity grows
         this.reconstructionUpdateFrame = (this.reconstructionUpdateFrame || 0) + 1;
@@ -1579,6 +1980,92 @@ class ParticleLenia {
         if (!eatenCount && this.compressedReconstruction) {
             // Estimate from reconstruction size (rough approximation)
             eatenCount = this.compressedReconstruction.width * this.compressedReconstruction.height;
+        }
+        
+        // If no reconstruction exists yet, try to update frequently (every 5 frames)
+        // This ensures we start building as soon as pixels are eaten after reload
+        if (!this.compressedReconstruction) {
+            // Try to update every 5 frames when no reconstruction exists
+            if (currentFrame % 5 === 0) {
+                // Force refresh of eaten pixels to get latest data
+                this.eatenPixelsCache = null;  // Clear cache to force fresh read
+                
+                // Force update to ensure fresh start
+                const forceUpdate = true;
+                
+                // Start async reconstruction (won't block rendering)
+                this.createCompressedReconstruction(forceUpdate).then(reconstruction => {
+                    // Check if image was reloaded while reconstruction was in progress
+                    if (!this.originalResourceData) {
+                        // Image was reloaded, ignore this result
+                        return;
+                    }
+                    
+                    // Reconstruction completed, will be visible on next render
+                    // Error is already updated in createCompressedReconstruction
+                    if (!reconstruction || !reconstruction.texture) {
+                        this.compressedReconstruction = null;
+                        this.reconstructionRGBd = 0;  // Clear RGBd if no reconstruction
+                        this.reconstructionSSIM = 0;  // Clear SSIM if no reconstruction
+                        this.reconstructionScore = 0;  // Clear score if no reconstruction
+                    }
+                }).catch(error => {
+                    // Ignore cancellation errors (image reloaded)
+                    if (error.message && error.message.includes('cancelling reconstruction')) {
+                        return;
+                    }
+                    console.error('[Reconstruction] Failed to update:', error);
+                    // Only clear metrics if image is still loaded (not reloaded)
+                    if (this.originalResourceData) {
+                        this.reconstructionRGBd = 0;  // Clear RGBd on failure
+                        this.reconstructionSSIM = 0;  // Clear SSIM on failure
+                        this.reconstructionScore = 0;  // Clear score on failure
+                    }
+                });
+            }
+            
+            // Render black screen if no reconstruction yet
+            const reconstruction = this.compressedReconstruction;
+            if (!reconstruction || !reconstruction.texture) {
+                const gl = this.gl;
+                const {width, height} = target || gl.canvas;
+                gl.viewport(0, 0, width, height);
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                return;
+            }
+            
+            // Render existing reconstruction (if any)
+            const {width, height} = target || gl.canvas;
+            const viewAspect = width / Math.max(1.0, height);
+            Object.assign(this.U, {viewCenter, viewExtent, viewAspect});
+            
+            const imgWidth = reconstruction.width;
+            const imgHeight = reconstruction.height;
+            
+            // Render texture directly to screen with view transform
+            this.runProgram(`
+            uniform sampler2D compressedTex;
+            uniform vec2 imgSize;
+            void main() {
+                // Convert screen UV to world position
+                vec2 wldPos = scr2wld(uv * 2.0 - 1.0);
+                
+                // Image is centered at origin, spans from -imgSize/2 to +imgSize/2
+                // Convert world position to texture UV (0 to 1)
+                vec2 imgUV = (wldPos + imgSize * 0.5) / imgSize;
+                
+                // Clamp to valid UV range
+                imgUV = clamp(imgUV, 0.0, 1.0);
+                
+                // Sample the compressed reconstruction texture
+                vec4 color = texture(compressedTex, imgUV);
+                
+                // Dark background
+                vec3 bg = vec3(0.0, 0.0, 0.0);
+                out0 = vec4(bg + color.rgb, 1.0);
+            }`, {dst: target || null}, {compressedTex: reconstruction.texture, imgSize: [imgWidth, imgHeight]});
+            return;
         }
         
         // Progressive intervals based on eaten pixel count:
@@ -1609,21 +2096,45 @@ class ParticleLenia {
             updateInterval = 360;  // Throttled for very large images
         }
         
-        const shouldUpdate = !this.compressedReconstruction || 
-                            (currentFrame % updateInterval === 0);
+        // Update based on interval
+        const shouldUpdate = (currentFrame % updateInterval === 0);
         
         if (shouldUpdate) {
             // Force refresh of eaten pixels to get latest data, but don't force full reconstruction
             // (createCompressedReconstruction will still use its own logic to decide if reconstruction needs update)
             this.eatenPixelsCache = null;  // Clear cache to force fresh read
+            
+            // If no reconstruction exists, force update to ensure fresh start
+            const forceUpdate = !this.compressedReconstruction;
+            
             // Start async reconstruction (won't block rendering)
-            this.createCompressedReconstruction(false).then(reconstruction => {
+            this.createCompressedReconstruction(forceUpdate).then(reconstruction => {
+                // Check if image was reloaded while reconstruction was in progress
+                if (!this.originalResourceData) {
+                    // Image was reloaded, ignore this result
+                    return;
+                }
+                
                 // Reconstruction completed, will be visible on next render
+                // Error is already updated in createCompressedReconstruction
                 if (!reconstruction || !reconstruction.texture) {
                     this.compressedReconstruction = null;
+                    this.reconstructionRGBd = 0;  // Clear RGBd if no reconstruction
+                    this.reconstructionSSIM = 0;  // Clear SSIM if no reconstruction
+                    this.reconstructionScore = 0;  // Clear score if no reconstruction
                 }
             }).catch(error => {
+                // Ignore cancellation errors (image reloaded)
+                if (error.message && error.message.includes('cancelling reconstruction')) {
+                    return;
+                }
                 console.error('[Reconstruction] Failed to update:', error);
+                // Only clear metrics if image is still loaded (not reloaded)
+                if (this.originalResourceData) {
+                    this.reconstructionRGBd = 0;  // Clear RGBd on failure
+                    this.reconstructionSSIM = 0;  // Clear SSIM on failure
+                    this.reconstructionScore = 0;  // Clear score on failure
+                }
             });
         }
         

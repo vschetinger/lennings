@@ -297,7 +297,7 @@
 <div id="zoo"></div>
 <pre id="stat"></pre>
 <div id="fps" style="position:fixed; bottom:10px; left:10px; color:#666; font-family:monospace; font-size:12px; z-index:1000; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:4px;"></div>
-<canvas id="cellGraph" style="position:fixed; left:0; bottom:0; width:100vw; height:80px; z-index:900; display:none; pointer-events:none;"></canvas>
+<canvas id="cellGraph" style="position:fixed; left:0; bottom:0; width:100vw; height:80px; z-index:1001; display:none; pointer-events:none;"></canvas>
 
 <script>
 
@@ -451,9 +451,18 @@ class MobileControls {
                 if (control.action) {
                     control.action();
                 }
-                // Update active state for toggle buttons
+                // Update active state for toggle buttons based on actual state
                 if (control.isToggle) {
-                    button.classList.toggle('active');
+                    // For 'q' button, sync with params.showCellGraph
+                    if (control.key === 'q') {
+                        button.classList.toggle('active', params.showCellGraph);
+                    } else if (control.key === ' ') {
+                        // For space button, sync with params.captureMode
+                        button.classList.toggle('active', params.captureMode);
+                    } else {
+                        // For other toggles, just toggle the class
+                        button.classList.toggle('active');
+                    }
                 }
             });
             
@@ -747,6 +756,10 @@ class MobileControls {
         isToggle: true,
         action: () => {
             params.showCellGraph = !params.showCellGraph;
+            // Update button state after toggle
+            if (window.mobileControls) {
+                window.mobileControls.updateButtonState('q', params.showCellGraph);
+            }
         }
     });
     
@@ -1004,7 +1017,37 @@ function animate(currentTime) {
     const modeName = modeNames[params.renderMode] || `Mode ${params.renderMode}`;
     if (now - fpsLastTime >= 1000) {
         lastCellCount = lenia.getAliveCount();
-        document.getElementById('fps').textContent = `${fpsFrameCount} FPS | [${params.renderMode}] ${modeName} | cells: ${lastCellCount} | steps: ${params.stepN}`;
+        const rgbdError = lenia.reconstructionRGBd;
+        const ssimValue = lenia.reconstructionSSIM;
+        let errorDisplay = '';
+        // Display metrics if they are defined and not null
+        // RGBd should be > 0 for a valid reconstruction (large number)
+        // SSIM can be 0 (poor match) or up to 1 (perfect match)
+        const hasRGBd = (rgbdError != null && rgbdError !== undefined && rgbdError > 0);
+        const hasSSIM = (ssimValue != null && ssimValue !== undefined);
+        
+        // Add reconstruction info (count and resolution) in green
+        const reconInfo = lenia.lastReconstructionDims 
+            ? `<span style="color: #4af2a1;">${lenia.reconstructionCount || 0} reconstruction ${lenia.lastReconstructionDims.width}x${lenia.lastReconstructionDims.height}</span>`
+            : '';
+        
+        // Build metrics line (colored stuff on second line)
+        let metricsLine = '';
+        if (hasRGBd || hasSSIM || reconInfo) {
+            const rgbdDisplay = hasRGBd ? `<span style="color: #ff8800;">RGBd: ${rgbdError.toLocaleString()}</span>` : '';
+            const ssimDisplay = hasSSIM ? `<span style="color: #cc88ff;">SSIM: ${ssimValue.toFixed(3)}</span>` : '';
+            
+            // Combine all parts with separators
+            const parts = [rgbdDisplay, ssimDisplay, reconInfo].filter(p => p);
+            metricsLine = parts.join(' | ');
+        }
+        
+        // Split into two lines: main stats on first line, colored metrics on second line
+        const mainLine = `${fpsFrameCount} FPS | [${params.renderMode}] ${modeName} | cells: ${lastCellCount} | steps: ${params.stepN}`;
+        const displayHTML = metricsLine 
+            ? `${mainLine}<br>${metricsLine}`
+            : mainLine;
+        document.getElementById('fps').innerHTML = displayHTML;
         fpsFrameCount = 0;
         fpsLastTime = now;
     }
