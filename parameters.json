@@ -98,7 +98,7 @@
     "gui": "main",
     "params": {
       "spawnCount": {
-        "value": 16,
+        "value": 256,
         "min": 1,
         "max": 2048,
         "step": 1,
@@ -109,6 +109,37 @@
         "value": [-24, 29],
         "name": "spawn center",
         "description": "World coordinates for particle spawn location (set via double-click)"
+      }
+    }
+  },
+
+  "run": {
+    "description": "Simulation run options (headless / simulation page)",
+    "folder": "Run",
+    "params": {
+      "numSteps": {
+        "value": 500,
+        "min": 100,
+        "max": 10000,
+        "step": 100,
+        "name": "Steps",
+        "description": "Number of simulation steps per run"
+      },
+      "sampleInterval": {
+        "value": 100,
+        "min": 0,
+        "max": 1000,
+        "step": 10,
+        "name": "Sample every N steps",
+        "description": "Metrics sampling interval"
+      },
+      "captureInterval": {
+        "value": 10,
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "name": "Replay: capture every N steps",
+        "description": "Replay frame granularity"
       }
     }
   },
