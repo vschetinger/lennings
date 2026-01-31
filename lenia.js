@@ -2401,6 +2401,25 @@ class ParticleLenia {
         }`, {dst: target}, {flipUD});
     }
 
+    /** Draw trail texture additively on top of current framebuffer (e.g. over main view). Same view as main. */
+    renderTrailsOverlay(target, {viewCenter=[0,0], viewExtent=50.0, flipUD=false}={}) {
+        const gl = this.gl;
+        const {width, height} = target || gl.canvas;
+        const viewAspect = width / Math.max(1.0, height);
+        Object.assign(this.U, {viewCenter, viewExtent, viewAspect});
+        this.runProgram(`
+        uniform bool flipUD;
+        void main() {
+            vec2 p = flipUD ? vec2(uv.x, 1.0-uv.y) : uv;
+            vec2 wldPos = scr2wld(p * 2.0 - 1.0);
+            vec2 trailUV = (wldPos / dishR) * 0.5 + 0.5;
+            vec4 trail = texture(trailTex, trailUV);
+            float d = length(wldPos) / dishR;
+            float inside = d <= 1.0 ? 1.0 : 0.3;
+            out0 = vec4(trail.rgb * inside, 0.0);
+        }`, {dst: target, blend: [gl.ONE, gl.ONE]}, {flipUD});
+    }
+
     flipBuffers() {
         [this.dst, this.src] = [this.src, this.dst];
         this.U.state = this.src.attachments[0];

@@ -28,7 +28,7 @@
 <script src="zoo.js"> </script>
 <script src="serialize.js"> </script>
 <script src="PNGView.js"> </script>
-    <script src="lenia.js?v=32"></script>
+    <script src="lenia.js?v=33"></script>
 <script src="audiosys.js"> </script>
 <script src="names.js"> </script>
 <script src="webm-writer2.js"> </script>
@@ -514,6 +514,7 @@ class MobileControls {
         targetFPS: getParamValue(paramMap, 'targetFPS', 60),
         renderMode: getParamValue(paramMap, 'renderMode', 1),
         showCellGraph: getParamValue(paramMap, 'showCellGraph', false),
+        showTrailsOverlay: getParamValue(paramMap, 'showTrailsOverlay', true),
         
         // Spawn controls
         spawnCount: getParamValue(paramMap, 'spawnCount', 512),
@@ -767,6 +768,18 @@ class MobileControls {
     });
     
     mobileControls.registerControl({
+        key: 't',
+        label: 'Trails Overlay',
+        isToggle: true,
+        action: () => {
+            params.showTrailsOverlay = !params.showTrailsOverlay;
+            if (window.mobileControls) {
+                window.mobileControls.updateButtonState('t', params.showTrailsOverlay);
+            }
+        }
+    });
+    
+    mobileControls.registerControl({
         key: ' ',
         label: 'Capture Mode',
         isToggle: true,
@@ -786,6 +799,7 @@ class MobileControls {
     // Set initial button states for toggle buttons
     setTimeout(() => {
         mobileControls.updateButtonState('q', params.showCellGraph);
+        mobileControls.updateButtonState('t', params.showTrailsOverlay);
         mobileControls.updateButtonState(' ', params.captureMode);
         // Set active state for current render mode
         const renderModeButtons = mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
@@ -1130,12 +1144,18 @@ function animate(currentTime) {
     // Render based on current mode
     if (params.renderMode === 1) {
         lenia.render(null, renderArgs);  // Main view
+        if (params.showTrailsOverlay) {
+            lenia.renderTrailsOverlay(null, renderArgs);  // Trails overlaid on main (key "t")
+        }
     } else if (params.renderMode === 2) {
         lenia.renderTrails(null, renderArgs);  // Trail view
     } else if (params.renderMode === 3) {
         lenia.renderCompressedReconstruction(null, renderArgs);  // Compressed reconstruction
     } else {
         lenia.render(null, renderArgs);  // Default to main
+        if (params.showTrailsOverlay) {
+            lenia.renderTrailsOverlay(null, renderArgs);
+        }
     }
     
     // Update cell count graph
@@ -1410,6 +1430,13 @@ window.addEventListener('keydown', e=>{
         // Update mobile control button state
         if (window.mobileControls) {
             window.mobileControls.updateButtonState('q', params.showCellGraph);
+        }
+    }
+    // Toggle trails overlay on main view (key "t")
+    if (e.key === 't' || e.key === 'T') {
+        params.showTrailsOverlay = !params.showTrailsOverlay;
+        if (window.mobileControls) {
+            window.mobileControls.updateButtonState('t', params.showTrailsOverlay);
         }
     }
 });
