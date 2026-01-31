@@ -238,6 +238,51 @@
     }
   },
   
+  "depth": {
+    "description": "Depth map constraint (optional): gradient force or connectivity modulation",
+    "folder": "Depth map",
+    "gui": "main",
+    "params": {
+      "depthEnabled": {
+        "value": false,
+        "name": "use depth map",
+        "description": "Enable depth map constraint (load a depth image first)"
+      },
+      "depthStrength": {
+        "value": 1.0,
+        "min": 0.0,
+        "max": 5.0,
+        "step": 0.1,
+        "name": "strength",
+        "description": "Depth gradient or connectivity effect strength"
+      },
+      "depthGradientSign": {
+        "value": 1.0,
+        "min": -1.0,
+        "max": 1.0,
+        "step": 0.1,
+        "name": "gradient sign",
+        "description": "+1 = move toward higher depth, -1 = toward lower depth (gradient mode)"
+      },
+      "depthBand": {
+        "value": 0.1,
+        "min": 0.01,
+        "max": 0.5,
+        "step": 0.01,
+        "name": "connectivity band",
+        "description": "Depth difference band for connectivity smoothstep (connectivity mode)"
+      },
+      "depthMode": {
+        "value": 0,
+        "min": 0,
+        "max": 1,
+        "step": 1,
+        "name": "mode",
+        "description": "0 = Gradient (depth as potential), 1 = Connectivity (depth modulates lattice)"
+      }
+    }
+  },
+
   "resources": {
     "description": "Resource interaction parameters",
     "folder": "Resources",

@@ -106,6 +106,22 @@
     <span class="status" id="imageStatus" title="Current image source">Default: zenarnie.jpg (or choose a file).</span>
   </section>
 
+  <section class="panel">
+    <h2 style="margin:0 0 0.75rem; font-size:1rem;">Depth map (optional)</h2>
+    <p class="status">Grayscale image constrains particles: gradient mode = flow along depth; connectivity mode = particles at similar depth interact more.</p>
+    <div class="row">
+      <div>
+        <label for="depthFile">Depth map image</label>
+        <input type="file" id="depthFile" accept="image/*" title="Optional grayscale depth map. Same world-space mapping as resource image.">
+        <span class="status" id="depthStatus" title="Current depth map">No depth map loaded.</span>
+      </div>
+      <div>
+        <label for="depthEnabled">Use depth map</label>
+        <input type="checkbox" id="depthEnabled" title="Enable depth constraint (load a depth image first)">
+      </div>
+    </div>
+  </section>
+
   <section class="panel params-panel-collapsible" id="paramsPanel">
     <h2 style="margin:0 0 0.75rem; font-size:1rem;">
       <button type="button" class="params-toggle-btn" id="paramsToggleBtn" aria-expanded="false" title="Show or hide simulation parameters (dt, repulsion, kernels, etc.)">Show sweepable parameters</button>

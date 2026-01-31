@@ -14,6 +14,7 @@ uniform sampler2D fieldU;     //! this.fieldU.attachments[0]
 uniform sampler2D fieldR;     //! this.fieldR.attachments[0]
 uniform sampler2D selectBuf;  //! this.selectBuf.attachments[0]
 uniform sampler2D resourceTex;    //! this.resourceTex.attachments[0]
+uniform sampler2D depthTex;       //! this.depthTex.attachments[0]
 uniform sampler2D prefBuf;        //! this.prefBuf.attachments[0]
 uniform sampler2D trailTex;       //! this.trailTex.attachments[0]
 uniform float dishR;          //! 75.0
@@ -33,6 +34,12 @@ uniform float deathEnergyAmount;  //! 0.3
 uniform float deathEnergyFalloff; //! 2.0
 uniform float deathAgeScale;      //! 0.002
 uniform float hueThreshold;       //! 30.0
+
+uniform bool depthEnabled;        //! false
+uniform float depthStrength;      //! 1.0
+uniform float depthGradientSign;  //! 1.0
+uniform float depthBand;          //! 0.1
+uniform int depthMode;            //! 0
 
 uniform float baseFreq;       //! slider(100.0, [20.0, 1000.0], 1.0)
 uniform float clockExp;       //! slider(4.0, [1.0, 10.0], 0.1)
@@ -189,6 +196,10 @@ class ParticleLenia {
         this.resourceFormat = [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}];
         this.resourceTex = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
         this.resourceTexDst = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
+        
+        // Depth map (read-only, grayscale in R, same world-space mapping as resourceTex)
+        this.depthTex = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
+        this.originalDepthData = null;
         
         // Trail accumulation texture for particle path visualization
         this.trailTex = twgl.createFramebufferInfo(gl, 
@@ -633,6 +644,16 @@ class ParticleLenia {
             return attraction * res.a;
         }
         
+        uniform bool depthEnabled;
+        uniform float depthStrength;
+        uniform float depthGradientSign;
+        uniform float depthBand;
+        uniform int depthMode;
+        float sampleDepthMap(vec2 wldPos) {
+            vec2 uv = (wldPos / dishR) * 0.5 + 0.5;
+            return texture(depthTex, uv).r;
+        }
+        
         void main() {
             ivec2 ij = ivec2(gl_FragCoord.xy);
             ivec2 sz = textureSize(state, 0);
@@ -665,6 +686,7 @@ class ParticleLenia {
             vec2 repDir=vec2(0.0), gv=vec2(0.0);
             float field=0.0, rep=0.5;
             float dmin=m1-3.0*s1, dmax=m1+3.0*s1;
+            float depthMe = (depthEnabled && depthMode == 1) ? sampleDepthMap(pos) : 0.0;
             for (int i=0; i<sz.y; ++i)
             for (int j=0; j<sz.x; ++j) {
                 vec4 other = texelFetch(state, ivec2(j, i), 0);
@@ -686,8 +708,14 @@ class ParticleLenia {
                 }
                 if (d>dmin && d<dmax) {
                     vec2 v_dv = kernel(d, m1, s1);
-                    field += v_dv.x;
-                    gv += v_dv.y*r;
+                    float conn = 1.0;
+                    if (depthEnabled && depthMode == 1) {
+                        float depthOther = sampleDepthMap(other.xy);
+                        float depthDiff = abs(depthMe - depthOther);
+                        conn = 1.0 - smoothstep(0.0, depthBand, depthDiff);
+                    }
+                    field += v_dv.x * conn;
+                    gv += v_dv.y * r * conn;
                 }
             }
             field *= w1; gv *= w1;
@@ -711,6 +739,16 @@ class ParticleLenia {
             // Hunger multiplier - low energy = stronger attraction to food
             float hungerFactor = 1.0 + (1.0 - clamp(myEnergy, 0.0, 1.0)) * hungerMultiplier;
             dpos += resourceGrad * resourceAttraction * hungerFactor;
+            
+            // Depth map: gradient mode - push particles along depth potential
+            if (depthEnabled && depthMode == 0) {
+                float dL = sampleDepthMap(pos - vec2(texelSize, 0.0));
+                float dR = sampleDepthMap(pos + vec2(texelSize, 0.0));
+                float dD = sampleDepthMap(pos - vec2(0.0, texelSize));
+                float dU = sampleDepthMap(pos + vec2(0.0, texelSize));
+                vec2 depthGrad = vec2(dR - dL, dU - dD) / (2.0 * texelSize);
+                dpos += depthGrad * depthStrength * depthGradientSign;
+            }
             
             // Clamp energy to valid range
             myEnergy = clamp(myEnergy, 0.0, 1.0);
@@ -882,6 +920,63 @@ class ParticleLenia {
         gl.bindTexture(gl.TEXTURE_2D, this.resourceTexDst.attachments[0]);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, 512, 512, 0, gl.RGBA, gl.FLOAT, floatData);
         gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+
+    async loadDepthImage(imageSource) {
+        const gl = this.gl;
+        let img;
+        if (imageSource instanceof HTMLImageElement || imageSource instanceof HTMLCanvasElement) {
+            img = imageSource;
+        } else {
+            img = new Image();
+            img.crossOrigin = 'anonymous';
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = imageSource;
+            });
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+        ctx.translate(0, 512);
+        ctx.scale(1, -1);
+        ctx.drawImage(img, 0, 0, 512, 512);
+        const imageData = ctx.getImageData(0, 0, 512, 512);
+        const floatData = new Float32Array(512 * 512 * 4);
+        for (let i = 0; i < 512 * 512; i++) {
+            const r = imageData.data[i * 4] / 255.0;
+            const g = imageData.data[i * 4 + 1] / 255.0;
+            const b = imageData.data[i * 4 + 2] / 255.0;
+            const gray = (r + g + b) / 3.0;
+            floatData[i * 4] = gray;
+            floatData[i * 4 + 1] = gray;
+            floatData[i * 4 + 2] = gray;
+            floatData[i * 4 + 3] = 1.0;
+        }
+        this.originalDepthData = floatData.slice();
+        this._uploadDepthData(floatData);
+    }
+
+    _uploadDepthData(floatData) {
+        const gl = this.gl;
+        gl.bindTexture(gl.TEXTURE_2D, this.depthTex.attachments[0]);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, 512, 512, 0, gl.RGBA, gl.FLOAT, floatData);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+
+    clearDepth() {
+        this.originalDepthData = null;
+        const gl = this.gl;
+        const empty = new Float32Array(512 * 512 * 4);
+        for (let i = 0; i < 512 * 512; i++) {
+            empty[i * 4] = 0.5;
+            empty[i * 4 + 1] = 0.5;
+            empty[i * 4 + 2] = 0.5;
+            empty[i * 4 + 3] = 1.0;
+        }
+        this._uploadDepthData(empty);
     }
     
     reloadResourceImage() {

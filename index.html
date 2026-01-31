@@ -826,6 +826,18 @@ class MobileControls {
     resourceFolder.add(params, 'consumeEnabled').name('consume resources');
     resourceFolder.open();
 
+    // Depth map (optional constraint)
+    const depthFolder = gui.addFolder('Depth map');
+    params['load depth'] = () => depthInput.click();
+    params['clear depth'] = () => lenia.clearDepth();
+    depthFolder.add(params, 'load depth');
+    depthFolder.add(params, 'clear depth');
+    depthFolder.add(lenia.U, 'depthEnabled').name('use depth map');
+    depthFolder.add(lenia.U, 'depthStrength', 0, 5, 0.1).name('strength');
+    depthFolder.add(lenia.U, 'depthGradientSign', -1, 1, 0.1).name('gradient sign (+ toward high)');
+    depthFolder.add(lenia.U, 'depthBand', 0.01, 0.5, 0.01).name('connectivity band');
+    depthFolder.add(lenia.U, 'depthMode', { Gradient: 0, Connectivity: 1 }).name('mode');
+
     // Life Cycle toggles
     params.enableLifeCycle = getParamValue(paramMap, 'enableLifeCycle', true);
     params.enableDeaths = getParamValue(paramMap, 'enableDeaths', true);
@@ -849,6 +861,21 @@ class MobileControls {
             const dataUrl = await asyncReadAsDataURL(file);
             await lenia.loadResourceImage(dataUrl);
             console.log('Loaded resource image:', file.name);
+        }
+    });
+
+    // Hidden file input for depth map (grayscale)
+    const depthInput = document.createElement('input');
+    depthInput.type = 'file';
+    depthInput.accept = 'image/*';
+    depthInput.style.display = 'none';
+    document.body.appendChild(depthInput);
+    depthInput.addEventListener('change', async (e) => {
+        if (depthInput.files.length > 0) {
+            const file = depthInput.files[0];
+            const dataUrl = await asyncReadAsDataURL(file);
+            await lenia.loadDepthImage(dataUrl);
+            console.log('Loaded depth map:', file.name);
         }
     });
 

@@ -16,11 +16,15 @@
   let gl = null;
   let lenia = null;
   let imageObjectUrl = null;
+  let depthObjectUrl = null;
 
   const runBtn = document.getElementById('runBtn');
   const runStatus = document.getElementById('runStatus');
   const imageStatus = document.getElementById('imageStatus');
   const imageFile = document.getElementById('imageFile');
+  const depthFile = document.getElementById('depthFile');
+  const depthStatus = document.getElementById('depthStatus');
+  const depthEnabledEl = document.getElementById('depthEnabled');
   const runMode = document.getElementById('runMode');
   const sweepOptions = document.getElementById('sweepOptions');
   const sweepGrid = document.getElementById('sweepGrid');
@@ -59,6 +63,7 @@
     const captureInterval = Math.max(1, parseInt(document.getElementById('captureInterval').value, 10) || 10);
     const seedEl = document.getElementById('seed');
     const seed = seedEl && seedEl.value.trim();
+    const overrides = getParamOverridesFromPanel();
     return {
       spawnCenter: [spawnX, spawnY],
       spawnCount,
@@ -67,8 +72,14 @@
       captureInterval,
       seed: seed || undefined,
       imageUrl: imageObjectUrl || '../zenarnie.jpg',
+      depthUrl: depthObjectUrl || undefined,
+      depthEnabled: depthEnabledEl ? depthEnabledEl.checked : false,
+      depthStrength: overrides.depthStrength,
+      depthGradientSign: overrides.depthGradientSign,
+      depthBand: overrides.depthBand,
+      depthMode: overrides.depthMode,
       runConfig: Runner.RUN_CONFIG_DEFAULTS,
-      paramOverrides: getParamOverridesFromPanel(),
+      paramOverrides: overrides,
     };
   }
 
@@ -350,12 +361,28 @@
     }
   });
 
+  if (depthFile) {
+    depthFile.addEventListener('change', () => {
+      if (depthObjectUrl) URL.revokeObjectURL(depthObjectUrl);
+      depthObjectUrl = null;
+      const file = depthFile.files[0];
+      if (file) {
+        depthObjectUrl = URL.createObjectURL(file);
+        if (depthStatus) depthStatus.textContent = 'Loaded: ' + file.name;
+      } else {
+        if (depthStatus) depthStatus.textContent = 'No depth map loaded.';
+      }
+    });
+  }
+
   runBtn.addEventListener('click', doRun);
 
   function exportConfig() {
     const opts = getRunOptions();
     opts.runMode = runMode.value;
     opts.sweepGrid = parseInt(sweepGrid.value, 10) || 2;
+    opts.depthUrl = opts.depthUrl || undefined;
+    opts.depthEnabled = opts.depthEnabled || false;
     const json = Runner.serializeRunConfig(opts);
     const str = JSON.stringify(json, null, 2);
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -376,6 +403,10 @@
       const el = document.getElementById(id);
       if (el && value !== undefined && value !== null) el.value = value;
     };
+    const setCheckbox = (id, value) => {
+      const el = document.getElementById(id);
+      if (el && typeof value === 'boolean') el.checked = value;
+    };
     set('spawnX', parsed.spawnCenter && parsed.spawnCenter[0]);
     set('spawnY', parsed.spawnCenter && parsed.spawnCenter[1]);
     set('spawnCount', parsed.spawnCount);
@@ -384,6 +415,7 @@
     set('seed', parsed.seed);
     if (parsed.runMode) runMode.value = parsed.runMode;
     if (parsed.sweepGrid != null) sweepGrid.value = parsed.sweepGrid;
+    setCheckbox('depthEnabled', parsed.depthEnabled);
     if (parsed.paramOverrides && typeof parsed.paramOverrides === 'object') {
       for (const [key, value] of Object.entries(parsed.paramOverrides)) {
         const startEl = document.getElementById('param_start_' + key);

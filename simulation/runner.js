@@ -118,6 +118,12 @@
    * @param {object} options
    * @param {object} [options.paramOverrides] - override lenia.U for this run
    * @param {string} [options.imageUrl] - URL or object URL to load as resource image
+   * @param {string} [options.depthUrl] - URL or object URL to load as depth map (grayscale); when absent, depth is cleared
+   * @param {boolean} [options.depthEnabled] - enable depth constraint
+   * @param {number} [options.depthStrength] - depth effect strength
+   * @param {number} [options.depthGradientSign] - +1 toward higher depth, -1 toward lower (gradient mode)
+   * @param {number} [options.depthBand] - connectivity band (connectivity mode)
+   * @param {number} [options.depthMode] - 0 = gradient, 1 = connectivity
    * @param {[number,number]} options.spawnCenter
    * @param {number} options.spawnCount
    * @param {number} options.numSteps
@@ -133,6 +139,7 @@
     const {
       paramOverrides,
       imageUrl,
+      depthUrl,
       spawnCenter = [0, 0],
       spawnCount = 256,
       numSteps = 1000,
@@ -142,6 +149,11 @@
       seed,
       captureStates = false,
       captureInterval = 10,
+      depthEnabled,
+      depthStrength,
+      depthGradientSign,
+      depthBand,
+      depthMode,
     } = options;
 
     const rc = { ...RUN_CONFIG_DEFAULTS, ...runConfig };
@@ -152,6 +164,17 @@
     } else if (!lenia.hasLoadedResource?.()) {
       lenia.clearResources();
     }
+
+    if (depthUrl != null && depthUrl !== '') {
+      await lenia.loadDepthImage(depthUrl);
+    } else {
+      lenia.clearDepth?.();
+    }
+    if (depthEnabled !== undefined && lenia.U.depthEnabled !== undefined) lenia.U.depthEnabled = !!depthEnabled;
+    if (depthStrength !== undefined && lenia.U.depthStrength !== undefined) lenia.U.depthStrength = depthStrength;
+    if (depthGradientSign !== undefined && lenia.U.depthGradientSign !== undefined) lenia.U.depthGradientSign = depthGradientSign;
+    if (depthBand !== undefined && lenia.U.depthBand !== undefined) lenia.U.depthBand = depthBand;
+    if (depthMode !== undefined && lenia.U.depthMode !== undefined) lenia.U.depthMode = depthMode;
 
     lenia.reset(spawnCount, spawnCenter);
     lenia.eatenPixelsCache = null;
@@ -288,6 +311,12 @@
       runConfig: options.runConfig,
       runMode: options.runMode,
       sweepGrid: options.sweepGrid,
+      depthUrl: options.depthUrl,
+      depthEnabled: options.depthEnabled,
+      depthStrength: options.depthStrength,
+      depthGradientSign: options.depthGradientSign,
+      depthBand: options.depthBand,
+      depthMode: options.depthMode,
     };
   }
 
@@ -307,6 +336,12 @@
       runConfig: obj.runConfig && typeof obj.runConfig === 'object' ? obj.runConfig : {},
       runMode: obj.runMode,
       sweepGrid: obj.sweepGrid,
+      depthUrl: obj.depthUrl,
+      depthEnabled: obj.depthEnabled,
+      depthStrength: obj.depthStrength,
+      depthGradientSign: obj.depthGradientSign,
+      depthBand: obj.depthBand,
+      depthMode: obj.depthMode,
     };
   }
 
