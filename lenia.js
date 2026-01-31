@@ -2031,42 +2031,54 @@ class ParticleLenia {
                 out0.rgb = mix(out0.rgb, vec3(1.0), 0.1);
             }
         }`, {dst:target}, {flipUD});
-        // render particles
+        // render particles as square pixels
         this.runProgram(`
         uniform bool flipUD;
         out vec3 color;
-        out vec2 wldPos;
         void main() {
-            uv = quad*1.1;
+            uv = quad * 1.0;
             Particle p = getParticle();
             if (!p.visible) {
               gl_Position = vec4(0.0);
               return;
             }
-            wldPos = p.pos + uv*p.radius;
+            vec2 wldPos = p.pos + uv * p.radius;
             color = p.color;
             gl_Position = vec4(wld2scr(wldPos), 0.0, 1.0);
             if (flipUD) gl_Position.y *= -1.0;
         }
         //FRAG
         in vec3 color;
-        in vec2 wldPos;
         void main() {
-            float r = length(uv);
-            
-            // Solid core (inner 60% is fully opaque)
-            float core = smoothstep(1.0, 0.6, r);
-            // Subtle outer glow
-            float glow = max(0.0, 1.0 - r) * 0.25;
-            float a = max(core, glow);
-            
-            // Slight 3D shading on the core
-            vec3 n = normalize(vec3(uv * 0.5, 1.0));
-            float v = max(dot(n, getLightDir(wldPos)), 0.0) * 0.4 + 0.6;
-            
-            // Brighter, more saturated color for visibility
+            float a = step(abs(uv.x), 1.0) * step(abs(uv.y), 1.0);
             vec3 brightColor = color * 1.2;
-            out0 = vec4(brightColor * v * a, a) * pointsAlpha;
+            out0 = vec4(brightColor, a) * pointsAlpha;
+        }`, {dst:target, n:this.max_point_n, blend:[gl.ONE, gl.ONE_MINUS_SRC_ALPHA]}, {flipUD});
+        // bleeping dot at exact eating location (resource color at particle position)
+        this.runProgram(`
+        uniform bool flipUD;
+        out vec2 eatUV;
+        void main() {
+            uv = quad * 0.4;
+            Particle p = getParticle();
+            if (!p.visible) {
+              gl_Position = vec4(0.0);
+              return;
+            }
+            vec2 wldPos = p.pos + uv * 0.5;
+            eatUV = (p.pos / dishR) * 0.5 + 0.5;
+            gl_Position = vec4(wld2scr(wldPos), 0.0, 1.0);
+            if (flipUD) gl_Position.y *= -1.0;
+        }
+        //FRAG
+        in vec2 eatUV;
+        void main() {
+            vec4 res = texture(resourceTex, eatUV);
+            if (res.a < 0.05) discard;
+            float blink = 0.4 + 0.6 * sin(currentStep * 0.25);
+            float r = length(uv);
+            float a = smoothstep(1.0, 0.2, r) * blink;
+            out0 = vec4(res.rgb, a);
         }`, {dst:target, n:this.max_point_n, blend:[gl.ONE, gl.ONE_MINUS_SRC_ALPHA]}, {flipUD});
     }
 
@@ -2408,6 +2420,8 @@ class ParticleLenia {
         twgl.bindFramebufferInfo(gl, opt.dst);
         if (opt.viewport) {
             gl.viewport(...opt.viewport);
+        } else if (!opt.dst) {
+            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
         }
         if (opt.dst) {
             const an = opt.dst.attachments.length;
