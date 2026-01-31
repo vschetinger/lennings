@@ -1303,7 +1303,35 @@ class ParticleLenia {
         
         return this.compressedReconstruction;
     }
-    
+
+    /** Return data URL of current compressed reconstruction for export/display, or null. */
+    getReconstructionDataURL() {
+        const recon = this.compressedReconstruction;
+        if (!recon || !recon.texture) return null;
+        const gl = this.gl;
+        const w = recon.width;
+        const h = recon.height;
+        const fb = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, recon.texture, 0);
+        const pixels = new Uint8ClampedArray(w * h * 4);
+        gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.deleteFramebuffer(fb);
+        const flipped = new Uint8ClampedArray(w * h * 4);
+        for (let y = 0; y < h; y++) {
+            const srcRow = (h - 1 - y) * w * 4;
+            const dstRow = y * w * 4;
+            for (let i = 0; i < w * 4; i++) flipped[dstRow + i] = pixels[srcRow + i];
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.putImageData(new ImageData(flipped, w, h), 0, 0);
+        return canvas.toDataURL('image/png');
+    }
+
     // Fallback synchronous computation using k-d tree (for when worker is unavailable)
     computeReconstructionSync(eatenPixels, targetImageData, originalImageData, dims) {
         // Simple k-d tree implementation for main thread fallback

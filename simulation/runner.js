@@ -222,7 +222,20 @@
     }
 
     if (onProgress) onProgress({ step: steps, numSteps, aliveCount: metrics.length ? metrics[metrics.length - 1].aliveCount : 0, eatenCount: metrics.length ? metrics[metrics.length - 1].eatenCount : null });
-    return { steps, metrics, states: captureStates ? states : undefined };
+
+    let finalReconstruction = null;
+    if (lenia.hasLoadedResource?.() && lenia.createCompressedReconstruction && lenia.getReconstructionDataURL) {
+      try {
+        await lenia.createCompressedReconstruction(true);
+        const ssim = lenia.reconstructionSSIM;
+        const dataURL = lenia.getReconstructionDataURL();
+        if (dataURL != null) finalReconstruction = { ssim, dataURL };
+      } catch (e) {
+        console.warn('[Runner] Final reconstruction failed:', e);
+      }
+    }
+
+    return { steps, metrics, states: captureStates ? states : undefined, finalReconstruction };
   }
 
   /**

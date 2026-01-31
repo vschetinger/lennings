@@ -28,6 +28,12 @@
   const progressPanel = document.getElementById('progressPanel');
   const progressBar = document.getElementById('progressBar');
   const progressStats = document.getElementById('progressStats');
+  const paramsPanel = document.getElementById('paramsPanel');
+  const paramsToggleBtn = document.getElementById('paramsToggleBtn');
+  const paramsPanelBody = document.getElementById('paramsPanelBody');
+  /** Cumulative: each entry is { timestamp, runs } from one Run click. */
+  let allResultGroups = [];
+  /** Flat list of all runs for play-button index lookup. */
   let lastRuns = [];
   let replayPlayer = null;
 
@@ -136,37 +142,49 @@
     return rows;
   }
 
-  function renderResults(data) {
-    const runs = Array.isArray(data) ? data : [data];
-    if (runs.length === 0) {
-      resultsEl.innerHTML = '<p class="status">No results.</p>';
+  function renderAllResults() {
+    if (allResultGroups.length === 0) {
+      resultsEl.innerHTML = '<p class="status">No results yet. Click Run to add.</p>';
       return;
     }
-    const lastMetrics = runs.map(r => {
-      const m = r.metrics && r.metrics.length ? r.metrics[r.metrics.length - 1] : null;
-      return m ? { step: m.step, aliveCount: m.aliveCount, eatenCount: m.eatenCount ?? '—' } : { step: 0, aliveCount: 0, eatenCount: '—' };
-    });
-    const colCount = 6 + (runs[0].sweepRow && Object.keys(runs[0].sweepRow).length ? 1 : 0);
-    let html = '<table><thead><tr><th>Run</th><th></th><th>Steps</th><th>Alive (final)</th><th>Eaten (final)</th>';
-    if (runs[0].sweepRow && Object.keys(runs[0].sweepRow).length) {
-      html += '<th>Sweep</th>';
+    lastRuns = allResultGroups.flatMap(g => g.runs);
+    const colCount = 8;
+    const thumbSize = 64;
+    let html = '<table><thead><tr><th class="recon-thumb-header" title="Final reconstruction thumbnail"> </th><th title="Run index">Run</th><th title="▶ Replay · 🖼 Full-size reconstruction"> </th><th title="Simulation steps completed">Steps</th><th title="Alive particles at end">Alive (final)</th><th title="Pixels eaten at end">Eaten (final)</th><th title="Similarity to original image (0–1)">SSIM</th><th title="Sweep spawn center [x,y]">Sweep</th></tr></thead><tbody>';
+    let globalIndex = 0;
+    for (const group of allResultGroups) {
+      const runs = group.runs;
+      const ts = group.timestamp != null ? new Date(group.timestamp).toLocaleString() : '';
+      html += `<tr class="results-timestamp-row"><td colspan="${colCount}">${ts}</td></tr>`;
+      const lastMetrics = runs.map(r => {
+        const m = r.metrics && r.metrics.length ? r.metrics[r.metrics.length - 1] : null;
+        return m ? { step: m.step, aliveCount: m.aliveCount, eatenCount: m.eatenCount ?? '—' } : { step: 0, aliveCount: 0, eatenCount: '—' };
+      });
+      runs.forEach((r, i) => {
+        const lm = lastMetrics[i];
+        const hasStates = r.states && r.states.length;
+        const playLabel = hasStates ? '▶' : '';
+        const playBtn = hasStates
+          ? `<button type="button" class="play-run-btn" data-run-index="${globalIndex}" title="Expand/collapse replay">${playLabel}</button>`
+          : '';
+        const hasRecon = r.finalReconstruction && r.finalReconstruction.dataURL;
+        const reconLabel = hasRecon ? '🖼' : '';
+        const reconBtn = hasRecon
+          ? `<button type="button" class="recon-toggle-btn" data-run-index="${globalIndex}" title="Expand/collapse full-size reconstruction">${reconLabel}</button>`
+          : '';
+        const thumbTd = hasRecon
+          ? `<td class="recon-thumb-cell"><img class="recon-thumb" src="${r.finalReconstruction.dataURL}" alt="Reconstruction" width="${thumbSize}" height="${thumbSize}"></td>`
+          : '<td class="recon-thumb-cell"><span class="recon-thumb-placeholder"></span></td>';
+        const ssimStr = r.finalReconstruction && r.finalReconstruction.ssim != null
+          ? Number(r.finalReconstruction.ssim).toFixed(3) : '—';
+        const sc = r.sweepRow && r.sweepRow.spawnCenter;
+        const sweepTd = `<td>${sc ? `[${sc[0].toFixed(0)}, ${sc[1].toFixed(0)}]` : '-'}</td>`;
+        html += `<tr class="result-data-row" data-run-index="${globalIndex}">${thumbTd}<td>${r.runIndex != null ? r.runIndex : globalIndex}</td><td>${playBtn} ${reconBtn}</td><td>${r.steps ?? 0}</td><td>${lm.aliveCount}</td><td>${lm.eatenCount}</td><td>${ssimStr}</td>${sweepTd}</tr>`;
+        html += `<tr class="replay-detail-row" data-run-index="${globalIndex}" style="display:none"><td colspan="${colCount}"><div class="replay-row-content"></div></td></tr>`;
+        html += `<tr class="recon-detail-row" data-run-index="${globalIndex}" style="display:none"><td colspan="${colCount}"><div class="recon-full-content"></div></td></tr>`;
+        globalIndex++;
+      });
     }
-    html += '</tr></thead><tbody>';
-    runs.forEach((r, i) => {
-      const lm = lastMetrics[i];
-      const hasStates = r.states && r.states.length;
-      const playLabel = hasStates ? '▶' : '';
-      const playBtn = hasStates
-        ? `<button type="button" class="play-run-btn" data-run-index="${i}" title="Expand/collapse replay">${playLabel}</button>`
-        : '';
-      html += `<tr><td>${r.runIndex != null ? r.runIndex : i}</td><td>${playBtn}</td><td>${r.steps ?? 0}</td><td>${lm.aliveCount}</td><td>${lm.eatenCount}</td>`;
-      if (r.sweepRow && Object.keys(r.sweepRow).length) {
-        const sc = r.sweepRow.spawnCenter;
-        html += `<td>${sc ? `[${sc[0].toFixed(0)}, ${sc[1].toFixed(0)}]` : '-'}</td>`;
-      }
-      html += '</tr>';
-      html += `<tr class="replay-detail-row" data-run-index="${i}" style="display:none"><td colspan="${colCount}"><div class="replay-row-content"></div></td></tr>`;
-    });
     html += '</tbody></table>';
     resultsEl.innerHTML = html;
     resultsEl.querySelectorAll('.play-run-btn').forEach(btn => {
@@ -187,6 +205,31 @@
         btn.textContent = '▼';
         if (content.children.length === 0) {
           buildRowReplayPlayer(content, run, idx);
+        }
+      });
+    });
+    resultsEl.querySelectorAll('.recon-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.runIndex, 10);
+        const run = lastRuns && lastRuns[idx];
+        if (!run || !run.finalReconstruction || !run.finalReconstruction.dataURL) return;
+        const detailRow = resultsEl.querySelector(`.recon-detail-row[data-run-index="${idx}"]`);
+        const content = detailRow && detailRow.querySelector('.recon-full-content');
+        if (!detailRow || !content) return;
+        const isVisible = detailRow.style.display !== 'none';
+        if (isVisible) {
+          detailRow.style.display = 'none';
+          btn.textContent = '🖼';
+          return;
+        }
+        detailRow.style.display = '';
+        btn.textContent = '▼';
+        if (content.children.length === 0) {
+          const img = document.createElement('img');
+          img.src = run.finalReconstruction.dataURL;
+          img.alt = 'Final reconstruction (full size)';
+          img.className = 'recon-full-image';
+          content.appendChild(img);
         }
       });
     });
@@ -277,8 +320,9 @@
       } else {
         data = await Runner.runOne(sim, optsWithProgress);
       }
-      lastRuns = Array.isArray(data) ? data : [data];
-      renderResults(data);
+      const runs = Array.isArray(data) ? data : [data];
+      allResultGroups.push({ timestamp: Date.now(), runs });
+      renderAllResults();
       runStatus.textContent = 'Done.';
     } catch (err) {
       runStatus.textContent = 'Error: ' + (err.message || String(err));
@@ -487,11 +531,56 @@
     }
   }
 
+  function applyRunDefaultsFromConfig(config) {
+    const set = (id, value, attrs = {}) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (value !== undefined && value !== null) el.value = value;
+      ['min', 'max', 'step'].forEach(a => { if (attrs[a] != null) el.setAttribute(a, attrs[a]); });
+    };
+    const spawn = config.spawn && config.spawn.params;
+    const run = config.run && config.run.params;
+    if (spawn) {
+      if (spawn.spawnCenter && Array.isArray(spawn.spawnCenter.value)) {
+        set('spawnX', spawn.spawnCenter.value[0]);
+        set('spawnY', spawn.spawnCenter.value[1]);
+      }
+      if (spawn.spawnCount) {
+        set('spawnCount', spawn.spawnCount.value, { min: spawn.spawnCount.min, max: spawn.spawnCount.max, step: spawn.spawnCount.step });
+      }
+    }
+    if (run) {
+      if (run.numSteps) set('numSteps', run.numSteps.value, { min: run.numSteps.min, max: run.numSteps.max, step: run.numSteps.step });
+      if (run.sampleInterval) set('sampleInterval', run.sampleInterval.value, { min: run.sampleInterval.min, max: run.sampleInterval.max, step: run.sampleInterval.step });
+      if (run.captureInterval) set('captureInterval', run.captureInterval.value, { min: run.captureInterval.min, max: run.captureInterval.max, step: run.captureInterval.step });
+    }
+  }
+
+  if (paramsToggleBtn && paramsPanel) {
+    paramsToggleBtn.addEventListener('click', () => {
+      const expanded = paramsPanel.classList.toggle('expanded');
+      paramsToggleBtn.textContent = expanded ? 'Hide sweepable parameters' : 'Show sweepable parameters';
+      paramsToggleBtn.setAttribute('aria-expanded', String(expanded));
+    });
+  }
+
+  const helpBtn = document.getElementById('helpBtn');
+  const helpPanel = document.getElementById('helpPanel');
+  if (helpBtn && helpPanel) {
+    helpBtn.addEventListener('click', () => {
+      const visible = helpPanel.style.display !== 'none';
+      helpPanel.style.display = visible ? 'none' : 'block';
+      helpBtn.setAttribute('aria-expanded', String(!visible));
+      helpBtn.title = visible ? 'Show usage help' : 'Hide usage help';
+    });
+  }
+
   (async function init() {
     runStatus.textContent = 'Loading parameters…';
     const { config, paramMap: pm } = await Runner.loadParameters('..');
     paramMap = pm;
     buildSweepableParamsPanel(config);
+    applyRunDefaultsFromConfig(config);
     runStatus.textContent = 'Ready. Load an image (optional) and click Run.';
   })();
 })();

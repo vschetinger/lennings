@@ -38,8 +38,9 @@
   .param-row input.window { width: 3.5rem; }
   .params-section { margin-bottom: 1rem; }
   .params-section h3 { font-size: 0.9rem; margin: 0 0 0.5rem; color: var(--muted); }
-  .play-run-btn { padding: 0.2rem 0.5rem; font-size: 0.8rem; cursor: pointer; background: var(--accent); color: #000; border: none; border-radius: 4px; }
-  .play-run-btn:hover { opacity: 0.9; }
+  .play-run-btn, .recon-toggle-btn { padding: 0.2rem 0.5rem; font-size: 0.8rem; cursor: pointer; background: var(--accent); color: #000; border: none; border-radius: 4px; margin-right: 0.25rem; }
+  .play-run-btn:hover, .recon-toggle-btn:hover { opacity: 0.9; }
+  .recon-toggle-btn { background: #444; color: var(--fg); }
   .replay-player { margin-top: 0.5rem; }
   .replay-player__controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
   .replay-player__btn { padding: 0.25rem 0.5rem; font-size: 0.85rem; }
@@ -51,23 +52,68 @@
   .replay-row-content { padding: 0.5rem 0; }
   .replay-row-canvas { border-radius: 6px; margin-bottom: 0.5rem; }
   .replay-row-controls { margin-top: 0.25rem; }
+  .params-toggle-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 1rem; font-weight: 600; padding: 0; text-decoration: underline; }
+  .params-toggle-btn:hover { opacity: 0.9; }
+  .params-panel-body { display: none; }
+  #paramsPanel.expanded .params-panel-body { display: block; }
+  .results-timestamp-row td { padding: 0.5rem 0.75rem; color: var(--muted); font-size: 0.85rem; border-bottom: 1px solid #333; }
+  .recon-thumb-header { width: 0; padding: 0.4rem; }
+  .recon-thumb-cell { width: 0; padding: 0.4rem !important; vertical-align: middle; }
+  .recon-thumb { display: block; width: 64px; height: 64px; object-fit: contain; border-radius: 4px; background: #0a0a12; }
+  .recon-thumb-placeholder { display: block; width: 64px; height: 64px; background: #1a1a22; border-radius: 4px; }
+  .recon-detail-row td { padding: 0.5rem 0.75rem; vertical-align: top; border-bottom: 1px solid #333; }
+  .recon-full-content { padding: 0.5rem 0; }
+  .recon-full-image { display: block; max-width: 100%; height: auto; border-radius: 6px; background: #0a0a12; }
+  .page-header { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .page-header h1 { margin: 0; }
+  .help-btn { width: 1.75rem; height: 1.75rem; padding: 0; border-radius: 50%; font-size: 0.9rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; background: var(--muted); color: var(--bg); border: none; cursor: pointer; font-weight: 700; }
+  .help-btn:hover { background: var(--accent); color: #000; }
+  .help-panel { margin-top: 1rem; padding: 1rem; background: var(--bg); border: 1px solid #333; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; }
+  .help-panel h3 { font-size: 0.95rem; margin: 0 0 0.5rem; color: var(--accent); }
+  .help-panel ul { margin: 0.25rem 0; padding-left: 1.25rem; }
+  .help-panel p { margin: 0.5rem 0 0; }
+  .help-panel p:first-child { margin-top: 0; }
+  .panel [title], .help-panel [title] { cursor: help; }
+  .custom-tooltip { position: fixed; z-index: 10000; max-width: 280px; padding: 0.4rem 0.6rem; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; font-size: 0.8rem; line-height: 1.35; color: #e0e0e0; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
 </style>
 <body>
   <nav class="nav"><a href="../">← Back to Lennings</a></nav>
-  <h1>Simulation</h1>
-  <p class="status">Headless runs: load an image, set parameters, run single or sweep. No rendering.</p>
+  <div class="page-header">
+    <h1>Simulation</h1>
+    <button type="button" class="help-btn secondary" id="helpBtn" title="Show usage help" aria-label="Show help">?</button>
+  </div>
+  <p class="status">Run headless Particle Lenia: load an image, set run options, then Run. Results append below with thumbnails and replay.</p>
+
+  <div id="helpPanel" class="help-panel" style="display:none;" role="region" aria-label="Usage help">
+    <h3>How to use</h3>
+    <p><strong>Image</strong> — The resource image that particles “eat.” Choose a file or use the default. Metrics and reconstruction compare eaten pixels to this image.</p>
+    <p><strong>Sweepable parameters</strong> — Optional. Click “Show sweepable parameters” to tune simulation params (dt, repulsion, kernels, etc.). Start = value for this run.</p>
+    <p><strong>Run</strong> — Set spawn position (X, Y), spawn count, steps, and optionally seed for reproducibility. Single run = one execution; Sweep = multiple runs over a grid of spawn centers. Run adds a new block of results below with a timestamp.</p>
+    <p><strong>Results table</strong></p>
+    <ul>
+      <li><strong>Thumbnail</strong> — Final reconstruction (image built from eaten pixels) at end of run.</li>
+      <li><strong>▶ Play</strong> — Expand to replay the run frame-by-frame with play/pause and seek.</li>
+      <li><strong>🖼</strong> — Expand to see the final reconstruction at full size.</li>
+      <li><strong>SSIM</strong> — Similarity (0–1) of final reconstruction to the original image; higher = closer match.</li>
+    </ul>
+    <p>Export/Import config copies or restores run settings (spawn, steps, seed, params) as JSON.</p>
+  </div>
 
   <section class="panel">
     <h2 style="margin:0 0 0.75rem; font-size:1rem;">Image</h2>
-    <label>Resource image (particles feed on it)</label>
-    <input type="file" id="imageFile" accept="image/*">
-    <span class="status" id="imageStatus">Default: zenarnie.jpg (or choose a file).</span>
+    <label for="imageFile">Resource image (particles feed on it)</label>
+    <input type="file" id="imageFile" accept="image/*" title="Choose an image file. Particles consume it; reconstruction and SSIM compare to this image.">
+    <span class="status" id="imageStatus" title="Current image source">Default: zenarnie.jpg (or choose a file).</span>
   </section>
 
-  <section class="panel" id="paramsPanel">
-    <h2 style="margin:0 0 0.75rem; font-size:1rem;">Sweepable parameters</h2>
-    <p class="status">Start = value for this run. Window = range for future param sweep (start ± window).</p>
-    <div id="sweepableParams"></div>
+  <section class="panel params-panel-collapsible" id="paramsPanel">
+    <h2 style="margin:0 0 0.75rem; font-size:1rem;">
+      <button type="button" class="params-toggle-btn" id="paramsToggleBtn" aria-expanded="false" title="Show or hide simulation parameters (dt, repulsion, kernels, etc.)">Show sweepable parameters</button>
+    </h2>
+    <div id="paramsPanelBody" class="params-panel-body">
+      <p class="status">Start = value for this run. Window = range for future param sweep (start ± window).</p>
+      <div id="sweepableParams"></div>
+    </div>
   </section>
 
   <section class="panel" id="progressPanel">
@@ -80,51 +126,51 @@
     <h2 style="margin:0 0 0.75rem; font-size:1rem;">Run</h2>
     <div class="row">
       <div>
-        <label>Spawn center X</label>
-        <input type="number" id="spawnX" value="-24" step="1">
+        <label for="spawnX">Spawn center X</label>
+        <input type="number" id="spawnX" value="-24" step="1" title="World X coordinate where particles spawn">
       </div>
       <div>
-        <label>Spawn center Y</label>
-        <input type="number" id="spawnY" value="29" step="1">
+        <label for="spawnY">Spawn center Y</label>
+        <input type="number" id="spawnY" value="29" step="1" title="World Y coordinate where particles spawn">
       </div>
       <div>
-        <label>Spawn count</label>
-        <input type="number" id="spawnCount" value="256" min="1" max="2048" step="1">
+        <label for="spawnCount">Spawn count</label>
+        <input type="number" id="spawnCount" value="256" min="1" max="2048" step="1" title="Number of particles to spawn at the start">
       </div>
       <div>
-        <label>Steps</label>
-        <input type="number" id="numSteps" value="500" min="100" step="100">
+        <label for="numSteps">Steps</label>
+        <input type="number" id="numSteps" value="500" min="100" step="100" title="Simulation steps per run (more = longer run)">
       </div>
       <div>
-        <label>Sample every N steps</label>
-        <input type="number" id="sampleInterval" value="100" min="0" step="10">
+        <label for="sampleInterval">Sample every N steps</label>
+        <input type="number" id="sampleInterval" value="100" min="0" step="10" title="How often to record metrics (alive count, eaten count)">
       </div>
       <div>
-        <label>Replay: capture every N steps</label>
-        <input type="number" id="captureInterval" value="10" min="1" step="1" title="Finer = more replay frames (e.g. 10 → 50 frames for 500 steps)">
+        <label for="captureInterval">Replay: capture every N steps</label>
+        <input type="number" id="captureInterval" value="10" min="1" step="1" title="Capture a frame every N steps for replay. Lower = smoother replay (e.g. 10 → 50 frames for 500 steps)">
       </div>
       <div>
-        <label>Seed (optional)</label>
-        <input type="text" id="seed" placeholder="e.g. 12345" title="Set for reproducible runs (same params + seed => same result)">
+        <label for="seed">Seed (optional)</label>
+        <input type="text" id="seed" placeholder="e.g. 12345" title="Same params + seed = same result. Leave empty for random">
       </div>
     </div>
     <div class="row" style="margin-top:0.75rem;">
       <div>
-        <label>Mode</label>
-        <select id="runMode">
+        <label for="runMode">Mode</label>
+        <select id="runMode" title="Single = one run. Sweep = multiple runs over a grid of spawn positions">
           <option value="single">Single run</option>
           <option value="sweep">Sweep (spawn centers)</option>
         </select>
       </div>
       <div id="sweepOptions" style="display:none;">
-        <label>Sweep: grid size (e.g. 3 = 3×3)</label>
-        <input type="number" id="sweepGrid" value="2" min="2" max="5">
+        <label for="sweepGrid">Sweep: grid size (e.g. 3 = 3×3)</label>
+        <input type="number" id="sweepGrid" value="2" min="2" max="5" title="Number of runs per axis (2 = 4 runs, 3 = 9 runs)">
       </div>
     </div>
     <div style="margin-top:1rem;">
-      <button id="runBtn">Run</button>
-      <button type="button" class="secondary" id="exportConfigBtn">Export config</button>
-      <button type="button" class="secondary" id="importConfigBtn">Import config</button>
+      <button id="runBtn" title="Start simulation with current settings. Results append below">Run</button>
+      <button type="button" class="secondary" id="exportConfigBtn" title="Copy current run settings (spawn, steps, params) to clipboard as JSON">Export config</button>
+      <button type="button" class="secondary" id="importConfigBtn" title="Paste and apply a previously exported config">Import config</button>
       <span class="status" id="runStatus"></span>
     </div>
     <div id="importConfigArea" style="display:none; margin-top:0.5rem;">
@@ -152,6 +198,7 @@
 
   <section class="panel">
     <h2 style="margin:0 0 0.75rem; font-size:1rem;">Results</h2>
+    <p class="status" style="margin-bottom:0.5rem;">Each Run adds a block below. Use ▶ to replay, 🖼 to view full-size reconstruction.</p>
     <div id="results"></div>
   </section>
 
@@ -160,5 +207,38 @@
   <script src="runner.js"></script>
   <script src="replay-player.js"></script>
   <script src="simulation.js"></script>
+  <script>
+  (function () {
+    var TOOLTIP_DELAY_MS = 500;
+    var el = null, t = null;
+    function show(e) {
+      var target = e.target.closest('[title]');
+      if (!target || !target.title) return;
+      clearTimeout(t);
+      t = setTimeout(function () {
+        el = document.createElement('div');
+        el.className = 'custom-tooltip';
+        el.textContent = target.title;
+        document.body.appendChild(el);
+        var rect = target.getBoundingClientRect();
+        var x = rect.left + (rect.width / 2) - (el.offsetWidth / 2);
+        var y = rect.top - el.offsetHeight - 6;
+        if (y < 8) y = rect.bottom + 6;
+        if (x < 8) x = 8;
+        if (x + el.offsetWidth > window.innerWidth - 8) x = window.innerWidth - el.offsetWidth - 8;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+      }, TOOLTIP_DELAY_MS);
+    }
+    function hide() {
+      clearTimeout(t);
+      t = null;
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+      el = null;
+    }
+    document.body.addEventListener('mouseover', show, true);
+    document.body.addEventListener('mouseout', hide, true);
+  })();
+  </script>
 </body>
 </html>
