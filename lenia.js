@@ -218,7 +218,10 @@ class ParticleLenia {
         this.reconstructionPendingId = 0;
         this.reconstructionPendingRequests = new Map(); // id -> {resolve, reject, dims}
         try {
-            this.reconstructionWorker = new Worker('reconstruction-worker.js');
+            const workerPath = (typeof location !== 'undefined' && location.pathname.includes('/simulation'))
+                ? new URL('../reconstruction-worker.js', location.href).href
+                : 'reconstruction-worker.js';
+            this.reconstructionWorker = new Worker(workerPath);
             this.reconstructionWorker.onmessage = (e) => {
                 const {id, success, result, rgbdError, ssimValue, ssimDistance, score, error, dims} = e.data;
                 const request = this.reconstructionPendingRequests.get(id);
@@ -298,13 +301,16 @@ class ParticleLenia {
         gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, sx, sy, gl.RGBA, gl.FLOAT, s.state1);
         gl.bindTexture(gl.TEXTURE_2D, this.selectBuf.attachments[0])
         gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, sx, sy, gl.RGBA, gl.UNSIGNED_BYTE, s.select);
+        if (s.resourceTex) this.pushResourceState(s.resourceTex);
     }
 
     // CPU-side reproduction step with per-parent child cap.
     // This is called infrequently (e.g. every K simulation steps) to avoid
     // heavy GPU readbacks every frame, and to guarantee that each parent
     // can produce at most `maxChildrenPerParent` offspring per reproduction step.
-    cpuReproductionStep(maxChildrenPerParent = 2) {
+    // When rng is provided (e.g. from a seeded PRNG), reproduction is deterministic for the same seed.
+    cpuReproductionStep(maxChildrenPerParent = 2, rng = null) {
+        const random = rng && typeof rng === 'function' ? rng : Math.random;
         const { reproThreshold, reproMinAge, reproCost, dishR } = this.U;
         const currentStep = this.stepCount || 0;
         const { state0, state1, select } = this.fetchState();
@@ -364,8 +370,8 @@ class ParticleLenia {
                 const cBase = emptyIdx * 4;
 
                 // Sample a random offset around the parent, similar to the GPU logic.
-                const angle = Math.random() * Math.PI * 2.0;
-                const dist = 1.0 + Math.random() * 2.0;
+                const angle = random() * Math.PI * 2.0;
+                const dist = 1.0 + random() * 2.0;
                 let cx = px + Math.cos(angle) * dist;
                 let cy = py + Math.sin(angle) * dist;
 
@@ -393,7 +399,7 @@ class ParticleLenia {
                 // Inherit and slightly mutate parent preference color
                 const childPrefBase = cBase;
                 const mutation = 0.1;
-                const mutate = () => (Math.random() - 0.5) * mutation;
+                const mutate = () => (random() - 0.5) * mutation;
                 let cr = parentR + mutate();
                 let cg = parentG + mutate();
                 let cb = parentB + mutate();
@@ -492,7 +498,8 @@ class ParticleLenia {
             const [lo, hi] = range;
             // Only create slider if this parameter is NOT in paramMap (JSON will create it)
             // Parameters in JSON will be handled by the dynamic GUI creation in index.html
-            if (!paramMap[name]) {
+            // When gui is null (e.g. headless simulation runner), skip slider creation
+            if (gui && !paramMap[name]) {
                 gui.add(U, name, lo, hi, step).onChange(cb);
             }
             return paramValue;
@@ -506,6 +513,11 @@ class ParticleLenia {
                 U[name] = getParamValue(name, defaultValue);
             }
         }
+    }
+
+    /** Sync w1 from m1/s1 (e.g. after headless param overrides). */
+    syncW1() {
+        this.U.w1 = calcNormCoef(this.U.m1, this.U.s1);
     }
 
     reset(n='max', center=[0,0]) {
@@ -769,8 +781,9 @@ class ParticleLenia {
     }
 
     clearSelection() {
+        const gl = this.gl;
         twgl.bindFramebufferInfo(gl, this.selectBuf);
-        gl.clear(gl.COLOR_BUFFER_BIT); 
+        gl.clear(gl.COLOR_BUFFER_BIT);
         twgl.bindFramebufferInfo(gl, null);
     }
 
@@ -895,7 +908,10 @@ class ParticleLenia {
             
             // Recreate the worker for future reconstructions
             try {
-                this.reconstructionWorker = new Worker('reconstruction-worker.js');
+                const workerPath = (typeof location !== 'undefined' && location.pathname.includes('/simulation'))
+                    ? new URL('../reconstruction-worker.js', location.href).href
+                    : 'reconstruction-worker.js';
+                this.reconstructionWorker = new Worker(workerPath);
                 this.reconstructionWorker.onmessage = (e) => {
                     const {id, success, result, rgbdError, ssimValue, ssimDistance, score, error, dims} = e.data;
                     const request = this.reconstructionPendingRequests.get(id);
@@ -1003,6 +1019,24 @@ class ParticleLenia {
         this.eatenPixelsCache = eatenPixels;
         
         return eatenPixels;
+    }
+
+    /** Read back current resource texture for replay state capture (512×512 RGBA float). */
+    fetchResourceState() {
+        const gl = this.gl;
+        const width = 512;
+        const height = 512;
+        const pixels = new Float32Array(width * height * 4);
+        twgl.bindFramebufferInfo(gl, this.resourceTex);
+        gl.readPixels(0, 0, width, height, gl.RGBA, gl.FLOAT, pixels);
+        twgl.bindFramebufferInfo(gl, null);
+        return pixels;
+    }
+
+    /** Restore resource texture from captured state (for replay). */
+    pushResourceState(floatData) {
+        if (!floatData || floatData.length !== 512 * 512 * 4) return;
+        this._uploadResourceData(floatData);
     }
 
     computeOptimalDimensions(eatenCount, aspectRatio) {
@@ -1890,7 +1924,8 @@ class ParticleLenia {
     render(target, {viewCenter=[0,0], viewExtent=50.0, 
             selectedOnly=false, flipUD=false,
             touchPos=[0,0], touchRadius=0.0}={}) {
-        const {width, height} = target || this.gl.canvas;
+        const gl = this.gl;
+        const {width, height} = target || gl.canvas;
         const viewAspect = width / Math.max(1.0, height);
         const minDim = Math.min(width, height)
         const fieldScale = Math.min(32.0*viewExtent/this.U.s1/minDim, 1.0);
@@ -2333,6 +2368,7 @@ class ParticleLenia {
     }
 
     runProgram(code, opt = {}, localUniforms={}) {
+        const gl = this.gl;
         if (!(code in this.programs)) {
             let [vp, fp] = code.split('//FRAG');
             if (!fp) {
@@ -2343,7 +2379,7 @@ class ParticleLenia {
         }
         twgl.bindFramebufferInfo(gl, opt.dst);
         if (opt.viewport) {
-            this.gl.viewport(...opt.viewport);
+            gl.viewport(...opt.viewport);
         }
         if (opt.dst) {
             const an = opt.dst.attachments.length;
@@ -2364,3 +2400,4 @@ class ParticleLenia {
         if (opt.blend) { gl.disable(gl.BLEND); }
     }
 };
+if (typeof window !== 'undefined') { window.ParticleLenia = ParticleLenia; }
