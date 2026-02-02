@@ -644,11 +644,6 @@ class ParticleLenia {
             return attraction * res.a;
         }
         
-        uniform bool depthEnabled;
-        uniform float depthStrength;
-        uniform float depthGradientSign;
-        uniform float depthBand;
-        uniform int depthMode;
         float sampleDepthMap(vec2 wldPos) {
             vec2 uv = (wldPos / dishR) * 0.5 + 0.5;
             return texture(depthTex, uv).r;
@@ -978,7 +973,31 @@ class ParticleLenia {
         }
         this._uploadDepthData(empty);
     }
-    
+
+    /**
+     * If no explicit depth map is loaded but a resource image exists, derive a grayscale
+     * depth texture from the resource (luminance) and upload it. Does nothing if
+     * originalDepthData already exists (user-provided depth) or if no resource is loaded.
+     */
+    ensureDepthFromResource() {
+        if (this.originalDepthData) return; // User provided depth; don't overwrite
+        if (!this.originalResourceData) return; // No resource to derive from
+        const src = this.originalResourceData;
+        const floatData = new Float32Array(512 * 512 * 4);
+        for (let i = 0; i < 512 * 512; i++) {
+            const r = src[i * 4];
+            const g = src[i * 4 + 1];
+            const b = src[i * 4 + 2];
+            const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+            floatData[i * 4] = gray;
+            floatData[i * 4 + 1] = gray;
+            floatData[i * 4 + 2] = gray;
+            floatData[i * 4 + 3] = 1.0;
+        }
+        this.originalDepthData = floatData.slice();
+        this._uploadDepthData(floatData);
+    }
+
     reloadResourceImage() {
         // Reload the original resource image if one was loaded
         if (this.originalResourceData) {
@@ -2515,6 +2534,50 @@ class ParticleLenia {
         }`, {dst: target, blend: [gl.ONE, gl.ONE]}, {flipUD});
     }
 
+    /** Display the current depth map texture (world-space, same mapping as resource/depth) with particles on top. Mode 4. */
+    renderDepthMap(target, {viewCenter=[0,0], viewExtent=50.0, flipUD=false}={}) {
+        const gl = this.gl;
+        const {width, height} = target || gl.canvas;
+        const viewAspect = width / Math.max(1.0, height);
+        Object.assign(this.U, {viewCenter, viewExtent, viewAspect});
+        // Depth map background
+        this.runProgram(`
+        uniform bool flipUD;
+        void main() {
+            vec2 p = flipUD ? vec2(uv.x, 1.0-uv.y) : uv;
+            vec2 wldPos = scr2wld(p * 2.0 - 1.0);
+            vec2 depthUV = (wldPos / dishR) * 0.5 + 0.5;
+            float d = texture(depthTex, depthUV).r;
+            vec3 gray = vec3(d, d, d);
+            float dist = length(wldPos) / dishR;
+            if (dist > 1.0) gray *= 0.3;
+            out0 = vec4(gray, 1.0);
+        }`, {dst: target}, {flipUD});
+        // Particles on top (same as main view)
+        this.runProgram(`
+        uniform bool flipUD;
+        out vec3 color;
+        void main() {
+            uv = quad * 1.0;
+            Particle p = getParticle();
+            if (!p.visible) {
+              gl_Position = vec4(0.0);
+              return;
+            }
+            vec2 wldPos = p.pos + uv * p.radius;
+            color = p.color;
+            gl_Position = vec4(wld2scr(wldPos), 0.0, 1.0);
+            if (flipUD) gl_Position.y *= -1.0;
+        }
+        //FRAG
+        in vec3 color;
+        void main() {
+            float a = step(abs(uv.x), 1.0) * step(abs(uv.y), 1.0);
+            vec3 brightColor = color * 1.2;
+            out0 = vec4(brightColor, a) * pointsAlpha;
+        }`, {dst: target, n: this.max_point_n, blend: [gl.ONE, gl.ONE_MINUS_SRC_ALPHA]}, {flipUD});
+    }
+
     flipBuffers() {
         [this.dst, this.src] = [this.src, this.dst];
         this.U.state = this.src.attachments[0];
@@ -2529,7 +2592,25 @@ class ParticleLenia {
                 vp = 'void main() {uv=quad*.5+.5; gl_Position=vec4(quad,0.0,1.0);}';
                 fp = code;
             }
-            this.programs[code] = twgl.createProgramInfo(gl, [vp_prefix + vp, fp_prefix + fp]);
+            const programInfo = twgl.createProgramInfo(gl, [vp_prefix + vp, fp_prefix + fp]);
+            if (!programInfo || !programInfo.program) {
+                const vs = gl.createShader(gl.VERTEX_SHADER);
+                gl.shaderSource(vs, vp_prefix + vp);
+                gl.compileShader(vs);
+                const fs = gl.createShader(gl.FRAGMENT_SHADER);
+                gl.shaderSource(fs, fp_prefix + fp);
+                gl.compileShader(fs);
+                const vsLog = gl.getShaderInfoLog(vs);
+                const fsLog = gl.getShaderInfoLog(fs);
+                gl.deleteShader(vs);
+                gl.deleteShader(fs);
+                throw new Error('Shader compile failed. Vertex: ' + (vsLog || 'ok') + ' Fragment: ' + (fsLog || 'ok'));
+            }
+            this.programs[code] = programInfo;
+        }
+        const program = this.programs[code];
+        if (!program || !program.program) {
+            throw new Error('Program not available (previous compile failed).');
         }
         twgl.bindFramebufferInfo(gl, opt.dst);
         if (opt.viewport) {
@@ -2548,7 +2629,6 @@ class ParticleLenia {
             gl.blendFunc(sfactor, dfactor);
             gl.blendEquation(eqation || gl.FUNC_ADD)
         }
-        const program = this.programs[code];
         gl.useProgram(program.program);
         twgl.setUniforms(program, {...this.U, ...localUniforms});
         twgl.setBuffersAndAttributes(gl, program, this.geom);

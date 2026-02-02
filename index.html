@@ -561,6 +561,8 @@ class MobileControls {
     for (const [category, catData] of Object.entries(config)) {
         if (category === 'description' || category === 'version') continue;
         if (!catData.params || catData.gui !== 'main') continue;
+        // Depth map has its own manual folder below (load/clear + sliders); skip here to avoid duplicate folder
+        if (category === 'depth') continue;
         
         const folderName = catData.folder || category;
         const folder = gui.addFolder(folderName);
@@ -698,10 +700,10 @@ class MobileControls {
             params.renderMode = 1;
             // Update button states
             if (window.mobileControls) {
-                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4'].includes(c.key));
                 renderModeButtons.forEach(control => {
                     if (control.buttonElement) {
-                        control.buttonElement.classList.toggle('active', parseInt(control.key) === 1);
+                        control.buttonElement.classList.toggle('active', control.key === '1');
                     }
                 });
             }
@@ -715,10 +717,10 @@ class MobileControls {
             params.renderMode = 2;
             // Update button states
             if (window.mobileControls) {
-                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4'].includes(c.key));
                 renderModeButtons.forEach(control => {
                     if (control.buttonElement) {
-                        control.buttonElement.classList.toggle('active', parseInt(control.key) === 2);
+                        control.buttonElement.classList.toggle('active', control.key === '2');
                     }
                 });
             }
@@ -744,10 +746,26 @@ class MobileControls {
             }
             // Update button states
             if (window.mobileControls) {
-                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4'].includes(c.key));
                 renderModeButtons.forEach(control => {
                     if (control.buttonElement) {
-                        control.buttonElement.classList.toggle('active', parseInt(control.key) === 3);
+                        control.buttonElement.classList.toggle('active', control.key === '3');
+                    }
+                });
+            }
+        }
+    });
+    
+    mobileControls.registerControl({
+        key: '4',
+        label: 'Depth map',
+        action: () => {
+            params.renderMode = 4;
+            if (window.mobileControls) {
+                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4'].includes(c.key));
+                renderModeButtons.forEach(control => {
+                    if (control.buttonElement) {
+                        control.buttonElement.classList.toggle('active', control.key === '4');
                     }
                 });
             }
@@ -802,7 +820,7 @@ class MobileControls {
         mobileControls.updateButtonState('t', params.showTrailsOverlay);
         mobileControls.updateButtonState(' ', params.captureMode);
         // Set active state for current render mode
-        const renderModeButtons = mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+        const renderModeButtons = mobileControls.controls.filter(c => ['1', '2', '3', '4'].includes(c.key));
         renderModeButtons.forEach(control => {
             if (control.buttonElement && parseInt(control.key) === params.renderMode) {
                 control.buttonElement.classList.add('active');
@@ -832,11 +850,16 @@ class MobileControls {
     params['clear depth'] = () => lenia.clearDepth();
     depthFolder.add(params, 'load depth');
     depthFolder.add(params, 'clear depth');
-    depthFolder.add(lenia.U, 'depthEnabled').name('use depth map');
+    const depthEnabledController = depthFolder.add(lenia.U, 'depthEnabled').name('use depth map');
+    depthEnabledController.onChange((value) => {
+        if (value) lenia.ensureDepthFromResource();
+    });
+    window.depthEnabledController = depthEnabledController;
     depthFolder.add(lenia.U, 'depthStrength', 0, 5, 0.1).name('strength');
     depthFolder.add(lenia.U, 'depthGradientSign', -1, 1, 0.1).name('gradient sign (+ toward high)');
     depthFolder.add(lenia.U, 'depthBand', 0.01, 0.5, 0.01).name('connectivity band');
     depthFolder.add(lenia.U, 'depthMode', { Gradient: 0, Connectivity: 1 }).name('mode');
+    depthFolder.open();
 
     // Life Cycle toggles
     params.enableLifeCycle = getParamValue(paramMap, 'enableLifeCycle', true);
@@ -1057,7 +1080,7 @@ function animate(currentTime) {
     // Update FPS counter
     fpsFrameCount++;
     const now = performance.now();
-    const modeNames = ['', 'Main', 'Trails', 'Compressed'];
+    const modeNames = ['', 'Main', 'Trails', 'Compressed', 'Depth map'];
     const modeName = modeNames[params.renderMode] || `Mode ${params.renderMode}`;
     if (now - fpsLastTime >= 1000) {
         lastCellCount = lenia.getAliveCount();
@@ -1178,6 +1201,11 @@ function animate(currentTime) {
         lenia.renderTrails(null, renderArgs);  // Trail view
     } else if (params.renderMode === 3) {
         lenia.renderCompressedReconstruction(null, renderArgs);  // Compressed reconstruction
+    } else if (params.renderMode === 4) {
+        lenia.renderDepthMap(null, renderArgs);  // Depth map display (key "d" or "4")
+        if (params.showTrailsOverlay) {
+            lenia.renderTrailsOverlay(null, renderArgs);
+        }
     } else {
         lenia.render(null, renderArgs);  // Default to main
         if (params.showTrailsOverlay) {
@@ -1438,7 +1466,7 @@ window.addEventListener('keydown', e=>{
         }
         // Update mobile control button states for render mode buttons
         if (window.mobileControls) {
-            const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+            const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4'].includes(c.key));
             renderModeButtons.forEach(control => {
                 if (control.buttonElement) {
                     const isActive = parseInt(control.key) === params.renderMode;
@@ -1464,6 +1492,18 @@ window.addEventListener('keydown', e=>{
         params.showTrailsOverlay = !params.showTrailsOverlay;
         if (window.mobileControls) {
             window.mobileControls.updateButtonState('t', params.showTrailsOverlay);
+        }
+    }
+    // Depth map display mode (key "d" or "4") - show current depth texture
+    if (e.key === 'd' || e.key === 'D') {
+        params.renderMode = 4;
+        if (window.mobileControls) {
+            const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4'].includes(c.key));
+            renderModeButtons.forEach(control => {
+                if (control.buttonElement) {
+                    control.buttonElement.classList.toggle('active', control.key === '4');
+                }
+            });
         }
     }
 });

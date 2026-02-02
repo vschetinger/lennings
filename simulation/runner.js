@@ -168,7 +168,11 @@
     if (depthUrl != null && depthUrl !== '') {
       await lenia.loadDepthImage(depthUrl);
     } else {
-      lenia.clearDepth?.();
+      if (depthEnabled && lenia.hasLoadedResource?.()) {
+        lenia.ensureDepthFromResource?.();
+      } else {
+        lenia.clearDepth?.();
+      }
     }
     if (depthEnabled !== undefined && lenia.U.depthEnabled !== undefined) lenia.U.depthEnabled = !!depthEnabled;
     if (depthStrength !== undefined && lenia.U.depthStrength !== undefined) lenia.U.depthStrength = depthStrength;
