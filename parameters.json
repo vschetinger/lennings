@@ -494,6 +494,10 @@
         "value": 75.0,
         "description": "World radius of the simulation dish"
       },
+      "worldTexSize": {
+        "value": 1024,
+        "description": "World texture resolution (resource/depth map width and height). Set in lenia.js as WORLD_TEX_SIZE; must match."
+      },
       "max_point_n": {
         "value": 2048,
         "description": "Maximum number of particles"

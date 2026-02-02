@@ -18,6 +18,7 @@ uniform sampler2D depthTex;       //! this.depthTex.attachments[0]
 uniform sampler2D prefBuf;        //! this.prefBuf.attachments[0]
 uniform sampler2D trailTex;       //! this.trailTex.attachments[0]
 uniform float dishR;          //! 75.0
+uniform float worldTexSize;   //! 1024.0
 uniform float fieldScale;     //! 1.0
 // Life cycle parameters (controlled via left panel, not auto-sliders)
 uniform float resourceAttraction; //! 1.0
@@ -161,6 +162,10 @@ function calcNormCoef(m, s) {
     return 1.0 / (acc*dr*2.0*Math.PI);
 }
 
+// World texture resolution: resource map, depth map, and repulsion field are painted at this size.
+// Particles live in continuous 2D (no grid); this only sets how sharp the painted world looks.
+const WORLD_TEX_SIZE = 1024;
+
 class ParticleLenia {
 
     constructor(gl, gui, paramMap = {}) {
@@ -185,7 +190,7 @@ class ParticleLenia {
             ()=>twgl.createFramebufferInfo(gl, [{internalFormat: gl.RGBA32F}, {internalFormat: gl.RGBA32F}], sx, sy ));
         this.fieldFormat = [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}];
         this.fieldU = twgl.createFramebufferInfo(gl, this.fieldFormat, 256, 256);
-        this.fieldR = twgl.createFramebufferInfo(gl, this.fieldFormat, 512, 512);
+        this.fieldR = twgl.createFramebufferInfo(gl, this.fieldFormat, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
         this.selectBuf = twgl.createFramebufferInfo(gl, [{}], sx, sy);
         
         // Preferences buffer for RGB resource preferences per particle (double-buffered for reproduction)
@@ -194,11 +199,11 @@ class ParticleLenia {
         
         // Resource texture for RGBA environmental fields (double-buffered for consumption)
         this.resourceFormat = [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}];
-        this.resourceTex = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
-        this.resourceTexDst = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
+        this.resourceTex = twgl.createFramebufferInfo(gl, this.resourceFormat, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
+        this.resourceTexDst = twgl.createFramebufferInfo(gl, this.resourceFormat, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
         
         // Depth map (read-only, grayscale in R, same world-space mapping as resourceTex)
-        this.depthTex = twgl.createFramebufferInfo(gl, this.resourceFormat, 512, 512);
+        this.depthTex = twgl.createFramebufferInfo(gl, this.resourceFormat, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
         this.originalDepthData = null;
         
         // Trail accumulation texture for particle path visualization
@@ -266,10 +271,13 @@ class ParticleLenia {
         }
 
         this.setupUniforms(gui);
+        this.U.worldTexSize = WORLD_TEX_SIZE;  // Keep in sync with resource/depth texture size
     }
 
     get dishR() { return this.U.dishR; }
-    
+    /** World texture resolution (resource/depth map size). Same in main app and simulation. */
+    get worldTexSize() { return WORLD_TEX_SIZE; }
+
     fetchState() {
         const gl = this.gl;
         const [sx, sy] = this.state_size;
@@ -719,7 +727,7 @@ class ParticleLenia {
             
             // Resource field attraction - compute gradient via finite differences
             vec3 myPref = normalize(abs(texelFetch(prefBuf, ij, 0).rgb) + 0.01);
-            float texelSize = dishR / 256.0;  // World-space size of gradient sample
+            float texelSize = (2.0 * dishR) / worldTexSize;  // World-space size of one texel (matches resource/depth resolution)
             float rC = sampleResource(pos, myPref);
             float rL = sampleResource(pos - vec2(texelSize, 0.0), myPref);
             float rR = sampleResource(pos + vec2(texelSize, 0.0), myPref);
@@ -847,23 +855,23 @@ class ParticleLenia {
         }
         
         // Store original image dimensions before resizing
-        this.originalWidth = img.naturalWidth || img.width || 512;
-        this.originalHeight = img.naturalHeight || img.height || 512;
+        this.originalWidth = img.naturalWidth || img.width || WORLD_TEX_SIZE;
+        this.originalHeight = img.naturalHeight || img.height || WORLD_TEX_SIZE;
         this.originalAspectRatio = this.originalWidth / this.originalHeight;
         
         // Create a canvas to process the image and extract RGBA
         const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 512;
+        canvas.width = WORLD_TEX_SIZE;
+        canvas.height = WORLD_TEX_SIZE;
         const ctx = canvas.getContext('2d');
         // Flip vertically to match WebGL coordinate system
-        ctx.translate(0, 512);
+        ctx.translate(0, WORLD_TEX_SIZE);
         ctx.scale(1, -1);
-        ctx.drawImage(img, 0, 0, 512, 512);
-        const imageData = ctx.getImageData(0, 0, 512, 512);
+        ctx.drawImage(img, 0, 0, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
+        const imageData = ctx.getImageData(0, 0, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
         
         // Convert to float array for RGBA16F texture
-        const floatData = new Float32Array(512 * 512 * 4);
+        const floatData = new Float32Array(WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4);
         for (let i = 0; i < imageData.data.length; i++) {
             floatData[i] = imageData.data[i] / 255.0;
         }
@@ -909,11 +917,11 @@ class ParticleLenia {
     _uploadResourceData(floatData) {
         const gl = this.gl;
         gl.bindTexture(gl.TEXTURE_2D, this.resourceTex.attachments[0]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, 512, 512, 0, gl.RGBA, gl.FLOAT, floatData);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, WORLD_TEX_SIZE, WORLD_TEX_SIZE, 0, gl.RGBA, gl.FLOAT, floatData);
         gl.bindTexture(gl.TEXTURE_2D, null);
         
         gl.bindTexture(gl.TEXTURE_2D, this.resourceTexDst.attachments[0]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, 512, 512, 0, gl.RGBA, gl.FLOAT, floatData);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, WORLD_TEX_SIZE, WORLD_TEX_SIZE, 0, gl.RGBA, gl.FLOAT, floatData);
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
@@ -932,15 +940,15 @@ class ParticleLenia {
             });
         }
         const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 512;
+        canvas.width = WORLD_TEX_SIZE;
+        canvas.height = WORLD_TEX_SIZE;
         const ctx = canvas.getContext('2d');
-        ctx.translate(0, 512);
+        ctx.translate(0, WORLD_TEX_SIZE);
         ctx.scale(1, -1);
-        ctx.drawImage(img, 0, 0, 512, 512);
-        const imageData = ctx.getImageData(0, 0, 512, 512);
-        const floatData = new Float32Array(512 * 512 * 4);
-        for (let i = 0; i < 512 * 512; i++) {
+        ctx.drawImage(img, 0, 0, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
+        const imageData = ctx.getImageData(0, 0, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
+        const floatData = new Float32Array(WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4);
+        for (let i = 0; i < WORLD_TEX_SIZE * WORLD_TEX_SIZE; i++) {
             const r = imageData.data[i * 4] / 255.0;
             const g = imageData.data[i * 4 + 1] / 255.0;
             const b = imageData.data[i * 4 + 2] / 255.0;
@@ -957,15 +965,15 @@ class ParticleLenia {
     _uploadDepthData(floatData) {
         const gl = this.gl;
         gl.bindTexture(gl.TEXTURE_2D, this.depthTex.attachments[0]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, 512, 512, 0, gl.RGBA, gl.FLOAT, floatData);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, WORLD_TEX_SIZE, WORLD_TEX_SIZE, 0, gl.RGBA, gl.FLOAT, floatData);
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
     clearDepth() {
         this.originalDepthData = null;
         const gl = this.gl;
-        const empty = new Float32Array(512 * 512 * 4);
-        for (let i = 0; i < 512 * 512; i++) {
+        const empty = new Float32Array(WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4);
+        for (let i = 0; i < WORLD_TEX_SIZE * WORLD_TEX_SIZE; i++) {
             empty[i * 4] = 0.5;
             empty[i * 4 + 1] = 0.5;
             empty[i * 4 + 2] = 0.5;
@@ -983,8 +991,8 @@ class ParticleLenia {
         if (this.originalDepthData) return; // User provided depth; don't overwrite
         if (!this.originalResourceData) return; // No resource to derive from
         const src = this.originalResourceData;
-        const floatData = new Float32Array(512 * 512 * 4);
-        for (let i = 0; i < 512 * 512; i++) {
+        const floatData = new Float32Array(WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4);
+        for (let i = 0; i < WORLD_TEX_SIZE * WORLD_TEX_SIZE; i++) {
             const r = src[i * 4];
             const g = src[i * 4 + 1];
             const b = src[i * 4 + 2];
@@ -1102,8 +1110,8 @@ class ParticleLenia {
         }
         
         const gl = this.gl;
-        const width = 512;
-        const height = 512;
+        const width = WORLD_TEX_SIZE;
+        const height = WORLD_TEX_SIZE;
         
         // Read back resource texture (expensive GPU operation)
         const pixels = new Float32Array(width * height * 4);
@@ -1135,11 +1143,11 @@ class ParticleLenia {
         return eatenPixels;
     }
 
-    /** Read back current resource texture for replay state capture (512×512 RGBA float). */
+    /** Read back current resource texture for replay state capture (WORLD_TEX_SIZE×WORLD_TEX_SIZE RGBA float). */
     fetchResourceState() {
         const gl = this.gl;
-        const width = 512;
-        const height = 512;
+        const width = WORLD_TEX_SIZE;
+        const height = WORLD_TEX_SIZE;
         const pixels = new Float32Array(width * height * 4);
         twgl.bindFramebufferInfo(gl, this.resourceTex);
         gl.readPixels(0, 0, width, height, gl.RGBA, gl.FLOAT, pixels);
@@ -1149,7 +1157,7 @@ class ParticleLenia {
 
     /** Restore resource texture from captured state (for replay). */
     pushResourceState(floatData) {
-        if (!floatData || floatData.length !== 512 * 512 * 4) return;
+        if (!floatData || floatData.length !== WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4) return;
         this._uploadResourceData(floatData);
     }
 
@@ -1249,19 +1257,19 @@ class ParticleLenia {
         // - Eaten count changed significantly (need to recalculate metrics)
         // - Force update requested
         
-        // Get original image at full resolution (512x512) for error calculation
+        // Get original image at full resolution (WORLD_TEX_SIZE) for error calculation
         const originalCanvas = document.createElement('canvas');
-        originalCanvas.width = 512;
-        originalCanvas.height = 512;
+        originalCanvas.width = WORLD_TEX_SIZE;
+        originalCanvas.height = WORLD_TEX_SIZE;
         const originalCtx = originalCanvas.getContext('2d');
-        const originalImageData = originalCtx.createImageData(512, 512);
+        const originalImageData = originalCtx.createImageData(WORLD_TEX_SIZE, WORLD_TEX_SIZE);
         
-        // Reconstruct original image data from float array (512x512)
+        // Reconstruct original image data from float array
         for (let i = 0; i < this.originalResourceData.length; i += 4) {
             const idx = i / 4;
-            const x = idx % 512;
-            const y = Math.floor(idx / 512);
-            const pixelIdx = (y * 512 + x) * 4;
+            const x = idx % WORLD_TEX_SIZE;
+            const y = Math.floor(idx / WORLD_TEX_SIZE);
+            const pixelIdx = (y * WORLD_TEX_SIZE + x) * 4;
             originalImageData.data[pixelIdx + 0] = Math.round(this.originalResourceData[i + 0] * 255);
             originalImageData.data[pixelIdx + 1] = Math.round(this.originalResourceData[i + 1] * 255);
             originalImageData.data[pixelIdx + 2] = Math.round(this.originalResourceData[i + 2] * 255);
@@ -1620,7 +1628,7 @@ class ParticleLenia {
                 }
                 
                 // Max possible error: if every pixel was completely different (255 diff in each channel)
-                // For 512x512: 512*512*3*255*255 = 51,117,158,400 (about 51 billion)
+                // For WORLD_TEX_SIZE^2: max RGB squared distance for normalization
                 // JavaScript safe integer limit: 2^53 - 1 = 9,007,199,254,740,991 (9 quadrillion)
                 // So we're well within safe integer range
                 const maxPossibleError = pixelCount * 3 * 255 * 255;
@@ -1762,8 +1770,8 @@ class ParticleLenia {
             dims.width,  // Reconstruction width
             dims.height,  // Reconstruction height
             originalImageData.data,  // Original data (for comparison)
-            originalImageData.width,  // Original width (512)
-            originalImageData.height  // Original height (512)
+            originalImageData.width,  // Original width (WORLD_TEX_SIZE)
+            originalImageData.height  // Original height (WORLD_TEX_SIZE)
         );
         
         // Calculate SSIM
@@ -1774,8 +1782,8 @@ class ParticleLenia {
             dims.width,  // Reconstruction width
             dims.height,  // Reconstruction height
             originalImageData.data,  // Original data (for comparison)
-            originalImageData.width,  // Original width (512)
-            originalImageData.height  // Original height (512)
+            originalImageData.width,  // Original width (WORLD_TEX_SIZE)
+            originalImageData.height  // Original height (WORLD_TEX_SIZE)
         );
         
         // Calculate score for metadata (not used for display, but available)
