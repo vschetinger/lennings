@@ -1,501 +1,367 @@
-// Web Worker for compressed image reconstruction using k-d tree nearest neighbor search
-// This prevents blocking the main thread during expensive computations
+// Web Worker for compressed image reconstruction
+// MOSAIC APPROACH: Each eaten pixel is a tile that can only be used ONCE
+// Uses greedy assignment sorted by luminance for O(n log n) performance
 
 // ============================================================================
-// Error Metric System - Class-based with decorators for extensibility
+// Utility Functions
 // ============================================================================
 
-// Base Error Metric Class
-class ErrorMetric {
-    calculate(targetData, resultData, width, height) {
-        throw new Error('Must implement calculate()');
-    }
-    
-    getName() {
-        return 'BaseErrorMetric';
-    }
+// Calculate luminance (for sorting)
+function luminance(r, g, b) {
+    return 0.299 * r + 0.587 * g + 0.114 * b;
 }
 
-// RGB Distance Error Metric - Uses raw RGB values (0-255), squared differences
-// Compares at original image resolution (scales reconstruction up if needed)
-class RGBDistanceErrorMetric extends ErrorMetric {
-    calculate(targetData, resultData, resultWidth, resultHeight, originalData, originalWidth, originalHeight) {
-        // Scale up reconstruction to original resolution using nearest neighbor (pixel art style)
-        const upscaledResult = new Uint8ClampedArray(originalWidth * originalHeight * 4);
-        
-        for (let oy = 0; oy < originalHeight; oy++) {
-            for (let ox = 0; ox < originalWidth; ox++) {
-                // Map original pixel to reconstruction pixel (nearest neighbor)
-                const rx = Math.floor((ox / originalWidth) * resultWidth);
-                const ry = Math.floor((oy / originalHeight) * resultHeight);
-                const rIdx = (ry * resultWidth + rx) * 4;
-                const oIdx = (oy * originalWidth + ox) * 4;
-                
-                // Copy pixel from reconstruction (upscaled)
-                upscaledResult[oIdx + 0] = resultData[rIdx + 0];
-                upscaledResult[oIdx + 1] = resultData[rIdx + 1];
-                upscaledResult[oIdx + 2] = resultData[rIdx + 2];
-                upscaledResult[oIdx + 3] = resultData[rIdx + 3];
-            }
-        }
-        
-        // Now compare upscaled reconstruction to original at full resolution
-        let totalError = 0;
-        let pixelCount = 0;
-        
-        for (let i = 0; i < originalWidth * originalHeight; i++) {
-            const idx = i * 4;
-            // Use raw RGB values (0-255 range), not normalized
-            const dr = originalData[idx + 0] - upscaledResult[idx + 0];
-            const dg = originalData[idx + 1] - upscaledResult[idx + 1];
-            const db = originalData[idx + 2] - upscaledResult[idx + 2];
-            
-            // Squared differences per channel, summed
-            const error = dr * dr + dg * dg + db * db;
-            totalError += error;
-            pixelCount++;
-        }
-        
-        // Max possible error: if every pixel was completely different (255 diff in each channel)
-        // For 512x512: 512*512*3*255*255 = 51,117,158,400 (about 51 billion)
-        // JavaScript safe integer limit: 2^53 - 1 = 9,007,199,254,740,991 (9 quadrillion)
-        // So we're well within safe integer range, but using Number (not BigInt) is fine
-        const maxPossibleError = pixelCount * 3 * 255 * 255;
-        
-        return {
-            error: totalError,  // Large number (e.g., billions) that decreases over time
-            metadata: {
-                pixelCount,
-                averageError: totalError / pixelCount,
-                maxPossibleError: maxPossibleError,
-                originalResolution: `${originalWidth}x${originalHeight}`,
-                reconstructionResolution: `${resultWidth}x${resultHeight}`
-            }
-        };
-    }
-    
-    getName() {
-        return 'RGBd';
-    }
-}
-
-// SSIM (Structural Similarity Index Measure) Error Metric
-// Measures structural similarity between images (luminance, contrast, structure)
-// Returns SSIM value (0-1, where 1 = perfect match) and distance (1 - SSIM)
-class SSIMErrorMetric extends ErrorMetric {
-    calculate(targetData, resultData, resultWidth, resultHeight, originalData, originalWidth, originalHeight) {
-        // Scale up reconstruction to original resolution using nearest neighbor (pixel art style)
-        const upscaledResult = new Uint8ClampedArray(originalWidth * originalHeight * 4);
-        
-        for (let oy = 0; oy < originalHeight; oy++) {
-            for (let ox = 0; ox < originalWidth; ox++) {
-                // Map original pixel to reconstruction pixel (nearest neighbor)
-                const rx = Math.floor((ox / originalWidth) * resultWidth);
-                const ry = Math.floor((oy / originalHeight) * resultHeight);
-                const rIdx = (ry * resultWidth + rx) * 4;
-                const oIdx = (oy * originalWidth + ox) * 4;
-                
-                // Copy pixel from reconstruction (upscaled)
-                upscaledResult[oIdx + 0] = resultData[rIdx + 0];
-                upscaledResult[oIdx + 1] = resultData[rIdx + 1];
-                upscaledResult[oIdx + 2] = resultData[rIdx + 2];
-                upscaledResult[oIdx + 3] = resultData[rIdx + 3];
-            }
-        }
-        
-        // Convert RGB to luminance (grayscale) for SSIM calculation
-        const originalLum = new Float32Array(originalWidth * originalHeight);
-        const resultLum = new Float32Array(originalWidth * originalHeight);
-        
-        for (let i = 0; i < originalWidth * originalHeight; i++) {
-            const idx = i * 4;
-            // Standard luminance weights: 0.299*R + 0.587*G + 0.114*B
-            originalLum[i] = 0.299 * originalData[idx + 0] + 
-                            0.587 * originalData[idx + 1] + 
-                            0.114 * originalData[idx + 2];
-            resultLum[i] = 0.299 * upscaledResult[idx + 0] + 
-                          0.587 * upscaledResult[idx + 1] + 
-                          0.114 * upscaledResult[idx + 2];
-        }
-        
-        // Calculate mean luminance
-        let meanX = 0, meanY = 0;
-        for (let i = 0; i < originalLum.length; i++) {
-            meanX += originalLum[i];
-            meanY += resultLum[i];
-        }
-        meanX /= originalLum.length;
-        meanY /= originalLum.length;
-        
-        // Calculate variance and covariance
-        let varX = 0, varY = 0, covXY = 0;
-        for (let i = 0; i < originalLum.length; i++) {
-            const diffX = originalLum[i] - meanX;
-            const diffY = resultLum[i] - meanY;
-            varX += diffX * diffX;
-            varY += diffY * diffY;
-            covXY += diffX * diffY;
-        }
-        varX /= originalLum.length;
-        varY /= originalLum.length;
-        covXY /= originalLum.length;
-        
-        // SSIM constants (typical values)
-        const C1 = (0.01 * 255) * (0.01 * 255);  // Luminance stability constant
-        const C2 = (0.03 * 255) * (0.03 * 255);  // Contrast stability constant
-        
-        // SSIM formula: (2μxμy + C1)(2σxy + C2) / ((μx² + μy² + C1)(σx² + σy² + C2))
-        const numerator = (2 * meanX * meanY + C1) * (2 * covXY + C2);
-        const denominator = (meanX * meanX + meanY * meanY + C1) * (varX + varY + C2);
-        
-        const ssim = numerator / denominator;
-        const ssimDistance = 1.0 - ssim;  // Distance from perfect (0 = perfect, 1 = worst)
-        
-        return {
-            error: ssimDistance,  // Distance from perfect (0-1, lower is better)
-            ssim: ssim,  // SSIM value (0-1, higher is better)
-            metadata: {
-                pixelCount: originalLum.length,
-                meanX: meanX,
-                meanY: meanY,
-                varX: varX,
-                varY: varY,
-                covXY: covXY,
-                originalResolution: `${originalWidth}x${originalHeight}`,
-                reconstructionResolution: `${resultWidth}x${resultHeight}`
-            }
-        };
-    }
-    
-    getName() {
-        return 'SSIM';
-    }
-}
-
-// Perceptual Error Metric - Luminance-weighted perceptual distance
-class PerceptualErrorMetric extends ErrorMetric {
-    calculate(targetData, resultData, width, height) {
-        function perceptualDistance(r1, g1, b1, r2, g2, b2) {
-            const lum1 = 0.299 * r1 + 0.587 * g1 + 0.114 * b1;
-            const lum2 = 0.299 * r2 + 0.587 * g2 + 0.114 * b2;
-            const lumDiff = Math.abs(lum1 - lum2);
-            
-            const dr = r1 - r2;
-            const dg = g1 - g2;
-            const db = b1 - b2;
-            const chromaDist = Math.sqrt(dr * dr + dg * dg + db * db);
-            
-            return 0.7 * lumDiff + 0.3 * chromaDist;
-        }
-        
-        let totalError = 0;
-        let pixelCount = 0;
-        
-        for (let i = 0; i < width * height; i++) {
-            const idx = i * 4;
-            const tr = targetData[idx + 0] / 255.0;
-            const tg = targetData[idx + 1] / 255.0;
-            const tb = targetData[idx + 2] / 255.0;
-            
-            const rr = resultData[idx + 0] / 255.0;
-            const rg = resultData[idx + 1] / 255.0;
-            const rb = resultData[idx + 2] / 255.0;
-            
-            const error = perceptualDistance(tr, tg, tb, rr, rg, rb);
-            totalError += error;
-            pixelCount++;
-        }
-        
-        const meanError = totalError / pixelCount;
-        const maxPossibleError = pixelCount * 1.0;  // Max perceptual distance is ~1.0
-        
-        return {
-            error: meanError,  // Normalized 0-1 range
-            metadata: {
-                pixelCount,
-                averageError: meanError,
-                maxPossibleError: maxPossibleError
-            }
-        };
-    }
-    
-    getName() {
-        return 'Perceptual';
-    }
-}
-
-// Score Decorator - Transforms error into a normalized score (0-100, higher = better)
-class ScoreDecorator {
-    constructor(metric, maxError = null) {
-        this.metric = metric;
-        this.maxError = maxError;  // Optional: override max error for normalization
-    }
-    
-    calculate(targetData, resultData, resultWidth, resultHeight, originalData, originalWidth, originalHeight) {
-        const result = this.metric.calculate(targetData, resultData, resultWidth, resultHeight, originalData, originalWidth, originalHeight);
-        
-        // Transform error into score (0-100, where 100 = perfect match)
-        let score = null;
-        const maxPossible = this.maxError || result.metadata?.maxPossibleError;
-        
-        if (maxPossible && maxPossible > 0) {
-            // Score = 100 * (1 - error/maxPossible)
-            // When error = 0, score = 100 (perfect)
-            // When error = maxPossible, score = 0 (worst)
-            score = Math.max(0, Math.min(100, 100 * (1 - result.error / maxPossible)));
-        }
-        
-        return {
-            ...result,
-            score: score,
-            scoreFormatted: score !== null ? score.toFixed(1) : 'N/A'
-        };
-    }
-    
-    getName() {
-        return `${this.metric.getName()}_Score`;
-    }
-}
-
-// Simple squared Euclidean distance (faster for k-d tree)
-function squaredDistance(r1, g1, b1, r2, g2, b2) {
+// Squared color distance
+function colorDistanceSq(r1, g1, b1, r2, g2, b2) {
     const dr = r1 - r2;
     const dg = g1 - g2;
     const db = b1 - b2;
     return dr * dr + dg * dg + db * db;
 }
 
-// k-d Tree Node for RGB color space (3D)
+// ============================================================================
+// SSIM Calculation
+// ============================================================================
+
+function calculateSSIM(img1, img2, width, height) {
+    const L = 255;
+    const k1 = 0.01, k2 = 0.03;
+    const c1 = (k1 * L) ** 2;
+    const c2 = (k2 * L) ** 2;
+    
+    let mean1 = 0, mean2 = 0;
+    const n = width * height;
+    
+    const gray1 = new Float32Array(n);
+    const gray2 = new Float32Array(n);
+    
+    for (let i = 0; i < n; i++) {
+        const idx = i * 4;
+        gray1[i] = 0.299 * img1[idx] + 0.587 * img1[idx + 1] + 0.114 * img1[idx + 2];
+        gray2[i] = 0.299 * img2[idx] + 0.587 * img2[idx + 1] + 0.114 * img2[idx + 2];
+        mean1 += gray1[i];
+        mean2 += gray2[i];
+    }
+    mean1 /= n;
+    mean2 /= n;
+    
+    let var1 = 0, var2 = 0, covar = 0;
+    for (let i = 0; i < n; i++) {
+        const d1 = gray1[i] - mean1;
+        const d2 = gray2[i] - mean2;
+        var1 += d1 * d1;
+        var2 += d2 * d2;
+        covar += d1 * d2;
+    }
+    var1 /= n;
+    var2 /= n;
+    covar /= n;
+    
+    const numerator = (2 * mean1 * mean2 + c1) * (2 * covar + c2);
+    const denominator = (mean1 * mean1 + mean2 * mean2 + c1) * (var1 + var2 + c2);
+    
+    return Math.max(0, Math.min(1, numerator / denominator));
+}
+
+// ============================================================================
+// RGB Distance Error
+// ============================================================================
+
+function calculateRGBError(img1, img2, width, height) {
+    let totalError = 0;
+    const n = width * height;
+    
+    for (let i = 0; i < n; i++) {
+        const idx = i * 4;
+        const dr = img1[idx] - img2[idx];
+        const dg = img1[idx + 1] - img2[idx + 1];
+        const db = img1[idx + 2] - img2[idx + 2];
+        totalError += dr * dr + dg * dg + db * db;
+    }
+    
+    return totalError;
+}
+
+// ============================================================================
+// Mosaic Reconstruction - Each pixel used exactly once
+// ============================================================================
+
+function reconstructMosaic(eatenPixels, targetImageData, dims) {
+    const targetWidth = dims.width;
+    const targetHeight = dims.height;
+    const targetData = targetImageData.data;
+    const numTargetPixels = targetWidth * targetHeight;
+    
+    // Create result image (initially black)
+    const result = new Uint8ClampedArray(numTargetPixels * 4);
+    for (let i = 0; i < numTargetPixels * 4; i += 4) {
+        result[i + 3] = 255; // Alpha
+    }
+    
+    // If no eaten pixels, return black image
+    if (eatenPixels.length === 0) {
+        return result;
+    }
+    
+    // Prepare target pixels with their positions and colors
+    const targets = [];
+    for (let y = 0; y < targetHeight; y++) {
+        for (let x = 0; x < targetWidth; x++) {
+            const idx = (y * targetWidth + x) * 4;
+            const r = targetData[idx] / 255;
+            const g = targetData[idx + 1] / 255;
+            const b = targetData[idx + 2] / 255;
+            targets.push({
+                x, y,
+                r, g, b,
+                lum: luminance(r, g, b),
+                idx: y * targetWidth + x
+            });
+        }
+    }
+    
+    // Prepare eaten pixels with colors
+    const tiles = eatenPixels.map((p, i) => ({
+        r: p.r,
+        g: p.g,
+        b: p.b,
+        lum: luminance(p.r, p.g, p.b),
+        originalIdx: i
+    }));
+    
+    // Sort both by luminance - this gives a good greedy assignment
+    // Matching dark-to-dark and light-to-light
+    targets.sort((a, b) => a.lum - b.lum);
+    tiles.sort((a, b) => a.lum - b.lum);
+    
+    // Greedy assignment: match sorted targets to sorted tiles
+    // Each tile used at most once
+    const numAssignments = Math.min(targets.length, tiles.length);
+    
+    for (let i = 0; i < numAssignments; i++) {
+        const target = targets[i];
+        const tile = tiles[i];
+        
+        const outIdx = target.idx * 4;
+        result[outIdx] = Math.round(tile.r * 255);
+        result[outIdx + 1] = Math.round(tile.g * 255);
+        result[outIdx + 2] = Math.round(tile.b * 255);
+        result[outIdx + 3] = 255;
+    }
+    
+    // Remaining target pixels (if more targets than tiles) stay black
+    // This represents "holes" in the reconstruction
+    
+    return result;
+}
+
+// ============================================================================
+// Advanced Mosaic - K-D Tree with proper deletion (slower but better quality)
+// ============================================================================
+
 class KDNode {
-    constructor(pixel, index, depth) {
-        this.pixel = pixel;  // {r, g, b}
-        this.index = index; // Original index in eatenPixels array
+    constructor(tile, depth) {
+        this.tile = tile;
         this.depth = depth;
         this.left = null;
         this.right = null;
-        this.used = false;  // Track if pixel has been used
+        this.deleted = false;
     }
     
-    // Get coordinate for current splitting dimension (0=r, 1=g, 2=b)
-    getCoordinate() {
+    getCoord() {
         const dim = this.depth % 3;
-        if (dim === 0) return this.pixel.r;
-        if (dim === 1) return this.pixel.g;
-        return this.pixel.b;
+        return dim === 0 ? this.tile.r : (dim === 1 ? this.tile.g : this.tile.b);
     }
 }
 
-// k-d Tree for efficient nearest neighbor search in RGB space
-class KDTree {
-    constructor(eatenPixels) {
-        this.root = this.buildTree(eatenPixels, 0);
+class MosaicKDTree {
+    constructor(tiles) {
+        this.root = this.build(tiles.slice(), 0);
+        this.remaining = tiles.length;
     }
     
-    // Build k-d tree from eaten pixels
-    buildTree(pixels, depth) {
-        if (pixels.length === 0) return null;
-        if (pixels.length === 1) {
-            return new KDNode(pixels[0].pixel, pixels[0].index, depth);
-        }
+    build(tiles, depth) {
+        if (tiles.length === 0) return null;
+        if (tiles.length === 1) return new KDNode(tiles[0], depth);
         
-        // Find median for current dimension
         const dim = depth % 3;
-        pixels.sort((a, b) => {
-            const aVal = dim === 0 ? a.pixel.r : (dim === 1 ? a.pixel.g : a.pixel.b);
-            const bVal = dim === 0 ? b.pixel.r : (dim === 1 ? b.pixel.g : b.pixel.b);
-            return aVal - bVal;
+        tiles.sort((a, b) => {
+            const av = dim === 0 ? a.r : (dim === 1 ? a.g : a.b);
+            const bv = dim === 0 ? b.r : (dim === 1 ? b.g : b.b);
+            return av - bv;
         });
         
-        const medianIdx = Math.floor(pixels.length / 2);
-        const node = new KDNode(pixels[medianIdx].pixel, pixels[medianIdx].index, depth);
-        
-        // Recursively build left and right subtrees
-        node.left = this.buildTree(pixels.slice(0, medianIdx), depth + 1);
-        node.right = this.buildTree(pixels.slice(medianIdx + 1), depth + 1);
-        
+        const mid = Math.floor(tiles.length / 2);
+        const node = new KDNode(tiles[mid], depth);
+        node.left = this.build(tiles.slice(0, mid), depth + 1);
+        node.right = this.build(tiles.slice(mid + 1), depth + 1);
         return node;
     }
     
-    // Find nearest unused neighbor to target color
-    findNearestUnused(targetR, targetG, targetB) {
-        let bestNode = null;
-        let bestDistance = Infinity;
+    // Find and remove nearest tile (returns null if tree is empty)
+    findAndRemoveNearest(r, g, b) {
+        if (this.remaining === 0) return null;
         
-        const search = (node, depth) => {
-            if (!node) return;
-            
-            // Skip used nodes
-            if (node.used) {
-                // Still search both subtrees in case there are unused nodes
-                search(node.left, depth + 1);
-                search(node.right, depth + 1);
+        let bestNode = null;
+        let bestDist = Infinity;
+        
+        const search = (node) => {
+            if (!node || node.deleted) {
+                // Still need to search children even if this node is deleted
+                if (node) {
+                    search(node.left);
+                    search(node.right);
+                }
                 return;
             }
             
-            // Calculate distance to current node
-            const dist = squaredDistance(targetR, targetG, targetB, 
-                                        node.pixel.r, node.pixel.g, node.pixel.b);
-            
-            if (dist < bestDistance) {
-                bestDistance = dist;
+            const dist = colorDistanceSq(r, g, b, node.tile.r, node.tile.g, node.tile.b);
+            if (dist < bestDist) {
+                bestDist = dist;
                 bestNode = node;
             }
             
-            // Determine which side to search first
-            const dim = depth % 3;
-            const targetVal = dim === 0 ? targetR : (dim === 1 ? targetG : targetB);
-            const nodeVal = node.getCoordinate();
+            const dim = node.depth % 3;
+            const targetVal = dim === 0 ? r : (dim === 1 ? g : b);
+            const nodeVal = node.getCoord();
+            const diff = targetVal - nodeVal;
             
-            const primary = targetVal < nodeVal ? node.left : node.right;
-            const secondary = targetVal < nodeVal ? node.right : node.left;
+            const first = diff < 0 ? node.left : node.right;
+            const second = diff < 0 ? node.right : node.left;
             
-            // Search primary side
-            search(primary, depth + 1);
-            
-            // Check if we need to search secondary side
-            const dimDiff = targetVal - nodeVal;
-            if (dimDiff * dimDiff < bestDistance) {
-                search(secondary, depth + 1);
+            search(first);
+            if (diff * diff < bestDist) {
+                search(second);
             }
         };
         
-        search(this.root, 0);
-        return bestNode;
+        search(this.root);
+        
+        if (bestNode) {
+            bestNode.deleted = true;
+            this.remaining--;
+            return bestNode.tile;
+        }
+        return null;
     }
 }
 
-// Perform k-d tree based nearest neighbor matching
-function performKDTreeMatching(eatenPixels, targetImageData, dims) {
-    const startTime = performance.now();
+function reconstructMosaicKD(eatenPixels, targetImageData, dims) {
+    const targetWidth = dims.width;
+    const targetHeight = dims.height;
+    const targetData = targetImageData.data;
+    const numTargetPixels = targetWidth * targetHeight;
     
-    // Handle both ImageData object and plain object with data array
-    const targetData = targetImageData.data || targetImageData;
-    const targetWidth = targetImageData.width || dims.width;
-    const targetHeight = targetImageData.height || dims.height;
+    // Create result image
+    const result = new Uint8ClampedArray(numTargetPixels * 4);
+    for (let i = 0; i < numTargetPixels * 4; i += 4) {
+        result[i + 3] = 255;
+    }
     
-    // Prepare eaten pixels for tree building (with indices)
-    const pixelsWithIndices = eatenPixels.map((pixel, index) => ({
-        pixel: pixel,
-        index: index
+    if (eatenPixels.length === 0) return result;
+    
+    // Prepare tiles
+    const tiles = eatenPixels.map(p => ({
+        r: p.r, g: p.g, b: p.b
     }));
     
-    // Build k-d tree from eaten pixels
-    const tree = new KDTree(pixelsWithIndices);
+    // Build k-d tree
+    const kdTree = new MosaicKDTree(tiles);
     
-    // Create result image data
-    const resultImageData = new Uint8ClampedArray(targetData.length);
-    
-    // For each target pixel, find nearest unused eaten pixel
-    for (let ty = 0; ty < dims.height; ty++) {
-        for (let tx = 0; tx < dims.width; tx++) {
-            const targetIdx = (ty * dims.width + tx) * 4;
-            const tr = targetData[targetIdx + 0] / 255.0;
-            const tg = targetData[targetIdx + 1] / 255.0;
-            const tb = targetData[targetIdx + 2] / 255.0;
+    // Process target pixels - prioritize by importance (variance from neighbors could help)
+    // For now, just process in raster order
+    for (let y = 0; y < targetHeight; y++) {
+        for (let x = 0; x < targetWidth; x++) {
+            const srcIdx = (y * targetWidth + x) * 4;
+            const tr = targetData[srcIdx] / 255;
+            const tg = targetData[srcIdx + 1] / 255;
+            const tb = targetData[srcIdx + 2] / 255;
             
-            // Find nearest unused pixel using k-d tree
-            const nearestNode = tree.findNearestUnused(tr, tg, tb);
+            // Find and remove nearest unused tile
+            const tile = kdTree.findAndRemoveNearest(tr, tg, tb);
             
-            if (nearestNode && !nearestNode.used) {
-                // Use actual eaten pixel color
-                resultImageData[targetIdx + 0] = Math.round(nearestNode.pixel.r * 255);
-                resultImageData[targetIdx + 1] = Math.round(nearestNode.pixel.g * 255);
-                resultImageData[targetIdx + 2] = Math.round(nearestNode.pixel.b * 255);
-                resultImageData[targetIdx + 3] = 255;
-                nearestNode.used = true;  // Mark as used
-            } else {
-                // No unused eaten pixel available - leave as black/transparent (only use eaten pixels!)
-                resultImageData[targetIdx + 0] = 0;
-                resultImageData[targetIdx + 1] = 0;
-                resultImageData[targetIdx + 2] = 0;
-                resultImageData[targetIdx + 3] = 0;  // Transparent/empty
+            if (tile) {
+                result[srcIdx] = Math.round(tile.r * 255);
+                result[srcIdx + 1] = Math.round(tile.g * 255);
+                result[srcIdx + 2] = Math.round(tile.b * 255);
+                result[srcIdx + 3] = 255;
             }
+            // else: no more tiles, pixel stays black
         }
     }
     
-    const endTime = performance.now();
-    console.log(`[Worker] k-d tree matching: ${(endTime - startTime).toFixed(2)}ms`);
-    
-    // Return only the reconstruction result - error calculation happens in onmessage
-    return { 
-        result: resultImageData
-    };
+    return result;
 }
 
-// Handle messages from main thread
+// ============================================================================
+// Worker Message Handler
+// ============================================================================
+
 self.onmessage = function(e) {
-    const {eatenPixels, targetImageData, originalImageData, dims, id} = e.data;
+    const { id, eatenPixels, targetImageData, originalImageData, dims } = e.data;
     
     try {
-        // First, build the reconstruction using k-d tree matching
-        const { result } = performKDTreeMatching(eatenPixels, targetImageData, dims);
+        const startTime = performance.now();
         
-        // Then, calculate error metrics by scaling reconstruction up to original resolution
-        // This is O(n) and doesn't need k-d tree - just scale and compare
-        const originalData = originalImageData ? new Uint8ClampedArray(originalImageData.data) : null;
-        const originalWidth = originalImageData?.width || 512;
-        const originalHeight = originalImageData?.height || 512;
+        // Choose algorithm based on size
+        // K-D tree with deletion is better quality but slower
+        // Luminance sorting is fast and gives decent results
+        let resultData;
         
-        let rgbdError = 0;
-        let ssimValue = 0;
-        let ssimDistance = 0;
-        let score = 0;
-        
-        if (originalData) {
-            // Calculate RGB distance (RGBd)
-            const rgbdMetric = new RGBDistanceErrorMetric();
-            const rgbdResult = rgbdMetric.calculate(
-                originalData,  // Original image at full resolution
-                result,  // Reconstruction at compressed size
-                dims.width,  // Reconstruction width
-                dims.height,  // Reconstruction height
-                originalData,  // Original data (for comparison)
-                originalWidth,  // Original width (512)
-                originalHeight  // Original height (512)
-            );
-            rgbdError = rgbdResult.error;
-            
-            // Calculate SSIM
-            const ssimMetric = new SSIMErrorMetric();
-            const ssimResult = ssimMetric.calculate(
-                originalData,  // Original image at full resolution
-                result,  // Reconstruction at compressed size
-                dims.width,  // Reconstruction width
-                dims.height,  // Reconstruction height
-                originalData,  // Original data (for comparison)
-                originalWidth,  // Original width (512)
-                originalHeight  // Original height (512)
-            );
-            ssimValue = ssimResult.ssim || 0;
-            ssimDistance = ssimResult.error || 0;
-            
-            // Calculate score for metadata (not used for display, but available)
-            const scoreDecorator = new ScoreDecorator(rgbdMetric);
-            const scoreResult = scoreDecorator.calculate(
-                originalData, result, dims.width, dims.height,
-                originalData, originalWidth, originalHeight
-            );
-            score = scoreResult.score;
-            
-            // Debug: log calculated metrics
-            console.log(`[Worker] Metrics calculated: RGBd=${rgbdError.toLocaleString()}, SSIM=${ssimValue.toFixed(3)}`);
+        if (eatenPixels.length > 10000 || dims.width * dims.height > 10000) {
+            // Use fast luminance-based matching for large images
+            resultData = reconstructMosaic(eatenPixels, targetImageData, dims);
         } else {
-            console.warn('[Worker] No originalData provided, skipping metric calculation');
+            // Use k-d tree with deletion for better quality on smaller images
+            resultData = reconstructMosaicKD(eatenPixels, targetImageData, dims);
         }
         
-        // Send result back to main thread
+        const reconstructTime = performance.now() - startTime;
+        
+        // Scale original to reconstruction size for comparison
+        const origWidth = originalImageData.width;
+        const origHeight = originalImageData.height;
+        const origData = originalImageData.data;
+        
+        const scaledOriginal = new Uint8ClampedArray(dims.width * dims.height * 4);
+        for (let y = 0; y < dims.height; y++) {
+            for (let x = 0; x < dims.width; x++) {
+                const ox = Math.floor((x / dims.width) * origWidth);
+                const oy = Math.floor((y / dims.height) * origHeight);
+                const srcIdx = (oy * origWidth + ox) * 4;
+                const dstIdx = (y * dims.width + x) * 4;
+                
+                scaledOriginal[dstIdx] = origData[srcIdx];
+                scaledOriginal[dstIdx + 1] = origData[srcIdx + 1];
+                scaledOriginal[dstIdx + 2] = origData[srcIdx + 2];
+                scaledOriginal[dstIdx + 3] = 255;
+            }
+        }
+        
+        // Calculate metrics
+        const ssimValue = calculateSSIM(scaledOriginal, resultData, dims.width, dims.height);
+        const rgbError = calculateRGBError(scaledOriginal, resultData, dims.width, dims.height);
+        
+        const maxError = dims.width * dims.height * 3 * 255 * 255;
+        const score = Math.max(0, Math.min(100, 100 * (1 - rgbError / maxError)));
+        
+        const totalTime = performance.now() - startTime;
+        
+        console.log(`[Worker] Mosaic: ${eatenPixels.length} tiles -> ${dims.width}x${dims.height} in ${totalTime.toFixed(0)}ms, SSIM: ${ssimValue.toFixed(3)}`);
+        
         self.postMessage({
             id,
             success: true,
-            result,
-            rgbdError: rgbdError,  // RGB distance (large number, calculated at original resolution)
-            ssimValue: ssimValue,  // SSIM value (0-1, higher is better)
-            ssimDistance: ssimDistance,  // SSIM distance (0-1, lower is better)
-            score: score,   // Normalized score (0-100, for future use)
-            dims
+            result: Array.from(resultData),
+            rgbdError: rgbError,
+            ssimValue: ssimValue,
+            ssimDistance: 1 - ssimValue,
+            score: score,
+            dims: dims
         });
+        
     } catch (error) {
-        console.error('[Worker] Error in k-d tree matching:', error);
+        console.error('[Worker] Error:', error);
         self.postMessage({
             id,
             success: false,

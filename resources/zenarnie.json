@@ -1,0 +1,7 @@
+{
+  "name": "Arnie",
+  "description": "The classic - reconstruct Arnie's portrait",
+  "ssimThreshold": 0.5,
+  "spawnCenter": [-28, -50],
+  "spawnCount": 10
+}

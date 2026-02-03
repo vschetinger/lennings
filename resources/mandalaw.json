@@ -1,0 +1,7 @@
+{
+  "name": "Mandala",
+  "description": "Sacred geometry - intricate patterns await",
+  "ssimThreshold": 0.45,
+  "spawnCenter": [0, 0],
+  "spawnCount": 8
+}

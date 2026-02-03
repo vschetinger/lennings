@@ -1,0 +1,7 @@
+{
+  "name": "Terrain",
+  "description": "Mountain valleys - explore the landscape",
+  "ssimThreshold": 0.45,
+  "spawnCenter": [20, 20],
+  "spawnCount": 12
+}
