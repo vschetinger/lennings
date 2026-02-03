@@ -280,6 +280,63 @@
         color: #ccc !important;
     }
 
+    /* Help overlay (mobile-friendly) */
+    .help-overlay-btn {
+        position: fixed;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border-radius: 0 6px 6px 0;
+        font-size: 1rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.5);
+        color: #fff;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-left: none;
+        cursor: pointer;
+        z-index: 1002;
+        font-weight: 700;
+    }
+    .help-overlay-btn:hover { background: #6af; color: #000; }
+    #helpOverlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1003;
+        background: rgba(0,0,0,0.92);
+        color: #e0e0e0;
+        overflow: auto;
+        padding: 1rem;
+        box-sizing: border-box;
+        -webkit-overflow-scrolling: touch;
+    }
+    #helpOverlay:not(.visible) { display: none; }
+    #helpOverlay.visible { display: block; }
+    #helpOverlay .help-content {
+        max-width: 36rem;
+        margin: 0 auto;
+        padding: 1.5rem 1rem 2rem;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    #helpOverlay h2 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; color: #6af; }
+    #helpOverlay h2:first-child { margin-top: 0; }
+    #helpOverlay .help-section { margin-bottom: 1.25rem; }
+    #helpOverlay .help-section p { display: block; margin: 0.5rem 0 0; font-size: 0.95rem; line-height: 1.6; color: #ccc; }
+    #helpOverlay ul { margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.95rem; line-height: 1.5; color: #ccc; }
+    #helpOverlay .help-keys { width: 100%; border-collapse: collapse; margin: 0.75rem 0 0; font-size: 0.9rem; }
+    #helpOverlay .help-keys th, #helpOverlay .help-keys td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid #333; color: #ccc; }
+    #helpOverlay .help-keys th { color: #888; font-weight: 500; }
+    #helpOverlay .help-keys .key-cap { display: inline-block; min-width: 1.6em; padding: 0.15rem 0.4rem; background: #333; border-radius: 4px; font-family: monospace; text-align: center; }
+    #helpOverlay .help-close { display: block; margin: 1.5rem 0 0; padding: 0.5rem 1rem; background: #6af; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 1rem; }
+    #helpOverlay .help-close:hover { opacity: 0.9; }
+
 
 </style>
 
@@ -290,14 +347,37 @@
 <div class="canvasOverlay" id="herd"><img src="herd.svg"></img><br><b>long</b> touch / click to herd particles</div>
 <div class="canvasOverlay" id="doubleclick"><img src="doubleclick.svg"></img><br><b>double</b> touch / click and <b>hold</b> to spawn new particles</div>
 <div class="canvasOverlay" id="mouse"><img class="dbimg" src="mouse.svg"></img><img class="dbimg" src="pinch.svg"></img><br><b>scroll</b> or <b>pinch</b> to zoom</div>
-<div class="canvasOverlay" id="space"><img src="space.svg"></img><img src="touch.svg"></img><br><b>space-bar</b> and <b>drag</b> to capture creatures</div>
+<div class="canvasOverlay" id="space"><img src="space.svg"></img><br><b>space-bar</b>: play / pause</div>
 <canvas id="c" width="800" height="800"></canvas>
 <br>
 </div>
 <div id="zoo"></div>
 <pre id="stat"></pre>
 <div id="fps" style="position:fixed; bottom:10px; left:10px; color:#666; font-family:monospace; font-size:12px; z-index:1000; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:4px;"></div>
-<a href="simulation/" style="position:fixed; bottom:10px; right:10px; color:#6af; font-size:12px; z-index:1000; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:4px; text-decoration:none;">Simulation</a>
+<a href="simulation/" style="position:fixed; bottom:10px; right:10px; color:#6af; font-size:12px; z-index:1000; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:4px; text-decoration:none; display:none;">Simulation</a>
+<button type="button" class="help-overlay-btn" id="helpOverlayBtn" title="Show help" aria-label="Show help">?</button>
+<div id="helpOverlay" role="dialog" aria-label="Help" aria-modal="true">
+    <div class="help-content">
+        <section class="help-section">
+            <h2>What is Lenia?</h2>
+            <p>Lenia is a particle-based artificial life system in continuous 2D space. Each agent has a position and state and interacts with others through a kernel that sums the influence of nearby particles to drive growth and movement. Unlike grid-based cellular automata, particles move freely in a continuous circular world.</p>
+        </section>
+        <section class="help-section">
+            <h2>What are these agents?</h2>
+            <p>These particles feed on the image you load (the “resource”): they consume pixels, gain energy, and can reproduce or die. Over time they “paint” by eating the image. You can optionally add a depth map so movement is constrained by depth—in gradient mode they flow along depth contours; in connectivity mode, particles on the same depth layer interact more.</p>
+        </section>
+        <section class="help-section">
+            <h2>Pan and zoom</h2>
+            <p>Touch or click and drag to pan the view. Use scroll or pinch to zoom in and out. Double-click (or double-tap and hold) to set the spawn point where new particles appear.</p>
+        </section>
+        <section class="help-section">
+            <h2>Keys and controls</h2>
+            <p>Use the keys below on keyboard, or open the hamburger menu on mobile for the same actions.</p>
+            <table class="help-keys" id="helpKeysTable"><thead><tr><th>Key</th><th>Action</th></tr></thead><tbody id="helpKeysBody"></tbody></table>
+        </section>
+        <button type="button" class="help-close" id="helpOverlayClose">Close</button>
+    </div>
+</div>
 <canvas id="cellGraph" style="position:fixed; left:0; bottom:0; width:100vw; height:80px; z-index:1001; display:none; pointer-events:none;"></canvas>
 
 <script>
@@ -454,14 +534,11 @@ class MobileControls {
                 }
                 // Update active state for toggle buttons based on actual state
                 if (control.isToggle) {
-                    // For 'q' button, sync with params.showCellGraph
                     if (control.key === 'q') {
                         button.classList.toggle('active', params.showCellGraph);
                     } else if (control.key === ' ') {
-                        // For space button, sync with params.captureMode
-                        button.classList.toggle('active', params.captureMode);
+                        button.classList.toggle('active', params.paused);
                     } else {
-                        // For other toggles, just toggle the class
                         button.classList.toggle('active');
                     }
                 }
@@ -530,7 +607,7 @@ class MobileControls {
         mousePos: [-10000.0, 0.0],
         mouseDown: false,
         touchRadius: getParamValue(paramMap, 'touchRadius', 0.05),
-        captureMode: getParamValue(paramMap, 'captureMode', false),
+        paused: false,
         shiftKey: false,
         pointAddI: 0,
         oscillogram: getParamValue(paramMap, 'oscillogram', false),
@@ -561,6 +638,8 @@ class MobileControls {
     for (const [category, catData] of Object.entries(config)) {
         if (category === 'description' || category === 'version') continue;
         if (!catData.params || catData.gui !== 'main') continue;
+        // Depth map has its own manual folder below (load/clear + sliders); skip here to avoid duplicate folder
+        if (category === 'depth') continue;
         
         const folderName = catData.folder || category;
         const folder = gui.addFolder(folderName);
@@ -698,10 +777,10 @@ class MobileControls {
             params.renderMode = 1;
             // Update button states
             if (window.mobileControls) {
-                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4', 'd'].includes(c.key));
                 renderModeButtons.forEach(control => {
                     if (control.buttonElement) {
-                        control.buttonElement.classList.toggle('active', parseInt(control.key) === 1);
+                        control.buttonElement.classList.toggle('active', control.key === '1');
                     }
                 });
             }
@@ -715,10 +794,10 @@ class MobileControls {
             params.renderMode = 2;
             // Update button states
             if (window.mobileControls) {
-                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4', 'd'].includes(c.key));
                 renderModeButtons.forEach(control => {
                     if (control.buttonElement) {
-                        control.buttonElement.classList.toggle('active', parseInt(control.key) === 2);
+                        control.buttonElement.classList.toggle('active', control.key === '2');
                     }
                 });
             }
@@ -744,10 +823,41 @@ class MobileControls {
             }
             // Update button states
             if (window.mobileControls) {
-                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4', 'd'].includes(c.key));
                 renderModeButtons.forEach(control => {
                     if (control.buttonElement) {
-                        control.buttonElement.classList.toggle('active', parseInt(control.key) === 3);
+                        control.buttonElement.classList.toggle('active', control.key === '3');
+                    }
+                });
+            }
+        }
+    });
+    
+    mobileControls.registerControl({
+        key: '4',
+        label: 'Depth map',
+        action: () => {
+            params.renderMode = 4;
+            if (window.mobileControls) {
+                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4', 'd'].includes(c.key));
+                renderModeButtons.forEach(control => {
+                    if (control.buttonElement) {
+                        control.buttonElement.classList.toggle('active', control.key === '4' || control.key === 'd');
+                    }
+                });
+            }
+        }
+    });
+    mobileControls.registerControl({
+        key: 'd',
+        label: 'Depth map view (same as 4)',
+        action: () => {
+            params.renderMode = 4;
+            if (window.mobileControls) {
+                const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4', 'd'].includes(c.key));
+                renderModeButtons.forEach(control => {
+                    if (control.buttonElement) {
+                        control.buttonElement.classList.toggle('active', control.key === '4' || control.key === 'd');
                     }
                 });
             }
@@ -781,15 +891,11 @@ class MobileControls {
     
     mobileControls.registerControl({
         key: ' ',
-        label: 'Capture Mode',
+        label: 'Play / Pause',
         isToggle: true,
         action: () => {
-            if (params.captureMode) {
-                const c = captureCreature();
-                lenia.clearSelection();
-                navigator.clipboard.writeText(JSON.stringify(c));
-            }
-            params.captureMode = !params.captureMode;
+            params.paused = !params.paused;
+            if (window.mobileControls) window.mobileControls.updateButtonState(' ', params.paused);
         }
     });
     
@@ -800,15 +906,46 @@ class MobileControls {
     setTimeout(() => {
         mobileControls.updateButtonState('q', params.showCellGraph);
         mobileControls.updateButtonState('t', params.showTrailsOverlay);
-        mobileControls.updateButtonState(' ', params.captureMode);
+        mobileControls.updateButtonState(' ', params.paused);
         // Set active state for current render mode
-        const renderModeButtons = mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+        const renderModeButtons = mobileControls.controls.filter(c => ['1', '2', '3', '4', 'd'].includes(c.key));
         renderModeButtons.forEach(control => {
-            if (control.buttonElement && parseInt(control.key) === params.renderMode) {
-                control.buttonElement.classList.add('active');
+            if (control.buttonElement) {
+                const isActive = (control.key === '4' || control.key === 'd') ? params.renderMode === 4 : parseInt(control.key) === params.renderMode;
+                control.buttonElement.classList.toggle('active', isActive);
             }
         });
     }, 100);
+    
+    // Help overlay: build key list from mobileControls only
+    function buildHelpKeys() {
+        const tbody = document.getElementById('helpKeysBody');
+        if (!tbody) return;
+        const controls = (window.mobileControls && window.mobileControls.controls) ? [...window.mobileControls.controls] : [];
+        tbody.innerHTML = controls.map(c => {
+            const keyDisplay = c.key === ' ' ? '␣' : c.key;
+            return `<tr><td><span class="key-cap">${keyDisplay}</span></td><td>${c.label}</td></tr>`;
+        }).join('');
+    }
+    const helpOverlay = document.getElementById('helpOverlay');
+    const helpOverlayBtn = document.getElementById('helpOverlayBtn');
+    const helpOverlayClose = document.getElementById('helpOverlayClose');
+    if (helpOverlayBtn) {
+        helpOverlayBtn.addEventListener('click', () => {
+            buildHelpKeys();
+            if (helpOverlay) helpOverlay.classList.add('visible');
+        });
+    }
+    if (helpOverlayClose) {
+        helpOverlayClose.addEventListener('click', () => {
+            if (helpOverlay) helpOverlay.classList.remove('visible');
+        });
+    }
+    if (helpOverlay) {
+        helpOverlay.addEventListener('click', (e) => {
+            if (e.target === helpOverlay) helpOverlay.classList.remove('visible');
+        });
+    }
     
     gui.add(params, 'benchmark');
     gui.add(params, 'toggle sound');
@@ -824,7 +961,22 @@ class MobileControls {
     resourceFolder.add(params, 'load resource');
     resourceFolder.add(params, 'clear resources');
     resourceFolder.add(params, 'consumeEnabled').name('consume resources');
-    resourceFolder.open();
+
+    // Depth map (optional constraint)
+    const depthFolder = gui.addFolder('Depth map');
+    params['load depth'] = () => depthInput.click();
+    params['clear depth'] = () => lenia.clearDepth();
+    depthFolder.add(params, 'load depth');
+    depthFolder.add(params, 'clear depth');
+    const depthEnabledController = depthFolder.add(lenia.U, 'depthEnabled').name('use depth map');
+    depthEnabledController.onChange((value) => {
+        if (value) lenia.ensureDepthFromResource();
+    });
+    window.depthEnabledController = depthEnabledController;
+    depthFolder.add(lenia.U, 'depthStrength', 0, 5, 0.1).name('strength');
+    depthFolder.add(lenia.U, 'depthGradientSign', -1, 1, 0.1).name('gradient sign (+ toward high)');
+    depthFolder.add(lenia.U, 'depthBand', 0.01, 0.5, 0.01).name('connectivity band');
+    depthFolder.add(lenia.U, 'depthMode', { Gradient: 0, Connectivity: 1 }).name('mode');
 
     // Life Cycle toggles
     params.enableLifeCycle = getParamValue(paramMap, 'enableLifeCycle', true);
@@ -835,7 +987,7 @@ class MobileControls {
     lifeFolder.add(params, 'enableLifeCycle').name('enable life cycle');
     lifeFolder.add(params, 'enableDeaths').name('enable deaths');
     lifeFolder.add(params, 'enableReproduction').name('enable reproduction');
-    lifeFolder.open();
+    lifeGui.close();
 
     // Hidden file input for resource images
     const resourceInput = document.createElement('input');
@@ -849,6 +1001,21 @@ class MobileControls {
             const dataUrl = await asyncReadAsDataURL(file);
             await lenia.loadResourceImage(dataUrl);
             console.log('Loaded resource image:', file.name);
+        }
+    });
+
+    // Hidden file input for depth map (grayscale)
+    const depthInput = document.createElement('input');
+    depthInput.type = 'file';
+    depthInput.accept = 'image/*';
+    depthInput.style.display = 'none';
+    document.body.appendChild(depthInput);
+    depthInput.addEventListener('change', async (e) => {
+        if (depthInput.files.length > 0) {
+            const file = depthInput.files[0];
+            const dataUrl = await asyncReadAsDataURL(file);
+            await lenia.loadDepthImage(dataUrl);
+            console.log('Loaded depth map:', file.name);
         }
     });
 
@@ -1027,10 +1194,39 @@ function animate(currentTime) {
     }
     lastFrameTime = currentTime;
     
+    // When paused, only re-render current state (no step)
+    if (params.paused) {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        if (canvas.width < 768) {
+            canvas.width = canvas.clientWidth * window.devicePixelRatio;
+            canvas.height = canvas.clientHeight * window.devicePixelRatio;
+        }
+        const touchRadius = params.touchRadius * params.viewExtent;
+        const renderArgs = { touchPos: params.mousePos, touchRadius, viewCenter: params.viewCenter, viewExtent: params.viewExtent };
+        if (params.renderMode === 1) {
+            lenia.render(null, renderArgs);
+            if (params.showTrailsOverlay) lenia.renderTrailsOverlay(null, renderArgs);
+        } else if (params.renderMode === 2) {
+            lenia.renderTrails(null, renderArgs);
+        } else if (params.renderMode === 3) {
+            lenia.renderCompressedReconstruction(null, renderArgs);
+        } else if (params.renderMode === 4) {
+            lenia.renderDepthMap(null, renderArgs);
+            if (params.showTrailsOverlay) lenia.renderTrailsOverlay(null, renderArgs);
+        } else {
+            lenia.render(null, renderArgs);
+            if (params.showTrailsOverlay) lenia.renderTrailsOverlay(null, renderArgs);
+        }
+        updateCellGraph();
+        requestAnimationFrame(animate);
+        return;
+    }
+    
     // Update FPS counter
     fpsFrameCount++;
     const now = performance.now();
-    const modeNames = ['', 'Main', 'Trails', 'Compressed'];
+    const modeNames = ['', 'Main', 'Trails', 'Compressed', 'Depth map'];
     const modeName = modeNames[params.renderMode] || `Mode ${params.renderMode}`;
     if (now - fpsLastTime >= 1000) {
         lastCellCount = lenia.getAliveCount();
@@ -1060,7 +1256,7 @@ function animate(currentTime) {
         }
         
         // Split into two lines: main stats on first line, colored metrics on second line
-        const mainLine = `${fpsFrameCount} FPS | [${params.renderMode}] ${modeName} | cells: ${lastCellCount} | steps: ${params.stepN}`;
+        const mainLine = `${fpsFrameCount} FPS | [${params.renderMode}] ${modeName} | cells: ${lastCellCount} | steps: ${params.stepN} | world ${lenia.worldTexSize}×${lenia.worldTexSize}`;
         const displayHTML = metricsLine 
             ? `${mainLine}<br>${metricsLine}`
             : mainLine;
@@ -1083,57 +1279,52 @@ function animate(currentTime) {
         viewCenter: params.viewCenter,
         viewExtent: params.viewExtent};
 
-    if (params.captureMode) {
-        if (params.mouseDown && !params.shiftKey)
-            lenia.select(params.mousePos, touchRadius);
-    } else {
-        let action = '';
-        if (params.mouseDown) {
-            action = params.shiftKey ? 'add' : 'attract';
-        }
-        if (action == 'add') {
-            lenia.setPoint(params.pointAddI, params.mousePos);
-            if (recording) { record_log.push(
-                {setPoint: {i:params.pointAddI, xy:params.mousePos}});}
-            params.pointAddI = (params.pointAddI+1)%lenia.max_point_n;
-        }
-        const stepArgs = {
-            attractPos: params.mousePos,
-            attractRadius:action=='attract'?touchRadius:0.0,
-            stepN: params.stepN,
-        };
-        if (audioSystem.playing && audioSystem.audioQueueLen<5) {
-            const k = 1+(audioSystem.audioQueueLen < 3);
-            for (let i=0; i<k; ++i) {
-                simFrame(stepArgs, audioSystem.audioFB, audioSystem.sampleRate);
-                audioSystem.push();
-                if (recording) { record_log.push({stepArgs, renderArgs});}
-            }
-        } else {
-            simFrame(stepArgs, null);
+    let action = '';
+    if (params.mouseDown) {
+        action = params.shiftKey ? 'add' : 'attract';
+    }
+    if (action == 'add') {
+        lenia.setPoint(params.pointAddI, params.mousePos);
+        if (recording) { record_log.push(
+            {setPoint: {i:params.pointAddI, xy:params.mousePos}});}
+        params.pointAddI = (params.pointAddI+1)%lenia.max_point_n;
+    }
+    const stepArgs = {
+        attractPos: params.mousePos,
+        attractRadius:action=='attract'?touchRadius:0.0,
+        stepN: params.stepN,
+    };
+    if (audioSystem.playing && audioSystem.audioQueueLen<5) {
+        const k = 1+(audioSystem.audioQueueLen < 3);
+        for (let i=0; i<k; ++i) {
+            simFrame(stepArgs, audioSystem.audioFB, audioSystem.sampleRate);
+            audioSystem.push();
             if (recording) { record_log.push({stepArgs, renderArgs});}
         }
-        
-        // Consume resources where particles are located
-        if (params.consumeEnabled) {
-            lenia.consumeResources();
+    } else {
+        simFrame(stepArgs, null);
+        if (recording) { record_log.push({stepArgs, renderArgs});}
+    }
+    
+    // Consume resources where particles are located
+    if (params.consumeEnabled) {
+        lenia.consumeResources();
+    }
+    
+    // Life cycle processing
+    if (params.enableLifeCycle) {
+        if (params.enableDeaths) {
+            lenia.processDeaths();
         }
-        
-        // Life cycle processing
-        if (params.enableLifeCycle) {
-            if (params.enableDeaths) {
-                lenia.processDeaths();
-            }
-            if (params.enableReproduction) {
-                if (params.useCpuRepro) {
-                    // CPU-side reproduction: check only every K steps
-                    if ((lenia.stepCount || 0) % params.reproInterval === 0) {
-                        lenia.cpuReproductionStep(params.maxChildrenPerParent);
-                    }
-                } else {
-                    // Original GPU-only reproduction (can create large bursts)
-                    lenia.processReproduction();
+        if (params.enableReproduction) {
+            if (params.useCpuRepro) {
+                // CPU-side reproduction: check only every K steps
+                if ((lenia.stepCount || 0) % params.reproInterval === 0) {
+                    lenia.cpuReproductionStep(params.maxChildrenPerParent);
                 }
+            } else {
+                // Original GPU-only reproduction (can create large bursts)
+                lenia.processReproduction();
             }
         }
     }
@@ -1151,6 +1342,11 @@ function animate(currentTime) {
         lenia.renderTrails(null, renderArgs);  // Trail view
     } else if (params.renderMode === 3) {
         lenia.renderCompressedReconstruction(null, renderArgs);  // Compressed reconstruction
+    } else if (params.renderMode === 4) {
+        lenia.renderDepthMap(null, renderArgs);  // Depth map display (key "d" or "4")
+        if (params.showTrailsOverlay) {
+            lenia.renderTrailsOverlay(null, renderArgs);
+        }
     } else {
         lenia.render(null, renderArgs);  // Default to main
         if (params.showTrailsOverlay) {
@@ -1368,19 +1564,8 @@ function animate(currentTime) {
 window.addEventListener('keydown', e=>{
     if (e.key == ' ') {
         e.preventDefault();
-        if (params.captureMode) {
-            const c = captureCreature();
-            lenia.clearSelection();
-            navigator.clipboard.writeText(JSON.stringify(c));
-        } 
-        params.captureMode = !params.captureMode;
-        // Update mobile control button state
-        if (window.mobileControls) {
-            window.mobileControls.updateButtonState(' ', params.captureMode);
-        }
-    }
-    if (e.key == 'R') {
-        toggleRecord();
+        params.paused = !params.paused;
+        if (window.mobileControls) window.mobileControls.updateButtonState(' ', params.paused);
     }
     if (e.key == 'r') {
         // If a texture was loaded, reload it; otherwise just reset particles
@@ -1411,15 +1596,11 @@ window.addEventListener('keydown', e=>{
         }
         // Update mobile control button states for render mode buttons
         if (window.mobileControls) {
-            const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3'].includes(c.key));
+            const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4', 'd'].includes(c.key));
             renderModeButtons.forEach(control => {
                 if (control.buttonElement) {
-                    const isActive = parseInt(control.key) === params.renderMode;
-                    if (isActive) {
-                        control.buttonElement.classList.add('active');
-                    } else {
-                        control.buttonElement.classList.remove('active');
-                    }
+                    const isActive = (control.key === '4' || control.key === 'd') ? params.renderMode === 4 : parseInt(control.key) === params.renderMode;
+                    control.buttonElement.classList.toggle('active', isActive);
                 }
             });
         }
@@ -1437,6 +1618,18 @@ window.addEventListener('keydown', e=>{
         params.showTrailsOverlay = !params.showTrailsOverlay;
         if (window.mobileControls) {
             window.mobileControls.updateButtonState('t', params.showTrailsOverlay);
+        }
+    }
+    // Depth map display mode (key "d" or "4") - show current depth texture
+    if (e.key === 'd' || e.key === 'D') {
+        params.renderMode = 4;
+        if (window.mobileControls) {
+            const renderModeButtons = window.mobileControls.controls.filter(c => ['1', '2', '3', '4', 'd'].includes(c.key));
+            renderModeButtons.forEach(control => {
+                if (control.buttonElement) {
+                    control.buttonElement.classList.toggle('active', control.key === '4' || control.key === 'd');
+                }
+            });
         }
     }
 });
@@ -1458,8 +1651,7 @@ canvas.addEventListener("pointerdown", e => {
     if (e.shiftKey || (lastTapTime != null && (Date.now() - lastTapTime < 600) &&  
         (Math.sqrt((e.offsetX - lastTapLoc[0])**2 + (e.offsetY - lastTapLoc[1])**2) <= canvas.width * 0.05)) ) params.shiftKey = true;
     if (e.shiftKey || (lastTapTime != null && (Date.now() - lastTapTime < 600) &&  
-        (Math.sqrt((e.offsetX - lastTapLoc[0])**2 + (e.offsetY - lastTapLoc[1])**2) <= canvas.width * 0.05)) ||
-        params.captureMode) {
+        (Math.sqrt((e.offsetX - lastTapLoc[0])**2 + (e.offsetY - lastTapLoc[1])**2) <= canvas.width * 0.05))) {
         params.mouseDown = true;
         params.mousePos = event2wld([e.offsetX, e.offsetY]);
         return;
@@ -1509,7 +1701,7 @@ canvas.addEventListener('dblclick', e => {
 canvas.addEventListener("pointermove", e => {
     e.preventDefault();
 
-    if (params.shiftKey || params.captureMode) {
+    if (params.shiftKey) {
         params.mousePos = event2wld([e.offsetX, e.offsetY]);
         return;
     } 
@@ -1585,7 +1777,7 @@ canvas.addEventListener("pointermove", e => {
     canvas.addEventListener(listenerName, e => {
         e.preventDefault();
         lastTapLoc = [e.offsetX, e.offsetY];
-        if (params.shiftKey || params.captureMode) {
+        if (params.shiftKey) {
             params.mousePos = event2wld([e.offsetX, e.offsetY]);
             params.mousePos = [-10000, -10000];
             params.shiftKey = false;
@@ -1646,24 +1838,6 @@ localZoo.forEach(c=>{
 
 pasteCreature(localZoo[0], 0.0, 0.0, 1.0);
 lenia.reset(params.spawnCount, params.spawnCenter);
-
-// largely inspired by approch from https://blog.shovonhasan.com/using-promises-with-filereader/
-const asyncReadAsDataURL = (inputFile) => {
-  const fr = new FileReader();
-
-  return new Promise((resolve, reject) => {
-    fr.onerror = () => {
-      fr.abort();
-      reject(new DOMException("can't read dropped/pasted file"));
-    };
-
-    fr.onload = () => {
-      resolve(fr.result);
-    };
-
-    fr.readAsDataURL(inputFile);
-  });
-};
 
 async function pasteFromURI(URI) {
     var img = new Image;
