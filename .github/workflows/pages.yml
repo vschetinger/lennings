@@ -11,6 +11,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           lfs: true
+      - name: Pull LFS files
+        run: git lfs pull
+      # Uncomment to verify LFS images are real files on deploy (not pointers)
+      # - name: Verify LFS images
+      #   run: |
+      #     F="levels/GlassBeadGame/images/A1012.2.png"
+      #     echo "=== $F ==="
+      #     ls -la "$F"
+      #     echo "First 20 bytes (hex):"
+      #     head -c 20 "$F" | xxd
+      #     # Real PNG starts with 89 50 4E 47. LFS pointer starts with "version https://"
+      #     if head -c 5 "$F" | grep -q "version"; then echo "LFS POINTER - images will not load on Pages"; exit 1; fi
+      #     echo "OK: real image file"
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
