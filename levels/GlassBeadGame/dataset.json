@@ -1,0 +1,6417 @@
+{
+  "name": "Glass Bead Game",
+  "description": "Motif beads from the Thompson Motif Index of Folk Literature",
+  "ssimThreshold": 0.7,
+  "motifs": [
+    {
+      "id": "A1012.2",
+      "name": "Flood From Urine",
+      "image": "A1012.2.png"
+    },
+    {
+      "id": "A1022",
+      "name": "Escape From Deluge On Mountain",
+      "image": "A1022.png"
+    },
+    {
+      "id": "A1029.5",
+      "name": "Escape From Deluge In Box Or Basket",
+      "image": "A1029.5.png"
+    },
+    {
+      "id": "A1036",
+      "name": "Earth Recreated After World-Fire",
+      "image": "A1036.png"
+    },
+    {
+      "id": "A1063",
+      "name": "Water-Disturbances At End Of World",
+      "image": "A1063.png"
+    },
+    {
+      "id": "A1074",
+      "name": "Fettered Monster's Captivity",
+      "image": "A1074.png"
+    },
+    {
+      "id": "A1101.2.1",
+      "name": "Formerly Men Plowed And Cattle Were Their Masters",
+      "image": "A1101.2.1.png"
+    },
+    {
+      "id": "A111.3",
+      "name": "Ancestor Of The Gods",
+      "image": "A111.3.png"
+    },
+    {
+      "id": "A1123",
+      "name": "Winds As Children Of Titans (Giants)",
+      "image": "A1123.png"
+    },
+    {
+      "id": "A1142.1",
+      "name": "Creator's (Deity's) Voice Makes Thunder",
+      "image": "A1142.1.png"
+    },
+    {
+      "id": "A117.2",
+      "name": "Mortal Translated To Heaven And Deified",
+      "image": "A117.2.png"
+    },
+    {
+      "id": "A117.3",
+      "name": "In Extreme Old Age Spirits Become Gods",
+      "image": "A117.3.png"
+    },
+    {
+      "id": "A1187",
+      "name": "Creator Appoints A Chief For Each Class Of Created Things: Lucifer For Demons, Sion For Mountains, Etc --Irish Myth: Cross; Jewish: Neuman",
+      "image": "A1187.png"
+    },
+    {
+      "id": "A1217.1",
+      "name": "Rebel Angels Oppose Creation Of Man",
+      "image": "A1217.1.png"
+    },
+    {
+      "id": "A123.1",
+      "name": "God Monstrous As To Body",
+      "image": "A123.1.png"
+    },
+    {
+      "id": "A123.2.1.3",
+      "name": "God With Four Faces",
+      "image": "A123.2.1.3.png"
+    },
+    {
+      "id": "A123.2.2",
+      "name": "God's Unusual Mouth",
+      "image": "A123.2.2.png"
+    },
+    {
+      "id": "A123.3.1.4.1",
+      "name": "Goddess With Thousand Eyes",
+      "image": "A123.3.1.4.1.png"
+    },
+    {
+      "id": "A1246",
+      "name": "Mankind Originates From Shell",
+      "image": "A1246.png"
+    },
+    {
+      "id": "A1256",
+      "name": "Man Made From Herb",
+      "image": "A1256.png"
+    },
+    {
+      "id": "A1295",
+      "name": "Creation In Covered Vessel",
+      "image": "A1295.png"
+    },
+    {
+      "id": "A1319.12",
+      "name": "Originally Man Rejuvenated Himself By Snake-Like Change Of Skin",
+      "image": "A1319.12.png"
+    },
+    {
+      "id": "A132",
+      "name": "God In Animal Form",
+      "image": "A132.png"
+    },
+    {
+      "id": "A1335.14",
+      "name": "Death Comes Into The World By Treachery Of The Gods: Stick Used By Man For Scratching His Back Is Changed Into Cobra",
+      "image": "A1335.14.png"
+    },
+    {
+      "id": "A1352.1",
+      "name": "Origin Of Unrestricted Sexual Intercourse Between Husband And Wife",
+      "image": "A1352.1.png"
+    },
+    {
+      "id": "A1372.4",
+      "name": "Why Women Have A Treble Voice",
+      "image": "A1372.4.png"
+    },
+    {
+      "id": "A139.10",
+      "name": "God With Myriad Natures",
+      "image": "A139.10.png"
+    },
+    {
+      "id": "A139.8.3",
+      "name": "Smoldering Fire Of Volcano As Head Of Goddess",
+      "image": "A139.8.3.png"
+    },
+    {
+      "id": "A139.8.4",
+      "name": "God Of The Wind In Shape Of Kite",
+      "image": "A139.8.4.png"
+    },
+    {
+      "id": "A1431",
+      "name": "Origin Of Coal",
+      "image": "A1431.png"
+    },
+    {
+      "id": "A1447",
+      "name": "Origin Of Metal-Working",
+      "image": "A1447.png"
+    },
+    {
+      "id": "A1453",
+      "name": "Origin Of Cloth-Making",
+      "image": "A1453.png"
+    },
+    {
+      "id": "A1457.3",
+      "name": "Origin Of The Net For Fishing",
+      "image": "A1457.3.png"
+    },
+    {
+      "id": "A1461.7",
+      "name": "Origin Of Nose-Flute",
+      "image": "A1461.7.png"
+    },
+    {
+      "id": "A1465.3.1",
+      "name": "Origin Of Gadaba Ornaments",
+      "image": "A1465.3.1.png"
+    },
+    {
+      "id": "A1468",
+      "name": "Origin Of Games Of Skill (Indoor)",
+      "image": "A1468.png"
+    },
+    {
+      "id": "A1482.1",
+      "name": "Hebrew The Language Of The Inhabitants Of Heaven",
+      "image": "A1482.1.png"
+    },
+    {
+      "id": "A1484.2",
+      "name": "Origin Of Alphabet",
+      "image": "A1484.2.png"
+    },
+    {
+      "id": "A1495",
+      "name": "Origin Of Outdoor Games",
+      "image": "A1495.png"
+    },
+    {
+      "id": "A151.0.1",
+      "name": "Home Of God Where He Is The Only Living One",
+      "image": "A151.0.1.png"
+    },
+    {
+      "id": "A1510",
+      "name": "Origin Of Eating Customs",
+      "image": "A1510.png"
+    },
+    {
+      "id": "A1520",
+      "name": "Origin Of Hunting And Fishing Customs",
+      "image": "A1520.png"
+    },
+    {
+      "id": "A1535.1",
+      "name": "Origin Of The Potlatch",
+      "image": "A1535.1.png"
+    },
+    {
+      "id": "A1545.3.3",
+      "name": "Origin Of Cock Sacrifice",
+      "image": "A1545.3.3.png"
+    },
+    {
+      "id": "A1546.3",
+      "name": "Origin Of Christian Worship",
+      "image": "A1546.3.png"
+    },
+    {
+      "id": "A1560",
+      "name": "Origin Of Customs Connected With Birth",
+      "image": "A1560.png"
+    },
+    {
+      "id": "A157.3",
+      "name": "God's Spear",
+      "image": "A157.3.png"
+    },
+    {
+      "id": "A1580",
+      "name": "Origin Of Laws",
+      "image": "A1580.png"
+    },
+    {
+      "id": "A163.1",
+      "name": "Game Between Gods",
+      "image": "A163.1.png"
+    },
+    {
+      "id": "A164.5",
+      "name": "Polyandry Among The Gods",
+      "image": "A164.5.png"
+    },
+    {
+      "id": "A1655",
+      "name": "Origin Of Peasantry",
+      "image": "A1655.png"
+    },
+    {
+      "id": "A1660",
+      "name": "Characteristics Of Various Peoples -- In Personal Appearance",
+      "image": "A1660.png"
+    },
+    {
+      "id": "A1727",
+      "name": "Primordial Animal Mutilated To Produce Present Form",
+      "image": "A1727.png"
+    },
+    {
+      "id": "A1731",
+      "name": "Creation Of Animals As Punishment For Beating Forbidden Drum",
+      "image": "A1731.png"
+    },
+    {
+      "id": "A182",
+      "name": "God Reveals Himself To Mortals",
+      "image": "A182.png"
+    },
+    {
+      "id": "A182.3.6",
+      "name": "Moon-God, Overcome In Contest With Mortal, Threatens To Withold Rain And Game",
+      "image": "A182.3.6.png"
+    },
+    {
+      "id": "A185.6",
+      "name": "Deity Particular Friend To One Mortal",
+      "image": "A185.6.png"
+    },
+    {
+      "id": "A1854",
+      "name": "Creation Of Rat",
+      "image": "A1854.png"
+    },
+    {
+      "id": "A1885",
+      "name": "Creation Of Goat",
+      "image": "A1885.png"
+    },
+    {
+      "id": "A192.2.4",
+      "name": "Divinity Departs In Column Of Flame",
+      "image": "A192.2.4.png"
+    },
+    {
+      "id": "A1945",
+      "name": "Creation Of Gull",
+      "image": "A1945.png"
+    },
+    {
+      "id": "A195.2",
+      "name": "Wisdom As God's Companion",
+      "image": "A195.2.png"
+    },
+    {
+      "id": "A1975",
+      "name": "Creation Of Diver (Bird)",
+      "image": "A1975.png"
+    },
+    {
+      "id": "A1983",
+      "name": "Creation Of Duck",
+      "image": "A1983.png"
+    },
+    {
+      "id": "A199.3",
+      "name": "Deity's Child Becomes Fire As Soon As He Is Born",
+      "image": "A199.3.png"
+    },
+    {
+      "id": "A2061.1",
+      "name": "Origin Of Cockroach In Finland",
+      "image": "A2061.1.png"
+    },
+    {
+      "id": "A2070",
+      "name": "Creation Of Miscellaneous Insects",
+      "image": "A2070.png"
+    },
+    {
+      "id": "A2171.4",
+      "name": "Origin Of Shrimp",
+      "image": "A2171.4.png"
+    },
+    {
+      "id": "A2221.6.1",
+      "name": "Bird Coloring As Reward For Obedience To Deity",
+      "image": "A2221.6.1.png"
+    },
+    {
+      "id": "A2229.4",
+      "name": "Fly Steals Fire From Spider: May Eat Everywhere",
+      "image": "A2229.4.png"
+    },
+    {
+      "id": "A2232.2",
+      "name": "Bees Pray For Sting: Punishment, First Sting Suicidal",
+      "image": "A2232.2.png"
+    },
+    {
+      "id": "A2236.2",
+      "name": "Animal Characteristics: Punishment For Carrying Devil Into Paradise",
+      "image": "A2236.2.png"
+    },
+    {
+      "id": "A2236.2.2",
+      "name": "Peacock Has Snake Carry Devil Into Paradise: Cursed With Ugly Voice And Feet",
+      "image": "A2236.2.2.png"
+    },
+    {
+      "id": "A2241",
+      "name": "Animal Characteristics: Borrowing And Not Returning",
+      "image": "A2241.png"
+    },
+    {
+      "id": "A2245",
+      "name": "Animal Characteristics: Stolen From Another Animal",
+      "image": "A2245.png"
+    },
+    {
+      "id": "A2332.1.1",
+      "name": "How Mouse Got His Eyes",
+      "image": "A2332.1.1.png"
+    },
+    {
+      "id": "A2332.5.3",
+      "name": "Why Water-Hen Has Red Eyes",
+      "image": "A2332.5.3.png"
+    },
+    {
+      "id": "A2332.5.5",
+      "name": "Why Turkey Has Red Eyes",
+      "image": "A2332.5.5.png"
+    },
+    {
+      "id": "A2332.6.9",
+      "name": "Why Bee Is Blind",
+      "image": "A2332.6.9.png"
+    },
+    {
+      "id": "A2335.4.5",
+      "name": "Why The Wolf's Muzzle Is Black",
+      "image": "A2335.4.5.png"
+    },
+    {
+      "id": "A2356.2.4",
+      "name": "Why Certain Fish Have Bowed Backs",
+      "image": "A2356.2.4.png"
+    },
+    {
+      "id": "A2371.2.8",
+      "name": "Why He-Goat Has Shaggy Legs",
+      "image": "A2371.2.8.png"
+    },
+    {
+      "id": "A2378.1.1",
+      "name": "Where Baboon Got Tail",
+      "image": "A2378.1.1.png"
+    },
+    {
+      "id": "A2378.4",
+      "name": "Why Animal Has Short Tail",
+      "image": "A2378.4.png"
+    },
+    {
+      "id": "A2378.4.6",
+      "name": "Why Monkey Has Short Tail",
+      "image": "A2378.4.6.png"
+    },
+    {
+      "id": "A2381.1",
+      "name": "Why Hog Has Good Flesh",
+      "image": "A2381.1.png"
+    },
+    {
+      "id": "A2411.1.6.1",
+      "name": "Color Of Horse",
+      "image": "A2411.1.6.1.png"
+    },
+    {
+      "id": "A2411.2.1.15",
+      "name": "Color Of Trumpet-Bird (Psophia Crepitans)",
+      "image": "A2411.2.1.15.png"
+    },
+    {
+      "id": "A2411.5.6.1",
+      "name": "Why Chameleon Can Change His Color",
+      "image": "A2411.5.6.1.png"
+    },
+    {
+      "id": "A2421.7",
+      "name": "Voice Of Peewit",
+      "image": "A2421.7.png"
+    },
+    {
+      "id": "A2423.1.3",
+      "name": "Loon's Ugly Voice",
+      "image": "A2423.1.3.png"
+    },
+    {
+      "id": "A2423.1.6",
+      "name": "Origin Of Snail's Monotonous Voice",
+      "image": "A2423.1.6.png"
+    },
+    {
+      "id": "A2426.2.4",
+      "name": "Hoopoe's Song",
+      "image": "A2426.2.4.png"
+    },
+    {
+      "id": "A2431.3.6.2",
+      "name": "Why Crow's Nest Is Not Tightly Built",
+      "image": "A2431.3.6.2.png"
+    },
+    {
+      "id": "A2433.6",
+      "name": "Haunts Of Reptiles, Etc",
+      "image": "A2433.6.png"
+    },
+    {
+      "id": "A2434.2.1",
+      "name": "Why Porcupines And Skunks Do Not Live On Cape Breton Island",
+      "image": "A2434.2.1.png"
+    },
+    {
+      "id": "A2435.3.16",
+      "name": "Food Of Jaguar",
+      "image": "A2435.3.16.png"
+    },
+    {
+      "id": "A2441.4",
+      "name": "Cause Of Movement Of Reptile, Etc",
+      "image": "A2441.4.png"
+    },
+    {
+      "id": "A2444.2",
+      "name": "Why Dolphins Swim Up And Down",
+      "image": "A2444.2.png"
+    },
+    {
+      "id": "A2455.3",
+      "name": "Why Raven Is Thief",
+      "image": "A2455.3.png"
+    },
+    {
+      "id": "A2482.3",
+      "name": "Why Wren Does Not Migrate",
+      "image": "A2482.3.png"
+    },
+    {
+      "id": "A2486",
+      "name": "Why Animals Lay Eggs As They Do",
+      "image": "A2486.png"
+    },
+    {
+      "id": "A2492",
+      "name": "Why Certain Animals Go In Herds",
+      "image": "A2492.png"
+    },
+    {
+      "id": "A2493.12",
+      "name": "Friendship Between Turtle And Heron",
+      "image": "A2493.12.png"
+    },
+    {
+      "id": "A2493.14.3",
+      "name": "Friendship Between Monkey And Stork",
+      "image": "A2493.14.3.png"
+    },
+    {
+      "id": "A2493.19",
+      "name": "Friendship Between Crab And Cobra",
+      "image": "A2493.19.png"
+    },
+    {
+      "id": "A2493.3",
+      "name": "Friendship Of Tiger And Buffalo",
+      "image": "A2493.3.png"
+    },
+    {
+      "id": "A2494.1.8",
+      "name": "Enmity Between Civet Cat And Chicken",
+      "image": "A2494.1.8.png"
+    },
+    {
+      "id": "A2494.13.10.2",
+      "name": "Enmity Between Hen, Beetle, And Duck",
+      "image": "A2494.13.10.2.png"
+    },
+    {
+      "id": "A2494.3.4",
+      "name": "Enmity Between Hyena And Cow",
+      "image": "A2494.3.4.png"
+    },
+    {
+      "id": "A2494.5.1",
+      "name": "Enmity Between Jackal And Wild Hen",
+      "image": "A2494.5.1.png"
+    },
+    {
+      "id": "A2496.3",
+      "name": "Why Men, Fish And Serpents Face Each Other In Copulation",
+      "image": "A2496.3.png"
+    },
+    {
+      "id": "A2525",
+      "name": "Why Animals Are Deceptive",
+      "image": "A2525.png"
+    },
+    {
+      "id": "A2527",
+      "name": "Why Animal Is Vain",
+      "image": "A2527.png"
+    },
+    {
+      "id": "A2531.1",
+      "name": "Why Water Serpents Are Not Venomous",
+      "image": "A2531.1.png"
+    },
+    {
+      "id": "A2531.3",
+      "name": "Why Elephant Is Peaceable",
+      "image": "A2531.3.png"
+    },
+    {
+      "id": "A2611.0.4",
+      "name": "Parts Of Body Of God Transformed Into Plants",
+      "image": "A2611.0.4.png"
+    },
+    {
+      "id": "A2684.3",
+      "name": "Origin Of Cotton Plant",
+      "image": "A2684.3.png"
+    },
+    {
+      "id": "A2752.1",
+      "name": "Why Bombax Tree Has Thorns",
+      "image": "A2752.1.png"
+    },
+    {
+      "id": "A2788",
+      "name": "Why Certain Tree Is Hardy",
+      "image": "A2788.png"
+    },
+    {
+      "id": "A2827",
+      "name": "Origin Of Pearls",
+      "image": "A2827.png"
+    },
+    {
+      "id": "A2831",
+      "name": "Origin Of Demons",
+      "image": "A2831.png"
+    },
+    {
+      "id": "A425.0.1",
+      "name": "Angel Of Rivers",
+      "image": "A425.0.1.png"
+    },
+    {
+      "id": "A431.1.3",
+      "name": "Goddess Causes Famine",
+      "image": "A431.1.3.png"
+    },
+    {
+      "id": "A441.1.2",
+      "name": "God Of Flocks",
+      "image": "A441.1.2.png"
+    },
+    {
+      "id": "A478.2",
+      "name": "God (Goddess) Of Smallpox",
+      "image": "A478.2.png"
+    },
+    {
+      "id": "A481",
+      "name": "God Of Intoxication (Or Of Wine)",
+      "image": "A481.png"
+    },
+    {
+      "id": "A484.1",
+      "name": "Goddess Of Oaths",
+      "image": "A484.1.png"
+    },
+    {
+      "id": "A488",
+      "name": "God Of Destruction",
+      "image": "A488.png"
+    },
+    {
+      "id": "A50.1",
+      "name": "Creation Of Angels And Devils",
+      "image": "A50.1.png"
+    },
+    {
+      "id": "A511.1.3.2",
+      "name": "Demigod Son Of King's Unmarried Sister By Her Brother",
+      "image": "A511.1.3.2.png"
+    },
+    {
+      "id": "A524.1.2",
+      "name": "Culture Hero Has Marvelous Horses",
+      "image": "A524.1.2.png"
+    },
+    {
+      "id": "A667",
+      "name": "Language Of Heaven",
+      "image": "A667.png"
+    },
+    {
+      "id": "A671.2.4.7",
+      "name": "Fiery Chains In Hell",
+      "image": "A671.2.4.7.png"
+    },
+    {
+      "id": "A70",
+      "name": "Creator -- Miscellaneous Motifs",
+      "image": "A70.png"
+    },
+    {
+      "id": "A717.1",
+      "name": "Hero Makes Sun And Moon From Tree And Vivifies Them With Blood Of Creator's Son",
+      "image": "A717.1.png"
+    },
+    {
+      "id": "A728.4",
+      "name": "Sun And Moon Carried Through Sky By Animals",
+      "image": "A728.4.png"
+    },
+    {
+      "id": "A736.1.4.3",
+      "name": "Creator Separates Sun And Moon To Prevent Birth Of More Stars",
+      "image": "A736.1.4.3.png"
+    },
+    {
+      "id": "A738.2.2",
+      "name": "Sun Endowed With Wisdom And Passion",
+      "image": "A738.2.2.png"
+    },
+    {
+      "id": "A751.9.1",
+      "name": "Rows Of Palm Trees (Black Spots) On The Moon",
+      "image": "A751.9.1.png"
+    },
+    {
+      "id": "A753.1.3",
+      "name": "Moon (Goddess, Woman) Cohabits With Mortal Man",
+      "image": "A753.1.3.png"
+    },
+    {
+      "id": "A755.4.1",
+      "name": "Moon Cut In Half",
+      "image": "A755.4.1.png"
+    },
+    {
+      "id": "A755.5",
+      "name": "Moon's Phases Caused By Feeding Or Starving",
+      "image": "A755.5.png"
+    },
+    {
+      "id": "A787",
+      "name": "Relation Of The Planets To Human Life",
+      "image": "A787.png"
+    },
+    {
+      "id": "A831.8",
+      "name": "Gods Create The Earth From Their Dead Victim's Blood And Bones",
+      "image": "A831.8.png"
+    },
+    {
+      "id": "A835",
+      "name": "Earth From Nut In Devil's Mouth",
+      "image": "A835.png"
+    },
+    {
+      "id": "A842.2",
+      "name": "Old Woman Supports Earth On Her Head",
+      "image": "A842.2.png"
+    },
+    {
+      "id": "A849.1",
+      "name": "Earth Founded On Stone",
+      "image": "A849.1.png"
+    },
+    {
+      "id": "A850",
+      "name": "Changes In The Earth",
+      "image": "A850.png"
+    },
+    {
+      "id": "A920.1.8.1",
+      "name": "Lake From Violating Tabu",
+      "image": "A920.1.8.1.png"
+    },
+    {
+      "id": "B0",
+      "name": "Mythical Animals",
+      "image": "B0.png"
+    },
+    {
+      "id": "B101.2",
+      "name": "Treasure-Hog",
+      "image": "B101.2.png"
+    },
+    {
+      "id": "B103.0.8",
+      "name": "Treasure Received From Tiger",
+      "image": "B103.0.8.png"
+    },
+    {
+      "id": "B11.2.14",
+      "name": "Dragon With Jewel In Head",
+      "image": "B11.2.14.png"
+    },
+    {
+      "id": "B119.2",
+      "name": "Treasure Produced By Goat's Entrails",
+      "image": "B119.2.png"
+    },
+    {
+      "id": "B121.6",
+      "name": "Lion With Magic Wisdom",
+      "image": "B121.6.png"
+    },
+    {
+      "id": "B154.2",
+      "name": "Ant As Soothsayer",
+      "image": "B154.2.png"
+    },
+    {
+      "id": "B16.6.2.1",
+      "name": "Fierce Black Chafer",
+      "image": "B16.6.2.1.png"
+    },
+    {
+      "id": "B17.2.1",
+      "name": "Hostile Sea-Beasts",
+      "image": "B17.2.1.png"
+    },
+    {
+      "id": "B182.1.1",
+      "name": "Magic Dog Vomits Any Liquor Required Of Him",
+      "image": "B182.1.1.png"
+    },
+    {
+      "id": "B184.1",
+      "name": "Magic Horse",
+      "image": "B184.1.png"
+    },
+    {
+      "id": "B184.2",
+      "name": "Magic Cow (Ox, Bull)",
+      "image": "B184.2.png"
+    },
+    {
+      "id": "B184.5",
+      "name": "Magic Goat",
+      "image": "B184.5.png"
+    },
+    {
+      "id": "B19.5",
+      "name": "Horse With Golden Mane",
+      "image": "B19.5.png"
+    },
+    {
+      "id": "B211.5",
+      "name": "Speaking Fish",
+      "image": "B211.5.png"
+    },
+    {
+      "id": "B214.1.4",
+      "name": "Singing Dog",
+      "image": "B214.1.4.png"
+    },
+    {
+      "id": "B217.1.2",
+      "name": "Animal Languages Learned From Eating Dragon's Heart",
+      "image": "B217.1.2.png"
+    },
+    {
+      "id": "B222.1",
+      "name": "Land Of Pigeons",
+      "image": "B222.1.png"
+    },
+    {
+      "id": "B223",
+      "name": "Kingdom Of Fishes",
+      "image": "B223.png"
+    },
+    {
+      "id": "B225.1.1",
+      "name": "Snake Kingdom Under The Sea",
+      "image": "B225.1.1.png"
+    },
+    {
+      "id": "B240.3",
+      "name": "Wild Man As King Of Animals",
+      "image": "B240.3.png"
+    },
+    {
+      "id": "B240.8",
+      "name": "Fox As King Of Animals",
+      "image": "B240.8.png"
+    },
+    {
+      "id": "B241.2.7",
+      "name": "King Of Dogs",
+      "image": "B241.2.7.png"
+    },
+    {
+      "id": "B243.2.2",
+      "name": "King Of Eels",
+      "image": "B243.2.2.png"
+    },
+    {
+      "id": "B25.2",
+      "name": "Dog With Human Head",
+      "image": "B25.2.png"
+    },
+    {
+      "id": "B255",
+      "name": "Miracle Wrought For Animal",
+      "image": "B255.png"
+    },
+    {
+      "id": "B267.3",
+      "name": "Alliance Of Raven And Crow",
+      "image": "B267.3.png"
+    },
+    {
+      "id": "B268.7",
+      "name": "Army Of Snakes",
+      "image": "B268.7.png"
+    },
+    {
+      "id": "B270.1",
+      "name": "Lawsuit Between The Owl And Kite",
+      "image": "B270.1.png"
+    },
+    {
+      "id": "B271.1",
+      "name": "Parrot And Sparrow Argue Right To Inherit Property Left By Man",
+      "image": "B271.1.png"
+    },
+    {
+      "id": "B282.12",
+      "name": "Wedding Of Thrush With Another Bird",
+      "image": "B282.12.png"
+    },
+    {
+      "id": "B29.4.1",
+      "name": "Man With Cat's Head",
+      "image": "B29.4.1.png"
+    },
+    {
+      "id": "B291.2",
+      "name": "Domestic Beast As Messenger",
+      "image": "B291.2.png"
+    },
+    {
+      "id": "B301.4.3.1",
+      "name": "Faithful Horse Lays His Head In Lap Of Dead Master's Wife",
+      "image": "B301.4.3.1.png"
+    },
+    {
+      "id": "B31.3.1",
+      "name": "Giant Swimming Raven",
+      "image": "B31.3.1.png"
+    },
+    {
+      "id": "B335.3",
+      "name": "Unsuccessful Attempt By Enemy To Kill Helpful Animal",
+      "image": "B335.3.png"
+    },
+    {
+      "id": "B361",
+      "name": "Animals Grateful For Rescue From Pit",
+      "image": "B361.png"
+    },
+    {
+      "id": "B392",
+      "name": "Hero Divides Spoil For Animals",
+      "image": "B392.png"
+    },
+    {
+      "id": "B41.2.1",
+      "name": "Angel Horse",
+      "image": "B41.2.1.png"
+    },
+    {
+      "id": "B43.1",
+      "name": "Flying Buffalo",
+      "image": "B43.1.png"
+    },
+    {
+      "id": "B482.1",
+      "name": "Helpful Firefly",
+      "image": "B482.1.png"
+    },
+    {
+      "id": "B486.1",
+      "name": "Helpful Locusts",
+      "image": "B486.1.png"
+    },
+    {
+      "id": "B493.1",
+      "name": "Helpful Frog",
+      "image": "B493.1.png"
+    },
+    {
+      "id": "B513",
+      "name": "Remedy Learned From Overhearing Animal Meeting",
+      "image": "B513.png"
+    },
+    {
+      "id": "B524.2.1.1",
+      "name": "Saint Sends Swarm Of Bees Or Wasps Against Enemies",
+      "image": "B524.2.1.1.png"
+    },
+    {
+      "id": "B541.2",
+      "name": "Fox Rescues Man From Sea",
+      "image": "B541.2.png"
+    },
+    {
+      "id": "B541.4.1",
+      "name": "Boat Towed By Dog",
+      "image": "B541.4.1.png"
+    },
+    {
+      "id": "B547.1",
+      "name": "Animal Rescues Man From Well",
+      "image": "B547.1.png"
+    },
+    {
+      "id": "B548.2.3",
+      "name": "Fish Recovers Lost Fish-Hook From Sea",
+      "image": "B548.2.3.png"
+    },
+    {
+      "id": "B559",
+      "name": "Animals Carry Men -- Miscellaneous",
+      "image": "B559.png"
+    },
+    {
+      "id": "B561",
+      "name": "Animals Tell Hero Their Secrets",
+      "image": "B561.png"
+    },
+    {
+      "id": "B562",
+      "name": "Animals' Advice Leads Man To Wealth",
+      "image": "B562.png"
+    },
+    {
+      "id": "B563.7",
+      "name": "Bird Conducts Navigators To Landing Place",
+      "image": "B563.7.png"
+    },
+    {
+      "id": "B587.3",
+      "name": "Grateful Bull Draws One Hundred Carts For Wager For Master",
+      "image": "B587.3.png"
+    },
+    {
+      "id": "B589",
+      "name": "Animal Helps Man To Wealth And Greatness -- Miscellaneous",
+      "image": "B589.png"
+    },
+    {
+      "id": "B613.1.1",
+      "name": "Snake Woman As Paramour",
+      "image": "B613.1.1.png"
+    },
+    {
+      "id": "B62",
+      "name": "Flying Fish",
+      "image": "B62.png"
+    },
+    {
+      "id": "B621",
+      "name": "Beast As Suitor",
+      "image": "B621.png"
+    },
+    {
+      "id": "B631.3",
+      "name": "Fish Bears Men-Children",
+      "image": "B631.3.png"
+    },
+    {
+      "id": "B635.3.1",
+      "name": "Culture Hero Licked By Deer Mother",
+      "image": "B635.3.1.png"
+    },
+    {
+      "id": "B700",
+      "name": "Fanciful Traits Of Animals",
+      "image": "B700.png"
+    },
+    {
+      "id": "B731.6.1",
+      "name": "Hound Half White, Half Green",
+      "image": "B731.6.1.png"
+    },
+    {
+      "id": "B736",
+      "name": "Animal Sheds Tears",
+      "image": "B736.png"
+    },
+    {
+      "id": "B739.1",
+      "name": "Magic Cock Has Elixir In His Body Which Makes People Light",
+      "image": "B739.1.png"
+    },
+    {
+      "id": "B752.3",
+      "name": "Snake Kills Itself By Biting Part Of Body (When In Danger Or Torture)",
+      "image": "B752.3.png"
+    },
+    {
+      "id": "B756",
+      "name": "Gold-Digging Ants",
+      "image": "B756.png"
+    },
+    {
+      "id": "B765.14.1",
+      "name": "Serpent Reduces Man To A Heap Of Ashes By Its Fiery Gaze",
+      "image": "B765.14.1.png"
+    },
+    {
+      "id": "B765.24",
+      "name": "Dragon Fly Serves As Snake's Servant, Feeds Snake; It Is Called Snake-Feeder",
+      "image": "B765.24.png"
+    },
+    {
+      "id": "B771.3",
+      "name": "Wild Animal Will Not Attack Royal Person",
+      "image": "B771.3.png"
+    },
+    {
+      "id": "B773.2",
+      "name": "Animal (Lion) Pines Away With Grief Upon His Friend's Grave",
+      "image": "B773.2.png"
+    },
+    {
+      "id": "B848.2",
+      "name": "Girl Removes Dog From Lion's Claws Without Being Harmed",
+      "image": "B848.2.png"
+    },
+    {
+      "id": "B871.1.3",
+      "name": "Giant Sheep",
+      "image": "B871.1.3.png"
+    },
+    {
+      "id": "B871.2.6",
+      "name": "Giant Walrus",
+      "image": "B871.2.6.png"
+    },
+    {
+      "id": "C12.4",
+      "name": "Man Commends Wife To Devil",
+      "image": "C12.4.png"
+    },
+    {
+      "id": "C196",
+      "name": "Tabu: Asking For King's Daughter In Marriage",
+      "image": "C196.png"
+    },
+    {
+      "id": "C210",
+      "name": "Tabu: Eating In Certain Place",
+      "image": "C210.png"
+    },
+    {
+      "id": "C221.1.1.1",
+      "name": "Tabu: Eating Cow",
+      "image": "C221.1.1.1.png"
+    },
+    {
+      "id": "C221.1.1.1.3",
+      "name": "Tabu: Killing And Cooking Sacred Cow",
+      "image": "C221.1.1.1.3.png"
+    },
+    {
+      "id": "C241",
+      "name": "Tabu: Eating Food Of Gods",
+      "image": "C241.png"
+    },
+    {
+      "id": "C273.2",
+      "name": "Tabu: Drinking Water From Certain Bottle",
+      "image": "C273.2.png"
+    },
+    {
+      "id": "C31.4.1",
+      "name": "Tabu: Questioning Supernatural Wife",
+      "image": "C31.4.1.png"
+    },
+    {
+      "id": "C311.1.4",
+      "name": "Tabu: Looking At Werewolf",
+      "image": "C311.1.4.png"
+    },
+    {
+      "id": "C311.2",
+      "name": "Tabu: Looking At Holy Objects",
+      "image": "C311.2.png"
+    },
+    {
+      "id": "C312.1",
+      "name": "Tabu: Man Looking At Nude Woman",
+      "image": "C312.1.png"
+    },
+    {
+      "id": "C312.2.3",
+      "name": "Tabu: Looking At Supernatural Woman Who Is Dismembered",
+      "image": "C312.2.3.png"
+    },
+    {
+      "id": "C312.3",
+      "name": "Tabu: On Looking At Daughter For Twelve Years",
+      "image": "C312.3.png"
+    },
+    {
+      "id": "C316.1",
+      "name": "Tabu: Seeing Herd Red-Headed And White-Starred",
+      "image": "C316.1.png"
+    },
+    {
+      "id": "C32",
+      "name": "Tabu: Offending Supernatural Husband",
+      "image": "C32.png"
+    },
+    {
+      "id": "C401.1",
+      "name": "Tabu: Speaking During Vigil",
+      "image": "C401.1.png"
+    },
+    {
+      "id": "C401.5",
+      "name": "Tabu: Speaking While Gathering Fernseed To Make Wishes Come True, At Midnight On Christmas Eve When Fernseed Ripens And Falls Immediately",
+      "image": "C401.5.png"
+    },
+    {
+      "id": "C497",
+      "name": "Tabu: Speaking To The Dead",
+      "image": "C497.png"
+    },
+    {
+      "id": "C513",
+      "name": "Tabu: Breaking Twig",
+      "image": "C513.png"
+    },
+    {
+      "id": "C52",
+      "name": "Tabu: Being In Presence Of God",
+      "image": "C52.png"
+    },
+    {
+      "id": "C532",
+      "name": "Tabu: Touching Water",
+      "image": "C532.png"
+    },
+    {
+      "id": "C546",
+      "name": "Tabu: Striking Certain Rock",
+      "image": "C546.png"
+    },
+    {
+      "id": "C566",
+      "name": "Tabus Of Heroes",
+      "image": "C566.png"
+    },
+    {
+      "id": "C61.4",
+      "name": "Tabu: Disbelief In Particular Supernatural Power",
+      "image": "C61.4.png"
+    },
+    {
+      "id": "C614.1.3",
+      "name": "Forbidden Direction: West",
+      "image": "C614.1.3.png"
+    },
+    {
+      "id": "C631.4",
+      "name": "Tabu: Lighting Or Extinguishing Lights On Sabbath",
+      "image": "C631.4.png"
+    },
+    {
+      "id": "C682",
+      "name": "Compulsion To Invite Singer To Feast",
+      "image": "C682.png"
+    },
+    {
+      "id": "C751",
+      "name": "Tabu: Doing Thing At Certain Time",
+      "image": "C751.png"
+    },
+    {
+      "id": "C833",
+      "name": "Tabus For Journeys",
+      "image": "C833.png"
+    },
+    {
+      "id": "C871",
+      "name": "Tabu: Refusing A Request",
+      "image": "C871.png"
+    },
+    {
+      "id": "C878.1",
+      "name": "Tabu: Wearing Satin",
+      "image": "C878.1.png"
+    },
+    {
+      "id": "C881.1",
+      "name": "Tabu: Grumbling At Narrowness Of Certain Boat",
+      "image": "C881.1.png"
+    },
+    {
+      "id": "C897",
+      "name": "Tabus Concerning Counting",
+      "image": "C897.png"
+    },
+    {
+      "id": "C901.1.4",
+      "name": "Tabu Imposed By Host",
+      "image": "C901.1.4.png"
+    },
+    {
+      "id": "C948.4",
+      "name": "Man's Liver Snatched Away Because Of Broken Tabu",
+      "image": "C948.4.png"
+    },
+    {
+      "id": "C961.3.1",
+      "name": "Transformation To Wooden Image For Breaking Tabu",
+      "image": "C961.3.1.png"
+    },
+    {
+      "id": "C985",
+      "name": "Physical Changes In Person Because Of Broken Tabu",
+      "image": "C985.png"
+    },
+    {
+      "id": "C985.1",
+      "name": "Skin Changes Color Because Of Broken Tabu",
+      "image": "C985.1.png"
+    },
+    {
+      "id": "D1011.0.1",
+      "name": "Magic Bird Head",
+      "image": "D1011.0.1.png"
+    },
+    {
+      "id": "D1025",
+      "name": "Magic Skin Of Animal",
+      "image": "D1025.png"
+    },
+    {
+      "id": "D1031.1.1",
+      "name": "Consecrated Bread As Magic Object",
+      "image": "D1031.1.1.png"
+    },
+    {
+      "id": "D1069.1",
+      "name": "Magic Handkerchief",
+      "image": "D1069.1.png"
+    },
+    {
+      "id": "D1070",
+      "name": "Magic Ornaments",
+      "image": "D1070.png"
+    },
+    {
+      "id": "D1079.3",
+      "name": "Magic Ornamental Breastplate",
+      "image": "D1079.3.png"
+    },
+    {
+      "id": "D1101.4",
+      "name": "Magic Helmet",
+      "image": "D1101.4.png"
+    },
+    {
+      "id": "D1149.3",
+      "name": "Magic House-Pillars",
+      "image": "D1149.3.png"
+    },
+    {
+      "id": "D117.3.1",
+      "name": "Transformation: Man To Bandicoot",
+      "image": "D117.3.1.png"
+    },
+    {
+      "id": "D1171.8",
+      "name": "Magic Bottle",
+      "image": "D1171.8.png"
+    },
+    {
+      "id": "D118.2",
+      "name": "Transformation: Man (Woman) To Monkey",
+      "image": "D118.2.png"
+    },
+    {
+      "id": "D1221",
+      "name": "Magic Trumpet",
+      "image": "D1221.png"
+    },
+    {
+      "id": "D1268",
+      "name": "Magic Statue (Doll)",
+      "image": "D1268.png"
+    },
+    {
+      "id": "D127.4",
+      "name": "Transformation: Man To Walrus",
+      "image": "D127.4.png"
+    },
+    {
+      "id": "D1291.2.2",
+      "name": "Magic Star Later Resolves Into Its Elements",
+      "image": "D1291.2.2.png"
+    },
+    {
+      "id": "D1297",
+      "name": "Magic Dye",
+      "image": "D1297.png"
+    },
+    {
+      "id": "D131",
+      "name": "Transformation: Man To Horse",
+      "image": "D131.png"
+    },
+    {
+      "id": "D1310.3",
+      "name": "Intelligent Ship",
+      "image": "D1310.3.png"
+    },
+    {
+      "id": "D1310.8",
+      "name": "Speaking And Walking Divan Brings Supernatural Information",
+      "image": "D1310.8.png"
+    },
+    {
+      "id": "D1316.7",
+      "name": "Magic Sod Indicates Falsehood By Turning Grassy Surface Downward, Truth By Turning It Upward",
+      "image": "D1316.7.png"
+    },
+    {
+      "id": "D1318.4",
+      "name": "Magic Seed Indicates Guilt",
+      "image": "D1318.4.png"
+    },
+    {
+      "id": "D1318.8.1",
+      "name": "Magic Cloth Betrays Thief",
+      "image": "D1318.8.1.png"
+    },
+    {
+      "id": "D1322.1.1",
+      "name": "Hammer In Coffin Maker's Shop Makes Noise To Announce A Death",
+      "image": "D1322.1.1.png"
+    },
+    {
+      "id": "D1323.6",
+      "name": "Magic Soap Gives Clairvoyance",
+      "image": "D1323.6.png"
+    },
+    {
+      "id": "D1325",
+      "name": "Magic Object Reveals Future History",
+      "image": "D1325.png"
+    },
+    {
+      "id": "D1331.1.1",
+      "name": "Hempseed Sown To Acquire Magic Sight",
+      "image": "D1331.1.1.png"
+    },
+    {
+      "id": "D1345.1",
+      "name": "Serpent's Water Gives Longevity",
+      "image": "D1345.1.png"
+    },
+    {
+      "id": "D1346.3.1",
+      "name": "Magic Honey Gives Immortality",
+      "image": "D1346.3.1.png"
+    },
+    {
+      "id": "D1355.13",
+      "name": "Love-Spot",
+      "image": "D1355.13.png"
+    },
+    {
+      "id": "D1355.13.1",
+      "name": "Charm Placed On Cheeks Of Hag Causes Love",
+      "image": "D1355.13.1.png"
+    },
+    {
+      "id": "D1355.2.2.1",
+      "name": "Blood Of Wounded Centaur As Love Philtre",
+      "image": "D1355.2.2.1.png"
+    },
+    {
+      "id": "D1355.20",
+      "name": "Green Stone Causes Women To Love The Possessor",
+      "image": "D1355.20.png"
+    },
+    {
+      "id": "D1361.20",
+      "name": "Helmet Renders Invisible",
+      "image": "D1361.20.png"
+    },
+    {
+      "id": "D1361.27",
+      "name": "Magic Light Renders Invisible",
+      "image": "D1361.27.png"
+    },
+    {
+      "id": "D1375.1.4",
+      "name": "Blossom Causes Horns To Grow On Person",
+      "image": "D1375.1.4.png"
+    },
+    {
+      "id": "D1379.1",
+      "name": "Magic Object Controls Person's Will",
+      "image": "D1379.1.png"
+    },
+    {
+      "id": "D1380",
+      "name": "Magic Object Protects",
+      "image": "D1380.png"
+    },
+    {
+      "id": "D1380.25",
+      "name": "Magic Cloud Protects",
+      "image": "D1380.25.png"
+    },
+    {
+      "id": "D1383.2",
+      "name": "Charms Protect From Poison",
+      "image": "D1383.2.png"
+    },
+    {
+      "id": "D1385.3",
+      "name": "Marriage Ring Protects From Devil",
+      "image": "D1385.3.png"
+    },
+    {
+      "id": "D1400.1.1",
+      "name": "Magic Trousers Conquer Enemy",
+      "image": "D1400.1.1.png"
+    },
+    {
+      "id": "D1400.1.4",
+      "name": "Magic Weapon Conquers Enemy",
+      "image": "D1400.1.4.png"
+    },
+    {
+      "id": "D1400.1.4.6",
+      "name": "Magic Stone Axe Conquers Enemies",
+      "image": "D1400.1.4.6.png"
+    },
+    {
+      "id": "D1402.3",
+      "name": "Magic Part Of Animal Kills",
+      "image": "D1402.3.png"
+    },
+    {
+      "id": "D1402.3.4",
+      "name": "Magic Jaw Bone Of Ass Kills",
+      "image": "D1402.3.4.png"
+    },
+    {
+      "id": "D1402.8",
+      "name": "Magic Breath Kills",
+      "image": "D1402.8.png"
+    },
+    {
+      "id": "D1412",
+      "name": "Magic Object Pulls Person Into It",
+      "image": "D1412.png"
+    },
+    {
+      "id": "D1414.4",
+      "name": "Magic Song Dulls Enemy's Sword",
+      "image": "D1414.4.png"
+    },
+    {
+      "id": "D1415.2",
+      "name": "Magic Musical Instrument Causes Person To Dance",
+      "image": "D1415.2.png"
+    },
+    {
+      "id": "D1421.5.3",
+      "name": "Magic Sack Contains Soldiers Which Appear When It Is Struck",
+      "image": "D1421.5.3.png"
+    },
+    {
+      "id": "D1431.1",
+      "name": "Rock (Stone) Pursues Person",
+      "image": "D1431.1.png"
+    },
+    {
+      "id": "D1443",
+      "name": "Magic Object Expels Animals",
+      "image": "D1443.png"
+    },
+    {
+      "id": "D1443.1",
+      "name": "Charm Expels Flies From City",
+      "image": "D1443.1.png"
+    },
+    {
+      "id": "D1447",
+      "name": "Magic Object Protects Against Wild Animals",
+      "image": "D1447.png"
+    },
+    {
+      "id": "D1466",
+      "name": "Magic Stone Furnishes Wealth",
+      "image": "D1466.png"
+    },
+    {
+      "id": "D1470.1.27",
+      "name": "Magic Wishing-Bag",
+      "image": "D1470.1.27.png"
+    },
+    {
+      "id": "D1470.1.48",
+      "name": "Magic Rubber Card For Wishing",
+      "image": "D1470.1.48.png"
+    },
+    {
+      "id": "D1470.2.5",
+      "name": "Supplies From Magic Table",
+      "image": "D1470.2.5.png"
+    },
+    {
+      "id": "D1500.1.32",
+      "name": "Magic Comb As Cure",
+      "image": "D1500.1.32.png"
+    },
+    {
+      "id": "D1500.1.7",
+      "name": "Parts Or Products Of Human Body Cure Disease",
+      "image": "D1500.1.7.png"
+    },
+    {
+      "id": "D1501.3",
+      "name": "Magic Plant Makes Childbirth Easy",
+      "image": "D1501.3.png"
+    },
+    {
+      "id": "D1520.1.1",
+      "name": "Transportation By Stretcing And Swaying Tree",
+      "image": "D1520.1.1.png"
+    },
+    {
+      "id": "D1520.13",
+      "name": "Magic Transportation By Arrow",
+      "image": "D1520.13.png"
+    },
+    {
+      "id": "D1520.18.1",
+      "name": "Transportation On Magic Swing",
+      "image": "D1520.18.1.png"
+    },
+    {
+      "id": "D1524.1.4",
+      "name": "Sand Permits Man To Walk On Water",
+      "image": "D1524.1.4.png"
+    },
+    {
+      "id": "D1524.10",
+      "name": "Magic Staff Comes To One Over Water",
+      "image": "D1524.10.png"
+    },
+    {
+      "id": "D1524.11",
+      "name": "Magic Betelnut Comes To One Over Water",
+      "image": "D1524.11.png"
+    },
+    {
+      "id": "D1526.2",
+      "name": "Magic Ball Flight",
+      "image": "D1526.2.png"
+    },
+    {
+      "id": "D1531.4",
+      "name": "Magic Stone Under Tongue Gives Power Of Flying",
+      "image": "D1531.4.png"
+    },
+    {
+      "id": "D1531.9",
+      "name": "Magic Flying By Means Of Magic Fiddle",
+      "image": "D1531.9.png"
+    },
+    {
+      "id": "D1532.11",
+      "name": "Magic Journey In Flying Boat",
+      "image": "D1532.11.png"
+    },
+    {
+      "id": "D1539",
+      "name": "Miscellaneous Forms Of Magic Transportation",
+      "image": "D1539.png"
+    },
+    {
+      "id": "D1542.2.1",
+      "name": "Sacred Weapon Thrown Into Sky Causes Drought",
+      "image": "D1542.2.1.png"
+    },
+    {
+      "id": "D1549.3.1",
+      "name": "Saint's Bachall Drives Back Flooding River",
+      "image": "D1549.3.1.png"
+    },
+    {
+      "id": "D1553",
+      "name": "Symplegades",
+      "image": "D1553.png"
+    },
+    {
+      "id": "D1566.1.1",
+      "name": "Magic Arrow Sets Fire To Whatever It Hits",
+      "image": "D1566.1.1.png"
+    },
+    {
+      "id": "D1566.2.1",
+      "name": "Saint's Bachall Quenches Fire",
+      "image": "D1566.2.1.png"
+    },
+    {
+      "id": "D1566.2.3",
+      "name": "Magic Song Quenches Fire",
+      "image": "D1566.2.3.png"
+    },
+    {
+      "id": "D1567.9",
+      "name": "Ring Brings Forth Water From Dry Soil",
+      "image": "D1567.9.png"
+    },
+    {
+      "id": "D1592.1",
+      "name": "Magic Ring Cools Boiling Water",
+      "image": "D1592.1.png"
+    },
+    {
+      "id": "D1594.0.2",
+      "name": "Vivification By Hitting With Bone",
+      "image": "D1594.0.2.png"
+    },
+    {
+      "id": "D1594.1",
+      "name": "Magic Dust Vitalizes Seeds And They Become Insects",
+      "image": "D1594.1.png"
+    },
+    {
+      "id": "D1601.18.1",
+      "name": "Self-Ringing Bell",
+      "image": "D1601.18.1.png"
+    },
+    {
+      "id": "D1601.19",
+      "name": "Fetish-Medicine Automatically Punishes",
+      "image": "D1601.19.png"
+    },
+    {
+      "id": "D1601.2",
+      "name": "Self-Growing And Self-Gathering Corn",
+      "image": "D1601.2.png"
+    },
+    {
+      "id": "D1601.32.1",
+      "name": "Letter From Captive Prince Asking For Help Flies Through The Air To Addressee",
+      "image": "D1601.32.1.png"
+    },
+    {
+      "id": "D1605",
+      "name": "Magic Thieving Object",
+      "image": "D1605.png"
+    },
+    {
+      "id": "D1610.14.3",
+      "name": "Speaking Hammer",
+      "image": "D1610.14.3.png"
+    },
+    {
+      "id": "D1610.21",
+      "name": "Speaking Image",
+      "image": "D1610.21.png"
+    },
+    {
+      "id": "D1610.27.2",
+      "name": "Voice Issues From Ruby",
+      "image": "D1610.27.2.png"
+    },
+    {
+      "id": "D1610.33",
+      "name": "Speaking Cliffs (Cf",
+      "image": "D1610.33.png"
+    },
+    {
+      "id": "D1610.6.1",
+      "name": "Speaking Vulva",
+      "image": "D1610.6.1.png"
+    },
+    {
+      "id": "D1611.1",
+      "name": "Magic Rosebush Answers For Fugitives",
+      "image": "D1611.1.png"
+    },
+    {
+      "id": "D1611.14",
+      "name": "Magic Apple Answers For Fugitives",
+      "image": "D1611.14.png"
+    },
+    {
+      "id": "D1615.9",
+      "name": "Singing Heavens And Earth",
+      "image": "D1615.9.png"
+    },
+    {
+      "id": "D1641.1",
+      "name": "Fountain (Well) Removes Itself",
+      "image": "D1641.1.png"
+    },
+    {
+      "id": "D1641.8",
+      "name": "Grave Removes Itself",
+      "image": "D1641.8.png"
+    },
+    {
+      "id": "D1646.3",
+      "name": "Dancing Kettle",
+      "image": "D1646.3.png"
+    },
+    {
+      "id": "D1651.9.1",
+      "name": "Bonds Can Be Loosed Only By Comrades Of Man Who Tied Them",
+      "image": "D1651.9.1.png"
+    },
+    {
+      "id": "D1652.16",
+      "name": "Lime (For Building Church) Miraculously Renewed By Power Of Saint",
+      "image": "D1652.16.png"
+    },
+    {
+      "id": "D1654.3.1.1",
+      "name": "Indelible Writing: The Scraped Word Found Written As Before",
+      "image": "D1654.3.1.1.png"
+    },
+    {
+      "id": "D1661.1",
+      "name": "Talking Statue, When Destroyed, Cannot Be Replaced For Thirty Thousand Years",
+      "image": "D1661.1.png"
+    },
+    {
+      "id": "D1711.2",
+      "name": "Virgil As Magician",
+      "image": "D1711.2.png"
+    },
+    {
+      "id": "D1721.1.4",
+      "name": "Magic Power From Rakshasi",
+      "image": "D1721.1.4.png"
+    },
+    {
+      "id": "D1736",
+      "name": "Magic Power From Great Piety",
+      "image": "D1736.png"
+    },
+    {
+      "id": "D1810",
+      "name": "Magic Knowledge",
+      "image": "D1810.png"
+    },
+    {
+      "id": "D1812.2.3",
+      "name": "Power Of Prophecy From Accidental Drinking Of Water From Magic Fountain",
+      "image": "D1812.2.3.png"
+    },
+    {
+      "id": "D1812.3",
+      "name": "Means Of Learning Future",
+      "image": "D1812.3.png"
+    },
+    {
+      "id": "D1812.3.3.6",
+      "name": "Prophetic Dream Induced By Eating Meat Of Bull",
+      "image": "D1812.3.3.6.png"
+    },
+    {
+      "id": "D1812.6.1",
+      "name": "Power Of Prophecy Lost By Spitting",
+      "image": "D1812.6.1.png"
+    },
+    {
+      "id": "D1813.1.5",
+      "name": "Dream Reveals To Girl Death Of Her Lover",
+      "image": "D1813.1.5.png"
+    },
+    {
+      "id": "D1821.3.10",
+      "name": "Magic Sight By Looking Through Feather",
+      "image": "D1821.3.10.png"
+    },
+    {
+      "id": "D1825.4.3",
+      "name": "Magic Power To See Lost Things",
+      "image": "D1825.4.3.png"
+    },
+    {
+      "id": "D1834",
+      "name": "Magic Strength From Helpful Animal",
+      "image": "D1834.png"
+    },
+    {
+      "id": "D1841.3.2.2",
+      "name": "Saint Walks Through Glowing Coals Without Harm",
+      "image": "D1841.3.2.2.png"
+    },
+    {
+      "id": "D1841.4.3.2",
+      "name": "Stones Cast In The Ocean Keep Dry",
+      "image": "D1841.4.3.2.png"
+    },
+    {
+      "id": "D1851.4",
+      "name": "Immortality Bestowed By Christ",
+      "image": "D1851.4.png"
+    },
+    {
+      "id": "D1857.1",
+      "name": "Old Woman Has Lived For Ages",
+      "image": "D1857.1.png"
+    },
+    {
+      "id": "D1865.3",
+      "name": "Face Of Pious Girl Becomes Angelic At Death",
+      "image": "D1865.3.png"
+    },
+    {
+      "id": "D1866.3",
+      "name": "Beautification By Fasting",
+      "image": "D1866.3.png"
+    },
+    {
+      "id": "D1931",
+      "name": "Hate Induced By Magic",
+      "image": "D1931.png"
+    },
+    {
+      "id": "D194",
+      "name": "Transformation: Man To Crocodile",
+      "image": "D194.png"
+    },
+    {
+      "id": "D1980",
+      "name": "Magic Invisibility",
+      "image": "D1980.png"
+    },
+    {
+      "id": "D1982.4",
+      "name": "Food And Drink Appear And Disappear In Otherworld",
+      "image": "D1982.4.png"
+    },
+    {
+      "id": "D2071",
+      "name": "Evil Eye",
+      "image": "D2071.png"
+    },
+    {
+      "id": "D2072.0.2.1.1",
+      "name": "Horse (Ox) Unable To Move Wagon Paralyzed By Witch",
+      "image": "D2072.0.2.1.1.png"
+    },
+    {
+      "id": "D2086.3",
+      "name": "Weapons Magically Blown Out Of Enemies' Hands",
+      "image": "D2086.3.png"
+    },
+    {
+      "id": "D2087.1",
+      "name": "Crops Stolen By Magic",
+      "image": "D2087.1.png"
+    },
+    {
+      "id": "D2089.10",
+      "name": "Fire Drills Magically Made Not To Function",
+      "image": "D2089.10.png"
+    },
+    {
+      "id": "D2091.6",
+      "name": "Enemies Magically Made To Feel Thirst",
+      "image": "D2091.6.png"
+    },
+    {
+      "id": "D2097",
+      "name": "Magic Trouble-Making",
+      "image": "D2097.png"
+    },
+    {
+      "id": "D2102.4",
+      "name": "\"Golden\" Son Of Supernatural Bride Of King Has The Power Of Producing Gold And Gold Buildings, Ornaments Etc India: Thompson-Balys",
+      "image": "D2102.4.png"
+    },
+    {
+      "id": "D2140.1",
+      "name": "Control Of Weather By Saint's Prayers",
+      "image": "D2140.1.png"
+    },
+    {
+      "id": "D2143.6",
+      "name": "Magic Control Of Snow",
+      "image": "D2143.6.png"
+    },
+    {
+      "id": "D2144.1.2",
+      "name": "Man With Power To Make Everything Freeze",
+      "image": "D2144.1.2.png"
+    },
+    {
+      "id": "D2145.1.1",
+      "name": "Local Winter",
+      "image": "D2145.1.1.png"
+    },
+    {
+      "id": "D2151.5.1",
+      "name": "Water Raised From Tank By Singing",
+      "image": "D2151.5.1.png"
+    },
+    {
+      "id": "D2161.1.3",
+      "name": "Woman's Labor Pains Magically Eased",
+      "image": "D2161.1.3.png"
+    },
+    {
+      "id": "D2161.3.9",
+      "name": "Bad Breath Magically Cured",
+      "image": "D2161.3.9.png"
+    },
+    {
+      "id": "D2161.4.10.2.1",
+      "name": "Fairy Wounded By Mortal Is Healed Only By Obtaining Mortal's Blessing",
+      "image": "D2161.4.10.2.1.png"
+    },
+    {
+      "id": "D2171.1.1",
+      "name": "Seat (Chair) Caused To Stick To Person",
+      "image": "D2171.1.1.png"
+    },
+    {
+      "id": "D2177.1",
+      "name": "Demon Enclosed In Bottle",
+      "image": "D2177.1.png"
+    },
+    {
+      "id": "D268",
+      "name": "Transformation: Man To Building",
+      "image": "D268.png"
+    },
+    {
+      "id": "D294",
+      "name": "Transformation Into Puff Of Dust",
+      "image": "D294.png"
+    },
+    {
+      "id": "D295",
+      "name": "Transformation: Man To Spittle",
+      "image": "D295.png"
+    },
+    {
+      "id": "D314.3",
+      "name": "Transformation: Elephant To Person",
+      "image": "D314.3.png"
+    },
+    {
+      "id": "D315.1",
+      "name": "Transformation: Rat To Person",
+      "image": "D315.1.png"
+    },
+    {
+      "id": "D411",
+      "name": "Transformation: Mammal (Wild) To Another Animal",
+      "image": "D411.png"
+    },
+    {
+      "id": "D411.1.1",
+      "name": "Transformation: Squirrel To Horse",
+      "image": "D411.1.1.png"
+    },
+    {
+      "id": "D422.2.3",
+      "name": "Transformation: Dog To Statue",
+      "image": "D422.2.3.png"
+    },
+    {
+      "id": "D426.2",
+      "name": "Transformation: Octopus To Stone",
+      "image": "D426.2.png"
+    },
+    {
+      "id": "D428.1.1",
+      "name": "Transformation: Frog To Tree",
+      "image": "D428.1.1.png"
+    },
+    {
+      "id": "D431.5.1",
+      "name": "Transformation: Grass To Soldiers",
+      "image": "D431.5.1.png"
+    },
+    {
+      "id": "D45",
+      "name": "Persons Exchange Forms",
+      "image": "D45.png"
+    },
+    {
+      "id": "D451.9.1",
+      "name": "Transformation: Peas To Stones",
+      "image": "D451.9.1.png"
+    },
+    {
+      "id": "D454.2.2",
+      "name": "Bread Tree Springs From Crumb Of Bread",
+      "image": "D454.2.2.png"
+    },
+    {
+      "id": "D454.8.2.1",
+      "name": "Transformation: Ring To Saber",
+      "image": "D454.8.2.1.png"
+    },
+    {
+      "id": "D457.13",
+      "name": "Transformation: Animal Dung To Other Object",
+      "image": "D457.13.png"
+    },
+    {
+      "id": "D457.19",
+      "name": "Transformation: Ear Tips (Animal) Into Pelts",
+      "image": "D457.19.png"
+    },
+    {
+      "id": "D457.3",
+      "name": "Transformation: Calf's Head To Death's Head",
+      "image": "D457.3.png"
+    },
+    {
+      "id": "D475.1.14",
+      "name": "Transformation: Bottle To Gold",
+      "image": "D475.1.14.png"
+    },
+    {
+      "id": "D475.1.19",
+      "name": "Transformation: Leaves On Which Meal Is Served Turn To Gold Plates",
+      "image": "D475.1.19.png"
+    },
+    {
+      "id": "D517",
+      "name": "Transformation Because Of Disobedience",
+      "image": "D517.png"
+    },
+    {
+      "id": "D523.1.1",
+      "name": "Transformation By Playing Flute",
+      "image": "D523.1.1.png"
+    },
+    {
+      "id": "D536",
+      "name": "Transformation By Removing Chains From Neck",
+      "image": "D536.png"
+    },
+    {
+      "id": "D551.6.2.1",
+      "name": "Transformation By Eating Sticky Rice",
+      "image": "D551.6.2.1.png"
+    },
+    {
+      "id": "D564",
+      "name": "Transformation By Smelling",
+      "image": "D564.png"
+    },
+    {
+      "id": "D588",
+      "name": "Transformation By Blowing",
+      "image": "D588.png"
+    },
+    {
+      "id": "D631.3.1",
+      "name": "Compressible Canoe",
+      "image": "D631.3.1.png"
+    },
+    {
+      "id": "D641.4",
+      "name": "Transformation To Travel To Otherworld",
+      "image": "D641.4.png"
+    },
+    {
+      "id": "D658.3.1",
+      "name": "Transformation To Seduce Man",
+      "image": "D658.3.1.png"
+    },
+    {
+      "id": "D659.9",
+      "name": "Transformation To Another Form To Persuade Man To Go To Battle",
+      "image": "D659.9.png"
+    },
+    {
+      "id": "D683.6",
+      "name": "Transformation By Evil Spirits",
+      "image": "D683.6.png"
+    },
+    {
+      "id": "D683.7",
+      "name": "Transformation By Fairy",
+      "image": "D683.7.png"
+    },
+    {
+      "id": "D712.4.1",
+      "name": "Disenchantment By Drinking Blood",
+      "image": "D712.4.1.png"
+    },
+    {
+      "id": "D722",
+      "name": "Disenchantment By Taking Off Bridle",
+      "image": "D722.png"
+    },
+    {
+      "id": "D731",
+      "name": "Disenchantment By Obedience And Kindness",
+      "image": "D731.png"
+    },
+    {
+      "id": "D735",
+      "name": "Disenchantment By Kiss",
+      "image": "D735.png"
+    },
+    {
+      "id": "D754",
+      "name": "Disenchantment By Serving Transformed Person",
+      "image": "D754.png"
+    },
+    {
+      "id": "D759.8",
+      "name": "Snake Disenchanted By Being Allowed To Wrap Itself Three Times Around Person's Neck",
+      "image": "D759.8.png"
+    },
+    {
+      "id": "D766.4",
+      "name": "Disenchantment By Bathing In Milk",
+      "image": "D766.4.png"
+    },
+    {
+      "id": "D783",
+      "name": "Disenchantment By Being Found When Lost",
+      "image": "D783.png"
+    },
+    {
+      "id": "D785",
+      "name": "Disenchantment By Magic Contest",
+      "image": "D785.png"
+    },
+    {
+      "id": "D789.6",
+      "name": "Disenchantment By Repeating Magic Formula",
+      "image": "D789.6.png"
+    },
+    {
+      "id": "D815",
+      "name": "Magic Object Received From Relative",
+      "image": "D815.png"
+    },
+    {
+      "id": "D849.8",
+      "name": "Magic Object Found On Ground",
+      "image": "D849.8.png"
+    },
+    {
+      "id": "D861.2",
+      "name": "Magic Object Stolen By Neighbor",
+      "image": "D861.2.png"
+    },
+    {
+      "id": "D934",
+      "name": "Magic Turf",
+      "image": "D934.png"
+    },
+    {
+      "id": "D935",
+      "name": "Magic Earth (Soil)",
+      "image": "D935.png"
+    },
+    {
+      "id": "D94",
+      "name": "Transformation: Man To Ogre",
+      "image": "D94.png"
+    },
+    {
+      "id": "D981.9",
+      "name": "Magic Date (Fruit)",
+      "image": "D981.9.png"
+    },
+    {
+      "id": "E105",
+      "name": "Resuscitation By Herbs (Leaves)",
+      "image": "E105.png"
+    },
+    {
+      "id": "E121.6",
+      "name": "Resuscitation By Demon",
+      "image": "E121.6.png"
+    },
+    {
+      "id": "E15.2",
+      "name": "Resuscitation By Sweating",
+      "image": "E15.2.png"
+    },
+    {
+      "id": "E182",
+      "name": "Dead Body Incorruptible",
+      "image": "E182.png"
+    },
+    {
+      "id": "E186",
+      "name": "Failure At Resuscitation",
+      "image": "E186.png"
+    },
+    {
+      "id": "E214.1",
+      "name": "Dead Lover Returns To Dance With Fickle Sweetheart At Her Wedding",
+      "image": "E214.1.png"
+    },
+    {
+      "id": "E225.1",
+      "name": "Ghost Of Abortion",
+      "image": "E225.1.png"
+    },
+    {
+      "id": "E231",
+      "name": "Return From Dead To Reveal Murder",
+      "image": "E231.png"
+    },
+    {
+      "id": "E284",
+      "name": "Ghost Haunts Cloister",
+      "image": "E284.png"
+    },
+    {
+      "id": "E332.3.2",
+      "name": "Ghost Rides In Carriage, Disappears Suddenly At Certain Spot",
+      "image": "E332.3.2.png"
+    },
+    {
+      "id": "E363.5",
+      "name": "Dead Provide Material Aid To Living",
+      "image": "E363.5.png"
+    },
+    {
+      "id": "E37",
+      "name": "Resuscitation By Assembling Members And Leaving In Cask For Certain Time",
+      "image": "E37.png"
+    },
+    {
+      "id": "E371",
+      "name": "Return From Dead To Reveal Hidden Treasure",
+      "image": "E371.png"
+    },
+    {
+      "id": "E4",
+      "name": "Sun Revived By Own Power After Being Killed By Moon",
+      "image": "E4.png"
+    },
+    {
+      "id": "E41",
+      "name": "Resuscitation From Excrement Of One Who Has Eaten Person (Animal)",
+      "image": "E41.png"
+    },
+    {
+      "id": "E411.0.4",
+      "name": "Sinner Wanders Between Earth And Heaven",
+      "image": "E411.0.4.png"
+    },
+    {
+      "id": "E411.1.1.1",
+      "name": "Suicides Must Walk The Earth Until Time For Their Natural Death",
+      "image": "E411.1.1.1.png"
+    },
+    {
+      "id": "E411.4",
+      "name": "Usurer Cannot Rest In Grave",
+      "image": "E411.4.png"
+    },
+    {
+      "id": "E411.6",
+      "name": "Person Who Never Said \"Good Morning\" Cannot Rest In Grave",
+      "image": "E411.6.png"
+    },
+    {
+      "id": "E411.8",
+      "name": "Pilate Appears Periodically At Mt",
+      "image": "E411.8.png"
+    },
+    {
+      "id": "E421.4",
+      "name": "Ghosts As Shadow",
+      "image": "E421.4.png"
+    },
+    {
+      "id": "E422.1.11.1",
+      "name": "Revenant As An Eye",
+      "image": "E422.1.11.1.png"
+    },
+    {
+      "id": "E423.3.4",
+      "name": "Revenant As Raven",
+      "image": "E423.3.4.png"
+    },
+    {
+      "id": "E431.0.1",
+      "name": "Test For Presence Of Demons In Corpses",
+      "image": "E431.0.1.png"
+    },
+    {
+      "id": "E431.20",
+      "name": "Coffin With Iron Band Made To Keep Corpse From Returning As Tiger",
+      "image": "E431.20.png"
+    },
+    {
+      "id": "E431.7.1",
+      "name": "Beheaded Man's Head Laid At Back To Prevent Return",
+      "image": "E431.7.1.png"
+    },
+    {
+      "id": "E431.8",
+      "name": "Dog Buried Alive To Prevent Ghosts From Walking",
+      "image": "E431.8.png"
+    },
+    {
+      "id": "E434.4",
+      "name": "Ghosts Cannot Pass Crossroads",
+      "image": "E434.4.png"
+    },
+    {
+      "id": "E434.8.1",
+      "name": "Ghost Cannot Harm Person Wearing A Cross",
+      "image": "E434.8.1.png"
+    },
+    {
+      "id": "E439.3",
+      "name": "Dog Saves Man From Malevolent Living Corpse",
+      "image": "E439.3.png"
+    },
+    {
+      "id": "E443.2.3",
+      "name": "Ghost Laid By Confessor To Priest",
+      "image": "E443.2.3.png"
+    },
+    {
+      "id": "E451.8",
+      "name": "Ghost Laid When House It Haunts Is Destroyed Or Changed",
+      "image": "E451.8.png"
+    },
+    {
+      "id": "E463",
+      "name": "Living Man In Dead Man's Shroud",
+      "image": "E463.png"
+    },
+    {
+      "id": "E465",
+      "name": "Revenant Rewards Its Conqueror",
+      "image": "E465.png"
+    },
+    {
+      "id": "E481.1",
+      "name": "Land Of Dead In Lower World",
+      "image": "E481.1.png"
+    },
+    {
+      "id": "E501.1.5",
+      "name": "Freemason As Wild Huntsman",
+      "image": "E501.1.5.png"
+    },
+    {
+      "id": "E501.13.2",
+      "name": "Wild Hunt Heralded By Music",
+      "image": "E501.13.2.png"
+    },
+    {
+      "id": "E501.13.3.1",
+      "name": "Wild Hunt Heralded By Stamping Of Horses",
+      "image": "E501.13.3.1.png"
+    },
+    {
+      "id": "E501.17.6.2",
+      "name": "Wild Huntsman Pacified With Food",
+      "image": "E501.17.6.2.png"
+    },
+    {
+      "id": "E501.17.8",
+      "name": "Wild Hunt Forced To Depart",
+      "image": "E501.17.8.png"
+    },
+    {
+      "id": "E501.4.3.1",
+      "name": "One-Eyed Sow In Wild Hunt",
+      "image": "E501.4.3.1.png"
+    },
+    {
+      "id": "E521.5.0.1",
+      "name": "Headless Ghost Of Hog",
+      "image": "E521.5.0.1.png"
+    },
+    {
+      "id": "E530.1.2",
+      "name": "Ball Of Fire Haunts Murderer",
+      "image": "E530.1.2.png"
+    },
+    {
+      "id": "E541.3",
+      "name": "Dead Come Forth And Eat Grave-Offerings",
+      "image": "E541.3.png"
+    },
+    {
+      "id": "E542.1.1",
+      "name": "Ghostly Fingers Leave Mark On Man's Hand",
+      "image": "E542.1.1.png"
+    },
+    {
+      "id": "E545.21",
+      "name": "Heads Of Slain People In Magician's House Advises Hero",
+      "image": "E545.21.png"
+    },
+    {
+      "id": "E545.9",
+      "name": "Dead Holy Man Begs Grave-Digger Not To Bury Sinner On Top Of Him",
+      "image": "E545.9.png"
+    },
+    {
+      "id": "E586.1",
+      "name": "Dead Returns On Burial Day",
+      "image": "E586.1.png"
+    },
+    {
+      "id": "E593.5",
+      "name": "Ghost Steals Food And Treasure",
+      "image": "E593.5.png"
+    },
+    {
+      "id": "E599",
+      "name": "Other Actions Of Revenants",
+      "image": "E599.png"
+    },
+    {
+      "id": "E605.1",
+      "name": "Reincarnation With Change Of Sex",
+      "image": "E605.1.png"
+    },
+    {
+      "id": "E605.1.1",
+      "name": "Reincarnation: Woman Reborn As Man",
+      "image": "E605.1.1.png"
+    },
+    {
+      "id": "E614.2",
+      "name": "Reincarnation As Lizard",
+      "image": "E614.2.png"
+    },
+    {
+      "id": "E614.3",
+      "name": "Reincarnation As Crocodile",
+      "image": "E614.3.png"
+    },
+    {
+      "id": "E649.3",
+      "name": "Reincarnation As Hoe",
+      "image": "E649.3.png"
+    },
+    {
+      "id": "E692",
+      "name": "Reincarnation As Punishment",
+      "image": "E692.png"
+    },
+    {
+      "id": "E694.3",
+      "name": "Frustrated Boy Reborn As Lizard",
+      "image": "E694.3.png"
+    },
+    {
+      "id": "E705",
+      "name": "Soul Forgets Everything At Birth",
+      "image": "E705.png"
+    },
+    {
+      "id": "E711.10",
+      "name": "Soul In Sword",
+      "image": "E711.10.png"
+    },
+    {
+      "id": "E712.3",
+      "name": "Soul Hidden In Urn",
+      "image": "E712.3.png"
+    },
+    {
+      "id": "E72",
+      "name": "Resuscitation By Smelling Of Moss",
+      "image": "E72.png"
+    },
+    {
+      "id": "E722.1.4",
+      "name": "Soul Leaves The Body In Form Of Bird",
+      "image": "E722.1.4.png"
+    },
+    {
+      "id": "E722.2.11",
+      "name": "Soul Leaves Body Through Eye",
+      "image": "E722.2.11.png"
+    },
+    {
+      "id": "E741",
+      "name": "Soul In Form Of Heavenly Body",
+      "image": "E741.png"
+    },
+    {
+      "id": "E751.4",
+      "name": "Four (Five) Groups On Judgment Day",
+      "image": "E751.4.png"
+    },
+    {
+      "id": "E752.6",
+      "name": "Soul Bound For Hell Given Sight Of Heaven",
+      "image": "E752.6.png"
+    },
+    {
+      "id": "E752.9",
+      "name": "Souls Of Wicked Eaten By Deity",
+      "image": "E752.9.png"
+    },
+    {
+      "id": "E754.1",
+      "name": "Condemned Soul Recovered",
+      "image": "E754.1.png"
+    },
+    {
+      "id": "E754.2.3",
+      "name": "Dead And Living Go Together To Gate Of Heaven",
+      "image": "E754.2.3.png"
+    },
+    {
+      "id": "E754.4",
+      "name": "Soul Of Hermit Who Fasts To Death For Worldly Fame Would Be Damned But For Past Good Deeds",
+      "image": "E754.4.png"
+    },
+    {
+      "id": "E755.2.4",
+      "name": "Ghosts Gather Wood For Hell Fires",
+      "image": "E755.2.4.png"
+    },
+    {
+      "id": "E761.1.10",
+      "name": "Life Token: Milk Becomes Bloody",
+      "image": "E761.1.10.png"
+    },
+    {
+      "id": "E783.8",
+      "name": "Dead Head Grateful For Burying It",
+      "image": "E783.8.png"
+    },
+    {
+      "id": "F101.8",
+      "name": "Man Returning From Hell Brings Heat With Him",
+      "image": "F101.8.png"
+    },
+    {
+      "id": "F1041.1.3.2",
+      "name": "Servant Grieves Over Master's Death",
+      "image": "F1041.1.3.2.png"
+    },
+    {
+      "id": "F1041.1.5",
+      "name": "Death From Excessive Joy",
+      "image": "F1041.1.5.png"
+    },
+    {
+      "id": "F1041.16.6.7",
+      "name": "Fury Enables Wounded Soldiers To Continue Fighting",
+      "image": "F1041.16.6.7.png"
+    },
+    {
+      "id": "F1041.21.1",
+      "name": "Illness From Excessive Grief",
+      "image": "F1041.21.1.png"
+    },
+    {
+      "id": "F1041.8.1.1",
+      "name": "Madness From Sight Of Magically Beautiful Man",
+      "image": "F1041.8.1.1.png"
+    },
+    {
+      "id": "F1041.9.2",
+      "name": "Illness From Keeping A Secret",
+      "image": "F1041.9.2.png"
+    },
+    {
+      "id": "F1066",
+      "name": "Arrow Shot To Heaven Returns Bloody",
+      "image": "F1066.png"
+    },
+    {
+      "id": "F109.2",
+      "name": "Hell Shown To Jonah By Fish",
+      "image": "F109.2.png"
+    },
+    {
+      "id": "F111.5",
+      "name": "Land Where All Creatures Are Friendly To One Another",
+      "image": "F111.5.png"
+    },
+    {
+      "id": "F12.1",
+      "name": "Journey To Sky-God",
+      "image": "F12.1.png"
+    },
+    {
+      "id": "F134.3",
+      "name": "Otherworld Island Divided Into Four Parts",
+      "image": "F134.3.png"
+    },
+    {
+      "id": "F149",
+      "name": "Bounds Of The Otherworld -- Miscellaneous",
+      "image": "F149.png"
+    },
+    {
+      "id": "F151.1.4",
+      "name": "Perilous Ford On Way To Otherworld",
+      "image": "F151.1.4.png"
+    },
+    {
+      "id": "F152.1.3",
+      "name": "Golden Bridge To Otherworld",
+      "image": "F152.1.3.png"
+    },
+    {
+      "id": "F162.2.7",
+      "name": "Thirteen Rivers Of Balm In Otherworld",
+      "image": "F162.2.7.png"
+    },
+    {
+      "id": "F162.6.2",
+      "name": "Lake With Water Of Life In Otherworld",
+      "image": "F162.6.2.png"
+    },
+    {
+      "id": "F163.2.2",
+      "name": "Fiery Temple In Otherworld: Jewish: Neuman",
+      "image": "F163.2.2.png"
+    },
+    {
+      "id": "F169.3",
+      "name": "Ship Of Glass In Otherworld",
+      "image": "F169.3.png"
+    },
+    {
+      "id": "F200",
+      "name": "Fairies (Elves)",
+      "image": "F200.png"
+    },
+    {
+      "id": "F222",
+      "name": "Fairy Castle",
+      "image": "F222.png"
+    },
+    {
+      "id": "F231.1.1",
+      "name": "Fairy's Iron Arms",
+      "image": "F231.1.1.png"
+    },
+    {
+      "id": "F231.2.1",
+      "name": "Fairies With Bird Feet",
+      "image": "F231.2.1.png"
+    },
+    {
+      "id": "F232.6",
+      "name": "Fairies As Giants",
+      "image": "F232.6.png"
+    },
+    {
+      "id": "F233.5",
+      "name": "Fairies Have Yellow (Golden) Hair (Clothing)",
+      "image": "F233.5.png"
+    },
+    {
+      "id": "F235.4",
+      "name": "Fairies Made Visible Through Use Of Magic Object",
+      "image": "F235.4.png"
+    },
+    {
+      "id": "F261.3.6",
+      "name": "Fairies Dance On The Green",
+      "image": "F261.3.6.png"
+    },
+    {
+      "id": "F271.2",
+      "name": "Fairies As Builders",
+      "image": "F271.2.png"
+    },
+    {
+      "id": "F277.0.1",
+      "name": "War Between Fairy Settlements",
+      "image": "F277.0.1.png"
+    },
+    {
+      "id": "F335",
+      "name": "Fairy Grateful For Loan",
+      "image": "F335.png"
+    },
+    {
+      "id": "F339.2",
+      "name": "Fairies Care For Tulip Bed Out Of Gratitude To Owner For Not Plucking Any Of Blossoms",
+      "image": "F339.2.png"
+    },
+    {
+      "id": "F35",
+      "name": "Divine Animal Visits Earth",
+      "image": "F35.png"
+    },
+    {
+      "id": "F359.2",
+      "name": "Theft Of Golden Bird From Fairies",
+      "image": "F359.2.png"
+    },
+    {
+      "id": "F361.1.2.1",
+      "name": "Fairy Takes Revenge For Mortal's Failure To Bring Food And Drink To Fairy Son's Wedding",
+      "image": "F361.1.2.1.png"
+    },
+    {
+      "id": "F365.0.1",
+      "name": "Fairy Steals On Hallowe'en",
+      "image": "F365.0.1.png"
+    },
+    {
+      "id": "F369.4",
+      "name": "Fairy Tricks Mortal",
+      "image": "F369.4.png"
+    },
+    {
+      "id": "F379.2.1",
+      "name": "Book (Medical) Brought Back From Otherworld",
+      "image": "F379.2.1.png"
+    },
+    {
+      "id": "F379.3",
+      "name": "Man Lives With Fairies Seven Years",
+      "image": "F379.3.png"
+    },
+    {
+      "id": "F381.7",
+      "name": "Fairies Leave When People Do Their Needs Where They Live",
+      "image": "F381.7.png"
+    },
+    {
+      "id": "F382.1",
+      "name": "Fairies Fear The Cross",
+      "image": "F382.1.png"
+    },
+    {
+      "id": "F394",
+      "name": "Mortals Help Fairies",
+      "image": "F394.png"
+    },
+    {
+      "id": "F403.2.1.1",
+      "name": "Familiar Spirit Acquired By Carrying Egg Under Left Arm-Pit",
+      "image": "F403.2.1.1.png"
+    },
+    {
+      "id": "F412",
+      "name": "Visibility Of Spirits",
+      "image": "F412.png"
+    },
+    {
+      "id": "F416",
+      "name": "Spirits Set Fire To Mill",
+      "image": "F416.png"
+    },
+    {
+      "id": "F419.1",
+      "name": "Demons Hold Horse-Race",
+      "image": "F419.1.png"
+    },
+    {
+      "id": "F419.3",
+      "name": "Special Spirit For Each Species Of Animal To Act As Its Protector",
+      "image": "F419.3.png"
+    },
+    {
+      "id": "F420.1.4.3",
+      "name": "Water-Spirits As Dwarfs",
+      "image": "F420.1.4.3.png"
+    },
+    {
+      "id": "F420.5.1.7.5",
+      "name": "Water-Spirit Gives Mortal Fish",
+      "image": "F420.5.1.7.5.png"
+    },
+    {
+      "id": "F420.5.2.1.1",
+      "name": "Water-Maiden Enamors Man And Draws Him Under Water",
+      "image": "F420.5.2.1.1.png"
+    },
+    {
+      "id": "F441.1",
+      "name": "Schrätel",
+      "image": "F441.1.png"
+    },
+    {
+      "id": "F441.3",
+      "name": "Wild Man As Wood-Spirit",
+      "image": "F441.3.png"
+    },
+    {
+      "id": "F451.2.7.4",
+      "name": "Dwarfs Clad In White",
+      "image": "F451.2.7.4.png"
+    },
+    {
+      "id": "F451.3.3.5",
+      "name": "Dwarfs Bewitch Cows To Give No Milk",
+      "image": "F451.3.3.5.png"
+    },
+    {
+      "id": "F451.3.3.8",
+      "name": "Dwarfs Made Invisible By Magic Caps",
+      "image": "F451.3.3.8.png"
+    },
+    {
+      "id": "F451.4.1.4",
+      "name": "Dwarfs Live In Underground Passage",
+      "image": "F451.4.1.4.png"
+    },
+    {
+      "id": "F451.7.5",
+      "name": "Dwarfs Have Little Horses",
+      "image": "F451.7.5.png"
+    },
+    {
+      "id": "F451.9.1.14",
+      "name": "Dwarfs Forced To Flee By Deity",
+      "image": "F451.9.1.14.png"
+    },
+    {
+      "id": "F451.9.1.6",
+      "name": "Dwarfs Emigrate Because Christianity Offends Them",
+      "image": "F451.9.1.6.png"
+    },
+    {
+      "id": "F455.3.4",
+      "name": "Trolls Spin And Weave Fine Cloth",
+      "image": "F455.3.4.png"
+    },
+    {
+      "id": "F455.5.3",
+      "name": "Trolls Have Cap Of Invisibility",
+      "image": "F455.5.3.png"
+    },
+    {
+      "id": "F455.6.6",
+      "name": "Trolls Carry Off People",
+      "image": "F455.6.6.png"
+    },
+    {
+      "id": "F456.1.2.2.3",
+      "name": "Knockers Test Entries And Supports By Tapping Them With Hammers",
+      "image": "F456.1.2.2.3.png"
+    },
+    {
+      "id": "F456.4",
+      "name": "Miscellaneous Mine Spirit Motifs",
+      "image": "F456.4.png"
+    },
+    {
+      "id": "F482.5.3",
+      "name": "Brownies Tease",
+      "image": "F482.5.3.png"
+    },
+    {
+      "id": "F488.2",
+      "name": "Mowing Contest With Household Spirit",
+      "image": "F488.2.png"
+    },
+    {
+      "id": "F493.1.2",
+      "name": "Demon Of Colic",
+      "image": "F493.1.2.png"
+    },
+    {
+      "id": "F493.3",
+      "name": "Protection Against Pestilence Spirit",
+      "image": "F493.3.png"
+    },
+    {
+      "id": "F51.0.1",
+      "name": "Sky-Rope Shot By Means Of Arrow",
+      "image": "F51.0.1.png"
+    },
+    {
+      "id": "F517.1.5",
+      "name": "Person With Knees Backwards",
+      "image": "F517.1.5.png"
+    },
+    {
+      "id": "F521.2",
+      "name": "Feathered People",
+      "image": "F521.2.png"
+    },
+    {
+      "id": "F531.1.0.1.1",
+      "name": "Beautiful Giantess",
+      "image": "F531.1.0.1.1.png"
+    },
+    {
+      "id": "F531.1.2.1",
+      "name": "Headless Giant",
+      "image": "F531.1.2.1.png"
+    },
+    {
+      "id": "F531.1.6.1.1",
+      "name": "Giantess With Iron Nails",
+      "image": "F531.1.6.1.1.png"
+    },
+    {
+      "id": "F531.1.6.6",
+      "name": "Giant With Peculiar Nose",
+      "image": "F531.1.6.6.png"
+    },
+    {
+      "id": "F531.2.3.1",
+      "name": "Giant's Skull So Large Fowl Can Pass Through Eye-Hole",
+      "image": "F531.2.3.1.png"
+    },
+    {
+      "id": "F531.3.12.1",
+      "name": "Giant Threads An Elephant On A Fish-Hook",
+      "image": "F531.3.12.1.png"
+    },
+    {
+      "id": "F531.3.12.3",
+      "name": "Giantess Kills Monstrous Bear",
+      "image": "F531.3.12.3.png"
+    },
+    {
+      "id": "F531.3.5",
+      "name": "Giant Steps Prodigious Distance",
+      "image": "F531.3.5.png"
+    },
+    {
+      "id": "F531.4.2",
+      "name": "Giant With Gigantic Chain As Belt",
+      "image": "F531.4.2.png"
+    },
+    {
+      "id": "F531.5.1.1",
+      "name": "Giant Carries Man In His Pocket (Glove, Bosom)",
+      "image": "F531.5.1.1.png"
+    },
+    {
+      "id": "F531.6.12.6.1",
+      "name": "Giant Destroyed By Army",
+      "image": "F531.6.12.6.1.png"
+    },
+    {
+      "id": "F531.6.15",
+      "name": "Giants And Supernatural Beings",
+      "image": "F531.6.15.png"
+    },
+    {
+      "id": "F535.2.3",
+      "name": "Man So Small He Dances In Spider Web",
+      "image": "F535.2.3.png"
+    },
+    {
+      "id": "F535.5.1.1",
+      "name": "Battle Between Giants And Dwarfs; Dwarfs Win",
+      "image": "F535.5.1.1.png"
+    },
+    {
+      "id": "F541.6.2",
+      "name": "Person Has Red Eye",
+      "image": "F541.6.2.png"
+    },
+    {
+      "id": "F545.2.4",
+      "name": "Man With Forehead Of Iron",
+      "image": "F545.2.4.png"
+    },
+    {
+      "id": "F547.5.10",
+      "name": "Woman With Privates Like Dog's",
+      "image": "F547.5.10.png"
+    },
+    {
+      "id": "F552.3",
+      "name": "Remarkably Pretty White Hands",
+      "image": "F552.3.png"
+    },
+    {
+      "id": "F556",
+      "name": "Remarkable Voice",
+      "image": "F556.png"
+    },
+    {
+      "id": "F57.4",
+      "name": "Wall As Path To Upper World",
+      "image": "F57.4.png"
+    },
+    {
+      "id": "F577.4",
+      "name": "Lovers Identical In Appearance",
+      "image": "F577.4.png"
+    },
+    {
+      "id": "F585.4",
+      "name": "Treasure Struck From Hand Of Phantom",
+      "image": "F585.4.png"
+    },
+    {
+      "id": "F62.1",
+      "name": "Birds Carry Person To Upper World",
+      "image": "F62.1.png"
+    },
+    {
+      "id": "F624.1.1",
+      "name": "Strong Man Throws Elephant Across Sea",
+      "image": "F624.1.1.png"
+    },
+    {
+      "id": "F624.5",
+      "name": "Strong Man Lifts Ton Of Rye",
+      "image": "F624.5.png"
+    },
+    {
+      "id": "F626",
+      "name": "Strong Man Pulls Down Mountains",
+      "image": "F626.png"
+    },
+    {
+      "id": "F634",
+      "name": "Mighty Fisherman",
+      "image": "F634.png"
+    },
+    {
+      "id": "F639.4",
+      "name": "Strong Man Overcomes Giant",
+      "image": "F639.4.png"
+    },
+    {
+      "id": "F641.2",
+      "name": "Man Can Hear Ant Leave Nest Fifty Miles Away",
+      "image": "F641.2.png"
+    },
+    {
+      "id": "F647.8",
+      "name": "Marvelous Sensitiveness: Fainting From Noise Of Wooden Pestle And Mortar",
+      "image": "F647.8.png"
+    },
+    {
+      "id": "F661.10",
+      "name": "Man Shoots Pearls From Wife's Nose-Ring",
+      "image": "F661.10.png"
+    },
+    {
+      "id": "F661.4.1",
+      "name": "Archer Shoots Eggs Through Middle",
+      "image": "F661.4.1.png"
+    },
+    {
+      "id": "F661.7.2",
+      "name": "Skillful Marksman Throws Swords And Scabbards So That Swords Are Sheathed In Air",
+      "image": "F661.7.2.png"
+    },
+    {
+      "id": "F711.2.2",
+      "name": "Sea Of Cream",
+      "image": "F711.2.2.png"
+    },
+    {
+      "id": "F715.2.2",
+      "name": "River Of Mercury",
+      "image": "F715.2.2.png"
+    },
+    {
+      "id": "F721.2.1",
+      "name": "Habitable Hill Raised On Four Pillars",
+      "image": "F721.2.1.png"
+    },
+    {
+      "id": "F760",
+      "name": "Extraordinary Cities",
+      "image": "F760.png"
+    },
+    {
+      "id": "F761.3",
+      "name": "City Of Onyx",
+      "image": "F761.3.png"
+    },
+    {
+      "id": "F772.2.6",
+      "name": "Flying Tower",
+      "image": "F772.2.6.png"
+    },
+    {
+      "id": "F782.3",
+      "name": "Seven-Fold Doors To Room",
+      "image": "F782.3.png"
+    },
+    {
+      "id": "F791.1",
+      "name": "Sky Lowers On People",
+      "image": "F791.1.png"
+    },
+    {
+      "id": "F809.9",
+      "name": "Stones Can Be Rolled Up Like A Scroll",
+      "image": "F809.9.png"
+    },
+    {
+      "id": "F811.1.10",
+      "name": "Tree Of Cakes",
+      "image": "F811.1.10.png"
+    },
+    {
+      "id": "F811.18.1",
+      "name": "Tree Bears Fruit Monthly",
+      "image": "F811.18.1.png"
+    },
+    {
+      "id": "F811.2.1",
+      "name": "Tree With Metal Leaves",
+      "image": "F811.2.1.png"
+    },
+    {
+      "id": "F811.22",
+      "name": "Extraordinary Firewood, Of Elephant Tusks",
+      "image": "F811.22.png"
+    },
+    {
+      "id": "F811.3.3",
+      "name": "Crimson Tree",
+      "image": "F811.3.3.png"
+    },
+    {
+      "id": "F821.1.2",
+      "name": "Brass Clothes",
+      "image": "F821.1.2.png"
+    },
+    {
+      "id": "F822",
+      "name": "Extraordinary Handkerchief",
+      "image": "F822.png"
+    },
+    {
+      "id": "F822.1",
+      "name": "Handkerchief Color Of Sun, Moon, And Stars",
+      "image": "F822.1.png"
+    },
+    {
+      "id": "F83",
+      "name": "Hell Of Women In South Of Otherworld",
+      "image": "F83.png"
+    },
+    {
+      "id": "F839.2",
+      "name": "Extraordinary Shield",
+      "image": "F839.2.png"
+    },
+    {
+      "id": "F839.2.1",
+      "name": "Gigantic Shield",
+      "image": "F839.2.1.png"
+    },
+    {
+      "id": "F841.1.13",
+      "name": "Iron Boat",
+      "image": "F841.1.13.png"
+    },
+    {
+      "id": "F841.2.6",
+      "name": "Tin Sail",
+      "image": "F841.2.6.png"
+    },
+    {
+      "id": "F863",
+      "name": "Extraordinary Chain",
+      "image": "F863.png"
+    },
+    {
+      "id": "F873.2",
+      "name": "Enormous Army Camp",
+      "image": "F873.2.png"
+    },
+    {
+      "id": "F883.1.3",
+      "name": "Words Of Decalogue Legible On Both Sides",
+      "image": "F883.1.3.png"
+    },
+    {
+      "id": "F891",
+      "name": "Extraordinary Still (With The Beads Of Crocodiles, Owls, And Parrots As Pots)",
+      "image": "F891.png"
+    },
+    {
+      "id": "F900",
+      "name": "Extraordinary Occurrences",
+      "image": "F900.png"
+    },
+    {
+      "id": "F914",
+      "name": "Person Swallowed And Disgorged",
+      "image": "F914.png"
+    },
+    {
+      "id": "F930.6",
+      "name": "Water Chants Song",
+      "image": "F930.6.png"
+    },
+    {
+      "id": "F931.3",
+      "name": "Sea Does Not Encroach On Burial Place Of Saint",
+      "image": "F931.3.png"
+    },
+    {
+      "id": "F932.3",
+      "name": "Stream Becomes Hot In Which Saint Performs His Ascetic Devotions",
+      "image": "F932.3.png"
+    },
+    {
+      "id": "F932.5",
+      "name": "River Acts As Messenger",
+      "image": "F932.5.png"
+    },
+    {
+      "id": "F933.8",
+      "name": "Bones Of Bird Constantly Thrown Up From Well",
+      "image": "F933.8.png"
+    },
+    {
+      "id": "F960.1.1.2",
+      "name": "Shower Of Gold And Silver Rains Upon King's Ship At Birth Of His Children",
+      "image": "F960.1.1.2.png"
+    },
+    {
+      "id": "F960.1.1.3",
+      "name": "Storm Signs Betray Newly Born Child's Chiefly Rank",
+      "image": "F960.1.1.3.png"
+    },
+    {
+      "id": "F962.5.3",
+      "name": "Triangular Hailstones",
+      "image": "F962.5.3.png"
+    },
+    {
+      "id": "F966",
+      "name": "Voices From Heaven (Or From The Air)",
+      "image": "F966.png"
+    },
+    {
+      "id": "F969.3",
+      "name": "Marvelous Light",
+      "image": "F969.3.png"
+    },
+    {
+      "id": "F975",
+      "name": "Garden Becomes Wilderness",
+      "image": "F975.png"
+    },
+    {
+      "id": "F981.1.1",
+      "name": "Animal Bursts From Anger",
+      "image": "F981.1.1.png"
+    },
+    {
+      "id": "F982.8",
+      "name": "Crab Carries In His Ear Cat, Tiger, Bamboos, River",
+      "image": "F982.8.png"
+    },
+    {
+      "id": "F985",
+      "name": "Animals Change Color",
+      "image": "F985.png"
+    },
+    {
+      "id": "F991.2.1",
+      "name": "Dry Bone Smells As Sign Of Forgiveness",
+      "image": "F991.2.1.png"
+    },
+    {
+      "id": "F997",
+      "name": "Sword Pierces Rock When Possessor Will Break It",
+      "image": "F997.png"
+    },
+    {
+      "id": "G206",
+      "name": "Witch Has (Three) Giant Sons",
+      "image": "G206.png"
+    },
+    {
+      "id": "G211.2.4",
+      "name": "Witch In Form Of Deer",
+      "image": "G211.2.4.png"
+    },
+    {
+      "id": "G213.1",
+      "name": "One-Eyed Witch",
+      "image": "G213.1.png"
+    },
+    {
+      "id": "G213.4",
+      "name": "Witch With Blazing Eyes",
+      "image": "G213.4.png"
+    },
+    {
+      "id": "G224",
+      "name": "Source Of Witch's Magic",
+      "image": "G224.png"
+    },
+    {
+      "id": "G225.0.1",
+      "name": "Witch Feeds Animal Familiar With Her Own Blood",
+      "image": "G225.0.1.png"
+    },
+    {
+      "id": "G232",
+      "name": "Witch Dwells On Glass Mountain",
+      "image": "G232.png"
+    },
+    {
+      "id": "G241.1.1",
+      "name": "Witch Rides On Wolf",
+      "image": "G241.1.1.png"
+    },
+    {
+      "id": "G252.3",
+      "name": "Bird's Neck Broken: Rakshasa Dies",
+      "image": "G252.3.png"
+    },
+    {
+      "id": "G262.2",
+      "name": "Witch Eats Person's Entrails (Heart)",
+      "image": "G262.2.png"
+    },
+    {
+      "id": "G263.4.1",
+      "name": "Witch Causes Toothache",
+      "image": "G263.4.1.png"
+    },
+    {
+      "id": "G263.6",
+      "name": "Witchcraft Causes Maiden To Hate Lover",
+      "image": "G263.6.png"
+    },
+    {
+      "id": "G269.21.2",
+      "name": "Witch Causes Person To Mew Like Cat And Neigh Like Horse",
+      "image": "G269.21.2.png"
+    },
+    {
+      "id": "G272.16",
+      "name": "Salt Protects Against Witches",
+      "image": "G272.16.png"
+    },
+    {
+      "id": "G273.4",
+      "name": "Witch Powerless To Cross Stream",
+      "image": "G273.4.png"
+    },
+    {
+      "id": "G292",
+      "name": "Witch Makes Man Engage In Dangerous Contests",
+      "image": "G292.png"
+    },
+    {
+      "id": "G299",
+      "name": "Other Witch Motifs",
+      "image": "G299.png"
+    },
+    {
+      "id": "G303.12.5",
+      "name": "Devil Marries Girl",
+      "image": "G303.12.5.png"
+    },
+    {
+      "id": "G303.12.7",
+      "name": "Devil's Sexual Relations With Mortals",
+      "image": "G303.12.7.png"
+    },
+    {
+      "id": "G303.15.2",
+      "name": "Granary Now Haunted Because Of Devil's Defeat",
+      "image": "G303.15.2.png"
+    },
+    {
+      "id": "G303.16.11",
+      "name": "Various Holy Persons Save One From Devil",
+      "image": "G303.16.11.png"
+    },
+    {
+      "id": "G303.16.14",
+      "name": "The Devil Exorcised",
+      "image": "G303.16.14.png"
+    },
+    {
+      "id": "G303.16.3.2",
+      "name": "Devil Cannot Endure Cross Made By Straps Of Knapsack",
+      "image": "G303.16.3.2.png"
+    },
+    {
+      "id": "G303.16.3.3",
+      "name": "Devils Put To Flight By Cross Made Of Leaves",
+      "image": "G303.16.3.3.png"
+    },
+    {
+      "id": "G303.24.1.9",
+      "name": "The Devil Has Two Books -- One Book Small For Sins Of Clerics, Erased By Confession; The Other Large For Unconfessed Sins Of Lay Folks",
+      "image": "G303.24.1.9.png"
+    },
+    {
+      "id": "G303.4.8.6",
+      "name": "Devil Is Swift Of Foot",
+      "image": "G303.4.8.6.png"
+    },
+    {
+      "id": "G303.6.2.9",
+      "name": "Devil Appears To Saint (Cleric)",
+      "image": "G303.6.2.9.png"
+    },
+    {
+      "id": "G303.9.5.6",
+      "name": "Man Temporarily Abducted By Devil",
+      "image": "G303.9.5.6.png"
+    },
+    {
+      "id": "G308.1",
+      "name": "Fight With Sea (Lake) Monster",
+      "image": "G308.1.png"
+    },
+    {
+      "id": "G322.1",
+      "name": "Giant Fisherman",
+      "image": "G322.1.png"
+    },
+    {
+      "id": "G351.4",
+      "name": "Ogress In Goat-Form",
+      "image": "G351.4.png"
+    },
+    {
+      "id": "G361.1",
+      "name": "Many-Headed Ogre",
+      "image": "G361.1.png"
+    },
+    {
+      "id": "G367",
+      "name": "Ogre Monstrous As To Blood",
+      "image": "G367.png"
+    },
+    {
+      "id": "G414",
+      "name": "Ogress Invites Boys To Live In Her House",
+      "image": "G414.png"
+    },
+    {
+      "id": "G421",
+      "name": "Ogre Traps Victim",
+      "image": "G421.png"
+    },
+    {
+      "id": "G422",
+      "name": "Ogre Imprisons Victim",
+      "image": "G422.png"
+    },
+    {
+      "id": "G512.5",
+      "name": "Ogre Killed By Burning External Soul",
+      "image": "G512.5.png"
+    },
+    {
+      "id": "G514.5",
+      "name": "Ogre Tied To Rock",
+      "image": "G514.5.png"
+    },
+    {
+      "id": "G515",
+      "name": "Holy Men Keep Devils Under Control",
+      "image": "G515.png"
+    },
+    {
+      "id": "G571",
+      "name": "Oaths (Abusive Speeches) Drive Ogres Away",
+      "image": "G571.png"
+    },
+    {
+      "id": "G631",
+      "name": "Ogre So Old That His Eyelids Must Be Propped Up",
+      "image": "G631.png"
+    },
+    {
+      "id": "G691.2",
+      "name": "Widow(S) Of Ogre's Victims Seen At Ogre's House",
+      "image": "G691.2.png"
+    },
+    {
+      "id": "G95",
+      "name": "Old Man Says His Arm Is Getting Thin -- Indicates Desire For Human Flesh",
+      "image": "G95.png"
+    },
+    {
+      "id": "H102",
+      "name": "Identification By Indenture",
+      "image": "H102.png"
+    },
+    {
+      "id": "H1022.6.1",
+      "name": "Task: Making Ale Derived From A Single Grain Of Corn",
+      "image": "H1022.6.1.png"
+    },
+    {
+      "id": "H1023.1.2",
+      "name": "Task: Hatching Eggs Immediately; Countertask: Sowing Seeds And Bringing In Crop Next Morning",
+      "image": "H1023.1.2.png"
+    },
+    {
+      "id": "H1023.2.1.1",
+      "name": "Task: Carrying Water In Leaky Vessel; Vessel Repaired With Clay Or Gum",
+      "image": "H1023.2.1.1.png"
+    },
+    {
+      "id": "H1023.7.1",
+      "name": "Task: Sewing Together A Broken Egg",
+      "image": "H1023.7.1.png"
+    },
+    {
+      "id": "H1035",
+      "name": "Task: Eating The Moon",
+      "image": "H1035.png"
+    },
+    {
+      "id": "H11",
+      "name": "Recognition Through Story-Telling",
+      "image": "H11.png"
+    },
+    {
+      "id": "H1124",
+      "name": "Task: Gathering All Stones From Brook Or Field",
+      "image": "H1124.png"
+    },
+    {
+      "id": "H1133.1",
+      "name": "Task: Building Magic Castle",
+      "image": "H1133.1.png"
+    },
+    {
+      "id": "H114",
+      "name": "Identification By Glove",
+      "image": "H114.png"
+    },
+    {
+      "id": "H1151.15",
+      "name": "Task: Stealing Goddess Freya's Necklace",
+      "image": "H1151.15.png"
+    },
+    {
+      "id": "H1154.7.1",
+      "name": "Task: Retrieving King's Falcon",
+      "image": "H1154.7.1.png"
+    },
+    {
+      "id": "H1181",
+      "name": "Task: Raising A Buried Treasure",
+      "image": "H1181.png"
+    },
+    {
+      "id": "H119.1",
+      "name": "A Piece Of Cloth On One's Back As A Guarantee Against His Being Eaten On The Way",
+      "image": "H119.1.png"
+    },
+    {
+      "id": "H1199",
+      "name": "Other Tasks",
+      "image": "H1199.png"
+    },
+    {
+      "id": "H1199.17.2",
+      "name": "Task: Guarding Six Sisters-In-Law So That They Do Not Joke Or Talk To Anyone",
+      "image": "H1199.17.2.png"
+    },
+    {
+      "id": "H1233.3.2",
+      "name": "Fakir As Helper On Quest",
+      "image": "H1233.3.2.png"
+    },
+    {
+      "id": "H1242.1",
+      "name": "Unpromising Hero Succeeds In Quest",
+      "image": "H1242.1.png"
+    },
+    {
+      "id": "H125.2",
+      "name": "Identification By Spear",
+      "image": "H125.2.png"
+    },
+    {
+      "id": "H1331.3.1",
+      "name": "Quest For Bald, White-Headed Cow",
+      "image": "H1331.3.1.png"
+    },
+    {
+      "id": "H1333.3.0.1",
+      "name": "Quest For Rejuvenating Fruit",
+      "image": "H1333.3.0.1.png"
+    },
+    {
+      "id": "H1333.3.1.4",
+      "name": "Quest For Singing Apple",
+      "image": "H1333.3.1.4.png"
+    },
+    {
+      "id": "H1337",
+      "name": "Quest For Sword Of Light",
+      "image": "H1337.png"
+    },
+    {
+      "id": "H1381.6",
+      "name": "Quest For Unknown Son",
+      "image": "H1381.6.png"
+    },
+    {
+      "id": "H1385.5",
+      "name": "Quest For Vanished Lover",
+      "image": "H1385.5.png"
+    },
+    {
+      "id": "H1386.3",
+      "name": "Quest For Lost Bird",
+      "image": "H1386.3.png"
+    },
+    {
+      "id": "H1482",
+      "name": "Dirk Stuck Into Thigh In Order To Keep From Sleeping",
+      "image": "H1482.png"
+    },
+    {
+      "id": "H1500",
+      "name": "Tests Of Endurance",
+      "image": "H1500.png"
+    },
+    {
+      "id": "H1502",
+      "name": "Test: Enduring Hardship",
+      "image": "H1502.png"
+    },
+    {
+      "id": "H1512",
+      "name": "Cold Test",
+      "image": "H1512.png"
+    },
+    {
+      "id": "H1515",
+      "name": "Poisoned Food Test",
+      "image": "H1515.png"
+    },
+    {
+      "id": "H1522.1",
+      "name": "Bent Tree Test",
+      "image": "H1522.1.png"
+    },
+    {
+      "id": "H1554.1",
+      "name": "Test Of Curiosity: Mouse In Jug",
+      "image": "H1554.1.png"
+    },
+    {
+      "id": "H1558.6",
+      "name": "Test Of Friendship: The Imagined Refusal",
+      "image": "H1558.6.png"
+    },
+    {
+      "id": "H1569.1.1",
+      "name": "Man Tests Industry Of Prospective Servant Girl",
+      "image": "H1569.1.1.png"
+    },
+    {
+      "id": "H157",
+      "name": "King Finds Note With Children In Casket Floated Down River Identifying Them As His",
+      "image": "H157.png"
+    },
+    {
+      "id": "H1571",
+      "name": "Test Of Sensitiveness",
+      "image": "H1571.png"
+    },
+    {
+      "id": "H1574.1",
+      "name": "Tests For Noble Blood",
+      "image": "H1574.1.png"
+    },
+    {
+      "id": "H1577",
+      "name": "Test Of Divine Favor",
+      "image": "H1577.png"
+    },
+    {
+      "id": "H1578.1.4",
+      "name": "Test Of Sex Of Girl Masking As Man: Ball Thrown Into Lap",
+      "image": "H1578.1.4.png"
+    },
+    {
+      "id": "H1578.2",
+      "name": "Test Of Sex Of Man Masking As Girl: Arms Placed Among Baskets And War-Trumpet Sounded",
+      "image": "H1578.2.png"
+    },
+    {
+      "id": "H1584.2",
+      "name": "Land Measured According To Amount Encompassed During Certain Hours",
+      "image": "H1584.2.png"
+    },
+    {
+      "id": "H1594.1",
+      "name": "Foot-Race Between Fairy And Mortal",
+      "image": "H1594.1.png"
+    },
+    {
+      "id": "H171.4",
+      "name": "Man Before Whom Riderless Car Stops Chosen King",
+      "image": "H171.4.png"
+    },
+    {
+      "id": "H19.1.1",
+      "name": "Recognition Of Reincarnated Person By Ability To Identify Former Weapons",
+      "image": "H19.1.1.png"
+    },
+    {
+      "id": "H227",
+      "name": "Ordeal: Carrying Murdered Man's Blood",
+      "image": "H227.png"
+    },
+    {
+      "id": "H316",
+      "name": "Suitor Test: Apple Thrown Indicates Princess's Choice",
+      "image": "H316.png"
+    },
+    {
+      "id": "H344.1",
+      "name": "Princess To Marry Man Who Can Give Her Correct Account Of What Happened In Her Bedchamber",
+      "image": "H344.1.png"
+    },
+    {
+      "id": "H355.1",
+      "name": "Suitor Test: Finding A Cow With Silver Horns",
+      "image": "H355.1.png"
+    },
+    {
+      "id": "H388",
+      "name": "Bride Test: Wisdom (Cleverness)",
+      "image": "H388.png"
+    },
+    {
+      "id": "H41.3",
+      "name": "Test Of King (Pope): His Candle Lights Itself",
+      "image": "H41.3.png"
+    },
+    {
+      "id": "H411.11",
+      "name": "Magic Spring As Chastity Test",
+      "image": "H411.11.png"
+    },
+    {
+      "id": "H411.14",
+      "name": "Apple As Chastity Test",
+      "image": "H411.14.png"
+    },
+    {
+      "id": "H432.1",
+      "name": "Rose As Chastity Index",
+      "image": "H432.1.png"
+    },
+    {
+      "id": "H481",
+      "name": "Infant Picks Out His Unknown Father",
+      "image": "H481.png"
+    },
+    {
+      "id": "H492.2.2",
+      "name": "Husband Has Friend Woo His Wife: Seduction Narrowly Averted By Frightened Husband's Intervention",
+      "image": "H492.2.2.png"
+    },
+    {
+      "id": "H500",
+      "name": "Test Of Cleverness Or Ability",
+      "image": "H500.png"
+    },
+    {
+      "id": "H507.1.1",
+      "name": "Princess Offered To Man Who Can Defeat Her In Argument",
+      "image": "H507.1.1.png"
+    },
+    {
+      "id": "H512",
+      "name": "Guessing With Life As Wager",
+      "image": "H512.png"
+    },
+    {
+      "id": "H582.1",
+      "name": "Riddling Answer Betrays Theft",
+      "image": "H582.1.png"
+    },
+    {
+      "id": "H583.5",
+      "name": "King: What Is Your Sister Doing? Youth: She Is Mourning Last Year's Laughter",
+      "image": "H583.5.png"
+    },
+    {
+      "id": "H588.5",
+      "name": "Father's Counsel: If You Want To Gamble, Then Gamble With Experienced Gamblers",
+      "image": "H588.5.png"
+    },
+    {
+      "id": "H619.4",
+      "name": "Symbolic Interpretation Of Ineffectual Thatching Of House And Building Of Fire In Otherworld",
+      "image": "H619.4.png"
+    },
+    {
+      "id": "H631.4",
+      "name": "What Is Strongest? Woman",
+      "image": "H631.4.png"
+    },
+    {
+      "id": "H64.2",
+      "name": "Werwolf Killed And Recognized By Man's Clothes Under The Wolf's Skin Or Rosary On The Neck",
+      "image": "H64.2.png"
+    },
+    {
+      "id": "H659.7.2",
+      "name": "What Is The Greatest? A Sense Of Shame",
+      "image": "H659.7.2.png"
+    },
+    {
+      "id": "H682.3",
+      "name": "How Many Exits From Paradise? Moreno Esdras; Jewish: Neuman",
+      "image": "H682.3.png"
+    },
+    {
+      "id": "H706.1",
+      "name": "How Many Days Have Passed Since The Time Of Adam? The Seven Days Of The Week",
+      "image": "H706.1.png"
+    },
+    {
+      "id": "H726",
+      "name": "Riddle: Who Are The Real Travellers? The Son And The Moon",
+      "image": "H726.png"
+    },
+    {
+      "id": "H731",
+      "name": "Riddle Of King And Courtiers",
+      "image": "H731.png"
+    },
+    {
+      "id": "H773",
+      "name": "Riddle: Why Are There More Living Than Dead? (There Are Some Of The Dead Of Whom We Still Speak",
+      "image": "H773.png"
+    },
+    {
+      "id": "H797",
+      "name": "Riddle: What Does God Do? Anderson Ffc Xlii 200",
+      "image": "H797.png"
+    },
+    {
+      "id": "H871",
+      "name": "Riddle: What Six Things Are Not Worth Doing? (Sowing Salt, Mowing Pebbles, Drinking From An Empty Jug, Making Signs To A Blind Man, Wooing At Mealtime, Playing A Harp In A Mill",
+      "image": "H871.png"
+    },
+    {
+      "id": "H91.3",
+      "name": "Identification By Producing Three Golden Apples",
+      "image": "H91.3.png"
+    },
+    {
+      "id": "H911.1",
+      "name": "Task (Quest) Assigned At Suggestion Of Jealous Co-Wife",
+      "image": "H911.1.png"
+    },
+    {
+      "id": "H914",
+      "name": "Tasks Assigned Because Of Mother's Foolish Boasting",
+      "image": "H914.png"
+    },
+    {
+      "id": "H919.3",
+      "name": "Task Assigned At Suggestion Of Parrot",
+      "image": "H919.3.png"
+    },
+    {
+      "id": "H934",
+      "name": "Relative Assigns Tasks",
+      "image": "H934.png"
+    },
+    {
+      "id": "H941",
+      "name": "Cumulative Tasks: Second Assigned So That First Can Be Done",
+      "image": "H941.png"
+    },
+    {
+      "id": "height_shade-3",
+      "name": "Height Shade 3",
+      "image": "height_shade-3.png"
+    },
+    {
+      "id": "J1030",
+      "name": "Self-Dependence",
+      "image": "J1030.png"
+    },
+    {
+      "id": "J1062",
+      "name": "Cure Yourself Before Doctoring Others",
+      "image": "J1062.png"
+    },
+    {
+      "id": "J1085.1",
+      "name": "The Happy Friar Becomes Unhappier As He Receives Ever More And More Money",
+      "image": "J1085.1.png"
+    },
+    {
+      "id": "J1175",
+      "name": "Judgments Concerning Arson",
+      "image": "J1175.png"
+    },
+    {
+      "id": "J1176.4",
+      "name": "A Two-Headed Man Is Only One Man",
+      "image": "J1176.4.png"
+    },
+    {
+      "id": "J1182.1",
+      "name": "To Be Beaten By Deceiver Of Husband",
+      "image": "J1182.1.png"
+    },
+    {
+      "id": "J1211.2.1",
+      "name": "The Drunken Officer's Stolen Mantle",
+      "image": "J1211.2.1.png"
+    },
+    {
+      "id": "J1224",
+      "name": "Poet Puts Others Out Of Countenance",
+      "image": "J1224.png"
+    },
+    {
+      "id": "J1241.3",
+      "name": "Dividing Three Fish Among Two Men",
+      "image": "J1241.3.png"
+    },
+    {
+      "id": "J1264.5",
+      "name": "Youth Says He Is Associating With A Pious Person",
+      "image": "J1264.5.png"
+    },
+    {
+      "id": "J1293",
+      "name": "Reductio Ad Absurdum Of Proposal",
+      "image": "J1293.png"
+    },
+    {
+      "id": "J1317",
+      "name": "Small Jug Preferred",
+      "image": "J1317.png"
+    },
+    {
+      "id": "J1319.1",
+      "name": "Man Says: \"I Do Love My Enemies And I Have Great Affection For Them That Hurt Me",
+      "image": "J1319.1.png"
+    },
+    {
+      "id": "J133",
+      "name": "Animal Gives Wise Example To Man",
+      "image": "J133.png"
+    },
+    {
+      "id": "J1330",
+      "name": "Repartee Concerning Beggars",
+      "image": "J1330.png"
+    },
+    {
+      "id": "J1341.4",
+      "name": "Two Eggs",
+      "image": "J1341.4.png"
+    },
+    {
+      "id": "J1441",
+      "name": "God Of The Earth",
+      "image": "J1441.png"
+    },
+    {
+      "id": "J1442",
+      "name": "A Cynic's Retorts",
+      "image": "J1442.png"
+    },
+    {
+      "id": "J1442.1.1",
+      "name": "Cynic Praises Power Of Reason",
+      "image": "J1442.1.1.png"
+    },
+    {
+      "id": "J1451",
+      "name": "Who Gets The Beehive",
+      "image": "J1451.png"
+    },
+    {
+      "id": "J1472",
+      "name": "The Fairest Thing In The Garden",
+      "image": "J1472.png"
+    },
+    {
+      "id": "J1475",
+      "name": "Is Ready To Go",
+      "image": "J1475.png"
+    },
+    {
+      "id": "J1486",
+      "name": "Listening To The Debate",
+      "image": "J1486.png"
+    },
+    {
+      "id": "J1511.13",
+      "name": "Oisin's Poor Diet In Patrick's House -- Pancake Size Of Ivy Leaf, Measure Of Butter Only Size Of Rowan Berry",
+      "image": "J1511.13.png"
+    },
+    {
+      "id": "J1511.8",
+      "name": "Forbidden To Think",
+      "image": "J1511.8.png"
+    },
+    {
+      "id": "J1531",
+      "name": "Borrower's Absurdities",
+      "image": "J1531.png"
+    },
+    {
+      "id": "J1531.1",
+      "name": "The Transformed Golden Pumpkin",
+      "image": "J1531.1.png"
+    },
+    {
+      "id": "J1539.2",
+      "name": "Scholar Given Third Egg",
+      "image": "J1539.2.png"
+    },
+    {
+      "id": "J157.0.1",
+      "name": "Deity Appears In Dream And Gives Instructions Or Advice",
+      "image": "J157.0.1.png"
+    },
+    {
+      "id": "J1582",
+      "name": "Base Money In The Offering",
+      "image": "J1582.png"
+    },
+    {
+      "id": "J1625",
+      "name": "Armies Like Seeds And Peppercorns",
+      "image": "J1625.png"
+    },
+    {
+      "id": "J1655.2",
+      "name": "Valuable Rubies Baked In Bread",
+      "image": "J1655.2.png"
+    },
+    {
+      "id": "J171.2.3",
+      "name": "King Questions Six Doctors: What Do You Like Best Of All On Earth? That All Evil And Hypocrisy Will Have An End",
+      "image": "J171.2.3.png"
+    },
+    {
+      "id": "J1732.3",
+      "name": "Woman Is Unacquainted With Tea, Serves The Boiled Leaves With Butter",
+      "image": "J1732.3.png"
+    },
+    {
+      "id": "J1759.3",
+      "name": "Numskull Thinks Fireflies Are Mosquitoes Carrying Lanterns To Find Victims",
+      "image": "J1759.3.png"
+    },
+    {
+      "id": "J1762.2",
+      "name": "Bear On Haywagon (On Horse) Thought To Be The Preacher",
+      "image": "J1762.2.png"
+    },
+    {
+      "id": "J1772.1.2",
+      "name": "Potatoes Mistaken For \"Irregular Eggs\", Or \"Eggs Of The Earth",
+      "image": "J1772.1.2.png"
+    },
+    {
+      "id": "J1805.2.1",
+      "name": "Daughter Says \"Sobur\" (Wait) To Her Father When He Asks What To Bring From The Journey",
+      "image": "J1805.2.1.png"
+    },
+    {
+      "id": "J181",
+      "name": "The Years Not Counted",
+      "image": "J181.png"
+    },
+    {
+      "id": "J1813.2.1",
+      "name": "Numskull Thinks His Prayers Have Stopped Milk Boiling Over",
+      "image": "J1813.2.1.png"
+    },
+    {
+      "id": "J1820",
+      "name": "Inappropriate Action From Misunderstanding",
+      "image": "J1820.png"
+    },
+    {
+      "id": "J1826",
+      "name": "The Falcon Not So Good As Represented",
+      "image": "J1826.png"
+    },
+    {
+      "id": "J1842.3",
+      "name": "Bird Protruding From King's Stomach Cut Out With Swords: King Killed",
+      "image": "J1842.3.png"
+    },
+    {
+      "id": "J1904.2.1",
+      "name": "Fools Try To Hedge The Cuckoo So That They Will Have Summer The Year Round (The Coming Of The First Cuckoo Being The Sign Of The Coming Summer)",
+      "image": "J1904.2.1.png"
+    },
+    {
+      "id": "J1920",
+      "name": "Absurd Searches For The Lost",
+      "image": "J1920.png"
+    },
+    {
+      "id": "J2025.2",
+      "name": "Woman Cannot Find Pastry Which Is Sticking To Her Posterior",
+      "image": "J2025.2.png"
+    },
+    {
+      "id": "J2072.2",
+      "name": "Short-Sighted Wish: Grain To Grow Without Beards",
+      "image": "J2072.2.png"
+    },
+    {
+      "id": "J2083.6",
+      "name": "Selling More Yards Of Goods For The Money Than They Received",
+      "image": "J2083.6.png"
+    },
+    {
+      "id": "J2093",
+      "name": "Valuables Given Away Or Sold For Trifle",
+      "image": "J2093.png"
+    },
+    {
+      "id": "J21.2",
+      "name": "\"Do Not Act When Angry\": Counsel Proved Wise By Experience",
+      "image": "J21.2.png"
+    },
+    {
+      "id": "J2102.2",
+      "name": "Snake Rids Himself Of Wasps: He Lets Himself Be Run Over By A Cart Wheel Along With Them",
+      "image": "J2102.2.png"
+    },
+    {
+      "id": "J2102.5",
+      "name": "Burning The Wasp Nest",
+      "image": "J2102.5.png"
+    },
+    {
+      "id": "J2132",
+      "name": "Numskull Dragged",
+      "image": "J2132.png"
+    },
+    {
+      "id": "J2174.4",
+      "name": "Hang Me Right Away So I Can Get Back To Work",
+      "image": "J2174.4.png"
+    },
+    {
+      "id": "J2183.6.1",
+      "name": "Whose Duty To Put Out Fire? Officers Investigate; Meanwhile Fire Burns Town",
+      "image": "J2183.6.1.png"
+    },
+    {
+      "id": "J2211",
+      "name": "Differences In Animal Nature Overlooked",
+      "image": "J2211.png"
+    },
+    {
+      "id": "J2214.10",
+      "name": "Starving Colt Fierce From Hunger, But Fool Refuses To Feed It Lest It Become Fiercer",
+      "image": "J2214.10.png"
+    },
+    {
+      "id": "J2214.3.3",
+      "name": "Waiting For The Thieves To Return For Invoice Of Goods Stolen",
+      "image": "J2214.3.3.png"
+    },
+    {
+      "id": "J2215.2",
+      "name": "The Servant Of God Beaten",
+      "image": "J2215.2.png"
+    },
+    {
+      "id": "J2243",
+      "name": "Fool Sleeps So As To Avoid Idleness",
+      "image": "J2243.png"
+    },
+    {
+      "id": "J2287",
+      "name": "Belief That Island May Be Towed By Ships To New Location",
+      "image": "J2287.png"
+    },
+    {
+      "id": "J229.2",
+      "name": "Sheep And Ignorant Shearer",
+      "image": "J229.2.png"
+    },
+    {
+      "id": "J2311.7",
+      "name": "Cold Hands And Feet For The Dead Man",
+      "image": "J2311.7.png"
+    },
+    {
+      "id": "J2314",
+      "name": "Layman Made To Believe That He Is A Monk",
+      "image": "J2314.png"
+    },
+    {
+      "id": "J2326.1",
+      "name": "Foolish Woman Gives Swindler Money For Her Parents In Heaven",
+      "image": "J2326.1.png"
+    },
+    {
+      "id": "J2347",
+      "name": "Occupational Tricks On New Employees",
+      "image": "J2347.png"
+    },
+    {
+      "id": "J2364",
+      "name": "Incognito Mistress Breaks Off Relations When She Overhears The Lover Discussing The Adventure",
+      "image": "J2364.png"
+    },
+    {
+      "id": "J2375",
+      "name": "Curiosity Satisfied: Riding The Ox's Horns",
+      "image": "J2375.png"
+    },
+    {
+      "id": "J2412.2",
+      "name": "Pulling Out The Eye So That The Pain Will Cease",
+      "image": "J2412.2.png"
+    },
+    {
+      "id": "J2464",
+      "name": "The Servant To Improve On The Master's Statements",
+      "image": "J2464.png"
+    },
+    {
+      "id": "J2465.10",
+      "name": "\"Collect Goats Under Tree",
+      "image": "J2465.10.png"
+    },
+    {
+      "id": "J2489.2",
+      "name": "\"Keep Locks Of Everyone In Your Hand\" (Keep Control Of Them)",
+      "image": "J2489.2.png"
+    },
+    {
+      "id": "J2499.2",
+      "name": "Not Naked But With A Hood On",
+      "image": "J2499.2.png"
+    },
+    {
+      "id": "J2661.1",
+      "name": "The Fool Accidentally Kills His Child And Loses The Body",
+      "image": "J2661.1.png"
+    },
+    {
+      "id": "J391.1",
+      "name": "Lamb Chooses Her Foster-Mother, The She-Goat",
+      "image": "J391.1.png"
+    },
+    {
+      "id": "J410",
+      "name": "Association Of Equals And Of Unequals",
+      "image": "J410.png"
+    },
+    {
+      "id": "J482.2.1",
+      "name": "Better To Marry A Man Lacking Money Than Money Lacking A Man",
+      "image": "J482.2.1.png"
+    },
+    {
+      "id": "J483",
+      "name": "Choice: To Do That Which One Knows Or To Learn Something",
+      "image": "J483.png"
+    },
+    {
+      "id": "J512.11",
+      "name": "Camel And Jackal Exchange Food: Camel Is Led By His Good Friend To Thorny Fruit And Thorn Sticks In His Throat",
+      "image": "J512.11.png"
+    },
+    {
+      "id": "J553",
+      "name": "Intemperance In Work",
+      "image": "J553.png"
+    },
+    {
+      "id": "J561.1",
+      "name": "Man Tracking Gorilla Sees Animal's Strength",
+      "image": "J561.1.png"
+    },
+    {
+      "id": "J62",
+      "name": "Observation Of Dying People For A Year Takes Man's Thoughts From Lust",
+      "image": "J62.png"
+    },
+    {
+      "id": "J954.2",
+      "name": "Fox Claims That Certain Statues Are Of His Ancestors",
+      "image": "J954.2.png"
+    },
+    {
+      "id": "J957",
+      "name": "Presumptuous Man Before The Works Of Michelangelo Says: \"I Too Am A Master\"",
+      "image": "J957.png"
+    },
+    {
+      "id": "J99.2",
+      "name": "Father Bequeathes Four Pots To Sons: Eldest Finds Earth In His; Second, Bones; Third, Rice Husks; Youngest, Rupees (Eldest To Get Land; Second, Cattle; Third, Grain; Youngest To Keep Money)",
+      "image": "J99.2.png"
+    },
+    {
+      "id": "K1012",
+      "name": "Making The Dupe Strong",
+      "image": "K1012.png"
+    },
+    {
+      "id": "K1013.5",
+      "name": "False Hair-Restorer Injures Patient",
+      "image": "K1013.5.png"
+    },
+    {
+      "id": "K1020",
+      "name": "Deception Into Disastrous Attempt To Procure Food",
+      "image": "K1020.png"
+    },
+    {
+      "id": "K1023.3",
+      "name": "Dupe Persuaded To Sit On Ant Hole",
+      "image": "K1023.3.png"
+    },
+    {
+      "id": "K1025.2",
+      "name": "Tiger Persuaded To Eat Own Eyes",
+      "image": "K1025.2.png"
+    },
+    {
+      "id": "K1081.3",
+      "name": "Blind Men Duped Into Fighting: Strings Leading To Water Removed",
+      "image": "K1081.3.png"
+    },
+    {
+      "id": "K1116",
+      "name": "Dupe Induced To Sit On Sharp Stones (Concealed As Soft Seat)",
+      "image": "K1116.png"
+    },
+    {
+      "id": "K112.2.1",
+      "name": "Alleged Soup-Making Pot Sold",
+      "image": "K112.2.1.png"
+    },
+    {
+      "id": "K115.1.2",
+      "name": "Pseudo-Magic Letter Is Found To Contain Insulting Remarks",
+      "image": "K115.1.2.png"
+    },
+    {
+      "id": "K1178",
+      "name": "Sheep Makes Fox Believe That The Hunter Is A Priest, The Dog His Servant, Etc Lithuanian: Balys Index 140*",
+      "image": "K1178.png"
+    },
+    {
+      "id": "K1182",
+      "name": "Rat Leaves Serpent Behind, Through Spared To Rescue Him",
+      "image": "K1182.png"
+    },
+    {
+      "id": "K1218.6",
+      "name": "Importunate Lover Beaten And Sent On Street Bearing Humiliating Placard",
+      "image": "K1218.6.png"
+    },
+    {
+      "id": "K122",
+      "name": "Sale Of Gilded Mudcakes",
+      "image": "K122.png"
+    },
+    {
+      "id": "K1227.4",
+      "name": "Girl Asks Undesired Lover To Take Off His Boots",
+      "image": "K1227.4.png"
+    },
+    {
+      "id": "K1317.10",
+      "name": "Devil Comes To Rendezvous Instead Of Woman's Lover",
+      "image": "K1317.10.png"
+    },
+    {
+      "id": "K1317.3",
+      "name": "Vengeful Paramours Send Syphilitic Man To Substitute In Woman's Bed",
+      "image": "K1317.3.png"
+    },
+    {
+      "id": "K1349.10",
+      "name": "Admission To Woman's Room By Means Of Cap Of Invisibility",
+      "image": "K1349.10.png"
+    },
+    {
+      "id": "K1349.9",
+      "name": "Trickster Pretends To Seek Lost Ball By Woman's Bed: Seduces Her",
+      "image": "K1349.9.png"
+    },
+    {
+      "id": "K1397",
+      "name": "Lucretia Seduced Through Threat",
+      "image": "K1397.png"
+    },
+    {
+      "id": "K1424",
+      "name": "Clearing Out Manure: Digs Hole",
+      "image": "K1424.png"
+    },
+    {
+      "id": "K1500",
+      "name": "Deception Connected With Adultery",
+      "image": "K1500.png"
+    },
+    {
+      "id": "K1501.2",
+      "name": "Cuckold Feigns To Be Asleep When Paramour Calls",
+      "image": "K1501.2.png"
+    },
+    {
+      "id": "K1510.2",
+      "name": "Wife Of Philanderer Gets Revenge By Having An Affair Herself",
+      "image": "K1510.2.png"
+    },
+    {
+      "id": "K1563",
+      "name": "Husband (God) Traps Wife And Paramour With Magic Armor",
+      "image": "K1563.png"
+    },
+    {
+      "id": "K1569",
+      "name": "Husband Outwits Wife And Paramour -- Miscellaneous Motifs",
+      "image": "K1569.png"
+    },
+    {
+      "id": "K1616.1",
+      "name": "Marooned Egg-Gatherer",
+      "image": "K1616.1.png"
+    },
+    {
+      "id": "K1682.1",
+      "name": "\"Big 'Fraid And Little 'Fraid",
+      "image": "K1682.1.png"
+    },
+    {
+      "id": "K1736",
+      "name": "Troll Bluffed Away From Christening",
+      "image": "K1736.png"
+    },
+    {
+      "id": "K1741.2.1",
+      "name": "Bluff: Told To Bring Home An Ox, Hero Prepares To Bring Home Ten",
+      "image": "K1741.2.1.png"
+    },
+    {
+      "id": "K1816",
+      "name": "Disguise As Menial",
+      "image": "K1816.png"
+    },
+    {
+      "id": "K1816.9.1",
+      "name": "Wise Men Disguise As Peasants",
+      "image": "K1816.9.1.png"
+    },
+    {
+      "id": "K1826.1",
+      "name": "Disguise As Monk",
+      "image": "K1826.1.png"
+    },
+    {
+      "id": "K1826.1.1",
+      "name": "Lover Disguised As Monk Or Friar Meets Sweetheart",
+      "image": "K1826.1.1.png"
+    },
+    {
+      "id": "K185.2",
+      "name": "Deceptive Land Purchase: As Much Land As Vishnu Can Lie Upon (Or Can Step Over In Three Steps)",
+      "image": "K185.2.png"
+    },
+    {
+      "id": "K185.7",
+      "name": "Deceptive Land Purchase: As Much Land As Can Be Surrounded In A Certain Time",
+      "image": "K185.7.png"
+    },
+    {
+      "id": "K1851.1",
+      "name": "Forged Letter: God Of Death Replaced By Another",
+      "image": "K1851.1.png"
+    },
+    {
+      "id": "K1886.3",
+      "name": "Mock Sunrise",
+      "image": "K1886.3.png"
+    },
+    {
+      "id": "K1911.1.5",
+      "name": "Old Woman Substituted For Bride In Bridegroom's Bed",
+      "image": "K1911.1.5.png"
+    },
+    {
+      "id": "K1950",
+      "name": "Sham Prowess",
+      "image": "K1950.png"
+    },
+    {
+      "id": "K1955.3",
+      "name": "Sham Physician Predicts The Sex Of The Unborn Child",
+      "image": "K1955.3.png"
+    },
+    {
+      "id": "K2058.1",
+      "name": "Apparently Pious Man (Sadhu) A Thief",
+      "image": "K2058.1.png"
+    },
+    {
+      "id": "K2128",
+      "name": "Slander: Prince Is Bastard",
+      "image": "K2128.png"
+    },
+    {
+      "id": "K2141",
+      "name": "Jealous Courtiers Shake King Lion's Confidence In His Councillor, The Virtuous Jackal, By Accusing The Jackal Of Stealing The Lion's Food",
+      "image": "K2141.png"
+    },
+    {
+      "id": "K2152.1",
+      "name": "Dead Dog Set Up So That Woman Knocks It Over",
+      "image": "K2152.1.png"
+    },
+    {
+      "id": "K2155.2",
+      "name": "Slanderers Kill A Woman And Put Her Body Near Buddha's Cell",
+      "image": "K2155.2.png"
+    },
+    {
+      "id": "K2213.3.2.2",
+      "name": "Wife Plots To Kill Her Husband, But Her Paramour Answers That He Could Never Touch Murderess",
+      "image": "K2213.3.2.2.png"
+    },
+    {
+      "id": "K2213.4.2",
+      "name": "Noah's Secret Betrayed By His Wife",
+      "image": "K2213.4.2.png"
+    },
+    {
+      "id": "K231.3",
+      "name": "Refusal To Make Sacrifice After Need Is Past",
+      "image": "K231.3.png"
+    },
+    {
+      "id": "K231.3.5",
+      "name": "Sick Man Offers Deity 100 Bulls For Recovery",
+      "image": "K231.3.5.png"
+    },
+    {
+      "id": "K2353",
+      "name": "Treasure Cast Down Crushes Besiegers",
+      "image": "K2353.png"
+    },
+    {
+      "id": "K2368.2",
+      "name": "Sounds Of Mock Battle Scare Away Attacking Force",
+      "image": "K2368.2.png"
+    },
+    {
+      "id": "K262",
+      "name": "The Priest Made Sick Of His Bargain: Three Words At The Grave",
+      "image": "K262.png"
+    },
+    {
+      "id": "K3",
+      "name": "Substitute In Contest",
+      "image": "K3.png"
+    },
+    {
+      "id": "K301.1",
+      "name": "Youth Learns Robbery As A Trade: Boasts Of It",
+      "image": "K301.1.png"
+    },
+    {
+      "id": "K331.2.2",
+      "name": "Guards Fatigued By Trickster So That They Sleep While Goods Are Stolen",
+      "image": "K331.2.2.png"
+    },
+    {
+      "id": "K334",
+      "name": "Owner Gives Up Goods Through Flattery",
+      "image": "K334.png"
+    },
+    {
+      "id": "K335.1.8",
+      "name": "Robbers Frightened From Goods By Man In Tar And Feathers",
+      "image": "K335.1.8.png"
+    },
+    {
+      "id": "K345",
+      "name": "Sympathetic Helper Robbed",
+      "image": "K345.png"
+    },
+    {
+      "id": "K405.3",
+      "name": "Thief Successfully Claims That Stolen Image Has Been Given Him By The Saint Himself",
+      "image": "K405.3.png"
+    },
+    {
+      "id": "K434.2",
+      "name": "Disguised Robber In Night-Lodging Tries To Pull Up Confederate On Rope: Princess Discovers Him And Catches Him",
+      "image": "K434.2.png"
+    },
+    {
+      "id": "K437.3",
+      "name": "Sausage As Revolver",
+      "image": "K437.3.png"
+    },
+    {
+      "id": "K444.1",
+      "name": "Egg As Reward Of Appropriate Saying",
+      "image": "K444.1.png"
+    },
+    {
+      "id": "K455.2",
+      "name": "Supper Won By Disguising As An Invited Guest",
+      "image": "K455.2.png"
+    },
+    {
+      "id": "K455.4",
+      "name": "The Other Man To Pay The Bill",
+      "image": "K455.4.png"
+    },
+    {
+      "id": "K47.1",
+      "name": "Sewing Contest Won By Deception: The Long Thread",
+      "image": "K47.1.png"
+    },
+    {
+      "id": "K476.7",
+      "name": "Woman Gives Friend Dried Comb While She Herself Eats The Honey",
+      "image": "K476.7.png"
+    },
+    {
+      "id": "K499",
+      "name": "Additional Cheats",
+      "image": "K499.png"
+    },
+    {
+      "id": "K521.1.3",
+      "name": "Escape In Monkey-Skin",
+      "image": "K521.1.3.png"
+    },
+    {
+      "id": "K521.4.5",
+      "name": "Adulteress Escapes Prison Disguised As An Old Woman",
+      "image": "K521.4.5.png"
+    },
+    {
+      "id": "K521.5",
+      "name": "Escape In Huge Pumpkin Shell",
+      "image": "K521.5.png"
+    },
+    {
+      "id": "K521.6",
+      "name": "Abbot Escapes From His Paramour's Husband In Disguise Of Priest",
+      "image": "K521.6.png"
+    },
+    {
+      "id": "K522.0.1",
+      "name": "Death Feigned To Escape Unwelcome Marriage",
+      "image": "K522.0.1.png"
+    },
+    {
+      "id": "K522.4.1",
+      "name": "Trout Pretends To Be Dead",
+      "image": "K522.4.1.png"
+    },
+    {
+      "id": "K525.3",
+      "name": "Object Substituted For Murdered Person So As To Allay Suspicion",
+      "image": "K525.3.png"
+    },
+    {
+      "id": "K53",
+      "name": "Deceptive Contest In Fasting",
+      "image": "K53.png"
+    },
+    {
+      "id": "K551.18",
+      "name": "Respite From Death Granted Until Wolf Reads Horse's Passport",
+      "image": "K551.18.png"
+    },
+    {
+      "id": "K555.1",
+      "name": "Respite From Death Gained By Long-Drawn-Out Speech",
+      "image": "K555.1.png"
+    },
+    {
+      "id": "K561.2",
+      "name": "Sheep Persuade The Wolf To Sing",
+      "image": "K561.2.png"
+    },
+    {
+      "id": "K584",
+      "name": "Throwing The Thief Over The Fence",
+      "image": "K584.png"
+    },
+    {
+      "id": "K611.1",
+      "name": "Escape By Pretended Lousing",
+      "image": "K611.1.png"
+    },
+    {
+      "id": "K629.2",
+      "name": "Guardian Enticed Away",
+      "image": "K629.2.png"
+    },
+    {
+      "id": "K641",
+      "name": "One Animal Saves Another By Frightening Enemy Away",
+      "image": "K641.png"
+    },
+    {
+      "id": "K715",
+      "name": "Deception Into Allowing Oneself To Be Hanged",
+      "image": "K715.png"
+    },
+    {
+      "id": "K725",
+      "name": "Dupe Lured Away From Protection Of Friends: Captured",
+      "image": "K725.png"
+    },
+    {
+      "id": "K730.4",
+      "name": "Tortoise Leads Elephant Down Wrong Trail Into Trap",
+      "image": "K730.4.png"
+    },
+    {
+      "id": "K730.5",
+      "name": "Birds Led Into Trap By Promise Of A Feast",
+      "image": "K730.5.png"
+    },
+    {
+      "id": "K737.1",
+      "name": "Dupe Lured Into Hole And Entrance Closed",
+      "image": "K737.1.png"
+    },
+    {
+      "id": "K762",
+      "name": "Stranger Asks Woman For Fire: Abducts Her",
+      "image": "K762.png"
+    },
+    {
+      "id": "K782",
+      "name": "Capture By Lying In Wait In Enemy's Haunt",
+      "image": "K782.png"
+    },
+    {
+      "id": "K812.3",
+      "name": "Monkey Lures Tiger Into Tree-Top And Sets Fire To It",
+      "image": "K812.3.png"
+    },
+    {
+      "id": "K815.9",
+      "name": "Tiger Flatters Cow Into Showing That She Has Few Teeth",
+      "image": "K815.9.png"
+    },
+    {
+      "id": "K82.1",
+      "name": "Deceptive Drinking Contest: Hole For Water",
+      "image": "K82.1.png"
+    },
+    {
+      "id": "K839",
+      "name": "Fatal Deception Into Trickster's Power -- Miscellaneous",
+      "image": "K839.png"
+    },
+    {
+      "id": "K840",
+      "name": "Deception Into Fatal Substitution",
+      "image": "K840.png"
+    },
+    {
+      "id": "K854",
+      "name": "Fatal Game: Throwing From Cliff",
+      "image": "K854.png"
+    },
+    {
+      "id": "K940.1",
+      "name": "Man Betrayed Into Eating His Own Children",
+      "image": "K940.1.png"
+    },
+    {
+      "id": "K957.1",
+      "name": "Killing By Throwing Hot Salt Into Eyes",
+      "image": "K957.1.png"
+    },
+    {
+      "id": "K959.2.3",
+      "name": "Man Murdered At His Wife's Side",
+      "image": "K959.2.3.png"
+    },
+    {
+      "id": "K961.2.1",
+      "name": "Brain Of Snake Said To Be Only Cure For Monkey's Disease",
+      "image": "K961.2.1.png"
+    },
+    {
+      "id": "L11",
+      "name": "Fortunate Youngest Son",
+      "image": "L11.png"
+    },
+    {
+      "id": "L121",
+      "name": "Stupid Hero",
+      "image": "L121.png"
+    },
+    {
+      "id": "L123.1",
+      "name": "Penniless Hero",
+      "image": "L123.1.png"
+    },
+    {
+      "id": "L142.2",
+      "name": "Pupil Surpasses Magician",
+      "image": "L142.2.png"
+    },
+    {
+      "id": "L311",
+      "name": "Weak (Small) Hero Overcomes Large Fighter",
+      "image": "L311.png"
+    },
+    {
+      "id": "L412",
+      "name": "Rich Man Made Poor To Punish Pride",
+      "image": "L412.png"
+    },
+    {
+      "id": "L421",
+      "name": "Attempt To Fly To Heaven Punished",
+      "image": "L421.png"
+    },
+    {
+      "id": "M114.4",
+      "name": "Swearing On Sacred Relics",
+      "image": "M114.4.png"
+    },
+    {
+      "id": "M151.5",
+      "name": "Vow Not To Eat Or Sleep Until Certain Event Is Brought To Pass",
+      "image": "M151.5.png"
+    },
+    {
+      "id": "M164",
+      "name": "Bard Vows That None Of His Profession Will Make A Request Of Any Man",
+      "image": "M164.png"
+    },
+    {
+      "id": "M183",
+      "name": "Religious Vows",
+      "image": "M183.png"
+    },
+    {
+      "id": "M183.3",
+      "name": "Vow To Find Holy Grail Before Returning To Round Table",
+      "image": "M183.3.png"
+    },
+    {
+      "id": "M193",
+      "name": "Vow To Destroy Kingdom By Austerities",
+      "image": "M193.png"
+    },
+    {
+      "id": "M231",
+      "name": "Free Keep In Inn Exchanged For Good Story",
+      "image": "M231.png"
+    },
+    {
+      "id": "M241",
+      "name": "Bargain: To Divide All Winnings",
+      "image": "M241.png"
+    },
+    {
+      "id": "M263",
+      "name": "Retreat In Return For Cessation Of Attack",
+      "image": "M263.png"
+    },
+    {
+      "id": "M301.7.1",
+      "name": "Moses As Prophet",
+      "image": "M301.7.1.png"
+    },
+    {
+      "id": "M311.1",
+      "name": "Prophecy: King's Grandson Will Dethrone Him",
+      "image": "M311.1.png"
+    },
+    {
+      "id": "M312.3.2",
+      "name": "Whoever Eats Outside Of Fruit Will Become A King And Whoever Eats The Seed Will Drop Gems From His Mouth Every Time He Laughs",
+      "image": "M312.3.2.png"
+    },
+    {
+      "id": "M341.1.1.3",
+      "name": "Prophecy Of Death Upon Daughter's Marriage",
+      "image": "M341.1.1.3.png"
+    },
+    {
+      "id": "M341.1.2.2",
+      "name": "Prophecy Of Death On Twelfth Day After Birth",
+      "image": "M341.1.2.2.png"
+    },
+    {
+      "id": "M341.1.4.5",
+      "name": "Prophecy: Death At Sixty",
+      "image": "M341.1.4.5.png"
+    },
+    {
+      "id": "M341.1.6.2",
+      "name": "Prophecy: Death After Two Life Spans",
+      "image": "M341.1.6.2.png"
+    },
+    {
+      "id": "M341.2.19",
+      "name": "Prophecy: Death At Hands Of Certain Person",
+      "image": "M341.2.19.png"
+    },
+    {
+      "id": "M341.3.2",
+      "name": "Prophecy: Death Between Erin And Alba",
+      "image": "M341.3.2.png"
+    },
+    {
+      "id": "M343.5",
+      "name": "Prophecy: Death At Hands Of Parents",
+      "image": "M343.5.png"
+    },
+    {
+      "id": "M356.5",
+      "name": "Prophecy: End Of Round Table For Arthur's Knights",
+      "image": "M356.5.png"
+    },
+    {
+      "id": "M357.1",
+      "name": "Prophecy: Fiery Bolt From A Dragon To Kill World Population",
+      "image": "M357.1.png"
+    },
+    {
+      "id": "M364.2",
+      "name": "Prophecy: Remission Of Tax Through Endeavor Of Saint",
+      "image": "M364.2.png"
+    },
+    {
+      "id": "M364.3.1",
+      "name": "Prophecy: Sinners Going To Heaven Are To Be Numbered By Hairs In Saint's Chasuble",
+      "image": "M364.3.1.png"
+    },
+    {
+      "id": "M376",
+      "name": "God Swallows His Pregnant Wife To Prevent Birth Of Son Whom He Fears",
+      "image": "M376.png"
+    },
+    {
+      "id": "M403",
+      "name": "Curse Of Everlasting Terror",
+      "image": "M403.png"
+    },
+    {
+      "id": "M411.4",
+      "name": "Man Pursued By Hatred Of The Gods",
+      "image": "M411.4.png"
+    },
+    {
+      "id": "M414.2",
+      "name": "Goddess Cursed",
+      "image": "M414.2.png"
+    },
+    {
+      "id": "M437.1",
+      "name": "Curse: \"What I Carry May You Carry; What You Carry May I Carry",
+      "image": "M437.1.png"
+    },
+    {
+      "id": "M451.1",
+      "name": "Death By Suicide",
+      "image": "M451.1.png"
+    },
+    {
+      "id": "M453",
+      "name": "Curse: Corpse To Be Put In Three Different Places After Person's Death",
+      "image": "M453.png"
+    },
+    {
+      "id": "M475",
+      "name": "Curse On A City",
+      "image": "M475.png"
+    },
+    {
+      "id": "mandalaw",
+      "name": "Mandalaw",
+      "image": "mandalaw.jpeg"
+    },
+    {
+      "id": "N111.2.3",
+      "name": "Fortuna Half White, Half Black",
+      "image": "N111.2.3.png"
+    },
+    {
+      "id": "N111.3.1",
+      "name": "Fortune's Wheel Turned By Dead King In Mountain",
+      "image": "N111.3.1.png"
+    },
+    {
+      "id": "N127",
+      "name": "The Auspicious (Lucky) Day (Days)",
+      "image": "N127.png"
+    },
+    {
+      "id": "N127.4",
+      "name": "Friday As Auspicious Day",
+      "image": "N127.4.png"
+    },
+    {
+      "id": "N171",
+      "name": "Unprotected Son Makes Fortune; Protected Son Has Bad Luck",
+      "image": "N171.png"
+    },
+    {
+      "id": "N211.1.2",
+      "name": "Key (To Fetters) Found In Fish",
+      "image": "N211.1.2.png"
+    },
+    {
+      "id": "N255.6",
+      "name": "Old Man Burns Self With Gunpowder, And Then Burns Himself Worse When He Pours Hot Water Over His Body",
+      "image": "N255.6.png"
+    },
+    {
+      "id": "N317",
+      "name": "Separation Of Family By Shipwreck",
+      "image": "N317.png"
+    },
+    {
+      "id": "N335.6",
+      "name": "Series Of Accidental Animal Killings",
+      "image": "N335.6.png"
+    },
+    {
+      "id": "N365.1.1",
+      "name": "Man Unwittingly Falls In Love With His Own Mother",
+      "image": "N365.1.1.png"
+    },
+    {
+      "id": "N392.1",
+      "name": "Escaping Prisoner Falls By Accident Onto Tiger's Back And Is Carried Away",
+      "image": "N392.1.png"
+    },
+    {
+      "id": "N511.1.10",
+      "name": "Treasure Buried Under Flower",
+      "image": "N511.1.10.png"
+    },
+    {
+      "id": "N511.1.12",
+      "name": "Treasure Buried On Island",
+      "image": "N511.1.12.png"
+    },
+    {
+      "id": "N511.2",
+      "name": "Natural Underground Treasure",
+      "image": "N511.2.png"
+    },
+    {
+      "id": "N538.2",
+      "name": "Treasure From Defeated Giant",
+      "image": "N538.2.png"
+    },
+    {
+      "id": "N541.3",
+      "name": "Treasure Found On Hallowe'en",
+      "image": "N541.3.png"
+    },
+    {
+      "id": "N543.1",
+      "name": "Treasure To Be Found By Hand That Hid It",
+      "image": "N543.1.png"
+    },
+    {
+      "id": "N611.4",
+      "name": "Thief Hears Owner Of House Singing \"Bore And Throw Out The Earth\" And Thinks Himself Detected",
+      "image": "N611.4.png"
+    },
+    {
+      "id": "N684",
+      "name": "Naked Soldier Becomes General",
+      "image": "N684.png"
+    },
+    {
+      "id": "N695",
+      "name": "Passengers On A Boat Are Terrorized By A Cutthroat",
+      "image": "N695.png"
+    },
+    {
+      "id": "N733.3",
+      "name": "Joseph And His Brethren",
+      "image": "N733.3.png"
+    },
+    {
+      "id": "N800",
+      "name": "Helpers",
+      "image": "N800.png"
+    },
+    {
+      "id": "N819.2.1",
+      "name": "Transformed Mother As Helper",
+      "image": "N819.2.1.png"
+    },
+    {
+      "id": "P16.3.1",
+      "name": "Old King Attacked",
+      "image": "P16.3.1.png"
+    },
+    {
+      "id": "P17.0.1",
+      "name": "No Sons Left To Rule After Father",
+      "image": "P17.0.1.png"
+    },
+    {
+      "id": "P17.10",
+      "name": "Three Sons Each Get A Kingship, But The Youngest The Most Important In The Home Country",
+      "image": "P17.10.png"
+    },
+    {
+      "id": "P178",
+      "name": "Slaves Freed",
+      "image": "P178.png"
+    },
+    {
+      "id": "P19.1",
+      "name": "King's Presence Necessary For Army's Victory",
+      "image": "P19.1.png"
+    },
+    {
+      "id": "P19.2.1",
+      "name": "King Abducts Woman To Be His Paramour",
+      "image": "P19.2.1.png"
+    },
+    {
+      "id": "P192.1",
+      "name": "Professional Fool",
+      "image": "P192.1.png"
+    },
+    {
+      "id": "P201",
+      "name": "Inherent Enmity Between Members Of A Family",
+      "image": "P201.png"
+    },
+    {
+      "id": "P23",
+      "name": "Queen Persuades King To Make War Without Cause That Her Sons May Have Territory",
+      "image": "P23.png"
+    },
+    {
+      "id": "P253.6",
+      "name": "Sister Warns Brothers",
+      "image": "P253.6.png"
+    },
+    {
+      "id": "P310.5",
+      "name": "Defeated Enemy Turns True Friend",
+      "image": "P310.5.png"
+    },
+    {
+      "id": "P313.1",
+      "name": "Friendship Starts At Babyhood: Two Babies Exchanged",
+      "image": "P313.1.png"
+    },
+    {
+      "id": "P321",
+      "name": "Salt Of Hospitality",
+      "image": "P321.png"
+    },
+    {
+      "id": "P412.3",
+      "name": "Hero As Rabbit-Herd",
+      "image": "P412.3.png"
+    },
+    {
+      "id": "P454",
+      "name": "Hatter",
+      "image": "P454.png"
+    },
+    {
+      "id": "P50.1",
+      "name": "Earl",
+      "image": "P50.1.png"
+    },
+    {
+      "id": "P557.4.3",
+      "name": "Choice Of Weapons Alternates Each Succeeding Day",
+      "image": "P557.4.3.png"
+    },
+    {
+      "id": "P557.5",
+      "name": "Warrior Disgraced By Slaying Of Those Under His Protection",
+      "image": "P557.5.png"
+    },
+    {
+      "id": "P613",
+      "name": "Charon's Fee: Putting Coin In Dead Person's Mouth To Pay For Ferry Across Styx",
+      "image": "P613.png"
+    },
+    {
+      "id": "P623.0.2",
+      "name": "Fasting Against The Devil",
+      "image": "P623.0.2.png"
+    },
+    {
+      "id": "P94",
+      "name": "Garment Must Be Removed In Presence Of Certain High Chiefs",
+      "image": "P94.png"
+    },
+    {
+      "id": "Q141.2",
+      "name": "Plentiful Game Animals (Fish) As Reward",
+      "image": "Q141.2.png"
+    },
+    {
+      "id": "Q174.1.1.2",
+      "name": "God Grants To Saint The Boon That No One Buried In Any Of His Churches Shall Go To Hell",
+      "image": "Q174.1.1.2.png"
+    },
+    {
+      "id": "Q211.9.2",
+      "name": "Punishment For Killing Foster Brother",
+      "image": "Q211.9.2.png"
+    },
+    {
+      "id": "Q221.2",
+      "name": "Punishment For Opposition To Christ At Crucifixion",
+      "image": "Q221.2.png"
+    },
+    {
+      "id": "Q222",
+      "name": "Punishment For Desecration Of Holy Places (Images, Etc) (Cf",
+      "image": "Q222.png"
+    },
+    {
+      "id": "Q232.1",
+      "name": "Pagan Punished By Fellows For Conversion To Christianity",
+      "image": "Q232.1.png"
+    },
+    {
+      "id": "Q243.2.1",
+      "name": "Attempted Seduction Punished",
+      "image": "Q243.2.1.png"
+    },
+    {
+      "id": "Q255",
+      "name": "Punishment Of Woman Who Prefers Mortal Lover To Gods",
+      "image": "Q255.png"
+    },
+    {
+      "id": "Q256",
+      "name": "Punishment For Clandestine Lover Of Princess",
+      "image": "Q256.png"
+    },
+    {
+      "id": "Q272.3",
+      "name": "Avaricious Miser Tries To Eat His Adored Money And Chokes To Death",
+      "image": "Q272.3.png"
+    },
+    {
+      "id": "Q292.3",
+      "name": "Abuse Of Hospitality Punished",
+      "image": "Q292.3.png"
+    },
+    {
+      "id": "Q322",
+      "name": "Dirtiness Punished",
+      "image": "Q322.png"
+    },
+    {
+      "id": "Q331.1",
+      "name": "Devil Torments Old Man Who Has Laid Aside His Humility",
+      "image": "Q331.1.png"
+    },
+    {
+      "id": "Q416.2.1",
+      "name": "Punishment: Drawing At The Tails Of Horses",
+      "image": "Q416.2.1.png"
+    },
+    {
+      "id": "Q42.1.1.1",
+      "name": "Reward For Giving Last Loaf",
+      "image": "Q42.1.1.1.png"
+    },
+    {
+      "id": "Q431.2.1",
+      "name": "Elder Brothers Banished For Treachery",
+      "image": "Q431.2.1.png"
+    },
+    {
+      "id": "Q438",
+      "name": "Punishment: Abandonment In Forest",
+      "image": "Q438.png"
+    },
+    {
+      "id": "Q45.1",
+      "name": "Angels Entertained Unawares",
+      "image": "Q45.1.png"
+    },
+    {
+      "id": "Q45.4",
+      "name": "Revenge Given Up As Reward For Hospitality",
+      "image": "Q45.4.png"
+    },
+    {
+      "id": "Q451.0.2",
+      "name": "Threat To Cut Off Hand Or Foot",
+      "image": "Q451.0.2.png"
+    },
+    {
+      "id": "Q451.0.4",
+      "name": "Hands And Feet Cut Off As Punishment For Robbery",
+      "image": "Q451.0.4.png"
+    },
+    {
+      "id": "Q451.1.2",
+      "name": "Hand Cut Off For Contempt Of Court",
+      "image": "Q451.1.2.png"
+    },
+    {
+      "id": "Q451.5.1.1",
+      "name": "Mistress's Nose Cut Off As Punishment For Faithlessness",
+      "image": "Q451.5.1.1.png"
+    },
+    {
+      "id": "Q451.7.2.1",
+      "name": "Blinding (Of Father) As Punishment For Ravisher",
+      "image": "Q451.7.2.1.png"
+    },
+    {
+      "id": "Q452",
+      "name": "Punishment: Snake Sucks Woman's Breasts",
+      "image": "Q452.png"
+    },
+    {
+      "id": "Q461.1",
+      "name": "Impalement As Punishment For Faithlessness",
+      "image": "Q461.1.png"
+    },
+    {
+      "id": "Q467",
+      "name": "Punishment By Drowning",
+      "image": "Q467.png"
+    },
+    {
+      "id": "Q469.3",
+      "name": "Punishment: Grinding Up In A Mill",
+      "image": "Q469.3.png"
+    },
+    {
+      "id": "Q482.2.1",
+      "name": "Queen Forced To Do Menial Service Rescued By Son",
+      "image": "Q482.2.1.png"
+    },
+    {
+      "id": "Q497.1",
+      "name": "Moustache Pulled Out As Punishment",
+      "image": "Q497.1.png"
+    },
+    {
+      "id": "Q5.2",
+      "name": "Lazy Owl Punished; Industrious Hummingbird Rewarded",
+      "image": "Q5.2.png"
+    },
+    {
+      "id": "Q511",
+      "name": "Punishment: Carrying Corpse Of Murdered Man",
+      "image": "Q511.png"
+    },
+    {
+      "id": "Q523.5",
+      "name": "Penance: Planting Garden And Offering Free Hospitality To All",
+      "image": "Q523.5.png"
+    },
+    {
+      "id": "Q524.2",
+      "name": "Penance: Lying The First Night With Every Corpse Brought To Certain Church",
+      "image": "Q524.2.png"
+    },
+    {
+      "id": "Q53",
+      "name": "Reward For Rescue",
+      "image": "Q53.png"
+    },
+    {
+      "id": "Q544",
+      "name": "Penance: Being Locked In Cellar (Well) With Key Thrown Into Water",
+      "image": "Q544.png"
+    },
+    {
+      "id": "Q551.5.1.1",
+      "name": "Punishment: Man Reborn As Girl",
+      "image": "Q551.5.1.1.png"
+    },
+    {
+      "id": "Q551.6.7",
+      "name": "Magic Sickness (Death) As Punishment For Inhospitality",
+      "image": "Q551.6.7.png"
+    },
+    {
+      "id": "Q552.14.5",
+      "name": "Hail As Punishment",
+      "image": "Q552.14.5.png"
+    },
+    {
+      "id": "Q552.2.2",
+      "name": "Grave Sinks So That Grave-Robbers Cannot Get Out",
+      "image": "Q552.2.2.png"
+    },
+    {
+      "id": "Q552.3.1",
+      "name": "Famine As Punishment",
+      "image": "Q552.3.1.png"
+    },
+    {
+      "id": "Q552.3.2",
+      "name": "Famine As Punishment For Oppression By Victors",
+      "image": "Q552.3.2.png"
+    },
+    {
+      "id": "Q558.9.1",
+      "name": "Mysterious Death Of Son As Punishment For Murder",
+      "image": "Q558.9.1.png"
+    },
+    {
+      "id": "Q582.4",
+      "name": "Man Dies From Drop Of Blood Of Pet Hound He Has Killed",
+      "image": "Q582.4.png"
+    },
+    {
+      "id": "R13.2.1",
+      "name": "Girl Carried Off By Ram",
+      "image": "R13.2.1.png"
+    },
+    {
+      "id": "R169.7",
+      "name": "Royal Minister Rescues Abandoned Queen(S)",
+      "image": "R169.7.png"
+    },
+    {
+      "id": "R227.3",
+      "name": "Supernatural Wife Finds Garment Stolen From Her By Husband And Leaves Him",
+      "image": "R227.3.png"
+    },
+    {
+      "id": "R243.1",
+      "name": "Pursuer Misdirected By Animal To Help Fugitive",
+      "image": "R243.1.png"
+    },
+    {
+      "id": "R260",
+      "name": "Pursuits",
+      "image": "R260.png"
+    },
+    {
+      "id": "R311.4",
+      "name": "Stretcing Tree Refuge For Fugitive",
+      "image": "R311.4.png"
+    },
+    {
+      "id": "R345",
+      "name": "Cities Of Refuge",
+      "image": "R345.png"
+    },
+    {
+      "id": "R4",
+      "name": "Surprise Capture",
+      "image": "R4.png"
+    },
+    {
+      "id": "R41.6",
+      "name": "Captivity In A Pillar",
+      "image": "R41.6.png"
+    },
+    {
+      "id": "R75",
+      "name": "Surrendering",
+      "image": "R75.png"
+    },
+    {
+      "id": "R75.2.1",
+      "name": "Warriors Flee After Chief's Death",
+      "image": "R75.2.1.png"
+    },
+    {
+      "id": "S0",
+      "name": "Cruel Relatives",
+      "image": "S0.png"
+    },
+    {
+      "id": "S111.6",
+      "name": "Murder With Poisoned Robe",
+      "image": "S111.6.png"
+    },
+    {
+      "id": "S111.9",
+      "name": "Murder By Placing A Poisoned Fingernail On Step",
+      "image": "S111.9.png"
+    },
+    {
+      "id": "S12.2.2",
+      "name": "Mother Throws Children Into Fire",
+      "image": "S12.2.2.png"
+    },
+    {
+      "id": "S141.3",
+      "name": "Exposure Astride A Log Of Wood Floated Down River",
+      "image": "S141.3.png"
+    },
+    {
+      "id": "S162.1",
+      "name": "Fighting On Stumps Of Legs After They Have Been Cut Off At Knee",
+      "image": "S162.1.png"
+    },
+    {
+      "id": "S210",
+      "name": "Children Sold Or Promised",
+      "image": "S210.png"
+    },
+    {
+      "id": "S222",
+      "name": "Man Promises (Sells) Child In Order To Save Himself From Danger Or Death",
+      "image": "S222.png"
+    },
+    {
+      "id": "S227",
+      "name": "Child Promised To Devil In Exchange For A Good Catch Of Fish",
+      "image": "S227.png"
+    },
+    {
+      "id": "S245",
+      "name": "Child Unwittingly Promised: What Is Born On Your Farm",
+      "image": "S245.png"
+    },
+    {
+      "id": "S25",
+      "name": "Cruel Grandson",
+      "image": "S25.png"
+    },
+    {
+      "id": "S252",
+      "name": "Vain Attempt To Save Promised Child",
+      "image": "S252.png"
+    },
+    {
+      "id": "S313",
+      "name": "Child Of Supernatural Birth Exposed",
+      "image": "S313.png"
+    },
+    {
+      "id": "S321.1",
+      "name": "Children Abandoned In Famine",
+      "image": "S321.1.png"
+    },
+    {
+      "id": "S322.1.1",
+      "name": "Father Who Wanted Son Exposes (Murders) Daughter",
+      "image": "S322.1.1.png"
+    },
+    {
+      "id": "S375",
+      "name": "Old Woman's Maledictions Inform Abandoned Hero Of His Parentage And Future",
+      "image": "S375.png"
+    },
+    {
+      "id": "sigil_Blossom_Causes_Horns_Fatal_Game__Throwing_1749340487",
+      "name": "Sigil Blossom Causes Horns Fatal Game  Throwing 1749340487",
+      "image": "sigil_Blossom_Causes_Horns_Fatal_Game__Throwing_1749340487.png"
+    },
+    {
+      "id": "sigil_Fiery_Temple_In_Othe_1749340223",
+      "name": "Sigil Fiery Temple In Othe 1749340223",
+      "image": "sigil_Fiery_Temple_In_Othe_1749340223.png"
+    },
+    {
+      "id": "sigil_Ghost_Cannot_Harm_Pe_Goddess_Cursed_Where_Baboon_Got_Tai_1749341169",
+      "name": "Sigil Ghost Cannot Harm Pe Goddess Cursed Where Baboon Got Tai 1749341169",
+      "image": "sigil_Ghost_Cannot_Harm_Pe_Goddess_Cursed_Where_Baboon_Got_Tai_1749341169.png"
+    },
+    {
+      "id": "sigil_Giant_Destroyed_By_A_Formerly_Men_Plowed__Curse_Of_Everlasting_1749343628",
+      "name": "Sigil Giant Destroyed By A Formerly Men Plowed  Curse Of Everlasting 1749343628",
+      "image": "sigil_Giant_Destroyed_By_A_Formerly_Men_Plowed__Curse_Of_Everlasting_1749343628.png"
+    },
+    {
+      "id": "sigil_Lazy_Owl_Punished__I_Vexed_Woman_Brings_P_1749340758",
+      "name": "Sigil Lazy Owl Punished  I Vexed Woman Brings P 1749340758",
+      "image": "sigil_Lazy_Owl_Punished__I_Vexed_Woman_Brings_P_1749340758.png"
+    },
+    {
+      "id": "sigil_Magic_Thieving_Objec_The_Lazy_Servant_And_Treasure-Hog_1749341971",
+      "name": "Sigil Magic Thieving Objec The Lazy Servant And Treasure Hog 1749341971",
+      "image": "sigil_Magic_Thieving_Objec_The_Lazy_Servant_And_Treasure-Hog_1749341971.png"
+    },
+    {
+      "id": "sigil_Magic_Transportation_Fakir_As_Helper_On_Q_1749343059",
+      "name": "Sigil Magic Transportation Fakir As Helper On Q 1749343059",
+      "image": "sigil_Magic_Transportation_Fakir_As_Helper_On_Q_1749343059.png"
+    },
+    {
+      "id": "sigil_Magic_Wishing-Bag_Extraordinary_Firewo_1749342725",
+      "name": "Sigil Magic Wishing Bag Extraordinary Firewo 1749342725",
+      "image": "sigil_Magic_Wishing-Bag_Extraordinary_Firewo_1749342725.png"
+    },
+    {
+      "id": "sigil_Person_Who_Never_Sai_Symbolic_Color__Red_Divine_Animal_Visits_1749341545",
+      "name": "Sigil Person Who Never Sai Symbolic Color  Red Divine Animal Visits 1749341545",
+      "image": "sigil_Person_Who_Never_Sai_Symbolic_Color__Red_Divine_Animal_Visits_1749341545.png"
+    },
+    {
+      "id": "sigil_Punishment_For_Desec_Serpent_Reduces_Man__1749340173",
+      "name": "Sigil Punishment For Desec Serpent Reduces Man  1749340173",
+      "image": "sigil_Punishment_For_Desec_Serpent_Reduces_Man__1749340173.png"
+    },
+    {
+      "id": "sigil_Quest_For_Sword_Of_L_Pilgrimage_To_Jerusa_1749340889",
+      "name": "Sigil Quest For Sword Of L Pilgrimage To Jerusa 1749340889",
+      "image": "sigil_Quest_For_Sword_Of_L_Pilgrimage_To_Jerusa_1749340889.png"
+    },
+    {
+      "id": "sigil_Rose_As_Chastity_Ind_Origin_Of_Cockroach__Culture_Hero_Has_Mar_1749341077",
+      "name": "Sigil Rose As Chastity Ind Origin Of Cockroach  Culture Hero Has Mar 1749341077",
+      "image": "sigil_Rose_As_Chastity_Ind_Origin_Of_Cockroach__Culture_Hero_Has_Mar_1749341077.png"
+    },
+    {
+      "id": "sigil_Serpent_Reduces_Man__Fiery_Temple_In_Othe_1749340257",
+      "name": "Sigil Serpent Reduces Man  Fiery Temple In Othe 1749340257",
+      "image": "sigil_Serpent_Reduces_Man__Fiery_Temple_In_Othe_1749340257.png"
+    },
+    {
+      "id": "sigil_The_Over-Hasty_Toad__1749342153",
+      "name": "Sigil The Over Hasty Toad  1749342153",
+      "image": "sigil_The_Over-Hasty_Toad__1749342153.png"
+    },
+    {
+      "id": "sigil_Widow_S__Of_Ogre_s_V_Thrown_Cane_Becomes__Repartee_Concerning__1749342449",
+      "name": "Sigil Widow S  Of Ogre S V Thrown Cane Becomes  Repartee Concerning  1749342449",
+      "image": "sigil_Widow_S__Of_Ogre_s_V_Thrown_Cane_Becomes__Repartee_Concerning__1749342449.png"
+    },
+    {
+      "id": "T113",
+      "name": "Marriage To Man Alive By Night But Dead By Day",
+      "image": "T113.png"
+    },
+    {
+      "id": "T117.1",
+      "name": "Marriage Of Girl To A Dagger",
+      "image": "T117.1.png"
+    },
+    {
+      "id": "T117.7",
+      "name": "Marriage To A Gourd",
+      "image": "T117.7.png"
+    },
+    {
+      "id": "T121",
+      "name": "Unequal Marriage",
+      "image": "T121.png"
+    },
+    {
+      "id": "T121.8.1",
+      "name": "Infertile Raja Marries Beggar Woman In Hope Of Having A Son",
+      "image": "T121.8.1.png"
+    },
+    {
+      "id": "T135.6",
+      "name": "Marriage By Drinking Festival",
+      "image": "T135.6.png"
+    },
+    {
+      "id": "T155",
+      "name": "Old Beggar Transforms Wedding Party Into Wolves",
+      "image": "T155.png"
+    },
+    {
+      "id": "T165.5",
+      "name": "Three Years Asked Before Consummation Of Marriage As Trick",
+      "image": "T165.5.png"
+    },
+    {
+      "id": "T215.5",
+      "name": "Fugitive Returns To His Family So That They May Collect Reward From His Capture",
+      "image": "T215.5.png"
+    },
+    {
+      "id": "T217",
+      "name": "Wife Refuses To Become Unfaithful Although She Knows Her Husband To Be So",
+      "image": "T217.png"
+    },
+    {
+      "id": "T231.2",
+      "name": "Faithless Widow Fans Husband's Grave",
+      "image": "T231.2.png"
+    },
+    {
+      "id": "T232.5",
+      "name": "Faithless Wife Pays Her Paramour For Enjoying Herself With Him",
+      "image": "T232.5.png"
+    },
+    {
+      "id": "T25",
+      "name": "Miraculous Healing From A Passionate Love",
+      "image": "T25.png"
+    },
+    {
+      "id": "T251.1.1",
+      "name": "Belfagor",
+      "image": "T251.1.1.png"
+    },
+    {
+      "id": "T252.7",
+      "name": "Vexed Woman Brings Pot Down On Husband's Head In Presence Of Guest",
+      "image": "T252.7.png"
+    },
+    {
+      "id": "T254.6.1",
+      "name": "Wife Refuses To Bring Husband Warm Water: Is Beaten",
+      "image": "T254.6.1.png"
+    },
+    {
+      "id": "T287",
+      "name": "Why Separation Of A Good Woman From A Bad Man Is A Benefit",
+      "image": "T287.png"
+    },
+    {
+      "id": "T327.3",
+      "name": "Saint Plucks Out Her Eye When Urged To Marry",
+      "image": "T327.3.png"
+    },
+    {
+      "id": "T327.5",
+      "name": "Woman Raises Sores On Her Body To Preserve Chastity",
+      "image": "T327.5.png"
+    },
+    {
+      "id": "T333",
+      "name": "Man Mutilates Himself To Remove Temptation",
+      "image": "T333.png"
+    },
+    {
+      "id": "T333.3",
+      "name": "Man Disfigures His Face To Remove Temptation",
+      "image": "T333.3.png"
+    },
+    {
+      "id": "T337",
+      "name": "Woman Wagers That She Can Seduce Anchorite",
+      "image": "T337.png"
+    },
+    {
+      "id": "T37.0.1",
+      "name": "\"Poisoned\" Woman Revives",
+      "image": "T37.0.1.png"
+    },
+    {
+      "id": "T462.1",
+      "name": "Lesbian Love: Women Give Birth To Monsters As Result",
+      "image": "T462.1.png"
+    },
+    {
+      "id": "T471.0.1",
+      "name": "Fines Imposed For Rape",
+      "image": "T471.0.1.png"
+    },
+    {
+      "id": "T513.1",
+      "name": "Conception Through Another's Wish",
+      "image": "T513.1.png"
+    },
+    {
+      "id": "T541",
+      "name": "Birth From Unusual Part Of Person's Body",
+      "image": "T541.png"
+    },
+    {
+      "id": "T549.2",
+      "name": "Thrown Cane Becomes Child",
+      "image": "T549.2.png"
+    },
+    {
+      "id": "T572.2.1",
+      "name": "Abortion By Vomiting Up Embryo",
+      "image": "T572.2.1.png"
+    },
+    {
+      "id": "T580",
+      "name": "Childbirth",
+      "image": "T580.png"
+    },
+    {
+      "id": "T585.3",
+      "name": "Infant Born Blind Immediately Drowns Self",
+      "image": "T585.3.png"
+    },
+    {
+      "id": "T61.5.3",
+      "name": "Unborn Children Promised In Marriage To Each Other",
+      "image": "T61.5.3.png"
+    },
+    {
+      "id": "T615.2",
+      "name": "Women Old From Their Birth",
+      "image": "T615.2.png"
+    },
+    {
+      "id": "T615.3",
+      "name": "Precocious Wisdom",
+      "image": "T615.3.png"
+    },
+    {
+      "id": "T617.1",
+      "name": "Future Hero As Child Isolated From World Kills Increasingly Larger Game With Superior Weapons",
+      "image": "T617.1.png"
+    },
+    {
+      "id": "T676.1",
+      "name": "Childless Woman Adopts A Serpent (Transformed Man)",
+      "image": "T676.1.png"
+    },
+    {
+      "id": "T85.1",
+      "name": "Woman Thinking Lover Dead Erects Cenotaph And Mourns Before It",
+      "image": "T85.1.png"
+    },
+    {
+      "id": "T91.3.3",
+      "name": "God Enamored Of Mortal",
+      "image": "T91.3.3.png"
+    },
+    {
+      "id": "U137",
+      "name": "Mill Horse When Taken To War Keeps Going In A Circle, As He Has Learned In The Mill",
+      "image": "U137.png"
+    },
+    {
+      "id": "U149.1",
+      "name": "Lions Despise What Asses Admire (Braying)",
+      "image": "U149.1.png"
+    },
+    {
+      "id": "U25",
+      "name": "Theft To Avoid Starvation Forgiven",
+      "image": "U25.png"
+    },
+    {
+      "id": "V1.4.1",
+      "name": "Worship Of The Sky",
+      "image": "V1.4.1.png"
+    },
+    {
+      "id": "V111",
+      "name": "Churches",
+      "image": "V111.png"
+    },
+    {
+      "id": "V115.4",
+      "name": "What Church Bells Say",
+      "image": "V115.4.png"
+    },
+    {
+      "id": "V123.1",
+      "name": "God Under Compulsion: Suppliant Threatens To Mutilate (Crush) Holy Image If His Wish Is Not Fulfilled",
+      "image": "V123.1.png"
+    },
+    {
+      "id": "V132",
+      "name": "Holy Water",
+      "image": "V132.png"
+    },
+    {
+      "id": "V132.2.1",
+      "name": "Holy Water Removes Mark Placed On Man's Face By The Devil",
+      "image": "V132.2.1.png"
+    },
+    {
+      "id": "V144.1",
+      "name": "Sacred Relics Carried In Battle To Aid Victory",
+      "image": "V144.1.png"
+    },
+    {
+      "id": "V210",
+      "name": "Religious Founders",
+      "image": "V210.png"
+    },
+    {
+      "id": "V211.1.1",
+      "name": "Air Fragrant At Nativity",
+      "image": "V211.1.1.png"
+    },
+    {
+      "id": "V211.7.3",
+      "name": "The Three Bolts Left On Hell By Christ",
+      "image": "V211.7.3.png"
+    },
+    {
+      "id": "V221.0.2.1",
+      "name": "Crippled Saint Miraculously Receives Horse And Chariot",
+      "image": "V221.0.2.1.png"
+    },
+    {
+      "id": "V228",
+      "name": "Immunities Of Saints (Holy Men)",
+      "image": "V228.png"
+    },
+    {
+      "id": "V229.2.3",
+      "name": "Saint Will Drink Only Milk Of Cow Milked By Faithful Woman",
+      "image": "V229.2.3.png"
+    },
+    {
+      "id": "V246",
+      "name": "Angel Counsels Mortal",
+      "image": "V246.png"
+    },
+    {
+      "id": "V25",
+      "name": "Easy Confession Not Effective",
+      "image": "V25.png"
+    },
+    {
+      "id": "V277",
+      "name": "Virgin Mary Appears To Devotee",
+      "image": "V277.png"
+    },
+    {
+      "id": "V277.1",
+      "name": "Virgin Mary Appears To Devout Nun With Infant Jesus",
+      "image": "V277.1.png"
+    },
+    {
+      "id": "V31",
+      "name": "Unconsecrated Host",
+      "image": "V31.png"
+    },
+    {
+      "id": "V32",
+      "name": "Host Miraculously Given When It Is Refused A Man By The Priest",
+      "image": "V32.png"
+    },
+    {
+      "id": "V332",
+      "name": "Baptism Of Heathen",
+      "image": "V332.png"
+    },
+    {
+      "id": "V346",
+      "name": "Skeptic Kicked By Sacrificial Animal",
+      "image": "V346.png"
+    },
+    {
+      "id": "V362",
+      "name": "Plague From Jews' Poisoning Wells",
+      "image": "V362.png"
+    },
+    {
+      "id": "V416.1",
+      "name": "Man Convicted Of Cheating At His Bookkeeping Is Excused When It Is Learned That He Has Given The Money To The Poor",
+      "image": "V416.1.png"
+    },
+    {
+      "id": "V434",
+      "name": "Conqueror Restores Kingship To King For Charity",
+      "image": "V434.png"
+    },
+    {
+      "id": "V461.6",
+      "name": "Monk Lives Where People Speak Ill Of Him To Avoid Danger Of Flattery",
+      "image": "V461.6.png"
+    },
+    {
+      "id": "V462.4.1",
+      "name": "Asceticism: Cleric Practices Continual Genuflexion",
+      "image": "V462.4.1.png"
+    },
+    {
+      "id": "V462.5",
+      "name": "Ascetic Cleric Tortures His Flesh",
+      "image": "V462.5.png"
+    },
+    {
+      "id": "V462.9",
+      "name": "Ascetic Cleric Leads Mendicant Life",
+      "image": "V462.9.png"
+    },
+    {
+      "id": "V5",
+      "name": "Negligence In Religious Exercise",
+      "image": "V5.png"
+    },
+    {
+      "id": "V5.1",
+      "name": "Virgin Mary Reproves A Monk Who Sleeps At Altar",
+      "image": "V5.1.png"
+    },
+    {
+      "id": "V510",
+      "name": "Religious Visions",
+      "image": "V510.png"
+    },
+    {
+      "id": "V52.15",
+      "name": "Prayer Said By Saint Into His Right Hand Restores Displaced Eye Of Opponent",
+      "image": "V52.15.png"
+    },
+    {
+      "id": "V535",
+      "name": "Pilgrimage To Jerusalem",
+      "image": "V535.png"
+    },
+    {
+      "id": "V57.3",
+      "name": "Prayer On Special Occasions",
+      "image": "V57.3.png"
+    },
+    {
+      "id": "V61.2",
+      "name": "Dead Burned On Pyre",
+      "image": "V61.2.png"
+    },
+    {
+      "id": "V63",
+      "name": "Bones Of Dismembered Person Assembled And Buried",
+      "image": "V63.png"
+    },
+    {
+      "id": "V65",
+      "name": "Commemoration Of Death",
+      "image": "V65.png"
+    },
+    {
+      "id": "V68.1",
+      "name": "Dead Washed (In River)",
+      "image": "V68.1.png"
+    },
+    {
+      "id": "V86.7",
+      "name": "The Seven Significances Of The Sign Of The Cross",
+      "image": "V86.7.png"
+    },
+    {
+      "id": "W11.5.10",
+      "name": "Champion Grants Requested Boon Of Safe Convoy To His Enemies",
+      "image": "W11.5.10.png"
+    },
+    {
+      "id": "W111.1.1.4",
+      "name": "Three Lazy Beggars Burn Alive Rather Than Run Away From Burning Castle",
+      "image": "W111.1.1.4.png"
+    },
+    {
+      "id": "W111.2.4",
+      "name": "Boy To See Whether It Is Raining: Calls Dog (Cat) In And Feels Of His Paws",
+      "image": "W111.2.4.png"
+    },
+    {
+      "id": "W121",
+      "name": "Cowardice",
+      "image": "W121.png"
+    },
+    {
+      "id": "W121.2.4",
+      "name": "Dogs Tear Up Lion Skin: Fear Living Lion",
+      "image": "W121.2.4.png"
+    },
+    {
+      "id": "W121.7",
+      "name": "Cowardly Bridegroom Flees Elephant And Loses Bride",
+      "image": "W121.7.png"
+    },
+    {
+      "id": "W121.8",
+      "name": "Illness From Fear",
+      "image": "W121.8.png"
+    },
+    {
+      "id": "W123",
+      "name": "Indecision",
+      "image": "W123.png"
+    },
+    {
+      "id": "W151.0.1",
+      "name": "Cauldron Of Greed",
+      "image": "W151.0.1.png"
+    },
+    {
+      "id": "W154.14",
+      "name": "Woman Who Saves Suitor From Death Is Later Condemned To Die By The Ingrate",
+      "image": "W154.14.png"
+    },
+    {
+      "id": "W165.1",
+      "name": "Humble Man After Speaking To King Disdains His Own Family",
+      "image": "W165.1.png"
+    },
+    {
+      "id": "W181.1",
+      "name": "Sheep Jealous Of Dog Because He Does Nothing",
+      "image": "W181.1.png"
+    },
+    {
+      "id": "W185.5",
+      "name": "Violence Of Judge's Temper Leads Him To Have Men Given Death Sentence Unjustly",
+      "image": "W185.5.png"
+    },
+    {
+      "id": "W215.2",
+      "name": "Refusal To Fight Wounded Enemy",
+      "image": "W215.2.png"
+    },
+    {
+      "id": "W28",
+      "name": "Self-Sacrifice",
+      "image": "W28.png"
+    },
+    {
+      "id": "W31",
+      "name": "Obedience",
+      "image": "W31.png"
+    },
+    {
+      "id": "W37.0.1",
+      "name": "Man Never Breaks His Word",
+      "image": "W37.0.1.png"
+    },
+    {
+      "id": "X1082.1",
+      "name": "Lie: Remarkable Sawmill Operator",
+      "image": "X1082.1.png"
+    },
+    {
+      "id": "X1201",
+      "name": "Lie: The Great Animal",
+      "image": "X1201.png"
+    },
+    {
+      "id": "X1211",
+      "name": "Lies About Cats",
+      "image": "X1211.png"
+    },
+    {
+      "id": "X1215.4",
+      "name": "Lie: Weak Dog",
+      "image": "X1215.4.png"
+    },
+    {
+      "id": "X123.1",
+      "name": "Blind Man Reaches His Home Hanging On Ox's Tail (Or In Other Ridiculous Situation)",
+      "image": "X123.1.png"
+    },
+    {
+      "id": "X1233",
+      "name": "Lie: Extraordinary Hog",
+      "image": "X1233.png"
+    },
+    {
+      "id": "X128",
+      "name": "Blind Man In Awkward Position Pretends To See",
+      "image": "X128.png"
+    },
+    {
+      "id": "X1523.2",
+      "name": "Lies About Farming On Steep Mountain",
+      "image": "X1523.2.png"
+    },
+    {
+      "id": "X1743.2",
+      "name": "Lie: Two Bullocks Go Where One Cannot",
+      "image": "X1743.2.png"
+    },
+    {
+      "id": "X1755",
+      "name": "Lies About Watches",
+      "image": "X1755.png"
+    },
+    {
+      "id": "X1761.2",
+      "name": "Lie: People Eat The Bungholes From Barrels",
+      "image": "X1761.2.png"
+    },
+    {
+      "id": "X1788",
+      "name": "Lie: The Realistic Painting",
+      "image": "X1788.png"
+    },
+    {
+      "id": "X1862",
+      "name": "The Over-Hasty Toad (Beetle)",
+      "image": "X1862.png"
+    },
+    {
+      "id": "X300",
+      "name": "Humor Dealing With Professions",
+      "image": "X300.png"
+    },
+    {
+      "id": "X31.2",
+      "name": "Pig Licks Sleeping Man's Lips: Man Thinks He Is Being Kissed",
+      "image": "X31.2.png"
+    },
+    {
+      "id": "X314",
+      "name": "Lawyer Who Tries To Practice Without Lying Fails",
+      "image": "X314.png"
+    },
+    {
+      "id": "X410",
+      "name": "Jokes On Parsons",
+      "image": "X410.png"
+    },
+    {
+      "id": "X411.1",
+      "name": "Sexton's Dog Steals Sausage From Parson's Pocket: Parson Flees",
+      "image": "X411.1.png"
+    },
+    {
+      "id": "X512",
+      "name": "Usurers Do Not Reply",
+      "image": "X512.png"
+    },
+    {
+      "id": "X651",
+      "name": "Battle Between Lice Of Strassburg And Of Hungary",
+      "image": "X651.png"
+    },
+    {
+      "id": "Z10.1",
+      "name": "Beginning Formulas",
+      "image": "Z10.1.png"
+    },
+    {
+      "id": "Z141",
+      "name": "Symbolic Color: Red",
+      "image": "Z141.png"
+    },
+    {
+      "id": "Z157",
+      "name": "Olive Branch Symbol Of Peace",
+      "image": "Z157.png"
+    },
+    {
+      "id": "Z177",
+      "name": "Lamb As Symbol Of Christ",
+      "image": "Z177.png"
+    },
+    {
+      "id": "Z216",
+      "name": "Supernatural Origin Of Hero: Magic Conception",
+      "image": "Z216.png"
+    },
+    {
+      "id": "Z32.2",
+      "name": "The Death Of The Little Hen",
+      "image": "Z32.2.png"
+    },
+    {
+      "id": "Z39.2",
+      "name": "There Was A Wee Wee Woman Who Had A Wee Wee Cow, Etc (First Ed",
+      "image": "Z39.2.png"
+    },
+    {
+      "id": "Z39.4.2",
+      "name": "Sparrow, Where Are You Going? --To Eat Seed",
+      "image": "Z39.4.2.png"
+    },
+    {
+      "id": "Z41.9",
+      "name": "The Lazy Servant And The Grain",
+      "image": "Z41.9.png"
+    },
+    {
+      "id": "Z43.1",
+      "name": "Toad Asks Magpie In Tree To Throw Down A Chestnut",
+      "image": "Z43.1.png"
+    },
+    {
+      "id": "Z44.1",
+      "name": "The House The Old Man Was To Build",
+      "image": "Z44.1.png"
+    },
+    {
+      "id": "Z47",
+      "name": "Series Of Trick Exchanges",
+      "image": "Z47.png"
+    },
+    {
+      "id": "Z49.2",
+      "name": "Cumulative Pursuit",
+      "image": "Z49.2.png"
+    },
+    {
+      "id": "Z49.6.2",
+      "name": "Bite (Prick) Causes Series Of Accidents",
+      "image": "Z49.6.2.png"
+    },
+    {
+      "id": "Z71.16.1",
+      "name": "Formulistic Number: Eight",
+      "image": "Z71.16.1.png"
+    },
+    {
+      "id": "Z71.5.6.3",
+      "name": "Seven Ecclesiastical Orders",
+      "image": "Z71.5.6.3.png"
+    },
+    {
+      "id": "zenarnie",
+      "name": "Zenarnie",
+      "image": "zenarnie.jpg"
+    }
+  ]
+}

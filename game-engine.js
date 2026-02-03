@@ -18,8 +18,10 @@ class LenningsGameEngine {
         // Configuration
         this.resourcesPath = options.resourcesPath || 'resources';
         this.parametersPath = options.parametersPath || 'parameters.json';
+        /** Level pack path (e.g. 'levels/GlassBeadGame'). When set, loads dataset.json + images from pack */
+        this.levelPackPath = options.levelPackPath || null;
         
-        // Available resources (image + json pairs)
+        // Available resources (from level pack manifest or legacy image+json pairs)
         this.availableResources = [];
         this.playedResources = []; // Track which resources have been played this session
         
@@ -42,11 +44,13 @@ class LenningsGameEngine {
         // Event listeners
         this.eventListeners = new Map();
         
-        // Snapshot system
-        this.maxSnapshots = 3; // Number of snapshot charges per level
-        this.snapshots = []; // Array of taken snapshots
-        this.isAnimatingSnapshot = false; // True during snapshot animation
-        this.snapshotGeneration = 0; // Incremented on reset to invalidate pending operations
+        // Digest system (reconstruct from eaten pixels; used pixels are "digested" and unavailable for next)
+        this.maxDigests = 3; // Charges per level
+        this.digests = []; // Array of taken digests
+        this.isAnimatingDigest = false;
+        this.digestGeneration = 0;
+        /** Set of "x,y" keys of pixels already used in a reconstruction (digested) - excluded from next digest */
+        this.digestedPixelKeys = new Set();
         
         // Win condition checking (only used when snapshot is taken now)
         this.winCheckInterval = 15;
@@ -57,6 +61,26 @@ class LenningsGameEngine {
         // Performance metrics
         this.startTime = null;
         this.elapsedTime = 0;
+        
+        // Glass Bead Game: 7 classical colors (RGB 0-1) for spawn
+        this.classicalColors = [
+            [1, 0, 0],     // Red
+            [1, 0.5, 0],   // Orange
+            [1, 1, 0],     // Yellow
+            [0, 1, 0],     // Green
+            [0, 0, 1],     // Blue
+            [0.29, 0, 0.51],  // Indigo
+            [0.58, 0, 0.83]   // Violet
+        ];
+        this.spawnCount = 7;
+        
+        // Skills: key -> { key, label, cooldownMs, cooldownEndAt, action }
+        this.skills = new Map();
+        this.skillCooldownEnd = new Map(); // key -> timestamp
+        // Speed burst state (W skill)
+        this.speedBurstEndAt = null;
+        this.baseStepN = null;
+        this.baseResourceAttraction = null;
     }
     
     // ============================================================
@@ -129,10 +153,30 @@ class LenningsGameEngine {
             this.emit('resourcesLoaded', { resources: this.availableResources });
             
             // Default win condition (can be overridden by resource config)
-            this.winCondition = { type: 'ssim', threshold: 0.5 };
+            this.winCondition = { type: 'ssim', threshold: 0.7 };
             
             this.gameState = 'idle';
             this.emit('stateChange', { state: this.gameState });
+            
+            // Glass Bead Game skills (key-triggered, with cooldowns)
+            this.registerSkill({
+                key: 'r',
+                label: 'Respawn',
+                cooldownMs: 5000,
+                action: () => this.respawnAtRandom()
+            });
+            this.registerSkill({
+                key: 'w',
+                label: 'Speed burst',
+                cooldownMs: 3000,
+                action: () => this.startSpeedBurst()
+            });
+            this.registerSkill({
+                key: 'd',
+                label: 'Digest',
+                cooldownMs: 0,
+                action: () => this.takeDigest()
+            });
             
             return true;
         } catch (error) {
@@ -143,53 +187,77 @@ class LenningsGameEngine {
     }
     
     /**
-     * Discover available resources in the resources folder
-     * Each resource is an image file with a matching .json config
+     * Discover available resources.
+     * If levelPackPath is set: load dataset.json from that path and use motifs[] (id, name, image);
+     * images are at levelPackPath/images/<image>. No per-image json.
+     * Otherwise: legacy mode with known image+config pairs in resourcesPath.
      */
     async discoverResources() {
-        // Known resource files - in production this could be a manifest or directory listing
-        const knownResources = [
-            { image: 'zenarnie.jpg', config: 'zenarnie.json' },
-            { image: 'mandalaw.jpeg', config: 'mandalaw.json' },
-            { image: 'height_shade-3.png', config: 'height_shade-3.json' }
-        ];
-        
         this.availableResources = [];
+        let defaultSsimThreshold = 0.7;
         
-        for (const resource of knownResources) {
+        if (this.levelPackPath) {
+            // Level pack: dataset.json + images folder
             try {
-                const configResponse = await fetch(`${this.resourcesPath}/${resource.config}`);
-                if (!configResponse.ok) {
-                    console.warn(`[GameEngine] Could not load config for ${resource.image}`);
-                    continue;
+                const manifestUrl = `${this.levelPackPath}/dataset.json`;
+                const res = await fetch(manifestUrl);
+                if (!res.ok) {
+                    throw new Error(`Failed to load ${manifestUrl}: ${res.status}`);
                 }
+                const dataset = await res.json();
+                defaultSsimThreshold = dataset.ssimThreshold ?? 0.7;
+                const motifs = dataset.motifs || [];
+                const imagesBase = `${this.levelPackPath}/images`;
                 
-                const config = await configResponse.json();
-                
-                this.availableResources.push({
-                    id: resource.image.replace(/\.[^.]+$/, ''), // Remove extension for ID
-                    imagePath: `${this.resourcesPath}/${resource.image}`,
-                    configPath: `${this.resourcesPath}/${resource.config}`,
-                    config: config
-                });
-                
-                console.log(`[GameEngine] Loaded resource: ${config.name || resource.image}`);
+                for (const motif of motifs) {
+                    const id = motif.id || (motif.image && motif.image.replace(/\.[^.]+$/, '')) || String(this.availableResources.length);
+                    const name = motif.name || id;
+                    const imageFile = motif.image || `${id}.jpg`;
+                    this.availableResources.push({
+                        id,
+                        imagePath: `${imagesBase}/${imageFile}`,
+                        config: { name, ssimThreshold: motif.ssimThreshold ?? defaultSsimThreshold }
+                    });
+                }
+                console.log(`[GameEngine] Level pack "${dataset.name || this.levelPackPath}": ${this.availableResources.length} motifs`);
             } catch (error) {
-                console.warn(`[GameEngine] Failed to load resource ${resource.image}:`, error);
+                console.error('[GameEngine] Failed to load level pack:', error);
+            }
+        } else {
+            // Legacy: known image + json pairs in resources folder
+            const knownResources = [
+                { image: 'zenarnie.jpg', config: 'zenarnie.json' },
+                { image: 'mandalaw.jpeg', config: 'mandalaw.json' },
+                { image: 'height_shade-3.png', config: 'height_shade-3.json' }
+            ];
+            for (const resource of knownResources) {
+                try {
+                    const configResponse = await fetch(`${this.resourcesPath}/${resource.config}`);
+                    if (!configResponse.ok) continue;
+                    const config = await configResponse.json();
+                    this.availableResources.push({
+                        id: resource.image.replace(/\.[^.]+$/, ''),
+                        imagePath: `${this.resourcesPath}/${resource.image}`,
+                        configPath: `${this.resourcesPath}/${resource.config}`,
+                        config
+                    });
+                } catch (e) {
+                    console.warn(`[GameEngine] Failed to load resource ${resource.image}:`, e);
+                }
             }
         }
         
-        // For compatibility, create levels array from resources
-        this.levels = this.availableResources.map((res, index) => ({
+        // Build levels array for compatibility
+        this.levels = this.availableResources.map((res) => ({
             id: res.id,
             name: res.config.name || res.id,
             description: res.config.description || '',
             resourceImage: res.imagePath,
-            ssimThreshold: res.config.ssimThreshold || 0.5,
+            ssimThreshold: res.config.ssimThreshold ?? defaultSsimThreshold,
             overrides: {
                 spawn: {
-                    spawnCenter: res.config.spawnCenter || [0, 0],
-                    spawnCount: res.config.spawnCount || 5
+                    spawnCenter: (res.config.spawnCenter || [0, 0]).slice(),
+                    spawnCount: res.config.spawnCount ?? 5
                 }
             }
         }));
@@ -331,7 +399,7 @@ class LenningsGameEngine {
             name: resource.config.name || resource.id,
             description: resource.config.description || '',
             resourceImage: resource.imagePath,
-            ssimThreshold: resource.config.ssimThreshold || 0.5,
+            ssimThreshold: resource.config.ssimThreshold || 0.7,
             overrides: {
                 spawn: {
                     spawnCenter: resource.config.spawnCenter || [0, 0],
@@ -358,7 +426,7 @@ class LenningsGameEngine {
         // Set win condition from level config
         this.winCondition = { 
             type: 'ssim', 
-            threshold: level.ssimThreshold || 0.5 
+            threshold: level.ssimThreshold || 0.7 
         };
         
         // Apply level configuration
@@ -380,10 +448,12 @@ class LenningsGameEngine {
         // Reset game-specific frame counter
         this.lenia._gameReconstructionFrame = 0;
         
-        // Reset simulation with level's spawn configuration
-        const spawnCount = this.getParamValue('spawnCount') || 3;
-        const spawnCenter = this.getParamValue('spawnCenter') || [0, 0];
-        this.lenia.reset(spawnCount, spawnCenter);
+        // Reset simulation: 7 particles, classical colors, random spawn center
+        const spawnCount = this.spawnCount;
+        const spawnCenter = this.getRandomSpawnCenter();
+        this.params.spawnCenter = spawnCenter.slice();
+        this.params.spawnCount = spawnCount;
+        this.lenia.resetWithColors(spawnCount, spawnCenter, this.classicalColors);
         this.lenia.clearTrails();
         
         // Reset game metrics
@@ -393,12 +463,13 @@ class LenningsGameEngine {
         this.elapsedTime = 0;
         
         // Reset snapshot system - cancel any in-progress snapshot first
-        if (this.isAnimatingSnapshot) {
-            this.cancelSnapshot();
+        if (this.isAnimatingDigest) {
+            this.cancelDigest();
         }
-        this.snapshots = [];
-        this.isAnimatingSnapshot = false;
-        this.snapshotGeneration++; // Invalidate any pending snapshot operations
+        this.digests = [];
+        this.isAnimatingDigest = false;
+        this.digestGeneration++;
+        this.digestedPixelKeys = new Set();
         
         // Emit reset event so UI can clean up
         this.emit('levelReset', {});
@@ -407,6 +478,11 @@ class LenningsGameEngine {
         if (this.params) {
             this.params.paused = false;
         }
+        
+        // Baseline for speed-burst skill (revert to these when burst ends)
+        this.baseStepN = this.params.stepN;
+        this.baseResourceAttraction = this.lenia.U.resourceAttraction;
+        this.speedBurstEndAt = null;
         
         // Start playing
         this.gameState = 'playing';
@@ -427,7 +503,103 @@ class LenningsGameEngine {
     }
     
     /**
-     * Restart current level
+     * Random spawn center within dish (world radius). Keeps spawn away from edges.
+     */
+    getRandomSpawnCenter() {
+        const dishR = this.lenia ? this.lenia.dishR : 75;
+        const margin = dishR * 0.35;
+        const x = (Math.random() * 2 - 1) * (dishR - margin);
+        const y = (Math.random() * 2 - 1) * (dishR - margin);
+        return [x, y];
+    }
+    
+    /**
+     * Respawn: restart simulation with 7 particles at a new random location (same level, same image).
+     * Used when player is stuck. Resets snapshot charges for this level.
+     */
+    respawnAtRandom() {
+        if (!this.lenia || !this.params || this.gameState === 'idle' || this.gameState === 'loading') return false;
+        const spawnCenter = this.getRandomSpawnCenter();
+        this.params.spawnCenter = spawnCenter.slice();
+        this.params.spawnCount = this.spawnCount;
+        this.lenia.resetWithColors(this.spawnCount, spawnCenter, this.classicalColors);
+        this.lenia.clearTrails();
+        this.lenia.hardResetReconstruction();
+        this.digests = [];
+        this.isAnimatingDigest = false;
+        this.digestGeneration++;
+        this.digestedPixelKeys = new Set();
+        this.emit('levelReset', {});
+        this.emit('skillUsed', { key: 'r', name: 'respawn' });
+        return true;
+    }
+    
+    /**
+     * Register a skill (key-triggered action with optional cooldown)
+     */
+    registerSkill(config) {
+        const { key, label, cooldownMs = 0, action } = config;
+        this.skills.set(key.toLowerCase(), { key: key.toLowerCase(), label: label || key, cooldownMs, action });
+    }
+    
+    /**
+     * Check if skill is on cooldown; return remaining ms or 0
+     */
+    getSkillCooldownRemaining(key) {
+        const endAt = this.skillCooldownEnd.get(key.toLowerCase());
+        if (!endAt) return 0;
+        const remaining = endAt - Date.now();
+        return remaining > 0 ? remaining : 0;
+    }
+    
+    /**
+     * Trigger skill by key. Returns true if skill ran, false if on cooldown or not found.
+     */
+    triggerSkill(key) {
+        const k = key.toLowerCase();
+        const skill = this.skills.get(k);
+        if (!skill || !skill.action) return false;
+        if (this.getSkillCooldownRemaining(k) > 0) return false;
+        skill.action();
+        if (skill.cooldownMs > 0) {
+            this.skillCooldownEnd.set(k, Date.now() + skill.cooldownMs);
+            this.emit('skillCooldown', { key: k, label: skill.label, cooldownMs: skill.cooldownMs });
+        }
+        return true;
+    }
+    
+    /**
+     * Start speed burst: for 5s add 3 to stepN and boost resourceAttraction
+     */
+    startSpeedBurst() {
+        if (!this.params || !this.lenia) return;
+        if (this.speedBurstEndAt && Date.now() < this.speedBurstEndAt) return; // already active
+        this.baseStepN = this.baseStepN ?? this.params.stepN;
+        this.baseResourceAttraction = this.baseResourceAttraction ?? this.lenia.U.resourceAttraction;
+        const durationMs = 3000;
+        this.speedBurstEndAt = Date.now() + durationMs;
+        this.params.stepN = this.baseStepN + 3;
+        this.lenia.U.resourceAttraction = Math.min(50, this.baseResourceAttraction + 8);
+        this.emit('skillUsed', { key: 'w', name: 'speedBurst', durationMs });
+    }
+    
+    /**
+     * Update speed burst: revert when duration ends. Call each frame.
+     */
+    updateSpeedBurst() {
+        if (this.speedBurstEndAt == null) return;
+        if (Date.now() >= this.speedBurstEndAt) {
+            this.speedBurstEndAt = null;
+            if (this.params && this.baseStepN != null) this.params.stepN = this.baseStepN;
+            if (this.lenia && this.baseResourceAttraction != null) this.lenia.U.resourceAttraction = this.baseResourceAttraction;
+            this.baseStepN = null;
+            this.baseResourceAttraction = null;
+            this.emit('skillEnd', { key: 'w', name: 'speedBurst' });
+        }
+    }
+    
+    /**
+     * Restart current level (full restart, same level config)
      */
     restartLevel() {
         if (this.currentLevel) {
@@ -518,6 +690,7 @@ class LenningsGameEngine {
      * Called each frame to update game state
      */
     update() {
+        this.updateSpeedBurst();
         if (this.gameState === 'playing') {
             this.checkWinCondition();
         }
@@ -568,25 +741,22 @@ class LenningsGameEngine {
      * Get remaining snapshot charges
      */
     getRemainingCharges() {
-        return this.maxSnapshots - this.snapshots.length;
+        return this.maxDigests - this.digests.length;
     }
     
-    /**
-     * Check if player can take a snapshot
-     */
-    canTakeSnapshot() {
+    canTakeDigest() {
         return this.getRemainingCharges() > 0 && 
                this.gameState === 'playing' && 
-               !this.isAnimatingSnapshot;
+               !this.isAnimatingDigest;
     }
     
     /**
-     * Take a snapshot of current reconstruction
-     * Returns a promise that resolves when animation completes
+     * Take a digest: reconstruct from available eaten pixels (excluding already digested).
+     * Pixels used in this reconstruction are marked digested and excluded from the next digest.
      */
-    async takeSnapshot() {
-        if (!this.canTakeSnapshot()) {
-            console.log('[GameEngine] Cannot take snapshot - no charges or not playing');
+    async takeDigest() {
+        if (!this.canTakeDigest()) {
+            console.log('[GameEngine] Cannot digest - no charges or not playing');
             return null;
         }
         
@@ -595,51 +765,33 @@ class LenningsGameEngine {
             return null;
         }
         
-        // Pause the game during snapshot
-        this.isAnimatingSnapshot = true;
+        this.isAnimatingDigest = true;
         const wasPaused = this.params?.paused;
-        if (this.params) {
-            this.params.paused = true;
-        }
+        if (this.params) this.params.paused = true;
         
-        // Get eaten pixels first (fast operation)
-        const eatenPixels = this.lenia.getEatenPixels(true);
+        const eatenPixels = this.lenia.getEatenPixels(true, this.digestedPixelKeys);
         
         if (eatenPixels.length === 0) {
-            console.log('[GameEngine] No eaten pixels to snapshot');
-            this.isAnimatingSnapshot = false;
-            if (this.params && !wasPaused) {
-                this.params.paused = false;
-            }
-            this.emit('snapshotFailed', { reason: 'No pixels eaten yet' });
+            console.log('[GameEngine] No available (non-digested) pixels to digest');
+            this.isAnimatingDigest = false;
+            if (this.params && !wasPaused) this.params.paused = false;
+            this.emit('digestFailed', { reason: 'No pixels available (all digested or none eaten)' });
             return null;
         }
         
-        // Store generation at start to detect resets
-        const startGeneration = this.snapshotGeneration;
+        const startGeneration = this.digestGeneration;
         
-        // Emit start event immediately with pixel count for UI feedback
-        this.emit('snapshotStart', { 
+        this.emit('digestStart', { 
             chargesRemaining: this.getRemainingCharges() - 1,
             pixelCount: eatenPixels.length
         });
         
         try {
-            // Always calculate fresh reconstruction on snapshot
-            // Since we don't do periodic updates anymore, we must recalculate each time
-            console.log('[GameEngine] Computing fresh reconstruction...');
-            console.log('[GameEngine] Eaten pixels before refresh:', eatenPixels.length);
-            
-            // Clear ALL caches to force completely fresh calculation
             this.lenia.eatenPixelsCache = null;
-            this.lenia.lastEatenCount = 0; // Force recalculation even if count matches
-            this.lenia.lastReconstructionDims = null; // Force dimension recalculation
+            this.lenia.lastEatenCount = 0;
+            this.lenia.lastReconstructionDims = null;
             
-            // Get fresh eaten pixel count
-            const freshPixels = this.lenia.getEatenPixels(true);
-            console.log('[GameEngine] Fresh eaten pixels:', freshPixels.length);
-            
-            const reconstructionPromise = this.lenia.createCompressedReconstruction(true);
+            const reconstructionPromise = this.lenia.createCompressedReconstruction(true, this.digestedPixelKeys);
             // Timeout is now generous since the optimized algorithm is much faster
             // Old k-d tree approach: O(n²) - could take 30+ seconds
             // New spatial hash approach: O(n) - should take < 1 second
@@ -653,144 +805,89 @@ class LenningsGameEngine {
             try {
                 reconstruction = await Promise.race([reconstructionPromise, timeoutPromise]);
                 ssim = this.lenia.reconstructionSSIM || 0;
-                console.log('[GameEngine] Reconstruction complete, SSIM:', ssim, 'dims:', reconstruction?.width, 'x', reconstruction?.height);
             } catch (timeoutError) {
-                console.warn('[GameEngine] Reconstruction timed out, using last known state');
-                // Use whatever we have
+                console.warn('[GameEngine] Reconstruction timed out');
                 reconstruction = this.lenia.compressedReconstruction || { width: 256, height: 256 };
                 ssim = this.lenia.reconstructionSSIM || 0;
             }
             
-            // Check if reset happened during reconstruction
-            if (this.snapshotGeneration !== startGeneration) {
-                console.log('[GameEngine] Snapshot cancelled due to reset');
-                return null;
-            }
-            
+            if (this.digestGeneration !== startGeneration) return null;
             if (!reconstruction) {
-                console.log('[GameEngine] Failed to create reconstruction');
-                this.isAnimatingSnapshot = false;
-                if (this.params && !wasPaused) {
-                    this.params.paused = false;
-                }
-                this.emit('snapshotFailed', { reason: 'Reconstruction failed' });
+                this.isAnimatingDigest = false;
+                if (this.params && !wasPaused) this.params.paused = false;
+                this.emit('digestFailed', { reason: 'Reconstruction failed' });
                 return null;
             }
             
-            // Create snapshot object
-            const snapshot = {
-                id: `snapshot-${Date.now()}`,
-                index: this.snapshots.length,
-                ssim: ssim,
+            const digest = {
+                id: `digest-${Date.now()}`,
+                index: this.digests.length,
+                ssim,
                 rgbd: this.lenia.reconstructionRGBd || 0,
                 pixelCount: eatenPixels.length,
                 width: reconstruction.width || 256,
                 height: reconstruction.height || 256,
                 timestamp: Date.now(),
-                eatenPixels: eatenPixels.slice(0, 3000), // Limit pixels for animation performance
-                imageDataURL: null // Will be set after getting the image
+                eatenPixels: eatenPixels.slice(0, 3000),
+                imageDataURL: null
             };
             
-            // Check again if reset happened
-            if (this.snapshotGeneration !== startGeneration) {
-                console.log('[GameEngine] Snapshot cancelled due to reset (before animation)');
-                this.isAnimatingSnapshot = false;
+            if (this.digestGeneration !== startGeneration) {
+                this.isAnimatingDigest = false;
                 return null;
             }
             
-            // Get the reconstruction as a data URL for thumbnail
             const dataURL = this.lenia.getReconstructionDataURL();
-            snapshot.imageDataURL = dataURL;
-            console.log('[GameEngine] Got data URL, length:', dataURL?.length || 0);
+            digest.imageDataURL = dataURL;
             
-            // Emit animation start event with pixel data
-            this.emit('snapshotAnimate', { 
-                snapshot,
-                eatenPixels: snapshot.eatenPixels, // Use limited set
-                reconstruction
-            });
-            
-            // Wait for animation to complete (UI will call completeSnapshot)
-            // The animation duration is handled by the UI
-            return snapshot;
+            this.emit('digestAnimate', { digest, eatenPixels: digest.eatenPixels, reconstruction });
+            return digest;
             
         } catch (error) {
-            console.error('[GameEngine] Snapshot error:', error);
-            this.isAnimatingSnapshot = false;
-            if (this.params && !wasPaused) {
-                this.params.paused = false;
-            }
-            this.emit('snapshotFailed', { reason: error.message });
+            console.error('[GameEngine] Digest error:', error);
+            this.isAnimatingDigest = false;
+            if (this.params && !wasPaused) this.params.paused = false;
+            this.emit('digestFailed', { reason: error.message });
             return null;
         }
     }
     
-    /**
-     * Complete a snapshot (called after animation finishes)
-     */
-    completeSnapshot(snapshot) {
-        if (!snapshot) return;
+    completeDigest(digest) {
+        if (!digest) return;
+        if (!this.isAnimatingDigest) return;
         
-        // Check if we've been reset since this snapshot was taken
-        if (!this.isAnimatingSnapshot) {
-            console.log('[GameEngine] Ignoring stale snapshot completion');
-            return;
-        }
+        this.digests.push(digest);
+        const usedKeys = this.lenia.getLastUsedPixelKeys();
+        usedKeys.forEach(k => this.digestedPixelKeys.add(k));
         
-        // Add to inventory
-        this.snapshots.push(snapshot);
+        const meetsThreshold = digest.ssim >= this.winCondition.threshold;
+        this.isAnimatingDigest = false;
         
-        // Check win condition based on snapshot
-        const meetsThreshold = snapshot.ssim >= this.winCondition.threshold;
+        this.emit('digestComplete', { digest, chargesRemaining: this.getRemainingCharges(), meetsThreshold });
         
-        this.isAnimatingSnapshot = false;
-        
-        // Emit snapshot complete event
-        this.emit('snapshotComplete', { 
-            snapshot,
-            chargesRemaining: this.getRemainingCharges(),
-            meetsThreshold
-        });
-        
-        // Check for win
         if (meetsThreshold) {
-            this.triggerWin(snapshot.ssim);
+            this.triggerWin(digest.ssim);
         } else if (this.params) {
-            // Resume game if not won
             this.params.paused = false;
         }
-        
-        return snapshot;
+        return digest;
     }
     
-    /**
-     * Cancel ongoing snapshot animation
-     */
-    cancelSnapshot() {
-        if (this.isAnimatingSnapshot) {
-            this.isAnimatingSnapshot = false;
-            if (this.params) {
-                this.params.paused = false;
-            }
-            this.emit('snapshotCancelled', {});
+    cancelDigest() {
+        if (this.isAnimatingDigest) {
+            this.isAnimatingDigest = false;
+            if (this.params) this.params.paused = false;
+            this.emit('digestCancelled', {});
         }
     }
     
-    /**
-     * Get all snapshots taken this level
-     */
     getSnapshots() {
-        return this.snapshots;
+        return this.digests;
     }
     
-    /**
-     * Get best snapshot (highest SSIM)
-     */
     getBestSnapshot() {
-        if (this.snapshots.length === 0) return null;
-        return this.snapshots.reduce((best, snap) => 
-            snap.ssim > best.ssim ? snap : best
-        );
+        if (this.digests.length === 0) return null;
+        return this.digests.reduce((best, d) => d.ssim > best.ssim ? d : best);
     }
     
     // ============================================================

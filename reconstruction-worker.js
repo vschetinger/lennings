@@ -98,9 +98,8 @@ function reconstructMosaic(eatenPixels, targetImageData, dims) {
         result[i + 3] = 255; // Alpha
     }
     
-    // If no eaten pixels, return black image
     if (eatenPixels.length === 0) {
-        return result;
+        return { result, usedIndices: [] };
     }
     
     // Prepare target pixels with their positions and colors
@@ -150,9 +149,8 @@ function reconstructMosaic(eatenPixels, targetImageData, dims) {
     }
     
     // Remaining target pixels (if more targets than tiles) stay black
-    // This represents "holes" in the reconstruction
-    
-    return result;
+    const usedIndices = tiles.slice(0, numAssignments).map(t => t.originalIdx);
+    return { result, usedIndices };
 }
 
 // ============================================================================
@@ -260,16 +258,15 @@ function reconstructMosaicKD(eatenPixels, targetImageData, dims) {
     
     if (eatenPixels.length === 0) return result;
     
-    // Prepare tiles
-    const tiles = eatenPixels.map(p => ({
-        r: p.r, g: p.g, b: p.b
+    // Prepare tiles with original index for usedIndices
+    const tiles = eatenPixels.map((p, i) => ({
+        r: p.r, g: p.g, b: p.b, originalIdx: i
     }));
     
     // Build k-d tree
     const kdTree = new MosaicKDTree(tiles);
+    const usedIndices = [];
     
-    // Process target pixels - prioritize by importance (variance from neighbors could help)
-    // For now, just process in raster order
     for (let y = 0; y < targetHeight; y++) {
         for (let x = 0; x < targetWidth; x++) {
             const srcIdx = (y * targetWidth + x) * 4;
@@ -277,7 +274,6 @@ function reconstructMosaicKD(eatenPixels, targetImageData, dims) {
             const tg = targetData[srcIdx + 1] / 255;
             const tb = targetData[srcIdx + 2] / 255;
             
-            // Find and remove nearest unused tile
             const tile = kdTree.findAndRemoveNearest(tr, tg, tb);
             
             if (tile) {
@@ -285,12 +281,12 @@ function reconstructMosaicKD(eatenPixels, targetImageData, dims) {
                 result[srcIdx + 1] = Math.round(tile.g * 255);
                 result[srcIdx + 2] = Math.round(tile.b * 255);
                 result[srcIdx + 3] = 255;
+                usedIndices.push(tile.originalIdx);
             }
-            // else: no more tiles, pixel stays black
         }
     }
     
-    return result;
+    return { result, usedIndices };
 }
 
 // ============================================================================
@@ -303,17 +299,17 @@ self.onmessage = function(e) {
     try {
         const startTime = performance.now();
         
-        // Choose algorithm based on size
-        // K-D tree with deletion is better quality but slower
-        // Luminance sorting is fast and gives decent results
         let resultData;
+        let usedIndices;
         
         if (eatenPixels.length > 10000 || dims.width * dims.height > 10000) {
-            // Use fast luminance-based matching for large images
-            resultData = reconstructMosaic(eatenPixels, targetImageData, dims);
+            const out = reconstructMosaic(eatenPixels, targetImageData, dims);
+            resultData = out.result;
+            usedIndices = out.usedIndices;
         } else {
-            // Use k-d tree with deletion for better quality on smaller images
-            resultData = reconstructMosaicKD(eatenPixels, targetImageData, dims);
+            const out = reconstructMosaicKD(eatenPixels, targetImageData, dims);
+            resultData = out.result;
+            usedIndices = out.usedIndices;
         }
         
         const reconstructTime = performance.now() - startTime;
@@ -353,6 +349,7 @@ self.onmessage = function(e) {
             id,
             success: true,
             result: Array.from(resultData),
+            usedIndices: usedIndices || [],
             rgbdError: rgbError,
             ssimValue: ssimValue,
             ssimDistance: 1 - ssimValue,
