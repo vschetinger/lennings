@@ -2,12 +2,15 @@
 # Add level images in small batches and push each batch to avoid GitHub push size limits.
 # Only adds files not yet tracked (safe to re-run; will continue from where you left off).
 # Run from repo root: bash levels/GlassBeadGame/push-images-in-batches.sh
+#
+# If you still get HTTP 400 / disconnect, try: git config http.postBuffer 524288000
+# Then re-run this script (it will skip already-pushed images).
 
 set -e
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$REPO_ROOT"
 IMAGES_DIR="levels/GlassBeadGame/images"
-BATCH_SIZE=15
+BATCH_SIZE=5
 
 if [ ! -d "$IMAGES_DIR" ]; then
   echo "No $IMAGES_DIR directory."
