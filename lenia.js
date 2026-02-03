@@ -233,6 +233,18 @@ class ParticleLenia {
         this.reconstructionWorker = null;
         this.reconstructionPendingId = 0;
         this.reconstructionPendingRequests = new Map(); // id -> {resolve, reject, dims}
+        this._createReconstructionWorker();
+
+        this.setupUniforms(gui);
+        this.U.worldTexSize = WORLD_TEX_SIZE;  // Keep in sync with resource/depth texture size
+    }
+
+    get dishR() { return this.U.dishR; }
+    /** World texture resolution (resource/depth map size). Same in main app and simulation. */
+    get worldTexSize() { return WORLD_TEX_SIZE; }
+
+    /** Create a new reconstruction worker (internal helper) */
+    _createReconstructionWorker() {
         try {
             const workerPath = (typeof location !== 'undefined' && location.pathname.includes('/simulation'))
                 ? new URL('../reconstruction-worker.js', location.href).href
@@ -243,9 +255,8 @@ class ParticleLenia {
                 const request = this.reconstructionPendingRequests.get(id);
                 if (request) {
                     // Check if this result is still valid (not cancelled by reset)
-                    // Compare the generation when request was made vs current generation
                     if (request.generation !== this.reconstructionGeneration) {
-                        // This is a stale result from before reset, ignore it
+                        // Stale result from before reset, ignore it
                         this.reconstructionPendingRequests.delete(id);
                         return;
                     }
@@ -259,7 +270,6 @@ class ParticleLenia {
             };
             this.reconstructionWorker.onerror = (error) => {
                 console.error('[Worker] Error:', error);
-                // Reject all pending requests
                 for (const [id, request] of this.reconstructionPendingRequests.entries()) {
                     request.reject(error);
                 }
@@ -269,14 +279,56 @@ class ParticleLenia {
             console.warn('[Worker] Failed to create worker, falling back to main thread:', error);
             this.reconstructionWorker = null;
         }
-
-        this.setupUniforms(gui);
-        this.U.worldTexSize = WORLD_TEX_SIZE;  // Keep in sync with resource/depth texture size
     }
 
-    get dishR() { return this.U.dishR; }
-    /** World texture resolution (resource/depth map size). Same in main app and simulation. */
-    get worldTexSize() { return WORLD_TEX_SIZE; }
+    /** 
+     * Hard reset of reconstruction system - terminates worker, clears all state.
+     * Call this on "R" key press for a clean slate.
+     */
+    hardResetReconstruction() {
+        // 1. Terminate existing worker
+        if (this.reconstructionWorker) {
+            try {
+                this.reconstructionWorker.terminate();
+            } catch (e) {
+                console.warn('[Worker] Error terminating:', e);
+            }
+            this.reconstructionWorker = null;
+        }
+        
+        // 2. Reject and clear all pending requests
+        for (const [id, request] of this.reconstructionPendingRequests.entries()) {
+            request.reject(new Error('Hard reset'));
+        }
+        this.reconstructionPendingRequests.clear();
+        this.reconstructionPendingId = 0;
+        
+        // 3. Increment generation to invalidate any lingering results
+        this.reconstructionGeneration++;
+        
+        // 4. Clear all reconstruction state
+        this.compressedReconstruction = null;
+        this.eatenPixelsCache = null;
+        this.lastEatenCount = 0;
+        this.lastReconstructionDims = null;
+        this.reconstructionUpdateFrame = 0;
+        this.reconstructionRGBd = 0;
+        this.reconstructionSSIM = 0;
+        this.reconstructionScore = 0;
+        this.reconstructionCount = 0;
+        
+        // 5. Delete reconstruction texture if exists
+        if (this.compressedReconstructionTex) {
+            const gl = this.gl;
+            gl.deleteTexture(this.compressedReconstructionTex);
+            this.compressedReconstructionTex = null;
+        }
+        
+        // 6. Create fresh worker
+        this._createReconstructionWorker();
+        
+        console.log('[Reconstruction] Hard reset complete');
+    }
 
     fetchState() {
         const gl = this.gl;
@@ -309,6 +361,44 @@ class ParticleLenia {
             if (x > -10000.0) count++;  // same isAlive criterion
         }
         return count;
+    }
+    
+    /** Get bounding box of all alive particles. Returns {minX, maxX, minY, maxY, centerX, centerY, count} or null if no particles */
+    getParticleBounds() {
+        const gl = this.gl;
+        const [sx, sy] = this.state_size;
+        const buf = new Float32Array(sx * sy * 4);
+        twgl.bindFramebufferInfo(gl, this.src);
+        gl.readBuffer(gl.COLOR_ATTACHMENT0);
+        gl.readPixels(0, 0, sx, sy, gl.RGBA, gl.FLOAT, buf);
+        twgl.bindFramebufferInfo(gl, null);
+        
+        let minX = Infinity, maxX = -Infinity;
+        let minY = Infinity, maxY = -Infinity;
+        let count = 0;
+        
+        for (let i = 0; i < sx * sy; ++i) {
+            const x = buf[i * 4];
+            const y = buf[i * 4 + 1];
+            if (x > -10000.0) {  // isAlive criterion
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+                count++;
+            }
+        }
+        
+        if (count === 0) return null;
+        
+        return {
+            minX, maxX, minY, maxY,
+            centerX: (minX + maxX) / 2,
+            centerY: (minY + maxY) / 2,
+            width: maxX - minX,
+            height: maxY - minY,
+            count
+        };
     }
     
     pushState(s) {
@@ -879,36 +969,8 @@ class ParticleLenia {
         // Store the original float data for reloading later
         this.originalResourceData = floatData.slice(); // Make a copy
         
-        // Cancel all pending reconstruction worker requests (they're for the old image)
-        if (this.reconstructionPendingRequests && this.reconstructionPendingRequests.size > 0) {
-            for (const [id, request] of this.reconstructionPendingRequests.entries()) {
-                request.reject(new Error('Image reloaded, cancelling reconstruction'));
-            }
-            this.reconstructionPendingRequests.clear();
-        }
-        
-        // Reset compressed reconstruction cache when new image is loaded
-        this.compressedReconstruction = null;
-        this.eatenPixelsCache = null;
-        this.lastEatenCount = 0;
-        this.lastReconstructionDims = null;  // Reset dimensions for new image
-        this.reconstructionCount = 0;  // Reset reconstruction count for new image
-        this.reconstructionUpdateFrame = 0;  // Reset update frame counter
-        this.reconstructionRGBd = 0;  // Reset metrics
-        this.reconstructionSSIM = 0;
-        this.reconstructionScore = 0;
-        
-        // Delete old reconstruction texture if it exists (will be recreated with new dimensions)
-        if (this.compressedReconstructionTex) {
-            const gl = this.gl;
-            gl.deleteTexture(this.compressedReconstructionTex);
-            this.compressedReconstructionTex = null;
-        }
-        
-        // Ensure reconstruction object is also cleared
-        if (this.compressedReconstruction) {
-            this.compressedReconstruction.texture = null;  // Clear texture reference
-        }
+        // Hard reset reconstruction system (terminates worker, clears all state)
+        this.hardResetReconstruction();
         
         // Upload to resource texture
         this._uploadResourceData(floatData);
@@ -1009,90 +1071,12 @@ class ParticleLenia {
     reloadResourceImage() {
         // Reload the original resource image if one was loaded
         if (this.originalResourceData) {
-            // Cancel all pending reconstruction worker requests
-            if (this.reconstructionPendingRequests && this.reconstructionPendingRequests.size > 0) {
-                for (const [id, request] of this.reconstructionPendingRequests.entries()) {
-                    request.reject(new Error('Image reloaded, cancelling reconstruction'));
-                }
-                this.reconstructionPendingRequests.clear();
-            }
+            // Hard reset reconstruction system (terminates worker, clears all state)
+            this.hardResetReconstruction();
             
-            // Terminate and recreate the worker to kill any in-progress computations
-            // This is especially important for large reconstructions that take a long time
-            if (this.reconstructionWorker) {
-                try {
-                    this.reconstructionWorker.terminate();
-                    this.reconstructionWorker = null;
-                } catch (error) {
-                    console.warn('[Worker] Error terminating worker:', error);
-                }
-            }
-            
-            // Recreate the worker for future reconstructions
-            try {
-                const workerPath = (typeof location !== 'undefined' && location.pathname.includes('/simulation'))
-                    ? new URL('../reconstruction-worker.js', location.href).href
-                    : 'reconstruction-worker.js';
-                this.reconstructionWorker = new Worker(workerPath);
-                this.reconstructionWorker.onmessage = (e) => {
-                    const {id, success, result, rgbdError, ssimValue, ssimDistance, score, error, dims} = e.data;
-                    const request = this.reconstructionPendingRequests.get(id);
-                    if (request) {
-                        // Check if this result is still valid (not cancelled by reset)
-                        // Compare the generation when request was made vs current generation
-                        if (request.generation !== this.reconstructionGeneration) {
-                            // This is a stale result from before reset, ignore it
-                            this.reconstructionPendingRequests.delete(id);
-                            return;
-                        }
-                        this.reconstructionPendingRequests.delete(id);
-                        if (success) {
-                            request.resolve({result, rgbdError, ssimValue, ssimDistance, score, dims});
-                        } else {
-                            request.reject(new Error(error || 'Worker computation failed'));
-                        }
-                    }
-                };
-                this.reconstructionWorker.onerror = (error) => {
-                    console.error('[Worker] Error:', error);
-                    // Reject all pending requests
-                    for (const [id, request] of this.reconstructionPendingRequests.entries()) {
-                        request.reject(error);
-                    }
-                    this.reconstructionPendingRequests.clear();
-                };
-            } catch (error) {
-                console.warn('[Worker] Failed to recreate worker, falling back to main thread:', error);
-                this.reconstructionWorker = null;
-            }
-            
+            // Re-upload the original resource data
             this._uploadResourceData(this.originalResourceData);
-            // Clear compressed reconstruction cache so it rebuilds from scratch
-            this.compressedReconstruction = null;
-            this.eatenPixelsCache = null;
-            this.lastReconstructionDims = null;
-            this.lastEatenCount = 0;  // Reset eaten count so update interval recalculates
-            this.reconstructionUpdateFrame = 0;
-            this.reconstructionRGBd = 0;  // Reset RGBd when reloading
-            this.reconstructionSSIM = 0;  // Reset SSIM when reloading
-            this.reconstructionScore = 0;  // Reset score when reloading
-            this.reconstructionCount = 0;  // Reset reconstruction count when reloading
-            this.reconstructionGeneration++;  // Increment generation to invalidate any pending worker results
-            // Also delete the texture if it exists
-            if (this.compressedReconstructionTex) {
-                const gl = this.gl;
-                gl.deleteTexture(this.compressedReconstructionTex);
-                this.compressedReconstructionTex = null;
-            }
-            // Ensure reconstruction object is also cleared (in case it still references the deleted texture)
-            if (this.compressedReconstruction) {
-                // Delete texture if it exists in the reconstruction object
-                if (this.compressedReconstruction.texture) {
-                    const gl = this.gl;
-                    gl.deleteTexture(this.compressedReconstruction.texture);
-                }
-                this.compressedReconstruction = null;  // Clear entire object, not just texture reference
-            }
+            
             return true;
         }
         return false;

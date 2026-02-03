@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Lennings - Play Mode</title>
+
+<script src="twgl.min.js"></script>
+<script src="zoo.js"></script>
+<script src="serialize.js"></script>
+<script src="PNGView.js"></script>
+<script src="lenia.js?v=33"></script>
+<script src="game-engine.js"></script>
+<script src="names.js"></script>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    
+    body { 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0; 
+        padding: 0;
+        overflow: hidden;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        background: #0a0a0f;
+        color: #e0e0e0;
+    }
+
+    #container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none;
+    }
+    
+    #c {
+        width: 100vw; 
+        height: 100vh; 
+        display: block;
+        touch-action: none;
+    }
+
+    /* Level Selection Screen */
+    #levelSelect {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 20px;
+    }
+
+    #levelSelect.hidden {
+        display: none;
+    }
+
+    #levelSelect h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(90deg, #4af2a1, #6af);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    #levelSelect .subtitle {
+        font-size: 1.1rem;
+        color: #888;
+        margin-bottom: 2rem;
+    }
+
+    .start-btn {
+        padding: 16px 48px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #4af2a1 0%, #6af 100%);
+        border: none;
+        border-radius: 12px;
+        color: #000;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .start-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(74, 242, 161, 0.5);
+    }
+
+    /* Game HUD */
+    #gameHUD {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+        z-index: 50;
+        pointer-events: none;
+    }
+
+    #gameHUD.hidden {
+        display: none;
+    }
+
+    #gameHUD > * {
+        pointer-events: auto;
+    }
+
+    .hud-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .hud-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .level-info {
+        font-size: 1.1rem;
+    }
+
+    .level-info .level-label {
+        color: #888;
+        font-size: 0.8rem;
+    }
+
+    /* Stats display */
+    .stats {
+        display: flex;
+        gap: 20px;
+        font-size: 0.9rem;
+    }
+
+    .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+        color: #888;
+        text-transform: uppercase;
+    }
+
+    /* Menu button */
+    .menu-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: #fff;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    .menu-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Snapshot Inventory */
+    .snapshot-inventory {
+        position: fixed;
+        right: 20px;
+        top: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 50;
+    }
+
+    .snapshot-charges {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+    }
+
+    .snapshot-charges .charge-label {
+        color: #888;
+    }
+
+    .snapshot-charges .charge-dots {
+        display: flex;
+        gap: 4px;
+    }
+
+    .snapshot-charges .charge-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .snapshot-charges .charge-dot.available {
+        background: #4af2a1;
+        border-color: #4af2a1;
+        box-shadow: 0 0 8px rgba(74, 242, 161, 0.5);
+    }
+
+    .snapshot-charges .key-hint {
+        color: #666;
+        font-size: 0.75rem;
+        margin-left: 8px;
+    }
+
+    .snapshot-charges kbd {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+    }
+
+    .snapshot-slot {
+        width: 100px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .snapshot-slot.empty {
+        height: 80px;
+        border-style: dashed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #444;
+        font-size: 0.75rem;
+    }
+
+    .snapshot-slot.filled {
+        border-color: rgba(74, 242, 161, 0.3);
+    }
+
+    .snapshot-slot.winner {
+        border-color: #4af2a1;
+        box-shadow: 0 0 15px rgba(74, 242, 161, 0.4);
+    }
+
+    .snapshot-slot .snapshot-image {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        display: block;
+    }
+
+    .snapshot-slot .snapshot-info {
+        padding: 6px;
+        text-align: center;
+        font-size: 0.75rem;
+    }
+
+    .snapshot-slot .snapshot-ssim {
+        color: #4af2a1;
+        font-weight: bold;
+        font-family: monospace;
+    }
+
+    .snapshot-slot .snapshot-ssim.low {
+        color: #ff6b6b;
+    }
+
+    .snapshot-slot .snapshot-ssim.medium {
+        color: #ffd93d;
+    }
+
+    .snapshot-slot .snapshot-ssim.high {
+        color: #4af2a1;
+    }
+
+    /* Snapshot Animation Overlay */
+    #snapshotOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 300;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    #snapshotOverlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    #snapshotOverlay .snapshot-title {
+        font-size: 1.5rem;
+        color: #4af2a1;
+        margin-bottom: 20px;
+    }
+
+    /* Loading state */
+    #snapshotOverlay .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    #snapshotOverlay .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        border-top-color: #4af2a1;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    #snapshotOverlay .loading-text {
+        font-size: 1rem;
+        color: #888;
+    }
+
+    #snapshotOverlay .loading-pixels {
+        font-size: 0.85rem;
+        color: #4af2a1;
+        font-family: monospace;
+    }
+
+    #snapshotOverlay .loading-container.hidden {
+        display: none;
+    }
+
+    #snapshotOverlay .snapshot-canvas-container.hidden {
+        display: none;
+    }
+
+    #snapshotOverlay .snapshot-canvas-container {
+        position: relative;
+        width: 400px;
+        height: 400px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+        background: #000;
+    }
+
+    #snapshotOverlay #snapshotCanvas {
+        width: 100%;
+        height: 100%;
+    }
+
+    #snapshotOverlay .snapshot-result {
+        margin-top: 20px;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    #snapshotOverlay .snapshot-result.visible {
+        opacity: 1;
+    }
+
+    #snapshotOverlay .snapshot-result .ssim-big {
+        font-size: 3rem;
+        font-weight: bold;
+        font-family: monospace;
+    }
+
+    #snapshotOverlay .snapshot-result .ssim-label {
+        font-size: 1rem;
+        color: #888;
+        margin-top: 8px;
+    }
+
+    #snapshotOverlay .snapshot-result .result-message {
+        font-size: 1.2rem;
+        margin-top: 16px;
+    }
+
+    #snapshotOverlay .snapshot-result .result-message.success {
+        color: #4af2a1;
+    }
+
+    #snapshotOverlay .snapshot-result .result-message.continue {
+        color: #ffd93d;
+    }
+
+    /* Win Overlay */
+    #winOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+    }
+
+    #winOverlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    #winOverlay h2 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #4af2a1;
+        text-shadow: 0 0 30px rgba(74, 242, 161, 0.5);
+    }
+
+    #winOverlay .win-stats {
+        display: flex;
+        gap: 40px;
+        margin-bottom: 2rem;
+    }
+
+    #winOverlay .win-stat {
+        text-align: center;
+    }
+
+    #winOverlay .win-stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    #winOverlay .win-stat-label {
+        font-size: 0.9rem;
+        color: #888;
+    }
+
+    .win-buttons {
+        display: flex;
+        gap: 16px;
+    }
+
+    .win-btn {
+        background: linear-gradient(135deg, #4af2a1, #3ad991);
+        border: none;
+        border-radius: 8px;
+        color: #000;
+        padding: 14px 32px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: all 0.2s ease;
+    }
+
+    .win-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(74, 242, 161, 0.4);
+    }
+
+    /* Win reconstruction preview */
+    .win-preview {
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .win-preview img {
+        max-width: 200px;
+        max-height: 200px;
+        border: 3px solid #4af2a1;
+        border-radius: 8px;
+        box-shadow: 0 0 30px rgba(74, 242, 161, 0.3);
+    }
+
+    .win-preview .preview-label {
+        font-size: 0.9rem;
+        color: #888;
+        margin-top: 8px;
+    }
+
+    /* Gallery Overlay */
+    #galleryOverlay {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+        z-index: 250;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+        overflow-y: auto;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    #galleryOverlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    #galleryOverlay h2 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(90deg, #4af2a1, #6af);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    #galleryOverlay .gallery-subtitle {
+        color: #888;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+        max-width: 900px;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+
+    .gallery-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .gallery-item:hover {
+        border-color: rgba(74, 242, 161, 0.4);
+        transform: translateY(-4px);
+    }
+
+    .gallery-item.new {
+        border-color: #4af2a1;
+        box-shadow: 0 0 20px rgba(74, 242, 161, 0.3);
+        animation: newItemPulse 2s ease-out;
+    }
+
+    @keyframes newItemPulse {
+        0% { box-shadow: 0 0 40px rgba(74, 242, 161, 0.6); }
+        100% { box-shadow: 0 0 20px rgba(74, 242, 161, 0.3); }
+    }
+
+    .gallery-item img {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        display: block;
+    }
+
+    .gallery-item-info {
+        padding: 12px;
+        text-align: center;
+    }
+
+    .gallery-item-name {
+        font-size: 0.95rem;
+        font-weight: bold;
+        margin-bottom: 4px;
+        color: #fff;
+    }
+
+    .gallery-item-ssim {
+        font-size: 0.85rem;
+        font-family: monospace;
+        color: #4af2a1;
+    }
+
+    .gallery-item-time {
+        font-size: 0.75rem;
+        color: #666;
+        margin-top: 4px;
+    }
+
+    .gallery-empty {
+        text-align: center;
+        color: #666;
+        padding: 60px 20px;
+        font-size: 1.1rem;
+    }
+
+    .gallery-buttons {
+        display: flex;
+        gap: 16px;
+        margin-top: auto;
+        padding-top: 20px;
+    }
+
+    .gallery-btn {
+        background: linear-gradient(135deg, #4af2a1, #3ad991);
+        border: none;
+        border-radius: 8px;
+        color: #000;
+        padding: 14px 32px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: all 0.2s ease;
+    }
+
+    .gallery-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(74, 242, 161, 0.4);
+    }
+
+    .gallery-btn.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .gallery-btn.secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: none;
+    }
+
+    /* Collection counter in HUD */
+    .collection-counter {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .collection-counter:hover {
+        background: rgba(74, 242, 161, 0.2);
+    }
+
+    .collection-counter .icon {
+        font-size: 1.2rem;
+    }
+
+    .collection-counter .count {
+        font-weight: bold;
+        color: #4af2a1;
+    }
+
+    .win-btn.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .win-btn.secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: none;
+    }
+
+    /* Instructions hint */
+    #instructions {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #888;
+        z-index: 50;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+    }
+
+    #instructions.fade {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    #instructions kbd {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin: 0 4px;
+    }
+
+    /* Pause overlay */
+    #pauseOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 150;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    #pauseOverlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    #pauseOverlay h2 {
+        font-size: 3rem;
+        color: #fff;
+    }
+</style>
+
+<div id="container">
+    <canvas id="c" width="800" height="800"></canvas>
+</div>
+
+<!-- Level Selection Screen -->
+<div id="levelSelect">
+    <h1>Lennings</h1>
+    <p class="subtitle">Reconstruct the image by growing your particles</p>
+    <p class="subtitle" style="font-size: 0.9rem; color: #666; margin-top: -1rem;">
+        Press <kbd style="background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;">K</kbd> to take snapshots and reconstruct the image
+    </p>
+    <button class="start-btn" id="startGameBtn">Start Game</button>
+    <button class="start-btn secondary" id="viewCollectionStartBtn" style="background: rgba(255,255,255,0.1); color: #fff; margin-top: 12px; font-size: 1rem; padding: 12px 32px;">
+        🖼️ View Collection (<span id="startCollectionCount">0</span>)
+    </button>
+</div>
+
+<!-- Game HUD -->
+<div id="gameHUD" class="hidden">
+    <div class="hud-left">
+        <button class="menu-btn" id="backBtn">← Back</button>
+        <div class="level-info">
+            <div class="level-label">LEVEL</div>
+            <div id="levelName">-</div>
+        </div>
+    </div>
+    
+    <div class="hud-right">
+        <div class="collection-counter" id="collectionBtn" title="View your collection">
+            <span class="icon">🖼️</span>
+            <span class="count" id="collectionCount">0</span>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="cellCount">0</div>
+                <div class="stat-label">Cells</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="timeDisplay">0:00</div>
+                <div class="stat-label">Time</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Snapshot Inventory -->
+<div id="snapshotInventory" class="snapshot-inventory hidden">
+    <div class="snapshot-charges">
+        <span class="charge-label">Snapshots:</span>
+        <div class="charge-dots">
+            <div class="charge-dot available" id="charge0"></div>
+            <div class="charge-dot available" id="charge1"></div>
+            <div class="charge-dot available" id="charge2"></div>
+        </div>
+        <span class="key-hint"><kbd>K</kbd></span>
+    </div>
+    <div class="snapshot-slot empty" id="slot0">Empty</div>
+    <div class="snapshot-slot empty" id="slot1">Empty</div>
+    <div class="snapshot-slot empty" id="slot2">Empty</div>
+</div>
+
+<!-- Snapshot Animation Overlay -->
+<div id="snapshotOverlay">
+    <div class="snapshot-title" id="snapshotTitle">Taking Snapshot...</div>
+    
+    <!-- Loading state -->
+    <div class="loading-container" id="loadingContainer">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Processing pixels...</div>
+        <div class="loading-pixels" id="loadingPixels">0 pixels</div>
+    </div>
+    
+    <!-- Animation canvas -->
+    <div class="snapshot-canvas-container hidden" id="canvasContainer">
+        <canvas id="snapshotCanvas" width="400" height="400"></canvas>
+    </div>
+    
+    <div class="snapshot-result" id="snapshotResult">
+        <div class="ssim-big" id="snapshotSSIM">0.000</div>
+        <div class="ssim-label">SSIM Score</div>
+        <div class="result-message" id="resultMessage"></div>
+    </div>
+</div>
+
+<!-- Win Overlay -->
+<div id="winOverlay">
+    <h2>Level Complete!</h2>
+    <div class="win-preview">
+        <img id="winPreviewImg" src="" alt="Your reconstruction">
+        <div class="preview-label">Added to your collection!</div>
+    </div>
+    <div class="win-stats">
+        <div class="win-stat">
+            <div class="win-stat-value" id="winSSIM">-</div>
+            <div class="win-stat-label">SSIM Score</div>
+        </div>
+        <div class="win-stat">
+            <div class="win-stat-value" id="winTime">-</div>
+            <div class="win-stat-label">Time</div>
+        </div>
+        <div class="win-stat">
+            <div class="win-stat-value" id="winCells">-</div>
+            <div class="win-stat-label">Cells</div>
+        </div>
+    </div>
+    <div class="win-buttons">
+        <button class="win-btn" id="nextLevelBtn">Next Level →</button>
+        <button class="win-btn secondary" id="viewCollectionBtn">View Collection</button>
+        <button class="win-btn secondary" id="menuBtn">Menu</button>
+    </div>
+</div>
+
+<!-- Gallery Overlay -->
+<div id="galleryOverlay">
+    <h2>Your Collection</h2>
+    <p class="gallery-subtitle">Reconstructions you've created</p>
+    <div class="gallery-grid" id="galleryGrid">
+        <!-- Items populated by JavaScript -->
+    </div>
+    <div class="gallery-empty" id="galleryEmpty">
+        No reconstructions yet. Play some levels to build your collection!
+    </div>
+    <div class="gallery-buttons">
+        <button class="gallery-btn" id="galleryContinueBtn">Continue Playing →</button>
+        <button class="gallery-btn secondary" id="galleryBackBtn">Back</button>
+    </div>
+</div>
+
+<!-- Pause Overlay -->
+<div id="pauseOverlay">
+    <h2>PAUSED</h2>
+</div>
+
+<!-- Instructions -->
+<div id="instructions" class="hidden">
+    <kbd>K</kbd>take snapshot |<kbd>Space</kbd>pause |<kbd>R</kbd>restart
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2', {alpha: false});
+gl.getExtension("EXT_color_buffer_float");
+gl.getExtension("OES_texture_float_linear");
+
+// Helper function similar to main app
+function calcNormCoef(m, s) {
+    const dr = 0.1 * s;
+    let acc = 0.0, prev = null;
+    for (let r = Math.max(m - s * 3.0, 0.0); r < m + s * 3.0; r += dr) {
+        let y = (r - m) / s;
+        let v = r * Math.exp(-y * y);
+        if (prev != null) acc += (prev + v) * 0.5;
+        prev = v;
+    }
+    return 1.0 / (acc * dr * 2.0 * Math.PI);
+}
+
+// Global state
+let lenia = null;
+let params = null;
+let gameEngine = null;
+
+// Helper to get param value from JSON
+function getParamValue(paramMap, paramName, defaultValue) {
+    const param = paramMap[paramName];
+    if (param && param.value !== undefined) {
+        return param.value;
+    }
+    return defaultValue;
+}
+
+// UI Elements
+const levelSelectEl = $('#levelSelect');
+const gameHUDEl = $('#gameHUD');
+const winOverlayEl = $('#winOverlay');
+const pauseOverlayEl = $('#pauseOverlay');
+const instructionsEl = $('#instructions');
+const galleryOverlayEl = $('#galleryOverlay');
+
+// Collection system - stores all winning reconstructions
+let collection = [];
+let latestWinData = null; // Stores data for the most recent win
+
+function addToCollection(levelName, ssim, time, imageDataURL) {
+    const item = {
+        id: `recon-${Date.now()}`,
+        levelName,
+        ssim,
+        time,
+        imageDataURL,
+        timestamp: Date.now()
+    };
+    collection.push(item);
+    updateCollectionCounter();
+    saveCollection();
+    return item;
+}
+
+function updateCollectionCounter() {
+    $('#collectionCount').textContent = collection.length;
+    // Also update start screen counter
+    const startCount = $('#startCollectionCount');
+    if (startCount) startCount.textContent = collection.length;
+}
+
+function saveCollection() {
+    // Save to localStorage for persistence
+    try {
+        localStorage.setItem('lennings_collection', JSON.stringify(collection));
+    } catch (e) {
+        console.warn('Could not save collection:', e);
+    }
+}
+
+function loadCollection() {
+    try {
+        const saved = localStorage.getItem('lennings_collection');
+        if (saved) {
+            collection = JSON.parse(saved);
+            updateCollectionCounter();
+        }
+    } catch (e) {
+        console.warn('Could not load collection:', e);
+        collection = [];
+    }
+}
+
+function showGallery(highlightLatest = false) {
+    const grid = $('#galleryGrid');
+    const empty = $('#galleryEmpty');
+    
+    grid.innerHTML = '';
+    
+    if (collection.length === 0) {
+        empty.style.display = 'block';
+        grid.style.display = 'none';
+    } else {
+        empty.style.display = 'none';
+        grid.style.display = 'grid';
+        
+        // Show newest first
+        const sorted = [...collection].reverse();
+        sorted.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'gallery-item' + (highlightLatest && index === 0 ? ' new' : '');
+            
+            const timeStr = formatTime(item.time);
+            div.innerHTML = `
+                <img src="${item.imageDataURL}" alt="${item.levelName}">
+                <div class="gallery-item-info">
+                    <div class="gallery-item-name">${item.levelName}</div>
+                    <div class="gallery-item-ssim">SSIM: ${item.ssim.toFixed(3)}</div>
+                    <div class="gallery-item-time">${timeStr}</div>
+                </div>
+            `;
+            grid.appendChild(div);
+        });
+    }
+    
+    galleryOverlayEl.classList.add('visible');
+}
+
+function hideGallery() {
+    galleryOverlayEl.classList.remove('visible');
+}
+
+function formatTime(ms) {
+    const seconds = Math.floor(ms / 1000);
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Initialize game
+async function initGame() {
+    // Load parameters
+    const response = await fetch('parameters.json');
+    const config = await response.json();
+    
+    // Build paramMap
+    const paramMap = {};
+    for (const [category, catData] of Object.entries(config)) {
+        if (category === 'description' || category === 'version') continue;
+        if (catData.params) {
+            for (const [paramName, paramData] of Object.entries(catData.params)) {
+                paramMap[paramName] = paramData;
+            }
+        }
+    }
+    
+    // Initialize params object
+    params = {
+        stepN: getParamValue(paramMap, 'stepN', 1),
+        targetFPS: getParamValue(paramMap, 'targetFPS', 60),
+        renderMode: 1,
+        showCellGraph: false,
+        showTrailsOverlay: true,
+        spawnCount: getParamValue(paramMap, 'spawnCount', 3),
+        spawnCenter: getParamValue(paramMap, 'spawnCenter', [0.0, 0.0]),
+        viewCenter: [0.0, 0.0],
+        viewExtent: getParamValue(paramMap, 'viewExtent', 50.0),
+        mousePos: [-10000.0, 0.0],
+        mouseDown: false,
+        touchRadius: getParamValue(paramMap, 'touchRadius', 0.05),
+        paused: false,
+        shiftKey: false,
+        pointAddI: 0,
+        enableLifeCycle: getParamValue(paramMap, 'enableLifeCycle', true),
+        enableDeaths: getParamValue(paramMap, 'enableDeaths', true),
+        enableReproduction: getParamValue(paramMap, 'enableReproduction', true),
+        consumeEnabled: getParamValue(paramMap, 'consumeEnabled', true),
+        useCpuRepro: getParamValue(paramMap, 'useCpuRepro', true),
+        maxChildrenPerParent: getParamValue(paramMap, 'maxChildrenPerParent', 2),
+        reproInterval: getParamValue(paramMap, 'reproInterval', 85),
+    };
+    
+    // Initialize Lenia
+    lenia = new ParticleLenia(gl, null, paramMap);
+    
+    // Initialize game engine
+    gameEngine = new LenningsGameEngine();
+    await gameEngine.initialize();
+    gameEngine.attachSimulation(lenia, params);
+    
+    // Set up event listeners
+    setupGameEvents();
+    
+    // Set up start button
+    $('#startGameBtn').addEventListener('click', startRandomGame);
+    
+    // Set up collection button on start screen
+    $('#viewCollectionStartBtn').addEventListener('click', () => {
+        showGallery(false);
+    });
+    
+    // Load saved collection
+    loadCollection();
+    
+    // Start animation loop
+    requestAnimationFrame(animate);
+}
+
+function startRandomGame() {
+    levelSelectEl.classList.add('hidden');
+    gameHUDEl.classList.remove('hidden');
+    instructionsEl.classList.remove('hidden');
+    snapshotInventoryEl.classList.remove('hidden');
+    hideSnapshotOverlay();
+    
+    // Reset snapshot UI
+    resetSnapshotUI();
+    
+    // Fade out instructions after 5 seconds
+    setTimeout(() => {
+        instructionsEl.classList.add('fade');
+    }, 5000);
+    
+    // Start a random level
+    gameEngine.startRandomLevel();
+}
+
+function setupGameEvents() {
+    // Game engine events
+    gameEngine.on('stateChange', ({ state }) => {
+        updateUIForState(state);
+    });
+    
+    gameEngine.on('progress', ({ ssim, smoothedSSIM, threshold, progress, cellCount, elapsedTime }) => {
+        updateProgress(ssim, smoothedSSIM, threshold, progress, cellCount, elapsedTime);
+    });
+    
+    gameEngine.on('levelWon', ({ ssim, elapsedTime, cellCount, levelIndex }) => {
+        // Hide snapshot overlay before showing win screen
+        hideSnapshotOverlay();
+        showWinScreen(ssim, elapsedTime, cellCount, levelIndex);
+    });
+    
+    gameEngine.on('levelStart', ({ level }) => {
+        $('#levelName').textContent = level.name;
+        // Hide pause overlay on level start/restart
+        pauseOverlayEl.classList.remove('visible');
+        // Hide win overlay on restart
+        winOverlayEl.classList.remove('visible');
+        // Reset snapshot UI
+        resetSnapshotUI();
+        // Hide snapshot overlay
+        hideSnapshotOverlay();
+        // Reset camera to spawn point
+        resetCameraToSpawn();
+    });
+    
+    gameEngine.on('levelReset', () => {
+        // Clean slate - hide all overlays and cancel animations
+        hideSnapshotOverlay();
+        pauseOverlayEl.classList.remove('visible');
+        winOverlayEl.classList.remove('visible');
+    });
+    
+    // Snapshot events
+    gameEngine.on('snapshotStart', ({ chargesRemaining, pixelCount }) => {
+        console.log(`[Snapshot] Starting with ${pixelCount} pixels, ${chargesRemaining} charges will remain`);
+        showSnapshotLoading(pixelCount);
+    });
+    
+    gameEngine.on('snapshotAnimate', ({ snapshot, eatenPixels, reconstruction }) => {
+        // Short delay to show the loading state
+        setTimeout(() => {
+            playSnapshotAnimation(snapshot, eatenPixels, reconstruction);
+        }, 300);
+    });
+    
+    gameEngine.on('snapshotComplete', ({ snapshot, chargesRemaining, meetsThreshold }) => {
+        addSnapshotToInventory(snapshot, meetsThreshold);
+        updateChargeDisplay(chargesRemaining);
+    });
+    
+    gameEngine.on('snapshotFailed', ({ reason }) => {
+        console.log(`[Snapshot] Failed: ${reason}`);
+        hideSnapshotOverlay();
+    });
+    
+    gameEngine.on('snapshotCancelled', () => {
+        console.log('[Snapshot] Cancelled');
+        hideSnapshotOverlay();
+    });
+    
+    // UI buttons
+    $('#backBtn').addEventListener('click', () => {
+        showLevelSelect();
+    });
+    
+    $('#nextLevelBtn').addEventListener('click', () => {
+        winOverlayEl.classList.remove('visible');
+        // Reset UI for new level
+        resetSnapshotUI();
+        // Load next random level
+        gameEngine.nextLevel();
+    });
+    
+    $('#viewCollectionBtn').addEventListener('click', () => {
+        winOverlayEl.classList.remove('visible');
+        showGallery(true); // Highlight the latest item
+    });
+    
+    $('#menuBtn').addEventListener('click', () => {
+        showLevelSelect();
+    });
+    
+    // Gallery buttons
+    $('#galleryContinueBtn').addEventListener('click', () => {
+        hideGallery();
+        // Reset UI for new level
+        resetSnapshotUI();
+        // Load next random level
+        gameEngine.nextLevel();
+    });
+    
+    $('#galleryBackBtn').addEventListener('click', () => {
+        hideGallery();
+        // Return to appropriate screen
+        if (latestWinData) {
+            // Came from win screen
+            winOverlayEl.classList.add('visible');
+        } else if (gameEngine.gameState === 'idle') {
+            // Came from start screen - already there
+        } else if (gameEngine.gameState === 'paused') {
+            // Came from in-game, return to pause
+            pauseOverlayEl.classList.add('visible');
+        }
+    });
+    
+    // Collection button in HUD
+    $('#collectionBtn').addEventListener('click', () => {
+        if (gameEngine.gameState === 'playing') {
+            gameEngine.pause();
+            pauseOverlayEl.classList.add('visible');
+        }
+        showGallery(false);
+    });
+    
+    // Keyboard controls
+    window.addEventListener('keydown', handleKeyDown);
+    
+    // Mouse/touch controls for panning
+    setupCanvasControls();
+}
+
+function handleKeyDown(e) {
+    // Space - Pause/Resume (only during gameplay)
+    if (e.key === ' ') {
+        e.preventDefault();
+        if (gameEngine.gameState === 'playing' || gameEngine.gameState === 'paused') {
+            gameEngine.togglePause();
+            pauseOverlayEl.classList.toggle('visible', gameEngine.gameState === 'paused');
+        }
+    }
+    
+    // R - Restart level
+    if (e.key === 'r' || e.key === 'R') {
+        if (gameEngine.isPlayMode() && gameEngine.gameState !== 'won') {
+            // Immediately hide snapshot overlay for instant feedback
+            hideSnapshotOverlay();
+            gameEngine.restartLevel();
+        }
+    }
+    
+    // K - Take snapshot (only when playing, not during animation or won state)
+    if (e.key === 'k' || e.key === 'K') {
+        if (gameEngine.canTakeSnapshot()) {
+            gameEngine.takeSnapshot();
+        }
+    }
+    
+    // Escape - Go back to menu or close overlays
+    if (e.key === 'Escape') {
+        if (galleryOverlayEl.classList.contains('visible')) {
+            hideGallery();
+        } else if (gameEngine.gameState === 'won') {
+            winOverlayEl.classList.remove('visible');
+            showLevelSelect();
+        } else {
+            showLevelSelect();
+        }
+    }
+    
+    // Note: Render mode keys (1-4) and debug keys are intentionally disabled in play mode
+}
+
+// Auto-camera state for smooth following
+let cameraState = {
+    targetCenterX: 0,
+    targetCenterY: 0,
+    targetExtent: 50,
+    currentCenterX: 0,
+    currentCenterY: 0,
+    currentExtent: 50,
+    smoothing: 0.08,  // How quickly camera follows (0-1, lower = smoother)
+    padding: 2.5,     // Padding multiplier around particles (higher = more zoomed out)
+    minExtent: 20,    // Minimum zoom level
+    maxExtent: 200,   // Maximum zoom level
+    lastBoundsCheck: 0,
+    boundsCheckInterval: 5  // Check bounds every N frames (GPU readback is expensive)
+};
+
+let cameraFrameCount = 0;
+
+function updateAutoCamera() {
+    if (!lenia) return;
+    
+    cameraFrameCount++;
+    
+    // Only check bounds periodically to avoid expensive GPU readbacks
+    if (cameraFrameCount % cameraState.boundsCheckInterval === 0) {
+        const bounds = lenia.getParticleBounds();
+        if (bounds && bounds.count > 0) {
+            // Calculate target view to frame all particles with padding
+            const size = Math.max(bounds.width, bounds.height, 10); // Minimum size of 10
+            cameraState.targetExtent = Math.min(
+                cameraState.maxExtent,
+                Math.max(cameraState.minExtent, size * cameraState.padding)
+            );
+            cameraState.targetCenterX = bounds.centerX;
+            cameraState.targetCenterY = bounds.centerY;
+        }
+    }
+    
+    // Smooth interpolation towards target (every frame for smooth motion)
+    const smoothing = cameraState.smoothing;
+    cameraState.currentCenterX += (cameraState.targetCenterX - cameraState.currentCenterX) * smoothing;
+    cameraState.currentCenterY += (cameraState.targetCenterY - cameraState.currentCenterY) * smoothing;
+    cameraState.currentExtent += (cameraState.targetExtent - cameraState.currentExtent) * smoothing;
+    
+    // Apply to params
+    params.viewCenter = [cameraState.currentCenterX, cameraState.currentCenterY];
+    params.viewExtent = cameraState.currentExtent;
+}
+
+function resetCameraToSpawn() {
+    // Reset camera to spawn center
+    const spawnCenter = params.spawnCenter || [0, 0];
+    cameraState.currentCenterX = spawnCenter[0];
+    cameraState.currentCenterY = spawnCenter[1];
+    cameraState.targetCenterX = spawnCenter[0];
+    cameraState.targetCenterY = spawnCenter[1];
+    cameraState.currentExtent = 50;
+    cameraState.targetExtent = 50;
+    params.viewCenter = [spawnCenter[0], spawnCenter[1]];
+    params.viewExtent = 50;
+}
+
+function setupCanvasControls() {
+    // In play mode, camera is automatic - no manual controls
+    // Prevent default touch/wheel behavior to avoid page scrolling
+    canvas.addEventListener('wheel', e => e.preventDefault(), { passive: false });
+    canvas.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+}
+
+function startLevel(index) {
+    levelSelectEl.classList.add('hidden');
+    gameHUDEl.classList.remove('hidden');
+    winOverlayEl.classList.remove('visible');
+    instructionsEl.classList.remove('hidden');
+    snapshotInventoryEl.classList.remove('hidden');
+    hideSnapshotOverlay();
+    
+    // Initialize snapshot UI
+    resetSnapshotUI();
+    
+    // Fade out instructions after 5 seconds
+    setTimeout(() => {
+        instructionsEl.classList.add('fade');
+    }, 5000);
+    
+    gameEngine.startLevel(index);
+}
+
+function showLevelSelect() {
+    gameEngine.gameState = 'idle';
+    params.paused = true;
+    levelSelectEl.classList.remove('hidden');
+    gameHUDEl.classList.add('hidden');
+    winOverlayEl.classList.remove('visible');
+    pauseOverlayEl.classList.remove('visible');
+    instructionsEl.classList.add('hidden');
+    snapshotInventoryEl.classList.add('hidden');
+    hideSnapshotOverlay();
+    hideGallery();
+    latestWinData = null;
+}
+
+function updateUIForState(state) {
+    pauseOverlayEl.classList.toggle('visible', state === 'paused');
+}
+
+function updateProgress(ssim, smoothedSSIM, threshold, progress, cellCount, elapsedTime) {
+    // Update cell count
+    $('#cellCount').textContent = cellCount;
+    
+    // Format time as M:SS
+    const seconds = Math.floor(elapsedTime / 1000);
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    $('#timeDisplay').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function showWinScreen(ssim, elapsedTime, cellCount, levelIndex) {
+    const seconds = Math.floor(elapsedTime / 1000);
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    
+    $('#winSSIM').textContent = ssim.toFixed(3);
+    $('#winTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    $('#winCells').textContent = cellCount;
+    
+    // Get the winning snapshot image
+    const bestSnapshot = gameEngine.getBestSnapshot();
+    const imageDataURL = bestSnapshot?.imageDataURL || lenia.getReconstructionDataURL();
+    
+    // Show preview image
+    const previewImg = $('#winPreviewImg');
+    if (imageDataURL) {
+        previewImg.src = imageDataURL;
+        previewImg.style.display = 'block';
+    } else {
+        previewImg.style.display = 'none';
+    }
+    
+    // Add to collection
+    const levelName = gameEngine.currentLevel?.name || 'Unknown';
+    if (imageDataURL) {
+        addToCollection(levelName, ssim, elapsedTime, imageDataURL);
+    }
+    
+    // Store latest win data for gallery back button
+    latestWinData = { ssim, elapsedTime, cellCount, levelIndex, imageDataURL };
+    
+    // Always show Next button - random levels mean there's always more to play
+    $('#nextLevelBtn').style.display = 'block';
+    
+    winOverlayEl.classList.add('visible');
+}
+
+// ============================================================
+// Snapshot UI Functions
+// ============================================================
+
+const snapshotInventoryEl = $('#snapshotInventory');
+const snapshotOverlayEl = $('#snapshotOverlay');
+const snapshotCanvasEl = $('#snapshotCanvas');
+const snapshotCtx = snapshotCanvasEl.getContext('2d');
+
+function resetSnapshotUI() {
+    // Cancel any running animation
+    cancelSnapshotAnimation();
+    
+    // Show inventory
+    snapshotInventoryEl.classList.remove('hidden');
+    
+    // Reset charge dots
+    for (let i = 0; i < 3; i++) {
+        $(`#charge${i}`).classList.add('available');
+        const slot = $(`#slot${i}`);
+        slot.className = 'snapshot-slot empty';
+        slot.innerHTML = 'Empty';
+    }
+}
+
+function updateChargeDisplay(chargesRemaining) {
+    for (let i = 0; i < 3; i++) {
+        const dot = $(`#charge${i}`);
+        if (i < chargesRemaining) {
+            dot.classList.add('available');
+        } else {
+            dot.classList.remove('available');
+        }
+    }
+}
+
+function addSnapshotToInventory(snapshot, meetsThreshold) {
+    const slotIndex = snapshot.index;
+    const slot = $(`#slot${slotIndex}`);
+    
+    // Determine SSIM color class
+    let ssimClass = 'low';
+    if (snapshot.ssim >= 0.7) ssimClass = 'high';
+    else if (snapshot.ssim >= 0.4) ssimClass = 'medium';
+    
+    slot.className = `snapshot-slot filled ${meetsThreshold ? 'winner' : ''}`;
+    slot.innerHTML = `
+        <img class="snapshot-image" src="${snapshot.imageDataURL}" alt="Snapshot ${slotIndex + 1}">
+        <div class="snapshot-info">
+            <div class="snapshot-ssim ${ssimClass}">${snapshot.ssim.toFixed(3)}</div>
+        </div>
+    `;
+}
+
+function showSnapshotOverlay() {
+    snapshotOverlayEl.classList.add('visible');
+    $('#snapshotResult').classList.remove('visible');
+}
+
+function showSnapshotLoading(pixelCount) {
+    snapshotOverlayEl.classList.add('visible');
+    $('#snapshotTitle').textContent = 'Taking Snapshot...';
+    $('#loadingContainer').classList.remove('hidden');
+    $('#canvasContainer').classList.add('hidden');
+    $('#snapshotResult').classList.remove('visible');
+    $('#loadingPixels').textContent = `${pixelCount.toLocaleString()} pixels`;
+}
+
+function hideSnapshotOverlay() {
+    // Cancel any running animation
+    cancelSnapshotAnimation();
+    
+    snapshotOverlayEl.classList.remove('visible');
+    // Reset state for next time
+    $('#loadingContainer').classList.remove('hidden');
+    $('#canvasContainer').classList.add('hidden');
+}
+
+function showSnapshotResult(ssim, meetsThreshold) {
+    const resultEl = $('#snapshotResult');
+    const ssimEl = $('#snapshotSSIM');
+    const messageEl = $('#resultMessage');
+    
+    ssimEl.textContent = ssim.toFixed(3);
+    
+    // Color based on result
+    if (meetsThreshold) {
+        ssimEl.style.color = '#4af2a1';
+        messageEl.className = 'result-message success';
+        messageEl.textContent = 'Target reached! Level complete!';
+    } else {
+        ssimEl.style.color = ssim >= 0.4 ? '#ffd93d' : '#ff6b6b';
+        messageEl.className = 'result-message continue';
+        const chargesLeft = gameEngine.getRemainingCharges();
+        messageEl.textContent = chargesLeft > 0 
+            ? `Keep going! ${chargesLeft} snapshot${chargesLeft > 1 ? 's' : ''} remaining`
+            : 'No snapshots left. Press R to restart.';
+    }
+    
+    resultEl.classList.add('visible');
+}
+
+// Snapshot animation
+let animationFrameId = null;
+let currentSnapshot = null;
+
+function cancelSnapshotAnimation() {
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+    }
+    currentSnapshot = null;
+}
+
+async function playSnapshotAnimation(snapshot, eatenPixels, reconstruction) {
+    // Cancel any in-progress animation
+    cancelSnapshotAnimation();
+    
+    currentSnapshot = snapshot;
+    
+    // Switch from loading to animation state
+    $('#snapshotTitle').textContent = 'Reconstructing...';
+    $('#loadingContainer').classList.add('hidden');
+    $('#canvasContainer').classList.remove('hidden');
+    
+    const canvas = snapshotCanvasEl;
+    const ctx = snapshotCtx;
+    const width = canvas.width;
+    const height = canvas.height;
+    
+    // Clear canvas
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, width, height);
+    
+    // Handle edge case - no pixels to animate
+    if (!eatenPixels || eatenPixels.length === 0) {
+        console.log('[Snapshot] No pixels to animate, skipping to result');
+        finishSnapshotAnimation(snapshot, reconstruction);
+        return;
+    }
+    
+    // Calculate scaling to fit reconstruction in canvas
+    const reconWidth = reconstruction.width || 256;
+    const reconHeight = reconstruction.height || 256;
+    const scale = Math.min(width / reconWidth, height / reconHeight) * 0.9;
+    const offsetX = (width - reconWidth * scale) / 2;
+    const offsetY = (height - reconHeight * scale) / 2;
+    
+    // Create particle objects for animation (with safety checks)
+    const maxParticles = 3000;
+    const particles = [];
+    const pixelCount = Math.min(eatenPixels.length, maxParticles);
+    
+    for (let i = 0; i < pixelCount; i++) {
+        const pixel = eatenPixels[i];
+        if (!pixel || typeof pixel.x !== 'number') continue;
+        
+        // Random start position (scattered)
+        const startX = Math.random() * width;
+        const startY = Math.random() * height;
+        
+        // Target position in reconstruction (simplified - just use original position scaled)
+        const targetX = offsetX + ((pixel.x || 0) / 1024) * reconWidth * scale;
+        const targetY = offsetY + (1 - (pixel.y || 0) / 1024) * reconHeight * scale; // Flip Y
+        
+        particles.push({
+            x: startX,
+            y: startY,
+            targetX,
+            targetY,
+            r: Math.round((pixel.r || 0) * 255),
+            g: Math.round((pixel.g || 0) * 255),
+            b: Math.round((pixel.b || 0) * 255),
+            size: 2
+        });
+    }
+    
+    // Animation duration in ms (shorter for snappier feel)
+    const animDuration = 1500;
+    const startTime = performance.now();
+    
+    function animateFrame(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(1, elapsed / animDuration);
+        
+        // Easing function (ease-out cubic)
+        const eased = 1 - Math.pow(1 - progress, 3);
+        
+        // Clear canvas
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillRect(0, 0, width, height);
+        
+        // Draw particles
+        for (const p of particles) {
+            const x = p.x + (p.targetX - p.x) * eased;
+            const y = p.y + (p.targetY - p.y) * eased;
+            
+            ctx.fillStyle = `rgb(${p.r}, ${p.g}, ${p.b})`;
+            ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
+        }
+        
+        if (progress < 1) {
+            animationFrameId = requestAnimationFrame(animateFrame);
+        } else {
+            // Animation complete - show final reconstruction
+            finishSnapshotAnimation(snapshot, reconstruction);
+        }
+    }
+    
+    animationFrameId = requestAnimationFrame(animateFrame);
+}
+
+function finishSnapshotAnimation(snapshot, reconstruction) {
+    const canvas = snapshotCanvasEl;
+    const ctx = snapshotCtx;
+    
+    const completeWithResult = () => {
+        // Show result
+        const meetsThreshold = snapshot.ssim >= gameEngine.winCondition.threshold;
+        showSnapshotResult(snapshot.ssim, meetsThreshold);
+        
+        // Complete snapshot after a delay
+        setTimeout(() => {
+            gameEngine.completeSnapshot(snapshot);
+            
+            // If won, hide overlay immediately (win screen will show)
+            // Otherwise, hide after a short delay
+            if (meetsThreshold) {
+                // Small delay to let user see "Target reached!" message
+                setTimeout(() => {
+                    hideSnapshotOverlay();
+                }, 800);
+            } else {
+                setTimeout(() => {
+                    hideSnapshotOverlay();
+                }, 1500);
+            }
+        }, 500);
+    };
+    
+    // Draw final reconstruction image
+    if (snapshot.imageDataURL) {
+        const img = new Image();
+        img.onload = () => {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Center the image
+            const scale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.9;
+            const x = (canvas.width - img.width * scale) / 2;
+            const y = (canvas.height - img.height * scale) / 2;
+            ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            
+            completeWithResult();
+        };
+        img.onerror = () => {
+            console.warn('[Snapshot] Failed to load image, showing result anyway');
+            completeWithResult();
+        };
+        img.src = snapshot.imageDataURL;
+    } else {
+        // No image URL, just show the result
+        console.warn('[Snapshot] No image data URL available');
+        completeWithResult();
+    }
+}
+
+// Animation loop
+let lastFrameTime = 0;
+
+function animate(currentTime) {
+    requestAnimationFrame(animate);
+    
+    // FPS limiting
+    const targetInterval = 1000 / params.targetFPS;
+    if (currentTime - lastFrameTime < targetInterval) {
+        return;
+    }
+    lastFrameTime = currentTime;
+    
+    // Resize canvas
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    if (canvas.width < 768) {
+        canvas.width = canvas.clientWidth * window.devicePixelRatio;
+        canvas.height = canvas.clientHeight * window.devicePixelRatio;
+    }
+    
+    // Skip simulation when paused or not actively playing
+    // Use isSimulationActive() which returns true only when gameState === 'playing'
+    if (params.paused || !gameEngine.isSimulationActive()) {
+        // Still render current state
+        if (lenia) {
+            const touchRadius = params.touchRadius * params.viewExtent;
+            const renderArgs = {
+                touchPos: params.mousePos,
+                touchRadius,
+                viewCenter: params.viewCenter,
+                viewExtent: params.viewExtent
+            };
+            
+            if (params.renderMode === 3) {
+                lenia.renderCompressedReconstruction(null, renderArgs);
+            } else {
+                lenia.render(null, renderArgs);
+                if (params.showTrailsOverlay) {
+                    lenia.renderTrailsOverlay(null, renderArgs);
+                }
+            }
+        }
+        return;
+    }
+    
+    // Simulation step
+    const touchRadius = params.touchRadius * params.viewExtent;
+    const renderArgs = {
+        touchPos: params.mousePos,
+        touchRadius,
+        viewCenter: params.viewCenter,
+        viewExtent: params.viewExtent
+    };
+    
+    // Step simulation
+    for (let i = 0; i < params.stepN; i++) {
+        lenia.step({
+            attractPos: params.mousePos,
+            attractRadius: 0,
+            stepN: 1
+        });
+    }
+    
+    // Consume resources
+    if (params.consumeEnabled) {
+        lenia.consumeResources();
+    }
+    
+    // Life cycle
+    if (params.enableLifeCycle) {
+        if (params.enableDeaths) {
+            lenia.processDeaths();
+        }
+        if (params.enableReproduction) {
+            if (params.useCpuRepro) {
+                if ((lenia.stepCount || 0) % params.reproInterval === 0) {
+                    lenia.cpuReproductionStep(params.maxChildrenPerParent);
+                }
+            } else {
+                lenia.processReproduction();
+            }
+        }
+    }
+    
+    // Accumulate trails
+    lenia.accumulateTrails();
+    
+    // Update auto-camera to follow particles
+    updateAutoCamera();
+    
+    // Update renderArgs with new camera position
+    renderArgs.viewCenter = params.viewCenter;
+    renderArgs.viewExtent = params.viewExtent;
+    
+    // NOTE: Reconstruction is now ONLY calculated when K is pressed for snapshot
+    // This significantly improves performance by not constantly running the expensive
+    // reconstruction calculation in the background
+    
+    // Render based on current mode
+    if (params.renderMode === 3) {
+        lenia.renderCompressedReconstruction(null, renderArgs);
+    } else {
+        lenia.render(null, renderArgs);
+        if (params.showTrailsOverlay) {
+            lenia.renderTrailsOverlay(null, renderArgs);
+        }
+    }
+    
+    // Update game engine (checks win condition)
+    gameEngine.update();
+}
+
+// Start the game
+initGame();
+</script>
+</html>
