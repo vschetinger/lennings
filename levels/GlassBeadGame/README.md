@@ -34,3 +34,13 @@ Optional later: **embedding**, per-motif **ssimThreshold**, **spawnCenter**, **s
 
 1. Put all images in `levels/GlassBeadGame/images/`.
 2. Build or extend `motifs` in `dataset.json`: one `{ "id", "name", "image" }` per file (id can be derived from the image filename). Embeddings and extra fields can be added to each motif when needed.
+
+## Pushing images to GitHub (large dataset)
+
+If the image folder is too large to push in one commit (~100MB+), use the batch script from the repo root:
+
+```bash
+bash levels/GlassBeadGame/push-images-in-batches.sh
+```
+
+It adds images in batches of 50, commits and pushes each batch so you stay under GitHub’s push size limits. Adjust `BATCH_SIZE` in the script if needed.
