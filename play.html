@@ -179,7 +179,128 @@
         background: rgba(255, 255, 255, 0.2);
     }
 
-    /* Snapshot Inventory */
+    /* Skills bar: help + R, W, D */
+    .skills-bar {
+        position: fixed;
+        left: 20px;
+        bottom: 24px;
+        display: flex;
+        gap: 12px;
+        z-index: 60;
+        pointer-events: auto;
+    }
+
+    .skills-bar.hidden {
+        display: none;
+    }
+
+    .skill-btn {
+        min-width: 72px;
+        min-height: 56px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-radius: 10px;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        transition: border-color 0.2s, background 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skill-btn:hover:not(.on-cooldown) {
+        border-color: rgba(74, 242, 161, 0.6);
+        background: rgba(0, 0, 0, 0.85);
+    }
+
+    .skill-btn:active:not(.on-cooldown) {
+        transform: scale(0.97);
+    }
+
+    .skill-btn.on-cooldown {
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .skill-btn .skill-key {
+        font-size: 1.2rem;
+        font-weight: bold;
+        font-family: monospace;
+        color: #4af2a1;
+    }
+
+    .skill-btn .skill-label {
+        font-size: 0.7rem;
+        color: #aaa;
+        margin-top: 2px;
+    }
+
+    .skill-cooldown {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 0%;
+        background: linear-gradient(180deg, rgba(40, 20, 60, 0.95) 0%, rgba(80, 20, 40, 0.95) 100%);
+        border-top: 2px solid rgba(255, 100, 150, 0.6);
+        transition: height 0.1s linear;
+        pointer-events: none;
+    }
+
+    .skill-btn.on-cooldown .skill-cooldown {
+        box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Speed burst: obvious active state */
+    .skill-btn.active-burst {
+        border-color: #ffd93d;
+        background: rgba(40, 35, 0, 0.85);
+        box-shadow: 0 0 20px rgba(255, 217, 61, 0.6), inset 0 0 15px rgba(255, 217, 61, 0.15);
+        animation: burst-glow 0.8s ease-in-out infinite;
+    }
+
+    .skill-btn.active-burst .skill-key {
+        color: #ffd93d;
+        text-shadow: 0 0 10px rgba(255, 217, 61, 0.9);
+    }
+
+    .skill-btn.active-burst .skill-label {
+        color: #ffd93d;
+    }
+
+    .help-btn {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        background: rgba(0, 0, 0, 0.7);
+        color: #aaa;
+        font-size: 1.4rem;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .help-btn:hover {
+        color: #4af2a1;
+        border-color: rgba(74, 242, 161, 0.6);
+        background: rgba(0, 0, 0, 0.85);
+    }
+
+    @keyframes burst-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(255, 217, 61, 0.6), inset 0 0 15px rgba(255, 217, 61, 0.15); }
+        50% { box-shadow: 0 0 28px rgba(255, 217, 61, 0.9), inset 0 0 20px rgba(255, 217, 61, 0.25); }
+    }
+
     .snapshot-inventory {
         position: fixed;
         right: 20px;
@@ -294,6 +415,22 @@
 
     .snapshot-slot .snapshot-ssim.high {
         color: #4af2a1;
+    }
+
+    .eaten-rings-container {
+        width: 100px;
+        height: 100px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;
+    }
+
+    .eaten-rings-canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
     }
 
     /* Snapshot Animation Overlay */
@@ -411,6 +548,40 @@
 
     #snapshotOverlay .snapshot-result .result-message.continue {
         color: #ffd93d;
+    }
+
+    #snapshotOverlay .snapshot-result .result-message.motif-failed {
+        color: #ff8c42;
+        font-weight: bold;
+    }
+
+    #snapshotOverlay .snapshot-result .result-btn {
+        margin-top: 20px;
+        padding: 12px 24px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #snapshotOverlay .snapshot-result .result-btn:hover {
+        transform: scale(1.05);
+    }
+
+    #snapshotOverlay .snapshot-result .result-btn.hidden {
+        display: none;
+    }
+
+    #snapshotOverlay .snapshot-result .result-btn-fail {
+        background: #c62828;
+        color: #fff;
+        box-shadow: 0 0 20px rgba(198, 40, 40, 0.5);
+    }
+
+    #snapshotOverlay .snapshot-result .result-btn-fail:hover {
+        box-shadow: 0 0 28px rgba(198, 40, 40, 0.7);
     }
 
     /* Win Overlay */
@@ -730,6 +901,72 @@
         font-size: 3rem;
         color: #fff;
     }
+
+    .help-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 250;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    .help-overlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .help-overlay .help-content {
+        max-width: 480px;
+        max-height: 85vh;
+        overflow-y: auto;
+        background: rgba(20, 20, 28, 0.98);
+        border: 1px solid rgba(74, 242, 161, 0.25);
+        border-radius: 12px;
+        padding: 24px;
+        color: #e0e0e0;
+    }
+    .help-overlay .help-content h2 {
+        margin-top: 0;
+        color: #4af2a1;
+        font-size: 1.5rem;
+    }
+    .help-overlay .help-content p, .help-overlay .help-content ul {
+        margin: 0.75rem 0;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    .help-overlay .help-content ul {
+        padding-left: 1.25rem;
+    }
+    .help-overlay .help-content li {
+        margin: 0.4rem 0;
+    }
+    .help-overlay .help-content kbd {
+        background: rgba(255, 255, 255, 0.12);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: inherit;
+    }
+    .help-overlay .help-close-btn {
+        margin-top: 1rem;
+        padding: 10px 24px;
+        font-size: 1rem;
+        background: #4af2a1;
+        color: #000;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .help-overlay .help-close-btn:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 16px rgba(74, 242, 161, 0.5);
+    }
 </style>
 
 <div id="container">
@@ -741,7 +978,7 @@
     <h1>Lennings</h1>
     <p class="subtitle">Reconstruct the image by growing your particles</p>
     <p class="subtitle" style="font-size: 0.9rem; color: #666; margin-top: -1rem;">
-        Press <kbd style="background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;">K</kbd> to take snapshots and reconstruct the image
+        Press <kbd style="background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;">D</kbd> to digest pixels and reconstruct the image
     </p>
     <button class="start-btn" id="startGameBtn">Start Game</button>
     <button class="start-btn secondary" id="viewCollectionStartBtn" style="background: rgba(255,255,255,0.1); color: #fff; margin-top: 12px; font-size: 1rem; padding: 12px 32px;">
@@ -777,25 +1014,47 @@
     </div>
 </div>
 
-<!-- Snapshot Inventory -->
+<!-- Help button + Skills (R, W, D) -->
+<div id="skillsBar" class="skills-bar hidden">
+    <button type="button" class="help-btn" id="helpBtn" title="How to play">?</button>
+    <div class="skill-btn" id="skillR" data-key="r" title="Respawn: new random location (15s cooldown)">
+        <span class="skill-key">R</span>
+        <span class="skill-label">Respawn</span>
+        <div class="skill-cooldown" id="cooldownR"></div>
+    </div>
+    <div class="skill-btn" id="skillW" data-key="w" title="Speed burst: 5s faster + attraction (25s cooldown)">
+        <span class="skill-key">W</span>
+        <span class="skill-label">Burst</span>
+        <div class="skill-cooldown" id="cooldownW"></div>
+    </div>
+    <div class="skill-btn" id="skillD" data-key="d" title="Digest: reconstruct from eaten pixels (3 per level)">
+        <span class="skill-key">D</span>
+        <span class="skill-label">Digest</span>
+    </div>
+</div>
+
+<!-- Right panel: digest charges, slots, color mass -->
 <div id="snapshotInventory" class="snapshot-inventory hidden">
     <div class="snapshot-charges">
-        <span class="charge-label">Snapshots:</span>
+        <span class="charge-label">Digests:</span>
         <div class="charge-dots">
             <div class="charge-dot available" id="charge0"></div>
             <div class="charge-dot available" id="charge1"></div>
             <div class="charge-dot available" id="charge2"></div>
         </div>
-        <span class="key-hint"><kbd>K</kbd></span>
+        <span class="key-hint"><kbd>D</kbd></span>
     </div>
     <div class="snapshot-slot empty" id="slot0">Empty</div>
     <div class="snapshot-slot empty" id="slot1">Empty</div>
     <div class="snapshot-slot empty" id="slot2">Empty</div>
+    <div class="eaten-rings-container" id="eatenRingsContainer" title="Color mass: average color, size = eaten / image pixels">
+        <canvas id="eatenRingsCanvas" width="100" height="100" class="eaten-rings-canvas"></canvas>
+    </div>
 </div>
 
-<!-- Snapshot Animation Overlay -->
+<!-- Digest overlay (loading → animation → result) -->
 <div id="snapshotOverlay">
-    <div class="snapshot-title" id="snapshotTitle">Taking Snapshot...</div>
+    <div class="snapshot-title" id="snapshotTitle">Digesting...</div>
     
     <!-- Loading state -->
     <div class="loading-container" id="loadingContainer">
@@ -813,6 +1072,7 @@
         <div class="ssim-big" id="snapshotSSIM">0.000</div>
         <div class="ssim-label">SSIM Score</div>
         <div class="result-message" id="resultMessage"></div>
+        <button type="button" class="result-btn result-btn-fail hidden" id="nextMotifBtn">Next motif →</button>
     </div>
 </div>
 
@@ -865,9 +1125,27 @@
     <h2>PAUSED</h2>
 </div>
 
+<!-- Help Overlay -->
+<div id="helpOverlay" class="help-overlay">
+    <div class="help-content">
+        <h2>How to Play</h2>
+        <p><strong>Goal:</strong> Your creatures eat pixels from the environment. Reconstruct the motif image by digesting at the right time. Reach the SSIM score target (e.g. 0.7) to complete the level.</p>
+        <p><strong>Controls:</strong></p>
+        <ul>
+            <li><kbd>D</kbd> <strong>Digest</strong> — Use eaten pixels to form one reconstruction. You have 3 digests per level. Each digest locks those pixels (they can’t be reused).</li>
+            <li><kbd>R</kbd> <strong>Respawn</strong> — New random spawn and colors (15s cooldown). Resets digests for this level.</li>
+            <li><kbd>W</kbd> <strong>Burst</strong> — Short speed and attraction boost (25s cooldown).</li>
+            <li><kbd>Space</kbd> Pause</li>
+        </ul>
+        <p><strong>UI:</strong> Top bar shows level name, cells, and time. Right panel: digest charges (dots), three reconstruction slots, and the <em>color mass</em> circle (average color and amount of eaten pixels).</p>
+        <p>Win by getting one digest with SSIM ≥ target. If you use all 3 digests without reaching it, the motif fails and you can load the next one.</p>
+        <button type="button" class="help-close-btn" id="helpCloseBtn">Got it</button>
+    </div>
+</div>
+
 <!-- Instructions -->
 <div id="instructions" class="hidden">
-    <kbd>K</kbd>take snapshot |<kbd>Space</kbd>pause |<kbd>R</kbd>restart
+    <kbd>D</kbd>digest |<kbd>Space</kbd>pause |<kbd>R</kbd>respawn |<kbd>W</kbd>burst
 </div>
 
 <script>
@@ -1052,8 +1330,8 @@ async function initGame() {
     // Initialize Lenia
     lenia = new ParticleLenia(gl, null, paramMap);
     
-    // Initialize game engine
-    gameEngine = new LenningsGameEngine();
+    // Initialize game engine with Glass Bead Game level pack (manifest + images folder)
+    gameEngine = new LenningsGameEngine({ levelPackPath: 'levels/GlassBeadGame' });
     await gameEngine.initialize();
     gameEngine.attachSimulation(lenia, params);
     
@@ -1062,6 +1340,12 @@ async function initGame() {
     
     // Set up start button
     $('#startGameBtn').addEventListener('click', startRandomGame);
+    
+    // Help (?)
+    const helpOverlayEl = $('#helpOverlay');
+    $('#helpBtn').addEventListener('click', () => helpOverlayEl.classList.add('visible'));
+    $('#helpCloseBtn').addEventListener('click', () => helpOverlayEl.classList.remove('visible'));
+    helpOverlayEl.addEventListener('click', (e) => { if (e.target === helpOverlayEl) helpOverlayEl.classList.remove('visible'); });
     
     // Set up collection button on start screen
     $('#viewCollectionStartBtn').addEventListener('click', () => {
@@ -1080,6 +1364,7 @@ function startRandomGame() {
     gameHUDEl.classList.remove('hidden');
     instructionsEl.classList.remove('hidden');
     snapshotInventoryEl.classList.remove('hidden');
+    skillsBarEl.classList.remove('hidden');
     hideSnapshotOverlay();
     
     // Reset snapshot UI
@@ -1124,6 +1409,27 @@ function setupGameEvents() {
         resetCameraToSpawn();
     });
     
+    // Skill buttons (R respawn, W speed burst, D digest) - mobile-friendly
+    ['r', 'w', 'd'].forEach(key => {
+        const btn = $(`#skill${key.toUpperCase()}`);
+        const cooldownEl = $(`#cooldown${key.toUpperCase()}`);
+        if (!btn) return;
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!gameEngine.isPlayMode() || gameEngine.gameState === 'won') return;
+            if (key === 'r') {
+                if (gameEngine.triggerSkill('r')) {
+                    resetCameraToSpawn();
+                    resetSnapshotUI();
+                }
+            } else if (key === 'd') {
+                if (gameEngine.canTakeDigest()) gameEngine.triggerSkill('d');
+            } else {
+                gameEngine.triggerSkill('w');
+            }
+        });
+    });
+
     gameEngine.on('levelReset', () => {
         // Clean slate - hide all overlays and cancel animations
         hideSnapshotOverlay();
@@ -1131,32 +1437,31 @@ function setupGameEvents() {
         winOverlayEl.classList.remove('visible');
     });
     
-    // Snapshot events
-    gameEngine.on('snapshotStart', ({ chargesRemaining, pixelCount }) => {
-        console.log(`[Snapshot] Starting with ${pixelCount} pixels, ${chargesRemaining} charges will remain`);
+    // Digest events
+    gameEngine.on('digestStart', ({ chargesRemaining, pixelCount }) => {
         showSnapshotLoading(pixelCount);
     });
-    
-    gameEngine.on('snapshotAnimate', ({ snapshot, eatenPixels, reconstruction }) => {
-        // Short delay to show the loading state
+    gameEngine.on('digestAnimate', ({ digest, eatenPixels, reconstruction }) => {
         setTimeout(() => {
-            playSnapshotAnimation(snapshot, eatenPixels, reconstruction);
+            playSnapshotAnimation(digest, eatenPixels, reconstruction);
         }, 300);
     });
-    
-    gameEngine.on('snapshotComplete', ({ snapshot, chargesRemaining, meetsThreshold }) => {
-        addSnapshotToInventory(snapshot, meetsThreshold);
+    gameEngine.on('digestComplete', ({ digest, chargesRemaining, meetsThreshold }) => {
+        addSnapshotToInventory(digest, meetsThreshold);
         updateChargeDisplay(chargesRemaining);
     });
-    
-    gameEngine.on('snapshotFailed', ({ reason }) => {
-        console.log(`[Snapshot] Failed: ${reason}`);
+    gameEngine.on('digestFailed', ({ reason }) => {
         hideSnapshotOverlay();
     });
-    
-    gameEngine.on('snapshotCancelled', () => {
-        console.log('[Snapshot] Cancelled');
+    gameEngine.on('digestCancelled', () => {
         hideSnapshotOverlay();
+    });
+    gameEngine.on('skillCooldown', () => { /* UI updated in animate via tickSkillCooldowns */ });
+    gameEngine.on('skillUsed', ({ key }) => {
+        if (key === 'w') $('#skillW').classList.add('active-burst');
+    });
+    gameEngine.on('skillEnd', ({ key }) => {
+        if (key === 'w') $('#skillW').classList.remove('active-burst');
     });
     
     // UI buttons
@@ -1164,6 +1469,12 @@ function setupGameEvents() {
         showLevelSelect();
     });
     
+    $('#nextMotifBtn').addEventListener('click', () => {
+        hideSnapshotOverlay();
+        resetSnapshotUI();
+        gameEngine.nextLevel();
+    });
+
     $('#nextLevelBtn').addEventListener('click', () => {
         winOverlayEl.classList.remove('visible');
         // Reset UI for new level
@@ -1230,19 +1541,28 @@ function handleKeyDown(e) {
         }
     }
     
-    // R - Restart level
+    // R - Respawn at random location (skill with cooldown)
     if (e.key === 'r' || e.key === 'R') {
         if (gameEngine.isPlayMode() && gameEngine.gameState !== 'won') {
-            // Immediately hide snapshot overlay for instant feedback
             hideSnapshotOverlay();
-            gameEngine.restartLevel();
+            if (gameEngine.triggerSkill('r')) {
+                resetCameraToSpawn();
+                resetSnapshotUI();
+            }
         }
     }
     
-    // K - Take snapshot (only when playing, not during animation or won state)
-    if (e.key === 'k' || e.key === 'K') {
-        if (gameEngine.canTakeSnapshot()) {
-            gameEngine.takeSnapshot();
+    // W - Speed burst (skill with cooldown)
+    if (e.key === 'w' || e.key === 'W') {
+        if (gameEngine.isPlayMode() && (gameEngine.gameState === 'playing' || gameEngine.gameState === 'paused')) {
+            gameEngine.triggerSkill('w');
+        }
+    }
+    
+    // D - Digest (reconstruct from eaten pixels; used pixels are marked digested)
+    if (e.key === 'd' || e.key === 'D') {
+        if (gameEngine.canTakeDigest()) {
+            gameEngine.triggerSkill('d');
         }
     }
     
@@ -1336,6 +1656,7 @@ function startLevel(index) {
     winOverlayEl.classList.remove('visible');
     instructionsEl.classList.remove('hidden');
     snapshotInventoryEl.classList.remove('hidden');
+    skillsBarEl.classList.remove('hidden');
     hideSnapshotOverlay();
     
     // Initialize snapshot UI
@@ -1358,6 +1679,7 @@ function showLevelSelect() {
     pauseOverlayEl.classList.remove('visible');
     instructionsEl.classList.add('hidden');
     snapshotInventoryEl.classList.add('hidden');
+    skillsBarEl.classList.add('hidden');
     hideSnapshotOverlay();
     hideGallery();
     latestWinData = null;
@@ -1420,6 +1742,7 @@ function showWinScreen(ssim, elapsedTime, cellCount, levelIndex) {
 // ============================================================
 
 const snapshotInventoryEl = $('#snapshotInventory');
+const skillsBarEl = $('#skillsBar');
 const snapshotOverlayEl = $('#snapshotOverlay');
 const snapshotCanvasEl = $('#snapshotCanvas');
 const snapshotCtx = snapshotCanvasEl.getContext('2d');
@@ -1438,6 +1761,28 @@ function resetSnapshotUI() {
         slot.className = 'snapshot-slot empty';
         slot.innerHTML = 'Empty';
     }
+}
+
+function tickSkillCooldowns() {
+    if (!gameEngine || !gameEngine.skills) return;
+    for (const [key] of gameEngine.skills) {
+        const remaining = gameEngine.getSkillCooldownRemaining(key);
+        const btn = $(`#skill${key.toUpperCase()}`);
+        const cooldownEl = $(`#cooldown${key.toUpperCase()}`);
+        if (!btn || !cooldownEl) continue;
+        if (remaining > 0) {
+            btn.classList.add('on-cooldown');
+            const skill = gameEngine.skills.get(key);
+            const pct = skill ? (remaining / skill.cooldownMs) * 100 : 0;
+            cooldownEl.style.height = pct + '%';
+        } else {
+            btn.classList.remove('on-cooldown');
+            cooldownEl.style.height = '0%';
+        }
+    }
+    const wActive = gameEngine.speedBurstEndAt && Date.now() < gameEngine.speedBurstEndAt;
+    const skillW = $('#skillW');
+    if (skillW) skillW.classList.toggle('active-burst', wActive);
 }
 
 function updateChargeDisplay(chargesRemaining) {
@@ -1476,7 +1821,7 @@ function showSnapshotOverlay() {
 
 function showSnapshotLoading(pixelCount) {
     snapshotOverlayEl.classList.add('visible');
-    $('#snapshotTitle').textContent = 'Taking Snapshot...';
+    $('#snapshotTitle').textContent = 'Digesting...';
     $('#loadingContainer').classList.remove('hidden');
     $('#canvasContainer').classList.add('hidden');
     $('#snapshotResult').classList.remove('visible');
@@ -1491,27 +1836,35 @@ function hideSnapshotOverlay() {
     // Reset state for next time
     $('#loadingContainer').classList.remove('hidden');
     $('#canvasContainer').classList.add('hidden');
+    const nextMotifBtn = $('#nextMotifBtn');
+    if (nextMotifBtn) nextMotifBtn.classList.add('hidden');
 }
 
-function showSnapshotResult(ssim, meetsThreshold) {
+function showSnapshotResult(ssim, meetsThreshold, chargesLeft) {
+    if (chargesLeft === undefined) chargesLeft = gameEngine.getRemainingCharges();
     const resultEl = $('#snapshotResult');
     const ssimEl = $('#snapshotSSIM');
     const messageEl = $('#resultMessage');
+    const nextMotifBtn = $('#nextMotifBtn');
     
     ssimEl.textContent = ssim.toFixed(3);
     
-    // Color based on result
     if (meetsThreshold) {
         ssimEl.style.color = '#4af2a1';
         messageEl.className = 'result-message success';
         messageEl.textContent = 'Target reached! Level complete!';
+        if (nextMotifBtn) nextMotifBtn.classList.add('hidden');
     } else {
         ssimEl.style.color = ssim >= 0.4 ? '#ffd93d' : '#ff6b6b';
-        messageEl.className = 'result-message continue';
-        const chargesLeft = gameEngine.getRemainingCharges();
-        messageEl.textContent = chargesLeft > 0 
-            ? `Keep going! ${chargesLeft} snapshot${chargesLeft > 1 ? 's' : ''} remaining`
-            : 'No snapshots left. Press R to restart.';
+        if (chargesLeft > 0) {
+            messageEl.className = 'result-message continue';
+            messageEl.textContent = `Keep going! ${chargesLeft} digest${chargesLeft > 1 ? 's' : ''} remaining`;
+            if (nextMotifBtn) nextMotifBtn.classList.add('hidden');
+        } else {
+            messageEl.className = 'result-message motif-failed';
+            messageEl.textContent = 'Motif failed.';
+            if (nextMotifBtn) nextMotifBtn.classList.remove('hidden');
+        }
     }
     
     resultEl.classList.add('visible');
@@ -1530,101 +1883,94 @@ function cancelSnapshotAnimation() {
 }
 
 async function playSnapshotAnimation(snapshot, eatenPixels, reconstruction) {
-    // Cancel any in-progress animation
     cancelSnapshotAnimation();
-    
     currentSnapshot = snapshot;
-    
-    // Switch from loading to animation state
+
     $('#snapshotTitle').textContent = 'Reconstructing...';
     $('#loadingContainer').classList.add('hidden');
     $('#canvasContainer').classList.remove('hidden');
-    
+
     const canvas = snapshotCanvasEl;
     const ctx = snapshotCtx;
-    const width = canvas.width;
-    const height = canvas.height;
-    
-    // Clear canvas
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, width, height);
-    
-    // Handle edge case - no pixels to animate
-    if (!eatenPixels || eatenPixels.length === 0) {
-        console.log('[Snapshot] No pixels to animate, skipping to result');
+    const displayWidth = canvas.width;
+    const displayHeight = canvas.height;
+
+    const reconWidth = reconstruction.width || 256;
+    const reconHeight = reconstruction.height || 256;
+    const totalPixels = reconWidth * reconHeight;
+
+    if (!snapshot.imageDataURL) {
         finishSnapshotAnimation(snapshot, reconstruction);
         return;
     }
-    
-    // Calculate scaling to fit reconstruction in canvas
-    const reconWidth = reconstruction.width || 256;
-    const reconHeight = reconstruction.height || 256;
-    const scale = Math.min(width / reconWidth, height / reconHeight) * 0.9;
-    const offsetX = (width - reconWidth * scale) / 2;
-    const offsetY = (height - reconHeight * scale) / 2;
-    
-    // Create particle objects for animation (with safety checks)
-    const maxParticles = 3000;
-    const particles = [];
-    const pixelCount = Math.min(eatenPixels.length, maxParticles);
-    
-    for (let i = 0; i < pixelCount; i++) {
-        const pixel = eatenPixels[i];
-        if (!pixel || typeof pixel.x !== 'number') continue;
-        
-        // Random start position (scattered)
-        const startX = Math.random() * width;
-        const startY = Math.random() * height;
-        
-        // Target position in reconstruction (simplified - just use original position scaled)
-        const targetX = offsetX + ((pixel.x || 0) / 1024) * reconWidth * scale;
-        const targetY = offsetY + (1 - (pixel.y || 0) / 1024) * reconHeight * scale; // Flip Y
-        
-        particles.push({
-            x: startX,
-            y: startY,
-            targetX,
-            targetY,
-            r: Math.round((pixel.r || 0) * 255),
-            g: Math.round((pixel.g || 0) * 255),
-            b: Math.round((pixel.b || 0) * 255),
-            size: 2
-        });
-    }
-    
-    // Animation duration in ms (shorter for snappier feel)
-    const animDuration = 1500;
-    const startTime = performance.now();
-    
-    function animateFrame(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(1, elapsed / animDuration);
-        
-        // Easing function (ease-out cubic)
-        const eased = 1 - Math.pow(1 - progress, 3);
-        
-        // Clear canvas
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-        ctx.fillRect(0, 0, width, height);
-        
-        // Draw particles
-        for (const p of particles) {
-            const x = p.x + (p.targetX - p.x) * eased;
-            const y = p.y + (p.targetY - p.y) * eased;
-            
-            ctx.fillStyle = `rgb(${p.r}, ${p.g}, ${p.b})`;
-            ctx.fillRect(x - p.size/2, y - p.size/2, p.size, p.size);
+
+    // Load final reconstruction image to get pixel data
+    const img = new Image();
+    img.onerror = () => {
+        finishSnapshotAnimation(snapshot, reconstruction);
+    };
+    img.onload = () => {
+        const srcCanvas = document.createElement('canvas');
+        srcCanvas.width = reconWidth;
+        srcCanvas.height = reconHeight;
+        const srcCtx = srcCanvas.getContext('2d');
+        srcCtx.drawImage(img, 0, 0, reconWidth, reconHeight);
+        const sourceData = srcCtx.getImageData(0, 0, reconWidth, reconHeight);
+        const src = sourceData.data;
+
+        // Buffer: same resolution, start with random colors (raster form)
+        const buffer = new Uint8ClampedArray(reconWidth * reconHeight * 4);
+        for (let i = 0; i < buffer.length; i += 4) {
+            buffer[i] = Math.floor(Math.random() * 256);
+            buffer[i + 1] = Math.floor(Math.random() * 256);
+            buffer[i + 2] = Math.floor(Math.random() * 256);
+            buffer[i + 3] = 255;
         }
-        
-        if (progress < 1) {
-            animationFrameId = requestAnimationFrame(animateFrame);
-        } else {
-            // Animation complete - show final reconstruction
-            finishSnapshotAnimation(snapshot, reconstruction);
+
+        const bufferImageData = new ImageData(buffer, reconWidth, reconHeight);
+        const offscreen = document.createElement('canvas');
+        offscreen.width = reconWidth;
+        offscreen.height = reconHeight;
+        const offCtx = offscreen.getContext('2d');
+
+        const animDuration = 1500;
+        const startTime = performance.now();
+        let lastFilled = 0;
+
+        function animateFrame(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(1, elapsed / animDuration);
+            const nextIndex = Math.min(totalPixels, Math.floor(progress * (totalPixels + 1)));
+
+            // Raster order: copy only new pixels (lastFilled..nextIndex) from source into buffer
+            for (let i = lastFilled; i < nextIndex; i++) {
+                const idx = i * 4;
+                buffer[idx] = src[idx];
+                buffer[idx + 1] = src[idx + 1];
+                buffer[idx + 2] = src[idx + 2];
+                buffer[idx + 3] = 255;
+            }
+            lastFilled = nextIndex;
+
+            offCtx.putImageData(bufferImageData, 0, 0);
+
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, displayWidth, displayHeight);
+            const scale = Math.min(displayWidth / reconWidth, displayHeight / reconHeight) * 0.9;
+            const dx = (displayWidth - reconWidth * scale) / 2;
+            const dy = (displayHeight - reconHeight * scale) / 2;
+            ctx.drawImage(offscreen, 0, 0, reconWidth, reconHeight, dx, dy, reconWidth * scale, reconHeight * scale);
+
+            if (progress < 1) {
+                animationFrameId = requestAnimationFrame(animateFrame);
+            } else {
+                finishSnapshotAnimation(snapshot, reconstruction);
+            }
         }
-    }
-    
-    animationFrameId = requestAnimationFrame(animateFrame);
+
+        animationFrameId = requestAnimationFrame(animateFrame);
+    };
+    img.src = snapshot.imageDataURL;
 }
 
 function finishSnapshotAnimation(snapshot, reconstruction) {
@@ -1632,27 +1978,20 @@ function finishSnapshotAnimation(snapshot, reconstruction) {
     const ctx = snapshotCtx;
     
     const completeWithResult = () => {
-        // Show result
+        // Complete digest first so charge count is correct when we show the result
+        gameEngine.completeDigest(snapshot);
         const meetsThreshold = snapshot.ssim >= gameEngine.winCondition.threshold;
-        showSnapshotResult(snapshot.ssim, meetsThreshold);
+        const chargesLeft = gameEngine.getRemainingCharges();
         
-        // Complete snapshot after a delay
-        setTimeout(() => {
-            gameEngine.completeSnapshot(snapshot);
-            
-            // If won, hide overlay immediately (win screen will show)
-            // Otherwise, hide after a short delay
-            if (meetsThreshold) {
-                // Small delay to let user see "Target reached!" message
-                setTimeout(() => {
-                    hideSnapshotOverlay();
-                }, 800);
-            } else {
-                setTimeout(() => {
-                    hideSnapshotOverlay();
-                }, 1500);
-            }
-        }, 500);
+        showSnapshotResult(snapshot.ssim, meetsThreshold, chargesLeft);
+        
+        if (meetsThreshold) {
+            setTimeout(() => hideSnapshotOverlay(), 800);
+        } else if (chargesLeft === 0) {
+            // Motif failed: wait for user to click "Next motif →" (no auto-advance)
+        } else {
+            setTimeout(() => hideSnapshotOverlay(), 1500);
+        }
     };
     
     // Draw final reconstruction image
@@ -1680,6 +2019,49 @@ function finishSnapshotAnimation(snapshot, reconstruction) {
         console.warn('[Snapshot] No image data URL available');
         completeWithResult();
     }
+}
+
+// Eaten pixels rings: throttle updates (getEatenPixels reads from GPU)
+let eatenRingsFrameCount = 0;
+const EATEN_RINGS_THROTTLE = 15;
+
+function updateEatenRings() {
+    const canvasEl = $('#eatenRingsCanvas');
+    if (!canvasEl || !lenia || typeof lenia.getEatenPixels !== 'function') return;
+    const ctx = canvasEl.getContext('2d');
+    if (!ctx) return;
+    const d = 100;
+    const cx = d / 2;
+    const cy = d / 2;
+    const maxRadius = 48;
+    // Get current eaten pixels (fresh read, no exclude - show all collected)
+    const eaten = lenia.getEatenPixels(true);
+const totalImagePixels = lenia.originalResourceData
+            ? lenia.originalResourceData.length / 4
+            : (lenia.resourceTexSize || 512) ** 2;
+    ctx.clearRect(0, 0, d, d);
+    if (eaten.length === 0) return;
+    // Average R, G, B (pixels use 0–1 float)
+    let sumR = 0, sumG = 0, sumB = 0;
+    for (let i = 0; i < eaten.length; i++) {
+        const p = eaten[i];
+        sumR += p.r != null ? p.r : 0;
+        sumG += p.g != null ? p.g : 0;
+        sumB += p.b != null ? p.b : 0;
+    }
+    const n = eaten.length;
+    const avgR = Math.round((sumR / n) * 255);
+    const avgG = Math.round((sumG / n) * 255);
+    const avgB = Math.round((sumB / n) * 255);
+    // Radius = fraction of image covered; use power scale so early growth is easy to see
+    const ratio = Math.min(1, eaten.length / totalImagePixels);
+    const scaledRatio = Math.pow(ratio, 0.4);
+    const minRadius = 6;
+    const radius = Math.max(minRadius, scaledRatio * maxRadius);
+    ctx.fillStyle = `rgb(${avgR},${avgG},${avgB})`;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fill();
 }
 
 // Animation loop
@@ -1791,8 +2173,16 @@ function animate(currentTime) {
         }
     }
     
-    // Update game engine (checks win condition)
+    // Update game engine (speed burst, win condition) and skill cooldown UI
     gameEngine.update();
+    tickSkillCooldowns();
+    // Eaten pixels rings (throttled, only when playing)
+    if (gameEngine.isPlayMode() && lenia) {
+        eatenRingsFrameCount++;
+        if (eatenRingsFrameCount % EATEN_RINGS_THROTTLE === 0) {
+            updateEatenRings();
+        }
+    }
 }
 
 // Start the game

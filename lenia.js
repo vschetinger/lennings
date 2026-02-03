@@ -162,9 +162,10 @@ function calcNormCoef(m, s) {
     return 1.0 / (acc*dr*2.0*Math.PI);
 }
 
-// World texture resolution: resource map, depth map, and repulsion field are painted at this size.
-// Particles live in continuous 2D (no grid); this only sets how sharp the painted world looks.
-const WORLD_TEX_SIZE = 1024;
+// Max world texture resolution (resource/depth can be smaller to match image dataset).
+const WORLD_TEX_SIZE_MAX = 1024;
+// Default resource size when no image loaded yet (e.g. 512 for 512×512 dataset).
+const RESOURCE_TEX_SIZE_DEFAULT = 512;
 
 class ParticleLenia {
 
@@ -190,7 +191,8 @@ class ParticleLenia {
             ()=>twgl.createFramebufferInfo(gl, [{internalFormat: gl.RGBA32F}, {internalFormat: gl.RGBA32F}], sx, sy ));
         this.fieldFormat = [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}];
         this.fieldU = twgl.createFramebufferInfo(gl, this.fieldFormat, 256, 256);
-        this.fieldR = twgl.createFramebufferInfo(gl, this.fieldFormat, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
+        this.resourceTexSize = RESOURCE_TEX_SIZE_DEFAULT;
+        this.fieldR = twgl.createFramebufferInfo(gl, this.fieldFormat, this.resourceTexSize, this.resourceTexSize);
         this.selectBuf = twgl.createFramebufferInfo(gl, [{}], sx, sy);
         
         // Preferences buffer for RGB resource preferences per particle (double-buffered for reproduction)
@@ -199,11 +201,11 @@ class ParticleLenia {
         
         // Resource texture for RGBA environmental fields (double-buffered for consumption)
         this.resourceFormat = [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}];
-        this.resourceTex = twgl.createFramebufferInfo(gl, this.resourceFormat, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
-        this.resourceTexDst = twgl.createFramebufferInfo(gl, this.resourceFormat, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
+        this.resourceTex = twgl.createFramebufferInfo(gl, this.resourceFormat, this.resourceTexSize, this.resourceTexSize);
+        this.resourceTexDst = twgl.createFramebufferInfo(gl, this.resourceFormat, this.resourceTexSize, this.resourceTexSize);
         
         // Depth map (read-only, grayscale in R, same world-space mapping as resourceTex)
-        this.depthTex = twgl.createFramebufferInfo(gl, this.resourceFormat, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
+        this.depthTex = twgl.createFramebufferInfo(gl, this.resourceFormat, this.resourceTexSize, this.resourceTexSize);
         this.originalDepthData = null;
         
         // Trail accumulation texture for particle path visualization
@@ -236,12 +238,24 @@ class ParticleLenia {
         this._createReconstructionWorker();
 
         this.setupUniforms(gui);
-        this.U.worldTexSize = WORLD_TEX_SIZE;  // Keep in sync with resource/depth texture size
+        this.U.worldTexSize = this.resourceTexSize;
     }
 
     get dishR() { return this.U.dishR; }
-    /** World texture resolution (resource/depth map size). Same in main app and simulation. */
-    get worldTexSize() { return WORLD_TEX_SIZE; }
+    /** World texture resolution (resource/depth map size). Matches loaded image or default. */
+    get worldTexSize() { return this.resourceTexSize; }
+
+    /** Resize resource/depth textures to match loaded image (e.g. 512 for 512×512 dataset). */
+    _resizeResourceTextures(size) {
+        if (size === this.resourceTexSize) return;
+        const gl = this.gl;
+        this.resourceTexSize = size;
+        this.U.worldTexSize = size;
+        twgl.resizeFramebufferInfo(gl, this.resourceTex, this.resourceFormat, size, size);
+        twgl.resizeFramebufferInfo(gl, this.resourceTexDst, this.resourceFormat, size, size);
+        twgl.resizeFramebufferInfo(gl, this.depthTex, this.resourceFormat, size, size);
+        // fieldR is resized per-frame in render() to canvas size; leave it as-is
+    }
 
     /** Create a new reconstruction worker (internal helper) */
     _createReconstructionWorker() {
@@ -262,7 +276,7 @@ class ParticleLenia {
                     }
                     this.reconstructionPendingRequests.delete(id);
                     if (success) {
-                        request.resolve({result, rgbdError, ssimValue, ssimDistance, score, dims});
+                        request.resolve({result, usedIndices: e.data.usedIndices || [], rgbdError, ssimValue, ssimDistance, score, dims});
                     } else {
                         request.reject(new Error(error || 'Worker computation failed'));
                     }
@@ -683,6 +697,63 @@ class ParticleLenia {
         }`, {dst:this.prefBuf}, {n});
     }
 
+    /**
+     * Reset with n particles at center, each assigned a fixed RGB preference (e.g. 7 classical colors).
+     * colors: array of [r,g,b] in 0-1, one per particle. If shorter than n, remainder use random.
+     */
+    resetWithColors(n, center = [0, 0], colors = []) {
+        if (n === 'max') n = this.max_point_n;
+        n = Math.min(n, this.max_point_n);
+        this.stepCount = 0;
+        this.U.currentStep = 0;
+        this.clearSelection();
+        this.runProgram(`
+        uniform int n;
+        uniform vec2 center;
+        void main() {
+            ivec2 ij = ivec2(gl_FragCoord.xy);
+            ivec2 sz = textureSize(state, 0);
+            int idx = ij.y*sz.x+ij.x;
+            if (idx>=n) {
+                out0 = vec4(-20000);
+                out1 = vec4(0.0);
+                return;
+            }
+            float r = sqrt(float(idx)*0.5+0.25);
+            float a = 2.4*float(idx);
+            vec2 p = center + vec2(sin(a)*r, cos(a)*r);
+            out0 = vec4(p, p);
+            out1 = vec4(0.5, 1.0, currentStep, 0.0);
+        }`, {dst: this.dst}, { n, center });
+        this.flipBuffers();
+
+        const gl = this.gl;
+        const [sx, sy] = this.state_size;
+        const prefData = new Float32Array(sx * sy * 4);
+        for (let i = 0; i < sx * sy; i++) {
+            const base = i * 4;
+            if (i < n && colors[i]) {
+                const c = colors[i];
+                prefData[base + 0] = typeof c[0] === 'number' ? c[0] : 1;
+                prefData[base + 1] = typeof c[1] === 'number' ? c[1] : 0;
+                prefData[base + 2] = typeof c[2] === 'number' ? c[2] : 0;
+                prefData[base + 3] = 1;
+            } else if (i < n) {
+                const fi = i;
+                const fract = (x) => x - Math.floor(x);
+                prefData[base + 0] = fract(Math.sin(fi * 12.9898) * 43758.5453);
+                prefData[base + 1] = fract(Math.sin(fi * 78.233) * 43758.5453);
+                prefData[base + 2] = fract(Math.sin(fi * 45.164) * 43758.5453);
+                prefData[base + 3] = 1;
+            } else {
+                prefData[base + 0] = prefData[base + 1] = prefData[base + 2] = 0;
+                prefData[base + 3] = 1;
+            }
+        }
+        gl.bindTexture(gl.TEXTURE_2D, this.prefBuf.attachments[0]);
+        gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, sx, sy, gl.RGBA, gl.FLOAT, prefData);
+    }
+
     setPoint(i, xy) {
         this.runProgram(`
         uniform int i;
@@ -945,50 +1016,48 @@ class ParticleLenia {
         }
         
         // Store original image dimensions before resizing
-        this.originalWidth = img.naturalWidth || img.width || WORLD_TEX_SIZE;
-        this.originalHeight = img.naturalHeight || img.height || WORLD_TEX_SIZE;
+        this.originalWidth = img.naturalWidth || img.width || this.resourceTexSize;
+        this.originalHeight = img.naturalHeight || img.height || this.resourceTexSize;
         this.originalAspectRatio = this.originalWidth / this.originalHeight;
-        
-        // Create a canvas to process the image and extract RGBA
+
+        // Match texture size to image (e.g. 512 for 512×512 dataset), capped at max
+        const desiredSize = Math.min(this.originalWidth, this.originalHeight, WORLD_TEX_SIZE_MAX);
+        if (desiredSize !== this.resourceTexSize) {
+            this._resizeResourceTextures(desiredSize);
+        }
+
+        const R = this.resourceTexSize;
         const canvas = document.createElement('canvas');
-        canvas.width = WORLD_TEX_SIZE;
-        canvas.height = WORLD_TEX_SIZE;
+        canvas.width = R;
+        canvas.height = R;
         const ctx = canvas.getContext('2d');
-        // Flip vertically to match WebGL coordinate system
-        ctx.translate(0, WORLD_TEX_SIZE);
+        ctx.translate(0, R);
         ctx.scale(1, -1);
-        ctx.drawImage(img, 0, 0, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
-        const imageData = ctx.getImageData(0, 0, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
-        
-        // Convert to float array for RGBA16F texture
-        const floatData = new Float32Array(WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4);
+        ctx.drawImage(img, 0, 0, R, R);
+        const imageData = ctx.getImageData(0, 0, R, R);
+        const floatData = new Float32Array(R * R * 4);
         for (let i = 0; i < imageData.data.length; i++) {
             floatData[i] = imageData.data[i] / 255.0;
         }
-        
-        // Store the original float data for reloading later
-        this.originalResourceData = floatData.slice(); // Make a copy
-        
-        // Hard reset reconstruction system (terminates worker, clears all state)
+        this.originalResourceData = floatData.slice();
         this.hardResetReconstruction();
-        
-        // Upload to resource texture
         this._uploadResourceData(floatData);
     }
-    
+
     _uploadResourceData(floatData) {
         const gl = this.gl;
+        const R = this.resourceTexSize;
         gl.bindTexture(gl.TEXTURE_2D, this.resourceTex.attachments[0]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, WORLD_TEX_SIZE, WORLD_TEX_SIZE, 0, gl.RGBA, gl.FLOAT, floatData);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, R, R, 0, gl.RGBA, gl.FLOAT, floatData);
         gl.bindTexture(gl.TEXTURE_2D, null);
-        
         gl.bindTexture(gl.TEXTURE_2D, this.resourceTexDst.attachments[0]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, WORLD_TEX_SIZE, WORLD_TEX_SIZE, 0, gl.RGBA, gl.FLOAT, floatData);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, R, R, 0, gl.RGBA, gl.FLOAT, floatData);
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
     async loadDepthImage(imageSource) {
         const gl = this.gl;
+        const R = this.resourceTexSize;
         let img;
         if (imageSource instanceof HTMLImageElement || imageSource instanceof HTMLCanvasElement) {
             img = imageSource;
@@ -1002,15 +1071,15 @@ class ParticleLenia {
             });
         }
         const canvas = document.createElement('canvas');
-        canvas.width = WORLD_TEX_SIZE;
-        canvas.height = WORLD_TEX_SIZE;
+        canvas.width = R;
+        canvas.height = R;
         const ctx = canvas.getContext('2d');
-        ctx.translate(0, WORLD_TEX_SIZE);
+        ctx.translate(0, R);
         ctx.scale(1, -1);
-        ctx.drawImage(img, 0, 0, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
-        const imageData = ctx.getImageData(0, 0, WORLD_TEX_SIZE, WORLD_TEX_SIZE);
-        const floatData = new Float32Array(WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4);
-        for (let i = 0; i < WORLD_TEX_SIZE * WORLD_TEX_SIZE; i++) {
+        ctx.drawImage(img, 0, 0, R, R);
+        const imageData = ctx.getImageData(0, 0, R, R);
+        const floatData = new Float32Array(R * R * 4);
+        for (let i = 0; i < R * R; i++) {
             const r = imageData.data[i * 4] / 255.0;
             const g = imageData.data[i * 4 + 1] / 255.0;
             const b = imageData.data[i * 4 + 2] / 255.0;
@@ -1026,16 +1095,18 @@ class ParticleLenia {
 
     _uploadDepthData(floatData) {
         const gl = this.gl;
+        const R = this.resourceTexSize;
         gl.bindTexture(gl.TEXTURE_2D, this.depthTex.attachments[0]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, WORLD_TEX_SIZE, WORLD_TEX_SIZE, 0, gl.RGBA, gl.FLOAT, floatData);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, R, R, 0, gl.RGBA, gl.FLOAT, floatData);
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
     clearDepth() {
         this.originalDepthData = null;
         const gl = this.gl;
-        const empty = new Float32Array(WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4);
-        for (let i = 0; i < WORLD_TEX_SIZE * WORLD_TEX_SIZE; i++) {
+        const R = this.resourceTexSize;
+        const empty = new Float32Array(R * R * 4);
+        for (let i = 0; i < R * R; i++) {
             empty[i * 4] = 0.5;
             empty[i * 4 + 1] = 0.5;
             empty[i * 4 + 2] = 0.5;
@@ -1050,11 +1121,12 @@ class ParticleLenia {
      * originalDepthData already exists (user-provided depth) or if no resource is loaded.
      */
     ensureDepthFromResource() {
-        if (this.originalDepthData) return; // User provided depth; don't overwrite
-        if (!this.originalResourceData) return; // No resource to derive from
+        if (this.originalDepthData) return;
+        if (!this.originalResourceData) return;
         const src = this.originalResourceData;
-        const floatData = new Float32Array(WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4);
-        for (let i = 0; i < WORLD_TEX_SIZE * WORLD_TEX_SIZE; i++) {
+        const R = this.resourceTexSize;
+        const floatData = new Float32Array(R * R * 4);
+        for (let i = 0; i < R * R; i++) {
             const r = src[i * 4];
             const g = src[i * 4 + 1];
             const b = src[i * 4 + 2];
@@ -1086,30 +1158,32 @@ class ParticleLenia {
         return !!this.originalResourceData;
     }
 
-    getEatenPixels(forceRefresh = false) {
-        // Return cached result if available and not forcing refresh
-        // GPU readbacks are expensive, so cache aggressively
-        if (!forceRefresh && this.eatenPixelsCache !== null) {
+    /**
+     * Get list of eaten pixels from resource texture.
+     * @param {boolean} forceRefresh - If true, bypass cache and read from GPU
+     * @param {Set<string>} excludeKeys - Optional set of "x,y" keys to exclude (e.g. already digested)
+     */
+    getEatenPixels(forceRefresh = false, excludeKeys = null) {
+        if (!forceRefresh && this.eatenPixelsCache !== null && !excludeKeys) {
             return this.eatenPixelsCache;
         }
         
         const gl = this.gl;
-        const width = WORLD_TEX_SIZE;
-        const height = WORLD_TEX_SIZE;
-        
-        // Read back resource texture (expensive GPU operation)
+        const width = this.resourceTexSize;
+        const height = this.resourceTexSize;
         const pixels = new Float32Array(width * height * 4);
         twgl.bindFramebufferInfo(gl, this.resourceTex);
         gl.readPixels(0, 0, width, height, gl.RGBA, gl.FLOAT, pixels);
         twgl.bindFramebufferInfo(gl, null);
         
-        // Find all pixels with alpha < 0.1 (mostly eaten)
         const eatenPixels = [];
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
                 const idx = (y * width + x) * 4;
                 const alpha = pixels[idx + 3];
-                if (alpha < 0.1) {  // Use 0.1 threshold as specified
+                if (alpha < 0.1) {
+                    const key = `${x},${y}`;
+                    if (excludeKeys && excludeKeys.has(key)) continue;
                     eatenPixels.push({
                         x: x,
                         y: y,
@@ -1121,17 +1195,17 @@ class ParticleLenia {
             }
         }
         
-        // Cache the result to avoid repeated expensive readbacks
-        this.eatenPixelsCache = eatenPixels;
-        
+        if (!excludeKeys) {
+            this.eatenPixelsCache = eatenPixels;
+        }
         return eatenPixels;
     }
 
-    /** Read back current resource texture for replay state capture (WORLD_TEX_SIZE×WORLD_TEX_SIZE RGBA float). */
+    /** Read back current resource texture for replay state capture (resourceTexSize² RGBA float). */
     fetchResourceState() {
         const gl = this.gl;
-        const width = WORLD_TEX_SIZE;
-        const height = WORLD_TEX_SIZE;
+        const width = this.resourceTexSize;
+        const height = this.resourceTexSize;
         const pixels = new Float32Array(width * height * 4);
         twgl.bindFramebufferInfo(gl, this.resourceTex);
         gl.readPixels(0, 0, width, height, gl.RGBA, gl.FLOAT, pixels);
@@ -1141,24 +1215,40 @@ class ParticleLenia {
 
     /** Restore resource texture from captured state (for replay). */
     pushResourceState(floatData) {
-        if (!floatData || floatData.length !== WORLD_TEX_SIZE * WORLD_TEX_SIZE * 4) return;
+        if (!floatData || floatData.length !== this.resourceTexSize * this.resourceTexSize * 4) return;
         this._uploadResourceData(floatData);
+    }
+
+    /** Sample n elements from array without replacement (Fisher–Yates). */
+    _sampleWithoutReplacement(arr, n) {
+        const copy = arr.slice();
+        if (n >= copy.length) return copy;
+        for (let i = 0; i < n; i++) {
+            const j = i + Math.floor(Math.random() * (copy.length - i));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy.slice(0, n);
     }
 
     computeOptimalDimensions(eatenCount, aspectRatio) {
         if (eatenCount === 0) {
             return { width: 0, height: 0, pixelCount: 0 };
         }
-        
-        // Find the largest valid dimensions that fit within eatenCount
-        // Try increasing widths until we find the maximum that fits
+        // Cap at original image resolution so we never reconstruct at higher resolution than the motif
+        const maxW = this.originalWidth || this.resourceTexSize;
+        const maxH = this.originalHeight || this.resourceTexSize;
+
+        // Find the largest valid dimensions that fit within eatenCount and original image size
         let bestWidth = 1;
         let bestHeight = 1;
         let bestPixelCount = 1;
-        
-        // Start from small and work up to find maximum valid size
-        for (let w = 1; w <= Math.ceil(Math.sqrt(eatenCount * aspectRatio)); w++) {
-            const h = Math.floor(w / aspectRatio);
+
+        const maxWidthTry = Math.min(
+            Math.ceil(Math.sqrt(eatenCount * aspectRatio)),
+            maxW
+        );
+        for (let w = 1; w <= maxWidthTry; w++) {
+            const h = Math.min(Math.floor(w / aspectRatio), maxH);
             if (h < 1) continue;
             const pixelCount = w * h;
             if (pixelCount <= eatenCount && pixelCount > bestPixelCount) {
@@ -1167,7 +1257,7 @@ class ParticleLenia {
                 bestPixelCount = pixelCount;
             }
         }
-        
+
         return {
             width: bestWidth,
             height: bestHeight,
@@ -1175,17 +1265,21 @@ class ParticleLenia {
         };
     }
 
-    async createCompressedReconstruction(forceUpdate = false) {
+    /**
+     * Create reconstruction from eaten pixels.
+     * @param {boolean} forceUpdate - Force GPU readback
+     * @param {Set<string>} excludeDigestedKeys - Optional set of "x,y" to exclude (already digested)
+     * @returns {Promise<{width, height, texture?, usedIndices?: number[]}|null>} usedIndices are indices into the *available* eaten list passed to worker
+     */
+    async createCompressedReconstruction(forceUpdate = false, excludeDigestedKeys = null) {
         if (!this.originalResourceData || !this.originalAspectRatio) {
             return null;
         }
         
-        // Performance timing
         const perfStart = performance.now();
-        
-        // Only refresh eaten pixels if cache is invalid or forced
-        // This avoids expensive GPU readbacks
-        const eatenPixels = this.getEatenPixels(forceUpdate);
+        const eatenPixels = excludeDigestedKeys
+            ? this.getEatenPixels(forceUpdate, excludeDigestedKeys)
+            : this.getEatenPixels(forceUpdate);
         const eatenCount = eatenPixels.length;
         const perfAfterRead = performance.now();
         
@@ -1201,7 +1295,13 @@ class ParticleLenia {
             this.compressedReconstruction = null;
             return null;
         }
-        
+
+        // Use only as many pixels as the image has – no cherry-picking from a huge surplus.
+        // When the world lattice (1024²) has more cells than the motif, this keeps difficulty fair.
+        const pixelsForMosaic = eatenCount > dims.pixelCount
+            ? this._sampleWithoutReplacement(eatenPixels, dims.pixelCount)
+            : eatenPixels;
+
         // Update when:
         // 1. No reconstruction exists yet (always update to show progress)
         // 2. Dimensions can grow (more pixels eaten, can make larger image)
@@ -1241,19 +1341,18 @@ class ParticleLenia {
         // - Eaten count changed significantly (need to recalculate metrics)
         // - Force update requested
         
-        // Get original image at full resolution (WORLD_TEX_SIZE) for error calculation
+        // Get original image at full resolution (resourceTexSize) for error calculation
+        const R = this.resourceTexSize;
         const originalCanvas = document.createElement('canvas');
-        originalCanvas.width = WORLD_TEX_SIZE;
-        originalCanvas.height = WORLD_TEX_SIZE;
+        originalCanvas.width = R;
+        originalCanvas.height = R;
         const originalCtx = originalCanvas.getContext('2d');
-        const originalImageData = originalCtx.createImageData(WORLD_TEX_SIZE, WORLD_TEX_SIZE);
-        
-        // Reconstruct original image data from float array
+        const originalImageData = originalCtx.createImageData(R, R);
         for (let i = 0; i < this.originalResourceData.length; i += 4) {
             const idx = i / 4;
-            const x = idx % WORLD_TEX_SIZE;
-            const y = Math.floor(idx / WORLD_TEX_SIZE);
-            const pixelIdx = (y * WORLD_TEX_SIZE + x) * 4;
+            const x = idx % R;
+            const y = Math.floor(idx / R);
+            const pixelIdx = (y * R + x) * 4;
             originalImageData.data[pixelIdx + 0] = Math.round(this.originalResourceData[i + 0] * 255);
             originalImageData.data[pixelIdx + 1] = Math.round(this.originalResourceData[i + 1] * 255);
             originalImageData.data[pixelIdx + 2] = Math.round(this.originalResourceData[i + 2] * 255);
@@ -1285,7 +1384,7 @@ class ParticleLenia {
                 
                 this.reconstructionWorker.postMessage({
                     id,
-                    eatenPixels,
+                    eatenPixels: pixelsForMosaic,
                     targetImageData: {
                         data: Array.from(targetImageData.data),
                         width: targetImageData.width,
@@ -1299,22 +1398,16 @@ class ParticleLenia {
                     dims
                 });
                 
-                // Wait for worker to complete
-                const {result: resultArray, rgbdError, ssimValue, ssimDistance, score: reconstructionScore} = await promise;
+                const response = await promise;
+                const {result: resultArray, usedIndices: workerUsedIndices = [], rgbdError, ssimValue, ssimDistance, score: reconstructionScore} = response;
                 
-                // Check if this result is still valid (image might have been reloaded or reset)
-                if (!this.originalResourceData) {
-                    // Image was reloaded, ignore this result
-                    return null;
-                }
-                
-                // Note: We don't need to check lastReconstructionDims here because the onmessage handler
-                // already filters out stale results based on generation. If we get here, the result is valid.
+                if (!this.originalResourceData) return null;
                 
                 resultImageData = new Uint8ClampedArray(resultArray);
                 this.reconstructionRGBd = (rgbdError != null && rgbdError !== undefined) ? rgbdError : 0;
-                this.reconstructionSSIM = (ssimValue != null && ssimValue !== undefined) ? ssimValue : 0;  // SSIM value (0-1, higher is better)
+                this.reconstructionSSIM = (ssimValue != null && ssimValue !== undefined) ? ssimValue : 0;
                 this.reconstructionScore = (reconstructionScore != null && reconstructionScore !== undefined) ? reconstructionScore : 0;
+                this._lastUsedPixelKeys = workerUsedIndices.map(i => `${pixelsForMosaic[i].x},${pixelsForMosaic[i].y}`);
             } catch (error) {
                 // Check if error is due to cancellation (image reloaded)
                 if (error.message && error.message.includes('cancelling reconstruction')) {
@@ -1328,20 +1421,20 @@ class ParticleLenia {
                 }
                 
                 console.error('[Reconstruction] Worker failed, falling back to main thread:', error);
-                // Fall through to synchronous computation
-                const syncResult = this.computeReconstructionSync(eatenPixels, targetImageData, originalImageData, dims);
+                const syncResult = this.computeReconstructionSync(pixelsForMosaic, targetImageData, originalImageData, dims);
                 resultImageData = syncResult.result;
                 this.reconstructionRGBd = (syncResult.rgbdError != null && syncResult.rgbdError !== undefined) ? syncResult.rgbdError : 0;
                 this.reconstructionSSIM = (syncResult.ssimValue != null && syncResult.ssimValue !== undefined) ? syncResult.ssimValue : 0;
                 this.reconstructionScore = (syncResult.score != null && syncResult.score !== undefined) ? syncResult.score : 0;
+                this._lastUsedPixelKeys = (syncResult.usedIndices || []).map(i => `${pixelsForMosaic[i].x},${pixelsForMosaic[i].y}`);
             }
         } else {
-            // Fallback: synchronous computation on main thread
-            const syncResult = this.computeReconstructionSync(eatenPixels, targetImageData, originalImageData, dims);
+            const syncResult = this.computeReconstructionSync(pixelsForMosaic, targetImageData, originalImageData, dims);
             resultImageData = syncResult.result;
             this.reconstructionRGBd = syncResult.rgbdError || 0;
             this.reconstructionSSIM = syncResult.ssimValue || 0;
             this.reconstructionScore = syncResult.score || 0;
+            this._lastUsedPixelKeys = (syncResult.usedIndices || []).map(i => `${pixelsForMosaic[i].x},${pixelsForMosaic[i].y}`);
         }
         
         // Create ImageData from result
@@ -1378,11 +1471,11 @@ class ParticleLenia {
         this.compressedReconstructionTex.width = dims.width;
         this.compressedReconstructionTex.height = dims.height;
         
-        // Cache the result
         this.compressedReconstruction = {
             texture: this.compressedReconstructionTex,
             width: dims.width,
-            height: dims.height
+            height: dims.height,
+            usedPixelKeys: this._lastUsedPixelKeys || []
         };
         this.lastEatenCount = eatenCount;
         
@@ -1407,7 +1500,13 @@ class ParticleLenia {
             console.log(`[PERF] Reconstruction: ${(perfEnd - perfStart).toFixed(2)}ms (read: ${(perfAfterRead - perfStart).toFixed(2)}ms, compute: ${(perfEnd - perfAfterRead).toFixed(2)}ms)`);
         }
         
-        return this.compressedReconstruction;
+        const out = this.compressedReconstruction;
+        return out;
+    }
+
+    /** Return set of "x,y" keys that were used in the last reconstruction (for digest tracking). */
+    getLastUsedPixelKeys() {
+        return this._lastUsedPixelKeys || [];
     }
 
     /** Return data URL of current compressed reconstruction for export/display, or null. */
@@ -1533,8 +1632,8 @@ class ParticleLenia {
         const tree = new SimpleKDTree(pixelsWithIndices);
         
         const resultImageData = new Uint8ClampedArray(targetImageData.data.length);
+        const usedIndices = [];
         
-        // For each target pixel, find nearest unused eaten pixel
         for (let ty = 0; ty < dims.height; ty++) {
             for (let tx = 0; tx < dims.width; tx++) {
                 const targetIdx = (ty * dims.width + tx) * 4;
@@ -1542,22 +1641,20 @@ class ParticleLenia {
                 const tg = targetImageData.data[targetIdx + 1] / 255.0;
                 const tb = targetImageData.data[targetIdx + 2] / 255.0;
                 
-                // Find nearest unused pixel using k-d tree
                 const nearestNode = tree.findNearestUnused(tr, tg, tb);
                 
                 if (nearestNode && !nearestNode.used) {
-                    // Use actual eaten pixel color
                     resultImageData[targetIdx + 0] = Math.round(nearestNode.pixel.r * 255);
                     resultImageData[targetIdx + 1] = Math.round(nearestNode.pixel.g * 255);
                     resultImageData[targetIdx + 2] = Math.round(nearestNode.pixel.b * 255);
                     resultImageData[targetIdx + 3] = 255;
-                    nearestNode.used = true;  // Mark as used
+                    nearestNode.used = true;
+                    usedIndices.push(nearestNode.index);
                 } else {
-                    // No unused eaten pixel available - leave as black/transparent (only use eaten pixels!)
                     resultImageData[targetIdx + 0] = 0;
                     resultImageData[targetIdx + 1] = 0;
                     resultImageData[targetIdx + 2] = 0;
-                    resultImageData[targetIdx + 3] = 0;  // Transparent/empty
+                    resultImageData[targetIdx + 3] = 0;
                 }
             }
         }
@@ -1779,10 +1876,11 @@ class ParticleLenia {
         
         return { 
             result: resultImageData, 
-            rgbdError: rgbdResult.error,  // RGB distance (large number, calculated at original resolution)
-            ssimValue: ssimResult.ssim || 0,  // SSIM value (0-1, higher is better)
-            ssimDistance: ssimResult.error || 0,  // SSIM distance (0-1, lower is better)
-            score: scoreResult.score   // Normalized score (0-100, for future use)
+            usedIndices,
+            rgbdError: rgbdResult.error,
+            ssimValue: ssimResult.ssim || 0,
+            ssimDistance: ssimResult.error || 0,
+            score: scoreResult.score
         };
     }
 
