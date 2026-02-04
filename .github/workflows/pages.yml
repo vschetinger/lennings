@@ -12,7 +12,16 @@ jobs:
         with:
           lfs: true
       - name: Pull LFS files
-        run: git lfs pull
+        run: |
+          echo "=== Pulling LFS files ==="
+          git lfs pull
+          echo "=== Verifying LFS files were pulled (should be real files, not pointers) ==="
+          echo "Checking A1012.2.png:"
+          ls -lh levels/GlassBeadGame/images/A1012.2.png
+          echo "First 20 bytes:"
+          head -c 20 levels/GlassBeadGame/images/A1012.2.png | xxd
+          echo "=== LFS status ==="
+          git lfs ls-files | head -10
       - name: Build static site for Pages (no LFS in output)
         run: |
           rm -rf dist-pages
@@ -22,17 +31,21 @@ jobs:
             --exclude='.github' \
             --exclude='.gitattributes' \
             ./ dist-pages/
-      # Uncomment to verify LFS images are real files on deploy (not pointers)
-      # - name: Verify LFS images
-      #   run: |
-      #     F="dist-pages/levels/GlassBeadGame/images/A1012.2.png"
-      #     echo "=== $F ==="
-      #     ls -la "$F"
-      #     echo "First 20 bytes (hex):"
-      #     head -c 20 "$F" | xxd
-      #     # Real PNG starts with 89 50 4E 47. LFS pointer starts with "version https://"
-      #     if head -c 5 "$F" | grep -q "version"; then echo "LFS POINTER - images will not load on Pages"; exit 1; fi
-      #     echo "OK: real image file"
+      - name: Verify LFS images are real files (not pointers)
+        run: |
+          echo "=== Counting images in dist-pages ==="
+          find dist-pages/levels/GlassBeadGame/images -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" | wc -l
+          echo "=== Checking sample image ==="
+          F="dist-pages/levels/GlassBeadGame/images/A1012.2.png"
+          ls -lh "$F"
+          echo "First 20 bytes (hex):"
+          head -c 20 "$F" | xxd
+          # Real PNG starts with 89 50 4E 47. LFS pointer starts with "version https://"
+          if head -c 5 "$F" | grep -q "version"; then 
+            echo "ERROR: LFS POINTER DETECTED - images will not load on Pages"
+            exit 1
+          fi
+          echo "✓ Image is a real binary file, not an LFS pointer"
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

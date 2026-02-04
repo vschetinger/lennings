@@ -5,7 +5,7 @@ Lenia + Lemmings: a game where creatures eat pixels from the environment and you
 ## Play
 
 - **Local:** open `play.html` in a browser (or serve the folder with any static server).
-- **GitHub Pages:** if this repo has Pages enabled (Settings → Pages → source: main branch), play at:
+- **GitHub Pages:** if this repo has Pages enabled (Settings → Pages → source: **gh-pages branch**), play at:
   - **https://&lt;username&gt;.github.io/&lt;repo-name&gt;/play.html**
 
 ## How to play (basics)
@@ -23,8 +23,18 @@ Lenia + Lemmings: a game where creatures eat pixels from the environment and you
 
 ## Deploy to GitHub Pages
 
+**⚠️ IMPORTANT:** If images show as "broken thumbnails" or don't load, see [GITHUB_PAGES_SETUP.md](GITHUB_PAGES_SETUP.md) for the fix.
+
+### Quick Setup
+
 1. Push this repo to GitHub (e.g. `origin` on `main` or `master`).
-2. In the repo: **Settings → Pages**.
-3. Under “Build and deployment”, choose **Source: GitHub Actions** (or “Deploy from a branch” and pick `gh-pages` if you use the branch workflow).
-4. The existing workflow (`.github/workflows/pages.yml`) publishes the repo root on push to `main`/`master`. After it runs, the site is at `https://<username>.github.io/<repo-name>/`.
-5. Open **play.html** from that URL (e.g. `https://<username>.github.io/<repo-name>/play.html`).
+2. The workflow (`.github/workflows/pages.yml`) will automatically run and deploy to the `gh-pages` branch.
+3. In your repo: **Settings → Pages**.
+4. Under "Build and deployment":
+   - **Source:** Select **"Deploy from a branch"**
+   - **Branch:** Select **"gh-pages"** (NOT main or master) 
+   - **Folder:** Select **"/ (root)"**
+5. Save and wait 1-2 minutes.
+6. Visit `https://<username>.github.io/<repo-name>/play.html`
+
+**Why gh-pages?** The main branch uses Git LFS for images (pointer files), but GitHub Pages needs actual image files. The workflow automatically pulls LFS images and deploys them as regular files to gh-pages.
