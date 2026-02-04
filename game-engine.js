@@ -177,6 +177,14 @@ class LenningsGameEngine {
                 cooldownMs: 0,
                 action: () => this.takeDigest()
             });
+
+            // Q - Split: trigger reproduction for all particles above threshold (with cooldown)
+            this.registerSkill({
+                key: 'q',
+                label: 'Split',
+                cooldownMs: 3000,
+                action: () => this.triggerSplitReproduction()
+            });
             
             return true;
         } catch (error) {
@@ -606,6 +614,26 @@ class LenningsGameEngine {
             return this.startLevelWithConfig(this.currentLevel, this.currentLevelIndex);
         }
         return false;
+    }
+
+    /**
+     * Split skill: immediately perform a reproduction step for all particles
+     * whose energy is above the reproduction threshold. Timing is controlled
+     * by the skill cooldown, not by simulation step interval.
+     */
+    triggerSplitReproduction() {
+        if (!this.lenia || !this.params) return;
+
+        const maxChildren = this.params.maxChildrenPerParent ?? 2;
+        const useCpu = this.params.useCpuRepro ?? true;
+
+        if (useCpu && this.lenia.cpuReproductionStep) {
+            this.lenia.cpuReproductionStep(maxChildren);
+        } else if (this.lenia.processReproduction) {
+            this.lenia.processReproduction();
+        }
+
+        this.emit('skillUsed', { key: 'q', name: 'split' });
     }
     
     /**

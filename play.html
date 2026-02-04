@@ -1014,13 +1014,13 @@
     </div>
 </div>
 
-<!-- Help button + Skills (R, W, D) -->
+<!-- Help button + Skills (Q, W, D, R) -->
 <div id="skillsBar" class="skills-bar hidden">
     <button type="button" class="help-btn" id="helpBtn" title="How to play">?</button>
-    <div class="skill-btn" id="skillR" data-key="r" title="Respawn: new random location (15s cooldown)">
-        <span class="skill-key">R</span>
-        <span class="skill-label">Respawn</span>
-        <div class="skill-cooldown" id="cooldownR"></div>
+    <div class="skill-btn" id="skillQ" data-key="q" title="Split: trigger reproduction for ready cells (cooldown)">
+        <span class="skill-key">Q</span>
+        <span class="skill-label">Split</span>
+        <div class="skill-cooldown" id="cooldownQ"></div>
     </div>
     <div class="skill-btn" id="skillW" data-key="w" title="Speed burst: 5s faster + attraction (25s cooldown)">
         <span class="skill-key">W</span>
@@ -1030,6 +1030,11 @@
     <div class="skill-btn" id="skillD" data-key="d" title="Digest: reconstruct from eaten pixels (3 per level)">
         <span class="skill-key">D</span>
         <span class="skill-label">Digest</span>
+    </div>
+    <div class="skill-btn" id="skillR" data-key="r" title="Respawn: new random location (15s cooldown)">
+        <span class="skill-key">R</span>
+        <span class="skill-label">Respawn</span>
+        <div class="skill-cooldown" id="cooldownR"></div>
     </div>
 </div>
 
@@ -1132,9 +1137,10 @@
         <p><strong>Goal:</strong> Your creatures eat pixels from the environment. Reconstruct the motif image by digesting at the right time. Reach the SSIM score target (e.g. 0.7) to complete the level.</p>
         <p><strong>Controls:</strong></p>
         <ul>
+            <li><kbd>Q</kbd> <strong>Split</strong> — Trigger reproduction for all \"pregnant\" cells (energy above threshold). Uses a cooldown.</li>
+            <li><kbd>W</kbd> <strong>Burst</strong> — Short speed and attraction boost (25s cooldown).</li>
             <li><kbd>D</kbd> <strong>Digest</strong> — Use eaten pixels to form one reconstruction. You have 3 digests per level. Each digest locks those pixels (they can’t be reused).</li>
             <li><kbd>R</kbd> <strong>Respawn</strong> — New random spawn and colors (15s cooldown). Resets digests for this level.</li>
-            <li><kbd>W</kbd> <strong>Burst</strong> — Short speed and attraction boost (25s cooldown).</li>
             <li><kbd>Space</kbd> Pause</li>
         </ul>
         <p><strong>UI:</strong> Top bar shows level name, cells, and time. Right panel: digest charges (dots), three reconstruction slots, and the <em>color mass</em> circle (average color and amount of eaten pixels).</p>
@@ -1145,7 +1151,7 @@
 
 <!-- Instructions -->
 <div id="instructions" class="hidden">
-    <kbd>D</kbd>digest |<kbd>Space</kbd>pause |<kbd>R</kbd>respawn |<kbd>W</kbd>burst
+    <kbd>Q</kbd>split |<kbd>W</kbd>burst |<kbd>D</kbd>digest |<kbd>R</kbd>respawn |<kbd>Space</kbd>pause
 </div>
 
 <script>
@@ -1320,7 +1326,9 @@ async function initGame() {
         pointAddI: 0,
         enableLifeCycle: getParamValue(paramMap, 'enableLifeCycle', true),
         enableDeaths: getParamValue(paramMap, 'enableDeaths', true),
-        enableReproduction: getParamValue(paramMap, 'enableReproduction', true),
+        // Disable automatic reproduction; reproduction is now triggered manually
+        // via the Q \"split\" skill with a cooldown.
+        enableReproduction: false,
         consumeEnabled: getParamValue(paramMap, 'consumeEnabled', true),
         useCpuRepro: getParamValue(paramMap, 'useCpuRepro', true),
         maxChildrenPerParent: getParamValue(paramMap, 'maxChildrenPerParent', 2),
@@ -1409,8 +1417,8 @@ function setupGameEvents() {
         resetCameraToSpawn();
     });
     
-    // Skill buttons (R respawn, W speed burst, D digest) - mobile-friendly
-    ['r', 'w', 'd'].forEach(key => {
+    // Skill buttons (R respawn, W speed burst, D digest, Q split) - mobile-friendly
+    ['r', 'w', 'd', 'q'].forEach(key => {
         const btn = $(`#skill${key.toUpperCase()}`);
         const cooldownEl = $(`#cooldown${key.toUpperCase()}`);
         if (!btn) return;
@@ -1424,8 +1432,10 @@ function setupGameEvents() {
                 }
             } else if (key === 'd') {
                 if (gameEngine.canTakeDigest()) gameEngine.triggerSkill('d');
-            } else {
+            } else if (key === 'w') {
                 gameEngine.triggerSkill('w');
+            } else if (key === 'q') {
+                gameEngine.triggerSkill('q');
             }
         });
     });
@@ -1556,6 +1566,13 @@ function handleKeyDown(e) {
     if (e.key === 'w' || e.key === 'W') {
         if (gameEngine.isPlayMode() && (gameEngine.gameState === 'playing' || gameEngine.gameState === 'paused')) {
             gameEngine.triggerSkill('w');
+        }
+    }
+
+    // Q - Split (manual reproduction with cooldown)
+    if (e.key === 'q' || e.key === 'Q') {
+        if (gameEngine.isPlayMode() && (gameEngine.gameState === 'playing' || gameEngine.gameState === 'paused')) {
+            gameEngine.triggerSkill('q');
         }
     }
     
@@ -2138,15 +2155,9 @@ function animate(currentTime) {
         if (params.enableDeaths) {
             lenia.processDeaths();
         }
-        if (params.enableReproduction) {
-            if (params.useCpuRepro) {
-                if ((lenia.stepCount || 0) % params.reproInterval === 0) {
-                    lenia.cpuReproductionStep(params.maxChildrenPerParent);
-                }
-            } else {
-                lenia.processReproduction();
-            }
-        }
+        // Automatic reproduction has been removed for game mode.
+        // Reproduction is now triggered explicitly via the Q \"split\" skill,
+        // which calls into cpuReproductionStep/processReproduction directly.
     }
     
     // Accumulate trails

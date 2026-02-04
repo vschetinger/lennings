@@ -110,7 +110,8 @@ struct Particle {
   vec2 pos;
   float radius;
   float clock;
-  vec3 pref;  // RGB resource preferences
+  vec3 pref;        // RGB resource preferences
+  bool readyToSplit; // true if energy >= reproThreshold
 };
 
 Particle getParticle() {
@@ -141,6 +142,9 @@ Particle getParticle() {
     float baseRadius = (0.25 + 0.75/(repulsionPotential*2.0))*0.5;
     float energyScale = 0.6 + 0.4 * clamp(particleEnergy, 0.0, 1.0);
     res.radius = baseRadius * energyScale;
+
+    // Mark whether particle is ready to split (energy above threshold)
+    res.readyToSplit = (particleEnergy >= reproThreshold);
     //res.radius *= cos(res.clock*tau)*0.5+0.5;
     return res;
 }
@@ -200,7 +204,9 @@ class ParticleLenia {
         this.prefBufDst = twgl.createFramebufferInfo(gl, [{internalFormat: gl.RGBA32F}], sx, sy);
         
         // Resource texture for RGBA environmental fields (double-buffered for consumption)
-        this.resourceFormat = [{minMag: gl.LINEAR, internalFormat: gl.RGBA16F}];
+        // Use nearest-neighbor sampling so the motif background looks pixelated,
+        // matching the discrete nature of the level image.
+        this.resourceFormat = [{minMag: gl.NEAREST, internalFormat: gl.RGBA16F}];
         this.resourceTex = twgl.createFramebufferInfo(gl, this.resourceFormat, this.resourceTexSize, this.resourceTexSize);
         this.resourceTexDst = twgl.createFramebufferInfo(gl, this.resourceFormat, this.resourceTexSize, this.resourceTexSize);
         
@@ -459,7 +465,8 @@ class ParticleLenia {
 
             if (alive) {
                 const age = currentStep - birthStep;
-                if (energy >= reproThreshold && age >= reproMinAge) {
+                // Ready to split when energy is above threshold; age no longer required
+                if (energy >= reproThreshold) {
                     parents.push(i);
                 }
             } else {
@@ -2008,12 +2015,11 @@ class ParticleLenia {
             
             if (!isAlive(out0)) return;
             
-            // Check if ready to reproduce (energy >= threshold AND age >= minimum)
-            float birthStep = out1.z;
-            float age = currentStep - birthStep;  // Calculate age from birthStep
+            // Check if ready to reproduce (energy >= threshold).
+            // Age gate has been removed; any sufficiently energetic particle can split
+            // when reproduction is triggered from the game.
             float energy = out1.y;
-            // Enforce minimum age requirement - particles must be old enough
-            if (energy >= reproThreshold && age >= reproMinAge) {
+            if (energy >= reproThreshold) {
                 // Mark for reproduction by setting high w value (temporary flag)
                 // and deduct energy cost
                 out1 = vec4(out1.x, energy - reproCost, birthStep, 999.0);
@@ -2235,18 +2241,28 @@ class ParticleLenia {
                 out0.rgb = mix(out0.rgb, vec3(1.0), 0.1);
             }
         }`, {dst:target}, {flipUD});
-        // render particles as square pixels
+        // render particles as square pixels; \"pregnant\" (ready-to-split) cells spin slowly
         this.runProgram(`
         uniform bool flipUD;
         out vec3 color;
         void main() {
-            uv = quad * 1.0;
             Particle p = getParticle();
             if (!p.visible) {
               gl_Position = vec4(0.0);
               return;
             }
-            vec2 wldPos = p.pos + uv * p.radius;
+            // Base quad
+            vec2 local = quad * 1.0;
+            // If particle is ready to split, spin its square based on global step
+            if (p.readyToSplit) {
+                float angle = currentStep * 0.03;
+                float ca = cos(angle);
+                float sa = sin(angle);
+                mat2 R = mat2(ca, -sa, sa, ca);
+                local = R * local;
+            }
+            uv = local;
+            vec2 wldPos = p.pos + local * p.radius;
             color = p.color;
             gl_Position = vec4(wld2scr(wldPos), 0.0, 1.0);
             if (flipUD) gl_Position.y *= -1.0;
