@@ -93,6 +93,13 @@ vec3 rgb2hsv(vec3 c) {
     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
 }
 
+// HSV to RGB conversion - inverse of rgb2hsv
+vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
 // Calculate angular distance between two hues (handles wraparound)
 float hueDistance(float h1, float h2) {
     float diff = abs(h1 - h2);
@@ -299,6 +306,70 @@ class ParticleLenia {
             console.warn('[Worker] Failed to create worker, falling back to main thread:', error);
             this.reconstructionWorker = null;
         }
+    }
+
+    /**
+     * Evolve particle preference colors toward local environment color
+     * sampled from the resource texture. For each alive particle, sample a
+     * k×k neighborhood (k odd, default 5) around its position in resourceTex,
+     * average RGB, and set pref = 0.5 * (pref + envColor).
+     */
+    evolveColors(kernelSize = 5) {
+        const gl = this.gl;
+        const k = Math.max(1, kernelSize | 0);
+        this.runProgram(`
+        uniform sampler2D srcPrefBuf;
+        uniform int kernelSize;
+        void main() {
+            ivec2 ij = ivec2(gl_FragCoord.xy);
+            ivec2 sz = textureSize(state, 0);
+            vec4 p = texelFetch(state, ij, 0);
+            vec4 s1 = texelFetch(state1, ij, 0);
+            vec4 currentPref = texelFetch(srcPrefBuf, ij, 0);
+            if (!isAlive(p)) {
+                out0 = currentPref;
+                return;
+            }
+            // Map world position to resource UV
+            vec2 resUV = (p.xy / dishR) * 0.5 + 0.5;
+            int halfK = kernelSize / 2;
+            vec3 acc = vec3(0.0);
+            float count = 0.0;
+            // Use worldTexSize as texture resolution hint
+            float texel = 1.0 / worldTexSize;
+            for (int dy = -8; dy <= 8; ++dy) {
+                if (dy < -halfK || dy > halfK) continue;
+                for (int dx = -8; dx <= 8; ++dx) {
+                    if (dx < -halfK || dx > halfK) continue;
+                    vec2 offset = vec2(float(dx), float(dy)) * texel;
+                    vec3 c = texture(resourceTex, resUV + offset).rgb;
+                    acc += c;
+                    count += 1.0;
+                }
+            }
+            vec3 envColor = count > 0.0 ? acc / count : currentPref.rgb;
+            // Blend in HSV space to avoid desaturated gray drift.
+            vec3 envHSV = rgb2hsv(envColor);
+            vec3 curHSV = rgb2hsv(currentPref.rgb);
+            // Circular mean of hue (wrap-around at 1.0)
+            float h1 = curHSV.x * tau;
+            float h2 = envHSV.x * tau;
+            vec2 v = vec2(cos(h1) + cos(h2), sin(h1) + sin(h2));
+            float avgHue = atan(v.y, v.x) / tau;
+            if (avgHue < 0.0) avgHue += 1.0;
+            float avgS = (curHSV.y + envHSV.y) * 0.5;
+            float avgV = (curHSV.z + envHSV.z) * 0.5;
+            vec3 outHSV = vec3(avgHue, avgS, avgV);
+            vec3 evolved = hsv2rgb(outHSV);
+            out0 = vec4(evolved, 1.0);
+        }`, {dst: this.prefBufDst}, {srcPrefBuf: this.prefBuf.attachments[0], kernelSize: k});
+
+        // Copy back to main preference buffer
+        this.runProgram(`
+        uniform sampler2D srcPref;
+        void main() {
+            out0 = texelFetch(srcPref, ivec2(gl_FragCoord.xy), 0);
+        }`, {dst: this.prefBuf}, {srcPref: this.prefBufDst.attachments[0]});
     }
 
     /** 
