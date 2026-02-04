@@ -14,7 +14,7 @@ When you view an image URL in your browser (e.g., `https://vschetinger.github.io
 
 ### Step-by-Step Fix
 
-1. Go to your repository on GitHub: `https://github.com/vschetinger/lennings`
+1. Go to your repository on GitHub: `https://github.com/<username>/<repo-name>`
 
 2. Click **Settings** (top menu)
 
@@ -31,7 +31,7 @@ When you view an image URL in your browser (e.g., `https://vschetinger.github.io
 
 7. **Test it:** Open an image URL in your browser:
    ```
-   https://vschetinger.github.io/lennings/levels/GlassBeadGame/images/A1012.2.png
+   https://<username>.github.io/<repo-name>/levels/GlassBeadGame/images/A1012.2.png
    ```
    
    You should see a real PNG image, not text content.
@@ -51,11 +51,11 @@ When you view an image URL in your browser (e.g., `https://vschetinger.github.io
 After changing the Pages configuration:
 
 1. **Check an image URL directly:**
-   - Visit: `https://vschetinger.github.io/lennings/levels/GlassBeadGame/images/A1012.2.png`
+   - Visit: `https://<username>.github.io/<repo-name>/levels/GlassBeadGame/images/A1012.2.png`
    - You should see an actual image, not text
 
 2. **Check the game:**
-   - Visit: `https://vschetinger.github.io/lennings/play.html`
+   - Visit: `https://<username>.github.io/<repo-name>/play.html`
    - Click "Start Game"
    - Images should load as levels
 
