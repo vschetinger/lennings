@@ -24,7 +24,7 @@
         "description": "Target frames per second (FPS limiter)"
       },
       "dt": {
-        "value": 0.07,
+        "value": 0.025,
         "min": 0.01,
         "max": 2.0,
         "step": 0.01,

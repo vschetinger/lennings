@@ -172,6 +172,12 @@ class LenningsGameEngine {
                 action: () => this.startSpeedBurst()
             });
             this.registerSkill({
+                key: 'e',
+                label: 'Evolve',
+                cooldownMs: 3000,
+                action: () => this.triggerEvolve()
+            });
+            this.registerSkill({
                 key: 'd',
                 label: 'Digest',
                 cooldownMs: 0,
@@ -523,7 +529,7 @@ class LenningsGameEngine {
     
     /**
      * Respawn: restart simulation with 7 particles at a new random location (same level, same image).
-     * Used when player is stuck. Resets snapshot charges for this level.
+     * Used when player is stuck. Eaten/digested pixels and digest charges are preserved.
      */
     respawnAtRandom() {
         if (!this.lenia || !this.params || this.gameState === 'idle' || this.gameState === 'loading') return false;
@@ -532,12 +538,6 @@ class LenningsGameEngine {
         this.params.spawnCount = this.spawnCount;
         this.lenia.resetWithColors(this.spawnCount, spawnCenter, this.classicalColors);
         this.lenia.clearTrails();
-        this.lenia.hardResetReconstruction();
-        this.digests = [];
-        this.isAnimatingDigest = false;
-        this.digestGeneration++;
-        this.digestedPixelKeys = new Set();
-        this.emit('levelReset', {});
         this.emit('skillUsed', { key: 'r', name: 'respawn' });
         return true;
     }
@@ -634,6 +634,18 @@ class LenningsGameEngine {
         }
 
         this.emit('skillUsed', { key: 'q', name: 'split' });
+    }
+
+    /**
+     * Evolve skill: adapt particle colors toward their local environment
+     * sampled from the resource texture. Each alive particle averages its
+     * current preference color with the mean RGB of a small (k=5) neighborhood
+     * around its position in the motif image.
+     */
+    triggerEvolve() {
+        if (!this.lenia || !this.lenia.evolveColors) return;
+        this.lenia.evolveColors(5);
+        this.emit('skillUsed', { key: 'e', name: 'evolve' });
     }
     
     /**

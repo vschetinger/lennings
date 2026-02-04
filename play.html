@@ -16,16 +16,37 @@
         box-sizing: border-box;
     }
     
+    /* Console / GBG practice-style dark theme */
+    :root {
+        --bg: #1e1e1e;
+        --panel: #252526;
+        --border: #2d2d2d;
+        --text: #d4d4d4;
+        --muted: #9aa0a6;
+        --accent-blue: #569cd6;
+        --accent-purple: #c586c0;
+        --accent-cyan: #4fc1ff;
+        --success: #89d185;
+        --warn: #dcdcaa;
+        --error: #f48771;
+        /* Survival-flavored override (slightly warmer) */
+        --survival-bg: #1f1a18;
+        --survival-panel: #2a2523;
+        --survival-border: #3a322f;
+        --survival-accent: #c9785f;
+        --survival-text: #e8d4c8;
+    }
+    
     body { 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: Consolas, SFMono-Regular, Menlo, Monaco, monospace;
         margin: 0; 
         padding: 0;
         overflow: hidden;
         user-select: none;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
-        background: #0a0a0f;
-        color: #e0e0e0;
+        background: var(--survival-bg);
+        color: var(--survival-text);
     }
 
     #container {
@@ -48,7 +69,7 @@
     #levelSelect {
         position: fixed;
         inset: 0;
-        background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+        background: radial-gradient(circle at top, #2b2522 0%, var(--survival-bg) 55%, #120f0e 100%);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -72,7 +93,7 @@
 
     #levelSelect .subtitle {
         font-size: 1.1rem;
-        color: #888;
+        color: var(--muted);
         margin-bottom: 2rem;
     }
 
@@ -80,18 +101,18 @@
         padding: 16px 48px;
         font-size: 1.3rem;
         font-weight: bold;
-        background: linear-gradient(135deg, #4af2a1 0%, #6af 100%);
-        border: none;
-        border-radius: 12px;
-        color: #000;
+        background: linear-gradient(135deg, var(--survival-accent) 0%, var(--accent-purple) 100%);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: #0b0b0b;
         cursor: pointer;
         transition: all 0.3s ease;
         margin-top: 1rem;
     }
 
     .start-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 30px rgba(74, 242, 161, 0.5);
+        transform: scale(1.03);
+        box-shadow: 0 0 24px rgba(201, 120, 95, 0.5);
     }
 
     /* Game HUD */
@@ -100,11 +121,10 @@
         top: 0;
         left: 0;
         right: 0;
-        padding: 16px 24px;
+        padding: 12px 24px;
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+        align-items: flex-start;
         z-index: 50;
         pointer-events: none;
     }
@@ -125,8 +145,9 @@
 
     .hud-right {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 16px;
+        gap: 8px;
     }
 
     .level-info {
@@ -165,10 +186,10 @@
 
     /* Menu button */
     .menu-btn {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        color: #fff;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
         padding: 8px 16px;
         cursor: pointer;
         font-size: 0.9rem;
@@ -176,7 +197,7 @@
     }
 
     .menu-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: #33302d;
     }
 
     /* Skills bar: help + R, W, D */
@@ -185,7 +206,7 @@
         left: 20px;
         bottom: 24px;
         display: flex;
-        gap: 12px;
+        gap: 10px;
         z-index: 60;
         pointer-events: auto;
     }
@@ -195,12 +216,12 @@
     }
 
     .skill-btn {
-        min-width: 72px;
-        min-height: 56px;
-        background: rgba(0, 0, 0, 0.7);
-        border: 2px solid rgba(255, 255, 255, 0.25);
-        border-radius: 10px;
-        color: #fff;
+        min-width: 70px;
+        min-height: 52px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -211,12 +232,12 @@
         touch-action: manipulation;
         transition: border-color 0.2s, background 0.2s;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
     }
 
     .skill-btn:hover:not(.on-cooldown) {
-        border-color: rgba(74, 242, 161, 0.6);
-        background: rgba(0, 0, 0, 0.85);
+        border-color: var(--accent-blue);
+        background: #33302d;
     }
 
     .skill-btn:active:not(.on-cooldown) {
@@ -229,15 +250,15 @@
     }
 
     .skill-btn .skill-key {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: bold;
-        font-family: monospace;
-        color: #4af2a1;
+        font-family: Consolas, SFMono-Regular, Menlo, Monaco, monospace;
+        color: var(--accent-cyan);
     }
 
     .skill-btn .skill-label {
         font-size: 0.7rem;
-        color: #aaa;
+        color: var(--muted);
         margin-top: 2px;
     }
 
@@ -247,8 +268,8 @@
         left: 0;
         right: 0;
         height: 0%;
-        background: linear-gradient(180deg, rgba(40, 20, 60, 0.95) 0%, rgba(80, 20, 40, 0.95) 100%);
-        border-top: 2px solid rgba(255, 100, 150, 0.6);
+        background: linear-gradient(180deg, rgba(45, 35, 50, 0.95) 0%, rgba(60, 32, 40, 0.95) 100%);
+        border-top: 1px solid rgba(255, 100, 150, 0.5);
         transition: height 0.1s linear;
         pointer-events: none;
     }
@@ -291,9 +312,9 @@
         transition: color 0.2s, border-color 0.2s, background 0.2s;
     }
     .help-btn:hover {
-        color: #4af2a1;
-        border-color: rgba(74, 242, 161, 0.6);
-        background: rgba(0, 0, 0, 0.85);
+        color: var(--accent-cyan);
+        border-color: var(--accent-blue);
+        background: #33302d;
     }
 
     @keyframes burst-glow {
@@ -315,16 +336,17 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        background: rgba(0, 0, 0, 0.7);
+        background: var(--panel);
         padding: 8px 12px;
-        border-radius: 8px;
+        border-radius: 6px;
         font-size: 0.85rem;
+        border: 1px solid var(--border);
     }
-
+    
     .snapshot-charges .charge-label {
-        color: #888;
+        color: var(--muted);
     }
-
+    
     .snapshot-charges .charge-dots {
         display: flex;
         gap: 4px;
@@ -334,19 +356,19 @@
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border);
         transition: all 0.3s ease;
     }
-
+    
     .snapshot-charges .charge-dot.available {
-        background: #4af2a1;
-        border-color: #4af2a1;
-        box-shadow: 0 0 8px rgba(74, 242, 161, 0.5);
+        background: var(--success);
+        border-color: var(--success);
+        box-shadow: 0 0 8px rgba(137, 209, 133, 0.5);
     }
-
+    
     .snapshot-charges .key-hint {
-        color: #666;
+        color: var(--muted);
         font-size: 0.75rem;
         margin-left: 8px;
     }
@@ -358,6 +380,29 @@
         font-family: monospace;
     }
 
+    /* When snapshot-charges is used inside a skill button, render it as a
+       small overlay strip above the button content. */
+    .skill-btn .snapshot-charges {
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: transparent;
+        border: none;
+        padding: 0;
+        font-size: 0; /* hide any label text if present */
+    }
+    
+    .skill-btn .snapshot-charges .charge-dots {
+        gap: 3px;
+    }
+    
+    .skill-btn .snapshot-charges .charge-dot {
+        width: 12px;
+        height: 12px;
+        box-shadow: none;
+    }
+
     .snapshot-slot {
         width: 100px;
         background: rgba(0, 0, 0, 0.7);
@@ -365,16 +410,7 @@
         border-radius: 8px;
         overflow: hidden;
         transition: all 0.3s ease;
-    }
-
-    .snapshot-slot.empty {
-        height: 80px;
-        border-style: dashed;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #444;
-        font-size: 0.75rem;
+        margin-bottom: 8px;
     }
 
     .snapshot-slot.filled {
@@ -427,10 +463,97 @@
         overflow: visible;
     }
 
+    .hud-circle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .eaten-rings-container {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        padding: 10px;
+        background: radial-gradient(circle at top, rgba(255,255,255,0.05), transparent);
+        box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+    
     .eaten-rings-canvas {
         width: 100%;
         height: 100%;
         display: block;
+    }
+    
+    .hud-circle-stats {
+        display: flex;
+        gap: 24px;
+        margin-top: 4px;
+    }
+
+    .hud-circle-eaten {
+        margin-top: 2px;
+    }
+    
+    .hud-circle-eaten .eaten-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        text-transform: uppercase;
+        text-align: center;
+    }
+    
+    .hud-circle-eaten .eaten-count {
+        font-size: 0.8rem;
+        color: var(--text);
+        font-family: Consolas, SFMono-Regular, Menlo, Monaco, monospace;
+        text-align: center;
+    }
+
+    /* Mobile layout tweaks */
+    @media (max-width: 768px) {
+        #gameHUD {
+            padding: 8px 12px;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+        .hud-left {
+            justify-content: space-between;
+        }
+        .hud-right {
+            align-items: center;
+        }
+        .eaten-rings-container {
+            width: 100px;
+            height: 100px;
+        }
+        .hud-circle-stats {
+            gap: 16px;
+        }
+        #snapshotSlots {
+            width: 120px;
+        }
+        .skills-bar {
+            left: 0;
+            right: 0;
+            bottom: 8px;
+            justify-content: space-evenly;
+            padding: 0 8px;
+        }
+        .skill-btn {
+            min-width: 56px;
+            min-height: 44px;
+        }
+    }
+
+    #snapshotSlots {
+        width: 140px; /* match circle container width */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 4px;
     }
 
     /* Snapshot Animation Overlay */
@@ -850,33 +973,7 @@
         box-shadow: none;
     }
 
-    /* Instructions hint */
-    #instructions {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.7);
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        color: #888;
-        z-index: 50;
-        opacity: 1;
-        transition: opacity 0.5s ease;
-    }
-
-    #instructions.fade {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    #instructions kbd {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 2px 8px;
-        border-radius: 4px;
-        margin: 0 4px;
-    }
+    /* (short bottom instructions hint removed as redundant) */
 
     /* Pause overlay */
     #pauseOverlay {
@@ -989,7 +1086,7 @@
 <!-- Game HUD -->
 <div id="gameHUD" class="hidden">
     <div class="hud-left">
-        <button class="menu-btn" id="backBtn">← Back</button>
+        <button type="button" class="help-btn" id="helpBtn" title="How to play">?</button>
         <div class="level-info">
             <div class="level-label">LEVEL</div>
             <div id="levelName">-</div>
@@ -997,26 +1094,31 @@
     </div>
     
     <div class="hud-right">
-        <div class="collection-counter" id="collectionBtn" title="View your collection">
-            <span class="icon">🖼️</span>
-            <span class="count" id="collectionCount">0</span>
-        </div>
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-value" id="cellCount">0</div>
-                <div class="stat-label">Cells</div>
+        <div class="hud-circle">
+            <div class="eaten-rings-container" id="eatenRingsContainer" title="Color mass: average color, size = eaten / image pixels">
+                <canvas id="eatenRingsCanvas" width="120" height="120" class="eaten-rings-canvas"></canvas>
             </div>
-            <div class="stat">
-                <div class="stat-value" id="timeDisplay">0:00</div>
-                <div class="stat-label">Time</div>
+            <div class="hud-circle-eaten">
+                <div class="eaten-label">EATEN PIXELS</div>
+                <div class="eaten-count" id="eatenPixelsCount">0</div>
+            </div>
+            <div class="hud-circle-stats">
+                <div class="stat">
+                    <div class="stat-value" id="cellCount">0</div>
+                    <div class="stat-label">Cells</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="timeDisplay">0:00</div>
+                    <div class="stat-label">Time</div>
+                </div>
             </div>
         </div>
+        <div id="snapshotSlots"></div>
     </div>
 </div>
 
-<!-- Help button + Skills (Q, W, D, R) -->
+<!-- Skills (Q, W, E, D, R) -->
 <div id="skillsBar" class="skills-bar hidden">
-    <button type="button" class="help-btn" id="helpBtn" title="How to play">?</button>
     <div class="skill-btn" id="skillQ" data-key="q" title="Split: trigger reproduction for ready cells (cooldown)">
         <span class="skill-key">Q</span>
         <span class="skill-label">Split</span>
@@ -1027,7 +1129,15 @@
         <span class="skill-label">Burst</span>
         <div class="skill-cooldown" id="cooldownW"></div>
     </div>
+    <div class="skill-btn" id="skillE" data-key="e" title="Evolve: adapt colors to environment (cooldown)">
+        <span class="skill-key">E</span>
+        <span class="skill-label">Evolve</span>
+        <div class="skill-cooldown" id="cooldownE"></div>
+    </div>
     <div class="skill-btn" id="skillD" data-key="d" title="Digest: reconstruct from eaten pixels (3 per level)">
+        <div class="snapshot-charges" data-skill="d">
+            <div class="charge-dots" id="charges-d"></div>
+        </div>
         <span class="skill-key">D</span>
         <span class="skill-label">Digest</span>
     </div>
@@ -1038,24 +1148,7 @@
     </div>
 </div>
 
-<!-- Right panel: digest charges, slots, color mass -->
-<div id="snapshotInventory" class="snapshot-inventory hidden">
-    <div class="snapshot-charges">
-        <span class="charge-label">Digests:</span>
-        <div class="charge-dots">
-            <div class="charge-dot available" id="charge0"></div>
-            <div class="charge-dot available" id="charge1"></div>
-            <div class="charge-dot available" id="charge2"></div>
-        </div>
-        <span class="key-hint"><kbd>D</kbd></span>
-    </div>
-    <div class="snapshot-slot empty" id="slot0">Empty</div>
-    <div class="snapshot-slot empty" id="slot1">Empty</div>
-    <div class="snapshot-slot empty" id="slot2">Empty</div>
-    <div class="eaten-rings-container" id="eatenRingsContainer" title="Color mass: average color, size = eaten / image pixels">
-        <canvas id="eatenRingsCanvas" width="100" height="100" class="eaten-rings-canvas"></canvas>
-    </div>
-</div>
+<!-- (snapshotInventory panel removed; reconstructions now live under HUD circle) -->
 
 <!-- Digest overlay (loading → animation → result) -->
 <div id="snapshotOverlay">
@@ -1077,6 +1170,7 @@
         <div class="ssim-big" id="snapshotSSIM">0.000</div>
         <div class="ssim-label">SSIM Score</div>
         <div class="result-message" id="resultMessage"></div>
+        <button type="button" class="result-btn hidden" id="continueBtn">Back to level</button>
         <button type="button" class="result-btn result-btn-fail hidden" id="nextMotifBtn">Next motif →</button>
     </div>
 </div>
@@ -1137,21 +1231,17 @@
         <p><strong>Goal:</strong> Your creatures eat pixels from the environment. Reconstruct the motif image by digesting at the right time. Reach the SSIM score target (e.g. 0.7) to complete the level.</p>
         <p><strong>Controls:</strong></p>
         <ul>
-            <li><kbd>Q</kbd> <strong>Split</strong> — Trigger reproduction for all \"pregnant\" cells (energy above threshold). Uses a cooldown.</li>
-            <li><kbd>W</kbd> <strong>Burst</strong> — Short speed and attraction boost (25s cooldown).</li>
-            <li><kbd>D</kbd> <strong>Digest</strong> — Use eaten pixels to form one reconstruction. You have 3 digests per level. Each digest locks those pixels (they can’t be reused).</li>
-            <li><kbd>R</kbd> <strong>Respawn</strong> — New random spawn and colors (15s cooldown). Resets digests for this level.</li>
-            <li><kbd>Space</kbd> Pause</li>
+            <li><kbd>Q</kbd> <strong>Split</strong> — Trigger reproduction for all \"pregnant\" cells (energy above threshold).</li>
+            <li><kbd>W</kbd> <strong>Burst</strong> — Short speed and attraction boost.</li>
+            <li><kbd>E</kbd> <strong>Evolve</strong> — Let creatures adapt their colors toward the environment.</li>
+            <li><kbd>D</kbd> <strong>Digest</strong> — Use eaten pixels to form one reconstruction. Each digest locks those pixels (they can’t be reused).</li>
+            <li><kbd>R</kbd> <strong>Respawn</strong> — New random spawn and colors. Does <em>not</em> restore digests or eaten pixels.</li>
+            <li><kbd>Space</kbd> Pause / resume</li>
         </ul>
-        <p><strong>UI:</strong> Top bar shows level name, cells, and time. Right panel: digest charges (dots), three reconstruction slots, and the <em>color mass</em> circle (average color and amount of eaten pixels).</p>
-        <p>Win by getting one digest with SSIM ≥ target. If you use all 3 digests without reaching it, the motif fails and you can load the next one.</p>
+        <p><strong>UI:</strong> Top bar shows level name, cells, time, and the <em>eaten pixels</em> circle with its counter. Reconstructions you keep appear as small cards under the circle.</p>
+        <p>Win by getting one digest with SSIM ≥ target. If you use all digests without reaching it, the motif fails and you can load the next one.</p>
         <button type="button" class="help-close-btn" id="helpCloseBtn">Got it</button>
     </div>
-</div>
-
-<!-- Instructions -->
-<div id="instructions" class="hidden">
-    <kbd>Q</kbd>split |<kbd>W</kbd>burst |<kbd>D</kbd>digest |<kbd>R</kbd>respawn |<kbd>Space</kbd>pause
 </div>
 
 <script>
@@ -1193,7 +1283,7 @@ const levelSelectEl = $('#levelSelect');
 const gameHUDEl = $('#gameHUD');
 const winOverlayEl = $('#winOverlay');
 const pauseOverlayEl = $('#pauseOverlay');
-const instructionsEl = $('#instructions');
+const instructionsEl = null;
 const galleryOverlayEl = $('#galleryOverlay');
 
 // Collection system - stores all winning reconstructions
@@ -1216,7 +1306,8 @@ function addToCollection(levelName, ssim, time, imageDataURL) {
 }
 
 function updateCollectionCounter() {
-    $('#collectionCount').textContent = collection.length;
+    const hudCount = $('#collectionCount');
+    if (hudCount) hudCount.textContent = collection.length;
     // Also update start screen counter
     const startCount = $('#startCollectionCount');
     if (startCount) startCount.textContent = collection.length;
@@ -1370,18 +1461,13 @@ async function initGame() {
 function startRandomGame() {
     levelSelectEl.classList.add('hidden');
     gameHUDEl.classList.remove('hidden');
-    instructionsEl.classList.remove('hidden');
-    snapshotInventoryEl.classList.remove('hidden');
     skillsBarEl.classList.remove('hidden');
     hideSnapshotOverlay();
     
     // Reset snapshot UI
     resetSnapshotUI();
     
-    // Fade out instructions after 5 seconds
-    setTimeout(() => {
-        instructionsEl.classList.add('fade');
-    }, 5000);
+    // Short bottom instructions hint removed as redundant.
     
     // Start a random level
     gameEngine.startRandomLevel();
@@ -1397,10 +1483,11 @@ function setupGameEvents() {
         updateProgress(ssim, smoothedSSIM, threshold, progress, cellCount, elapsedTime);
     });
     
+    // Level-won events are now reflected via the snapshot overlay result UI,
+    // so we avoid popping a separate win overlay to prevent flicker.
     gameEngine.on('levelWon', ({ ssim, elapsedTime, cellCount, levelIndex }) => {
-        // Hide snapshot overlay before showing win screen
-        hideSnapshotOverlay();
-        showWinScreen(ssim, elapsedTime, cellCount, levelIndex);
+        // Optionally, we could log or store this, but UI is handled in snapshotResult.
+        latestWinData = { ssim, elapsedTime, cellCount, levelIndex, imageDataURL: null };
     });
     
     gameEngine.on('levelStart', ({ level }) => {
@@ -1417,8 +1504,8 @@ function setupGameEvents() {
         resetCameraToSpawn();
     });
     
-    // Skill buttons (R respawn, W speed burst, D digest, Q split) - mobile-friendly
-    ['r', 'w', 'd', 'q'].forEach(key => {
+    // Skill buttons (Q split, W burst, E evolve, D digest, R respawn) - mobile-friendly
+    ['q', 'w', 'e', 'd', 'r'].forEach(key => {
         const btn = $(`#skill${key.toUpperCase()}`);
         const cooldownEl = $(`#cooldown${key.toUpperCase()}`);
         if (!btn) return;
@@ -1428,7 +1515,6 @@ function setupGameEvents() {
             if (key === 'r') {
                 if (gameEngine.triggerSkill('r')) {
                     resetCameraToSpawn();
-                    resetSnapshotUI();
                 }
             } else if (key === 'd') {
                 if (gameEngine.canTakeDigest()) gameEngine.triggerSkill('d');
@@ -1436,6 +1522,8 @@ function setupGameEvents() {
                 gameEngine.triggerSkill('w');
             } else if (key === 'q') {
                 gameEngine.triggerSkill('q');
+            } else if (key === 'e') {
+                gameEngine.triggerSkill('e');
             }
         });
     });
@@ -1475,14 +1563,14 @@ function setupGameEvents() {
     });
     
     // UI buttons
-    $('#backBtn').addEventListener('click', () => {
-        showLevelSelect();
-    });
-    
     $('#nextMotifBtn').addEventListener('click', () => {
         hideSnapshotOverlay();
         resetSnapshotUI();
         gameEngine.nextLevel();
+    });
+
+    $('#continueBtn').addEventListener('click', () => {
+        hideSnapshotOverlay();
     });
 
     $('#nextLevelBtn').addEventListener('click', () => {
@@ -1525,14 +1613,17 @@ function setupGameEvents() {
         }
     });
     
-    // Collection button in HUD
-    $('#collectionBtn').addEventListener('click', () => {
-        if (gameEngine.gameState === 'playing') {
-            gameEngine.pause();
-            pauseOverlayEl.classList.add('visible');
-        }
-        showGallery(false);
-    });
+    // Collection button in HUD (only if present)
+    const collectionBtn = $('#collectionBtn');
+    if (collectionBtn) {
+        collectionBtn.addEventListener('click', () => {
+            if (gameEngine.gameState === 'playing') {
+                gameEngine.pause();
+                pauseOverlayEl.classList.add('visible');
+            }
+            showGallery(false);
+        });
+    }
     
     // Keyboard controls
     window.addEventListener('keydown', handleKeyDown);
@@ -1551,13 +1642,12 @@ function handleKeyDown(e) {
         }
     }
     
-    // R - Respawn at random location (skill with cooldown)
+    // R - Respawn at random location (skill with cooldown; does NOT reset digests)
     if (e.key === 'r' || e.key === 'R') {
         if (gameEngine.isPlayMode() && gameEngine.gameState !== 'won') {
             hideSnapshotOverlay();
             if (gameEngine.triggerSkill('r')) {
                 resetCameraToSpawn();
-                resetSnapshotUI();
             }
         }
     }
@@ -1566,6 +1656,13 @@ function handleKeyDown(e) {
     if (e.key === 'w' || e.key === 'W') {
         if (gameEngine.isPlayMode() && (gameEngine.gameState === 'playing' || gameEngine.gameState === 'paused')) {
             gameEngine.triggerSkill('w');
+        }
+    }
+
+    // E - Evolve (adapt colors to environment, with cooldown)
+    if (e.key === 'e' || e.key === 'E') {
+        if (gameEngine.isPlayMode() && (gameEngine.gameState === 'playing' || gameEngine.gameState === 'paused')) {
+            gameEngine.triggerSkill('e');
         }
     }
 
@@ -1671,18 +1768,13 @@ function startLevel(index) {
     levelSelectEl.classList.add('hidden');
     gameHUDEl.classList.remove('hidden');
     winOverlayEl.classList.remove('visible');
-    instructionsEl.classList.remove('hidden');
-    snapshotInventoryEl.classList.remove('hidden');
     skillsBarEl.classList.remove('hidden');
     hideSnapshotOverlay();
     
     // Initialize snapshot UI
     resetSnapshotUI();
     
-    // Fade out instructions after 5 seconds
-    setTimeout(() => {
-        instructionsEl.classList.add('fade');
-    }, 5000);
+    // Short bottom instructions hint removed as redundant.
     
     gameEngine.startLevel(index);
 }
@@ -1694,8 +1786,7 @@ function showLevelSelect() {
     gameHUDEl.classList.add('hidden');
     winOverlayEl.classList.remove('visible');
     pauseOverlayEl.classList.remove('visible');
-    instructionsEl.classList.add('hidden');
-    snapshotInventoryEl.classList.add('hidden');
+    // Short bottom instructions hint removed as redundant.
     skillsBarEl.classList.add('hidden');
     hideSnapshotOverlay();
     hideGallery();
@@ -1758,25 +1849,45 @@ function showWinScreen(ssim, elapsedTime, cellCount, levelIndex) {
 // Snapshot UI Functions
 // ============================================================
 
-const snapshotInventoryEl = $('#snapshotInventory');
+const snapshotInventoryEl = $('#snapshotInventory'); // may be null; panel removed
 const skillsBarEl = $('#skillsBar');
 const snapshotOverlayEl = $('#snapshotOverlay');
+let wasPausedBeforeSnapshot = false;
 const snapshotCanvasEl = $('#snapshotCanvas');
 const snapshotCtx = snapshotCanvasEl.getContext('2d');
+
+// Initialize charge indicators for charge-based skills
+function initSkillCharges() {
+    // Digest (D) currently has 3 charges; could be driven from config later.
+    const digestCharges = $('#charges-d');
+    if (digestCharges && digestCharges.children.length === 0) {
+        const maxCharges = 3;
+        for (let i = 0; i < maxCharges; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'charge-dot available';
+            digestCharges.appendChild(dot);
+        }
+    }
+}
 
 function resetSnapshotUI() {
     // Cancel any running animation
     cancelSnapshotAnimation();
+        
+    // Initialize charges for charge-based skills
+    initSkillCharges();
     
-    // Show inventory
-    snapshotInventoryEl.classList.remove('hidden');
+    // Ensure all digest charge dots start as available
+    const container = $('#charges-d');
+    if (container) {
+        const dots = Array.from(container.querySelectorAll('.charge-dot'));
+        dots.forEach(dot => dot.classList.add('available'));
+    }
     
-    // Reset charge dots
-    for (let i = 0; i < 3; i++) {
-        $(`#charge${i}`).classList.add('available');
-        const slot = $(`#slot${i}`);
-        slot.className = 'snapshot-slot empty';
-        slot.innerHTML = 'Empty';
+    // Clear stacked snapshots
+    const slotsContainer = $('#snapshotSlots');
+    if (slotsContainer) {
+        slotsContainer.innerHTML = '';
     }
 }
 
@@ -1803,41 +1914,50 @@ function tickSkillCooldowns() {
 }
 
 function updateChargeDisplay(chargesRemaining) {
-    for (let i = 0; i < 3; i++) {
-        const dot = $(`#charge${i}`);
-        if (i < chargesRemaining) {
-            dot.classList.add('available');
-        } else {
-            dot.classList.remove('available');
-        }
-    }
+    // Digest skill currently uses 3 charges; this can be generalized per-skill.
+    const container = $('#charges-d');
+    if (!container) return;
+    const dots = Array.from(container.querySelectorAll('.charge-dot'));
+    dots.forEach((dot, i) => {
+        if (i < chargesRemaining) dot.classList.add('available');
+        else dot.classList.remove('available');
+    });
 }
 
 function addSnapshotToInventory(snapshot, meetsThreshold) {
-    const slotIndex = snapshot.index;
-    const slot = $(`#slot${slotIndex}`);
+    const slotsContainer = $('#snapshotSlots');
+    if (!slotsContainer || !snapshot.imageDataURL) return;
+    const slot = document.createElement('div');
+    slot.className = `snapshot-slot filled ${meetsThreshold ? 'winner' : ''}`;
     
     // Determine SSIM color class
     let ssimClass = 'low';
     if (snapshot.ssim >= 0.7) ssimClass = 'high';
     else if (snapshot.ssim >= 0.4) ssimClass = 'medium';
     
-    slot.className = `snapshot-slot filled ${meetsThreshold ? 'winner' : ''}`;
     slot.innerHTML = `
-        <img class="snapshot-image" src="${snapshot.imageDataURL}" alt="Snapshot ${slotIndex + 1}">
+        <img class="snapshot-image" src="${snapshot.imageDataURL}" alt="Snapshot">
         <div class="snapshot-info">
             <div class="snapshot-ssim ${ssimClass}">${snapshot.ssim.toFixed(3)}</div>
         </div>
     `;
+    slotsContainer.prepend(slot);
 }
 
 function showSnapshotOverlay() {
+    // Pause game while snapshot overlay is visible
+    if (gameEngine) {
+        wasPausedBeforeSnapshot = (gameEngine.gameState === 'paused');
+        if (gameEngine.gameState === 'playing') {
+            gameEngine.pause();
+        }
+    }
     snapshotOverlayEl.classList.add('visible');
     $('#snapshotResult').classList.remove('visible');
 }
 
 function showSnapshotLoading(pixelCount) {
-    snapshotOverlayEl.classList.add('visible');
+    showSnapshotOverlay();
     $('#snapshotTitle').textContent = 'Digesting...';
     $('#loadingContainer').classList.remove('hidden');
     $('#canvasContainer').classList.add('hidden');
@@ -1855,6 +1975,13 @@ function hideSnapshotOverlay() {
     $('#canvasContainer').classList.add('hidden');
     const nextMotifBtn = $('#nextMotifBtn');
     if (nextMotifBtn) nextMotifBtn.classList.add('hidden');
+    
+    // Restore previous pause state
+    if (gameEngine) {
+        if (gameEngine.gameState === 'paused' && !wasPausedBeforeSnapshot) {
+            gameEngine.resume();
+        }
+    }
 }
 
 function showSnapshotResult(ssim, meetsThreshold, chargesLeft) {
@@ -1863,20 +1990,41 @@ function showSnapshotResult(ssim, meetsThreshold, chargesLeft) {
     const ssimEl = $('#snapshotSSIM');
     const messageEl = $('#resultMessage');
     const nextMotifBtn = $('#nextMotifBtn');
+    const continueBtn = $('#continueBtn');
     
-    ssimEl.textContent = ssim.toFixed(3);
+    // Animate SSIM value rising up to the final score for a more
+    // satisfying transition from reconstruction to result.
+    const target = ssim;
+    const duration = 800;
+    const startTime = performance.now();
+    
+    function animateSSIM(now) {
+        const t = Math.min(1, (now - startTime) / duration);
+        const value = target * t;
+        ssimEl.textContent = value.toFixed(3);
+        if (t < 1) {
+            requestAnimationFrame(animateSSIM);
+        }
+    }
+    requestAnimationFrame(animateSSIM);
+    
+    // Set final colors/messages once; SSIM text will drift up into place.
+    // Reset buttons visibility
+    if (continueBtn) continueBtn.classList.add('hidden');
+    if (nextMotifBtn) nextMotifBtn.classList.add('hidden');
     
     if (meetsThreshold) {
         ssimEl.style.color = '#4af2a1';
         messageEl.className = 'result-message success';
         messageEl.textContent = 'Target reached! Level complete!';
-        if (nextMotifBtn) nextMotifBtn.classList.add('hidden');
+        if (nextMotifBtn) nextMotifBtn.classList.remove('hidden');
     } else {
         ssimEl.style.color = ssim >= 0.4 ? '#ffd93d' : '#ff6b6b';
         if (chargesLeft > 0) {
             messageEl.className = 'result-message continue';
             messageEl.textContent = `Keep going! ${chargesLeft} digest${chargesLeft > 1 ? 's' : ''} remaining`;
-            if (nextMotifBtn) nextMotifBtn.classList.add('hidden');
+            // Give the player a calm confirm button instead of auto-hide
+            if (continueBtn) continueBtn.classList.remove('hidden');
         } else {
             messageEl.className = 'result-message motif-failed';
             messageEl.textContent = 'Motif failed.';
@@ -2003,11 +2151,12 @@ function finishSnapshotAnimation(snapshot, reconstruction) {
         showSnapshotResult(snapshot.ssim, meetsThreshold, chargesLeft);
         
         if (meetsThreshold) {
-            setTimeout(() => hideSnapshotOverlay(), 800);
+            // For wins, keep the reconstruction overlay visible so the
+            // player can enjoy the result and advance via the button.
         } else if (chargesLeft === 0) {
             // Motif failed: wait for user to click "Next motif →" (no auto-advance)
         } else {
-            setTimeout(() => hideSnapshotOverlay(), 1500);
+            // Non-winning digest with charges left: wait for player to press "Back to level".
         }
     };
     
@@ -2047,38 +2196,83 @@ function updateEatenRings() {
     if (!canvasEl || !lenia || typeof lenia.getEatenPixels !== 'function') return;
     const ctx = canvasEl.getContext('2d');
     if (!ctx) return;
-    const d = 100;
-    const cx = d / 2;
-    const cy = d / 2;
-    const maxRadius = 48;
-    // Get current eaten pixels (fresh read, no exclude - show all collected)
-    const eaten = lenia.getEatenPixels(true);
-const totalImagePixels = lenia.originalResourceData
+    const width = canvasEl.width;
+    const height = canvasEl.height;
+    const d = Math.min(width, height);
+    const cx = width / 2;
+    const cy = height / 2;
+    const margin = 6;
+    const maxRadius = d / 2 - margin;
+
+    // Get current eaten pixels, excluding digested pixels so that
+    // digesting clears the accumulation.
+    const excludeKeys = (typeof gameEngine !== 'undefined' && gameEngine && gameEngine.digestedPixelKeys)
+        ? gameEngine.digestedPixelKeys
+        : null;
+    const eaten = lenia.getEatenPixels(true, excludeKeys);
+    const totalImagePixels = lenia.originalResourceData
             ? lenia.originalResourceData.length / 4
             : (lenia.resourceTexSize || 512) ** 2;
-    ctx.clearRect(0, 0, d, d);
-    if (eaten.length === 0) return;
-    // Average R, G, B (pixels use 0–1 float)
-    let sumR = 0, sumG = 0, sumB = 0;
-    for (let i = 0; i < eaten.length; i++) {
-        const p = eaten[i];
-        sumR += p.r != null ? p.r : 0;
-        sumG += p.g != null ? p.g : 0;
-        sumB += p.b != null ? p.b : 0;
-    }
+
+    ctx.clearRect(0, 0, width, height);
+    if (!eaten || eaten.length === 0) return;
+
     const n = eaten.length;
-    const avgR = Math.round((sumR / n) * 255);
-    const avgG = Math.round((sumG / n) * 255);
-    const avgB = Math.round((sumB / n) * 255);
-    // Radius = fraction of image covered; use power scale so early growth is easy to see
-    const ratio = Math.min(1, eaten.length / totalImagePixels);
-    const scaledRatio = Math.pow(ratio, 0.4);
-    const minRadius = 6;
-    const radius = Math.max(minRadius, scaledRatio * maxRadius);
-    ctx.fillStyle = `rgb(${avgR},${avgG},${avgB})`;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.fill();
+    
+    // Update numeric eaten pixels counter in HUD
+    const eatenCountEl = $('#eatenPixelsCount');
+    if (eatenCountEl) {
+        eatenCountEl.textContent = n.toLocaleString();
+    }
+
+    // Overall coverage (0–1)
+    const coverage = Math.min(1, n / totalImagePixels);
+    // Ease coverage so early growth is more visible (same feel as before).
+    const eased = Math.pow(coverage, 0.4);
+    const filledRadius = Math.max(0, eased * maxRadius);
+
+    // Use many thin rings, but drive their count by eased coverage so
+    // early rings appear quickly and later ones fill in more slowly.
+    const maxRings = 36;
+    let ringCount = Math.floor(eased * maxRings);
+    ringCount = Math.max(1, Math.min(maxRings, ringCount || 1));
+    const perRing = Math.max(1, Math.floor(n / ringCount));
+
+    // Draw from inner to outer so new rings appear at the edge while
+    // keeping earlier inner structure visible.
+    for (let ring = 0; ring < ringCount; ring++) {
+        const startIdx = ring * perRing;
+        const endIdx = (ring === ringCount - 1) ? n : Math.min(n, (ring + 1) * perRing);
+        if (startIdx >= endIdx) continue;
+
+        let sumR = 0, sumG = 0, sumB = 0;
+        let count = 0;
+        for (let i = startIdx; i < endIdx; i++) {
+            const p = eaten[i];
+            sumR += p.r != null ? p.r : 0;
+            sumG += p.g != null ? p.g : 0;
+            sumB += p.b != null ? p.b : 0;
+            count++;
+        }
+        if (count === 0) continue;
+        const avgR = Math.round((sumR / count) * 255);
+        const avgG = Math.round((sumG / count) * 255);
+        const avgB = Math.round((sumB / count) * 255);
+
+        // Rings grow from center outward as coverage increases.
+        // Outer radius of last ring = filledRadius.
+        const innerT = ring / ringCount;
+        const outerT = (ring + 1) / ringCount;
+        const innerRadius = innerT * filledRadius;
+        const outerRadius = outerT * filledRadius;
+
+        ctx.fillStyle = `rgb(${avgR},${avgG},${avgB})`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, outerRadius, 0, Math.PI * 2);
+        ctx.arc(cx, cy, innerRadius, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.fill();
+    }
 }
 
 // Animation loop
