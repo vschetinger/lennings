@@ -1,3 +1,0 @@
-levels/GlassBeadGame/images/*.jpg filter=lfs diff=lfs merge=lfs -text
-levels/GlassBeadGame/images/*.jpeg filter=lfs diff=lfs merge=lfs -text
-levels/GlassBeadGame/images/*.png filter=lfs diff=lfs merge=lfs -text
