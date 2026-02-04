@@ -4,7 +4,7 @@
 
 If images show as "broken thumbnails" or don't load in the game, it means GitHub Pages is serving **Git LFS pointer files** instead of **actual image files**.
 
-When you view an image URL in your browser (e.g., `https://vschetinger.github.io/lennings/levels/GlassBeadGame/images/A1012.2.png`), you'll see either:
+When you view an image URL in your browser (e.g., `https://<username>.github.io/<repo-name>/levels/GlassBeadGame/images/A1012.2.png`), you'll see either:
 - ❌ **Text content** starting with `version https://git-lfs.github.com/spec/v1` (LFS pointer - WRONG)
 - ✅ **An actual PNG image** (correct)
 
