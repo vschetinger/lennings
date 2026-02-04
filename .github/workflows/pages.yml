@@ -13,10 +13,19 @@ jobs:
           lfs: true
       - name: Pull LFS files
         run: git lfs pull
+      - name: Build static site for Pages (no LFS in output)
+        run: |
+          rm -rf dist-pages
+          mkdir -p dist-pages
+          rsync -av \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitattributes' \
+            ./ dist-pages/
       # Uncomment to verify LFS images are real files on deploy (not pointers)
       # - name: Verify LFS images
       #   run: |
-      #     F="levels/GlassBeadGame/images/A1012.2.png"
+      #     F="dist-pages/levels/GlassBeadGame/images/A1012.2.png"
       #     echo "=== $F ==="
       #     ls -la "$F"
       #     echo "First 20 bytes (hex):"
@@ -27,4 +36,4 @@ jobs:
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./dist-pages
