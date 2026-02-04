@@ -32,7 +32,7 @@ Lenia + Lemmings: a game where creatures eat pixels from the environment and you
 3. In your repo: **Settings → Pages**.
 4. Under "Build and deployment":
    - **Source:** Select **"Deploy from a branch"**
-   - **Branch:** Select **"gh-pages"** (NOT main/master) 
+   - **Branch:** Select **"gh-pages"** (NOT main or master) 
    - **Folder:** Select **"/ (root)"**
 5. Save and wait 1-2 minutes.
 6. Visit `https://<username>.github.io/<repo-name>/play.html`
