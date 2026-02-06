@@ -47,6 +47,7 @@ git remote -v
    ```bash
    ssh-keygen -t ed25519 -C "your_email@example.com"
    ```
+   Replace `your_email@example.com` with the email address associated with your GitHub account.
    - Press Enter to accept the default file location (`~/.ssh/id_ed25519`)
    - Optionally, enter a passphrase for extra security (or press Enter for no passphrase)
 
@@ -77,7 +78,7 @@ git remote -v
    ```bash
    ssh -T git@github.com
    ```
-   You should see: `Hi <username>! You've successfully authenticated...`
+   You should see: `Hi <username>! You've successfully authenticated, but GitHub does not provide shell access.`
 
 **Alternative:** If you prefer copying the key directly to clipboard:
 - **macOS**: `pbcopy < ~/.ssh/id_ed25519.pub`
