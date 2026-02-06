@@ -52,6 +52,38 @@
         align-items: center;
         gap: 12px;
     }
+    .lang-switch {
+        display: flex;
+        flex-direction: column;
+        margin-left: 12px;
+        gap: 4px;
+    }
+    .lang-flag-btn {
+        width: 28px;
+        height: 18px;
+        border-radius: 3px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        opacity: 0.7;
+        transition: opacity 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+    }
+    .lang-flag-btn.active {
+        opacity: 1;
+        border-color: var(--accent);
+        transform: translateY(-1px);
+    }
+    .lang-flag-btn:hover {
+        opacity: 1;
+        border-color: #6af;
+    }
     .controls label {
         font-size: 0.85rem;
         color: var(--muted);
@@ -142,6 +174,35 @@
         background: rgba(74, 242, 161, 0.15);
         border-color: var(--accent);
     }
+    #motifMetaPanel {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        max-width: 280px;
+        background: rgba(10, 10, 20, 0.96);
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.16);
+        padding: 10px 14px 12px;
+        color: var(--text);
+        font-size: 0.8rem;
+        pointer-events: none;
+    }
+    #motifMetaPanel h3 {
+        margin: 0 0 6px 0;
+        font-size: 0.9rem;
+    }
+    #motifMetaPanel .meta-line {
+        margin-top: 3px;
+    }
+    #motifMetaPanel .meta-label {
+        color: var(--muted);
+        font-weight: 500;
+        margin-right: 4px;
+        white-space: nowrap;
+    }
+    #motifMetaPanel .meta-value {
+        white-space: normal;
+    }
     .empty-state {
         position: absolute;
         inset: 0;
@@ -163,12 +224,27 @@
         <label for="threshold">Threshold</label>
         <input type="range" id="threshold" min="0" max="1" step="0.05" value="0.5">
         <span class="threshold-value" id="thresholdValue">0.50</span>
+        <div class="lang-switch">
+            <button type="button" class="lang-flag-btn" id="graphLangEnBtn" title="English (AUS)">🇦🇺</button>
+            <button type="button" class="lang-flag-btn" id="graphLangPtBrBtn" title="Português (BR)">🇧🇷</button>
+        </div>
     </div>
 </div>
 
 <div id="graph-container">
     <svg id="graph-svg"></svg>
     <div class="empty-state" id="emptyState">No collection data. Play and win motifs in <a href="play.html" class="btn">Play</a> to build your graph.</div>
+    <div id="motifMetaPanel" style="display: none;">
+        <h3 id="metaMotifName">—</h3>
+        <div class="meta-line">
+            <span class="meta-label">Tarot:</span>
+            <span class="meta-value" id="metaTarot">—</span>
+        </div>
+        <div class="meta-line">
+            <span class="meta-label">I Ching:</span>
+            <span class="meta-value" id="metaIChing">—</span>
+        </div>
+    </div>
 </div>
 
 <div class="footer">
@@ -184,6 +260,7 @@
 <script>
 (function () {
     const COLLECTION_KEY = 'lennings_collection';
+    const LANGUAGE_STORAGE_KEY = 'gbg-language-preference';
     const LEVEL_PACK = 'levels/GlassBeadGame';
 
     let gameEngine = null;
@@ -198,6 +275,25 @@
     // When set (e.g. from \"play.html?focus=...\"), the graph will center on this
     // collection node once the layout has settled.
     let focusIdFromUrl = null;
+
+    function getCurrentLanguage() {
+        try {
+            const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+            if (stored === 'en' || stored === 'pt_br') return stored;
+        } catch (e) {
+            // ignore
+        }
+        return 'en';
+    }
+
+    function setCurrentLanguage(lang) {
+        const normalized = (lang === 'pt_br') ? 'pt_br' : 'en';
+        try {
+            localStorage.setItem(LANGUAGE_STORAGE_KEY, normalized);
+        } catch (e) {
+            // ignore
+        }
+    }
 
     function loadCollection() {
         try {
@@ -309,14 +405,64 @@
         render();
     }
 
-    function buildGraphData(threshold) {
+    // ===== Tarot and I Ching mapping (compact JS ports of gbg-miro-app utilities) =====
+
+    const TAROT_SUITS = [
+        { name: 'Cups', emoji: '♥', symbol: '♥' },
+        { name: 'Pentacles', emoji: '♦', symbol: '♦' },
+        { name: 'Swords', emoji: '♠', symbol: '♠' },
+        { name: 'Wands', emoji: '♣', symbol: '♣' }
+    ];
+    const MINOR_RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    const MAJOR_ARCANA = [
+        'The Fool', 'The Magician', 'The High Priestess', 'The Empress', 'The Emperor',
+        'The Hierophant', 'The Lovers', 'The Chariot', 'Strength', 'The Hermit',
+        'Wheel of Fortune', 'Justice', 'The Hanged Man', 'Death', 'Temperance',
+        'The Devil', 'The Tower', 'The Star', 'The Moon', 'The Sun', 'Judgement', 'The World'
+    ];
+
+    function getTarotDisplay(tarotIndex) {
+        if (typeof tarotIndex !== 'number' || tarotIndex < 0 || tarotIndex > 55) {
+            return '❓';
+        }
+        if (tarotIndex <= 21) {
+            const name = MAJOR_ARCANA[tarotIndex] || 'Unknown Card';
+            return `🌟 ${name}`;
+        }
+        const minorIndex = tarotIndex - 22;
+        const suitIndex = Math.floor(minorIndex / 13);
+        const rankIndex = minorIndex % 13;
+        const suit = TAROT_SUITS[suitIndex] || TAROT_SUITS[0];
+        const rank = MINOR_RANKS[rankIndex] || '?';
+        return `${suit.emoji} ${rank} of ${suit.name}`;
+    }
+
+    // Minimal I Ching mapping: we rely on numbers and the chinese/english names
+    // already stored on the motif metadata (iching_hexagram_* fields) where available.
+    function getIChingDisplay(motif) {
+        if (!motif || typeof motif.iching_hexagram_number !== 'number') return '—';
+        const n = motif.iching_hexagram_number;
+        const chinese = motif.iching_hexagram_chinese || '';
+        const english = motif.iching_hexagram_english || '';
+        if (!chinese && !english) return `Hexagram ${n}`;
+        if (chinese && english) return `${n}: ${chinese} — ${english}`;
+        if (english) return `${n}: ${english}`;
+        return `${n}: ${chinese}`;
+    }
+
+    function buildGraphData(threshold, language) {
         const items = collection.length ? [...collection].reverse() : [];
         const nodes = items.map((item, i) => {
             const motifId = getMotifIdForItem(item);
+            let label = item.levelName || item.id;
+            if (motifId && gameEngine && typeof gameEngine.getLocalizedMotifName === 'function') {
+                const localized = gameEngine.getLocalizedMotifName(motifId, language);
+                if (localized) label = localized;
+            }
             return {
                 id: item.id,
                 motifId,
-                label: item.levelName || item.id,
+                label,
                 imageDataURL: item.imageDataURL,
                 suggested: !!item.suggested,
                 x: 0,
@@ -362,7 +508,8 @@
 
         emptyEl.style.display = 'none';
 
-        const { nodes, links, maxSimilarity } = buildGraphData(threshold);
+        const language = getCurrentLanguage();
+        const { nodes, links, maxSimilarity } = buildGraphData(threshold, language);
         const width = container.clientWidth || 800;
         const height = Math.max(400, container.clientHeight || 480);
 
@@ -441,6 +588,41 @@
             .attr('r', nodeRadius)
             .attr('class', 'node-circle');
 
+        const metaPanelEl = document.getElementById('motifMetaPanel');
+        const metaNameEl = document.getElementById('metaMotifName');
+        const metaTarotEl = document.getElementById('metaTarot');
+        const metaIChingEl = document.getElementById('metaIChing');
+
+        function updateMetaPanelForNode(nodeDatum) {
+            if (!metaPanelEl || !metaNameEl || !metaTarotEl || !metaIChingEl || !nodeDatum) {
+                if (metaPanelEl) metaPanelEl.style.display = 'none';
+                return;
+            }
+            const motifId = nodeDatum.motifId;
+            const language = getCurrentLanguage();
+            let name = nodeDatum.label || nodeDatum.id;
+            let motifMeta = null;
+            if (motifId && gameEngine && typeof gameEngine.getMotifById === 'function') {
+                motifMeta = gameEngine.getMotifById(motifId);
+            }
+            if (motifId && gameEngine && typeof gameEngine.getLocalizedMotifName === 'function') {
+                const localized = gameEngine.getLocalizedMotifName(motifId, language);
+                if (localized) name = localized;
+            }
+            metaNameEl.textContent = name;
+            if (motifMeta) {
+                const tarotIndex = typeof gameEngine.getTarotIndexForId === 'function'
+                    ? gameEngine.getTarotIndexForId(motifId)
+                    : motifMeta.tarot_index;
+                metaTarotEl.textContent = getTarotDisplay(tarotIndex);
+                metaIChingEl.textContent = getIChingDisplay(motifMeta);
+            } else {
+                metaTarotEl.textContent = '—';
+                metaIChingEl.textContent = '—';
+            }
+            metaPanelEl.style.display = 'block';
+        }
+
         node.on('dblclick', (event, d) => {
             event.stopPropagation();
             event.preventDefault();
@@ -464,6 +646,7 @@
             } else {
                 selectedNodeId = d.id;
                 node.select('.node-halo').classed('selected', (n) => n.id === selectedNodeId);
+                updateMetaPanelForNode(d);
             }
         });
 
@@ -494,6 +677,14 @@
         });
 
         node.select('.node-halo').classed('selected', (n) => n.id === selectedNodeId);
+        if (selectedNodeId) {
+            const initiallySelected = nodeData.find(n => n.id === selectedNodeId);
+            if (initiallySelected) {
+                updateMetaPanelForNode(initiallySelected);
+            }
+        } else if (metaPanelEl) {
+            metaPanelEl.style.display = 'none';
+        }
 
         if (simulation) simulation.stop();
         simulation = d3.forceSimulation(nodeData)
@@ -563,6 +754,29 @@
         gameEngine = new LenningsGameEngine({ levelPackPath: LEVEL_PACK });
         await gameEngine.initialize();
         loadCollection();
+
+        const langEnBtn = document.getElementById('graphLangEnBtn');
+        const langPtBrBtn = document.getElementById('graphLangPtBrBtn');
+        function updateLangButtons(current) {
+            if (langEnBtn) langEnBtn.classList.toggle('active', current === 'en');
+            if (langPtBrBtn) langPtBrBtn.classList.toggle('active', current === 'pt_br');
+        }
+        const initialLang = getCurrentLanguage();
+        updateLangButtons(initialLang);
+        if (langEnBtn) {
+            langEnBtn.addEventListener('click', () => {
+                setCurrentLanguage('en');
+                updateLangButtons('en');
+                render();
+            });
+        }
+        if (langPtBrBtn) {
+            langPtBrBtn.addEventListener('click', () => {
+                setCurrentLanguage('pt_br');
+                updateLangButtons('pt_br');
+                render();
+            });
+        }
 
         document.getElementById('threshold').addEventListener('input', render);
         const clearBtn = document.getElementById('clearCollectionBtn');
