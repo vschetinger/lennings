@@ -41,9 +41,50 @@ git remote set-url origin git@github.com:<username>/<repo-name>.git
 git remote -v
 ```
 
-**Prerequisites:**
-- [Generate an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) if you don't have one
-- [Add your SSH key to GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+**Step-by-step SSH Key Setup:**
+
+1. **Generate an SSH key** (if you don't have one):
+   ```bash
+   ssh-keygen -t ed25519 -C "your_email@example.com"
+   ```
+   - Press Enter to accept the default file location (`~/.ssh/id_ed25519`)
+   - Optionally, enter a passphrase for extra security (or press Enter for no passphrase)
+
+2. **Display your public key**:
+   ```bash
+   # On macOS/Linux:
+   cat ~/.ssh/id_ed25519.pub
+   
+   # On Windows (PowerShell):
+   type $env:USERPROFILE\.ssh\id_ed25519.pub
+   
+   # On Windows (Git Bash):
+   cat ~/.ssh/id_ed25519.pub
+   ```
+   This will show your public key (starts with `ssh-ed25519`). Copy the entire output.
+
+3. **Add the SSH key to GitHub**:
+   - Go to [GitHub.com](https://github.com) and sign in
+   - Click your profile picture (top-right) → **Settings**
+   - In the left sidebar, click **SSH and GPG keys**
+   - Click the green **New SSH key** button
+   - **Title**: Enter a descriptive name (e.g., "My MacBook" or "Work Laptop")
+   - **Key**: Paste the entire public key you copied in step 2
+   - Click **Add SSH key**
+   - Confirm with your GitHub password if prompted
+
+4. **Test your SSH connection**:
+   ```bash
+   ssh -T git@github.com
+   ```
+   You should see: `Hi <username>! You've successfully authenticated...`
+
+**Alternative:** If you prefer copying the key directly to clipboard:
+- **macOS**: `pbcopy < ~/.ssh/id_ed25519.pub`
+- **Linux** (with xclip): `xclip -selection clipboard < ~/.ssh/id_ed25519.pub`
+- **Windows** (PowerShell): `Get-Content $env:USERPROFILE\.ssh\id_ed25519.pub | Set-Clipboard`
+
+For more details, see [GitHub's SSH documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh).
 
 ### Troubleshooting Push Issues
 
