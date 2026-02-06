@@ -321,6 +321,37 @@
         flex-direction: column;
         gap: 8px;
     }
+    .language-flags {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .language-flag-btn {
+        width: 32px;
+        height: 20px;
+        border-radius: 3px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        opacity: 0.7;
+        transition: opacity 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+    }
+    .language-flag-btn.active {
+        opacity: 1;
+        border-color: var(--accent-cyan);
+        transform: translateY(-1px);
+    }
+    .language-flag-btn:hover {
+        opacity: 1;
+        border-color: var(--accent-blue);
+    }
     .back-to-graph-btn {
         width: 48px;
         height: 48px;
@@ -1255,6 +1286,10 @@
         <div class="hud-left-buttons">
             <button type="button" class="help-btn" id="helpBtn" title="How to play">?</button>
             <a href="graph.html" class="back-to-graph-btn" title="Back to collection">&#8249;</a>
+            <div class="language-flags">
+                <button type="button" class="language-flag-btn" id="langEnBtn" title="English (AUS)">🇦🇺</button>
+                <button type="button" class="language-flag-btn" id="langPtBrBtn" title="Português (BR)">🇧🇷</button>
+            </div>
         </div>
         <div class="level-info">
             <div class="level-label">LEVEL</div>
@@ -1580,6 +1615,42 @@ function formatTime(ms) {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
+const LANGUAGE_STORAGE_KEY = 'gbg-language-preference';
+
+// Simple shared language state (mirrors gbg-miro-app: 'en' | 'pt_br')
+function getCurrentLanguage() {
+    try {
+        const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+        if (stored === 'en' || stored === 'pt_br') return stored;
+    } catch (e) {
+        // ignore
+    }
+    return 'en';
+}
+
+function setCurrentLanguage(lang) {
+    const normalized = (lang === 'pt_br') ? 'pt_br' : 'en';
+    try {
+        localStorage.setItem(LANGUAGE_STORAGE_KEY, normalized);
+    } catch (e) {
+        // ignore
+    }
+    document.dispatchEvent(new CustomEvent('gbg-language-changed', { detail: { language: normalized } }));
+}
+
+function updateCurrentLevelNameForLanguage() {
+    if (!gameEngine || !gameEngine.currentLevel) return;
+    const lang = getCurrentLanguage();
+    const level = gameEngine.currentLevel;
+    let name = level.name || level.id || '';
+    if (level.id && typeof gameEngine.getLocalizedMotifName === 'function') {
+        const localized = gameEngine.getLocalizedMotifName(level.id, lang);
+        if (localized) name = localized;
+    }
+    const el = $('#levelName');
+    if (el) el.textContent = name;
+}
+
 // Initialize game
 async function initGame() {
     // Load parameters
@@ -1661,6 +1732,30 @@ async function initGame() {
     
     // Load saved collection
     loadCollection();
+
+    // Initialize language flags according to stored preference
+    const langEnBtn = $('#langEnBtn');
+    const langPtBrBtn = $('#langPtBrBtn');
+    function updateLanguageFlagButtons(current) {
+        if (langEnBtn) langEnBtn.classList.toggle('active', current === 'en');
+        if (langPtBrBtn) langPtBrBtn.classList.toggle('active', current === 'pt_br');
+    }
+    const initialLang = getCurrentLanguage();
+    updateLanguageFlagButtons(initialLang);
+    if (langEnBtn) {
+        langEnBtn.addEventListener('click', () => {
+            setCurrentLanguage('en');
+            updateLanguageFlagButtons('en');
+            updateCurrentLevelNameForLanguage();
+        });
+    }
+    if (langPtBrBtn) {
+        langPtBrBtn.addEventListener('click', () => {
+            setCurrentLanguage('pt_br');
+            updateLanguageFlagButtons('pt_br');
+            updateCurrentLevelNameForLanguage();
+        });
+    }
     
     // If opened from graph with ?play=MotifId, auto-start that level
     const playId = new URLSearchParams(window.location.search).get('play');
@@ -1706,7 +1801,7 @@ function setupGameEvents() {
     });
     
     gameEngine.on('levelStart', ({ level }) => {
-        $('#levelName').textContent = level.name;
+        updateCurrentLevelNameForLanguage();
         // Hide pause overlay on level start/restart
         pauseOverlayEl.classList.remove('visible');
         // Hide win overlay on restart
@@ -1717,6 +1812,11 @@ function setupGameEvents() {
         hideSnapshotOverlay();
         // Reset camera to spawn point
         resetCameraToSpawn();
+    });
+
+    // When language changes while a level is running, update the HUD title
+    document.addEventListener('gbg-language-changed', () => {
+        updateCurrentLevelNameForLanguage();
     });
     
     // Skill buttons (Q split, W burst, E evolve, D digest, R respawn) - mobile-friendly
