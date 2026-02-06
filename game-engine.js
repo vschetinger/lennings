@@ -24,7 +24,15 @@ class LenningsGameEngine {
         // Available resources (from level pack manifest or legacy image+json pairs)
         this.availableResources = [];
         this.playedResources = []; // Track which resources have been played this session
-        /** Map of motifId -> rich metadata (including embeddings) loaded from GBG dataset when available */
+        /**
+         * Glass Bead Game motif metadata, keyed by motif id.
+         * Each entry comes from gbg-motifs.json and typically includes:
+         * - id, name, name_pt_br
+         * - chapter, description, level
+         * - embedding: number[]
+         * - tarot_index
+         * - iching_hexagram_number (+ optional iching_* name fields)
+         */
         this.motifMetadataById = new Map();
         
         // Game state
@@ -1004,6 +1012,37 @@ class LenningsGameEngine {
             return motif.embedding;
         }
         return null;
+    }
+
+    /**
+     * Get the localized display name for a motif id based on language.
+     * language: 'en' | 'pt_br'
+     */
+    getLocalizedMotifName(id, language = 'en') {
+        const motif = this.getMotifById(id);
+        if (!motif) return null;
+        if (language === 'pt_br' && motif.name_pt_br) {
+            return motif.name_pt_br;
+        }
+        return motif.name || motif.id || null;
+    }
+
+    /**
+     * Get the tarot_index for a motif id, or null if unavailable.
+     */
+    getTarotIndexForId(id) {
+        const motif = this.getMotifById(id);
+        if (!motif || typeof motif.tarot_index !== 'number') return null;
+        return motif.tarot_index;
+    }
+
+    /**
+     * Get the I Ching hexagram number for a motif id, or null if unavailable.
+     */
+    getIChingHexagramNumberForId(id) {
+        const motif = this.getMotifById(id);
+        if (!motif || typeof motif.iching_hexagram_number !== 'number') return null;
+        return motif.iching_hexagram_number;
     }
     
     /**
