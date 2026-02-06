@@ -316,6 +316,31 @@
         border-color: var(--accent-blue);
         background: #33302d;
     }
+    .hud-left-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .back-to-graph-btn {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        background: rgba(0, 0, 0, 0.7);
+        color: #aaa;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .back-to-graph-btn:hover {
+        color: var(--accent-cyan);
+        border-color: var(--accent-blue);
+        background: #33302d;
+    }
 
     @keyframes burst-glow {
         0%, 100% { box-shadow: 0 0 20px rgba(255, 217, 61, 0.6), inset 0 0 15px rgba(255, 217, 61, 0.15); }
@@ -524,8 +549,8 @@
             justify-content: flex-start;
             align-items: flex-start;
         }
-        /* ? button: fixed at mid-y on the left to use space better */
-        .hud-left .help-btn {
+        /* ? and back buttons: fixed at mid-y on the left */
+        .hud-left-buttons {
             position: fixed;
             left: 12px;
             top: 50%;
@@ -721,6 +746,17 @@
 
     #snapshotOverlay .snapshot-result .result-btn-fail:hover {
         box-shadow: 0 0 28px rgba(198, 40, 40, 0.7);
+    }
+
+    #snapshotOverlay .snapshot-result .result-btn-graph {
+        background: transparent;
+        color: var(--accent, #4af2a1);
+        text-decoration: none;
+        border: 2px solid currentColor;
+        margin-left: 8px;
+    }
+    #snapshotOverlay .snapshot-result .result-btn-graph:hover {
+        box-shadow: 0 0 16px rgba(74, 242, 161, 0.4);
     }
 
     /* Win Overlay */
@@ -954,6 +990,120 @@
         box-shadow: none;
     }
 
+    /* Similarity Graph Overlay */
+    #similarityGraphOverlay {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #050510 0%, #111122 100%);
+        z-index: 260;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 16px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    #similarityGraphOverlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    #similarityGraphHeader {
+        max-width: 960px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        color: #eee;
+    }
+
+    #similarityGraphHeader h2 {
+        font-size: 2rem;
+        margin: 0;
+        background: linear-gradient(90deg, #4af2a1, #6af);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    #similarityGraphHeader .subtitle {
+        font-size: 0.95rem;
+        color: #aaa;
+        margin-top: 4px;
+    }
+
+    #similarityGraphControls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    #similarityGraphSimilarityLabel {
+        font-size: 0.85rem;
+        color: #aaa;
+    }
+
+    #similarityThresholdSlider {
+        width: 140px;
+        accent-color: #4af2a1;
+    }
+
+    #similarityGraphContainer {
+        flex: 1;
+        max-width: 960px;
+        width: 100%;
+        /* Warm \"old paper\" tone from survival palette */
+        background: radial-gradient(circle at center, rgba(232, 212, 200, 0.96) 0%, rgba(214, 191, 176, 0.96) 42%, rgba(43, 37, 34, 1) 100%);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.18);
+        box-shadow: 0 0 40px rgba(0,0,0,0.6);
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    #similarityGraphSvg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .similarity-node-image {
+        clip-path: circle(50%);
+        stroke: #000;
+        stroke-width: 2;
+    }
+
+    .similarity-node-circle {
+        fill: none;
+        stroke: #000;
+        stroke-width: 2;
+    }
+
+    .similarity-link {
+        stroke: rgba(255,255,255,0.22);
+        stroke-width: 1;
+        opacity: 0.9;
+    }
+
+    .similarityGraphFooter {
+        max-width: 960px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+        font-size: 0.9rem;
+        color: #888;
+    }
+
+    .similarityGraphFooter .hint {
+        color: #666;
+    }
+
     /* Collection counter in HUD */
     .collection-counter {
         display: flex;
@@ -1102,7 +1252,10 @@
 <!-- Game HUD -->
 <div id="gameHUD" class="hidden">
     <div class="hud-left">
-        <button type="button" class="help-btn" id="helpBtn" title="How to play">?</button>
+        <div class="hud-left-buttons">
+            <button type="button" class="help-btn" id="helpBtn" title="How to play">?</button>
+            <a href="graph.html" class="back-to-graph-btn" title="Back to collection">&#8249;</a>
+        </div>
         <div class="level-info">
             <div class="level-label">LEVEL</div>
             <div id="levelName">-</div>
@@ -1187,6 +1340,7 @@
         <div class="ssim-label">SSIM Score</div>
         <div class="result-message" id="resultMessage"></div>
         <button type="button" class="result-btn hidden" id="continueBtn">Back to level</button>
+        <a href="#" class="result-btn result-btn-graph hidden" id="viewInGraphBtn">View in graph</a>
         <button type="button" class="result-btn result-btn-fail hidden" id="nextMotifBtn">Next motif →</button>
     </div>
 </div>
@@ -1231,7 +1385,29 @@
     </div>
     <div class="gallery-buttons">
         <button class="gallery-btn" id="galleryContinueBtn">Continue Playing →</button>
+        <button class="gallery-btn secondary" id="galleryGraphBtn">Similarity graph</button>
         <button class="gallery-btn secondary" id="galleryBackBtn">Back</button>
+    </div>
+</div>
+
+<!-- Similarity Graph Overlay -->
+<div id="similarityGraphOverlay">
+    <div id="similarityGraphHeader">
+        <div>
+            <h2>Motif Similarity</h2>
+            <div class="subtitle">Collected motifs linked when cosine similarity is high</div>
+        </div>
+        <div id="similarityGraphControls">
+            <div id="similarityGraphSimilarityLabel">Similarity threshold: <span id="similarityThresholdValue">0.7</span></div>
+            <input type="range" id="similarityThresholdSlider" min="0" max="1" step="0.05" value="0.7">
+        </div>
+    </div>
+    <div id="similarityGraphContainer">
+        <svg id="similarityGraphSvg"></svg>
+    </div>
+    <div class="similarityGraphFooter">
+        <div class="hint">Nodes use your reconstructions; edges connect motifs with high cosine similarity in embedding space.</div>
+        <button class="gallery-btn secondary" id="similarityGraphBackBtn">Back to collection</button>
     </div>
 </div>
 
@@ -1301,19 +1477,23 @@ const winOverlayEl = $('#winOverlay');
 const pauseOverlayEl = $('#pauseOverlay');
 const instructionsEl = null;
 const galleryOverlayEl = $('#galleryOverlay');
+const similarityGraphOverlayEl = $('#similarityGraphOverlay');
 
 // Collection system - stores all winning reconstructions
+// Each item may optionally be linked to a Glass Bead Game motif via motifId.
 let collection = [];
 let latestWinData = null; // Stores data for the most recent win
+let lastAddedCollectionId = null; // Set on win so "View in graph" can focus on this node
 
-function addToCollection(levelName, ssim, time, imageDataURL) {
+function addToCollection(levelName, ssim, time, imageDataURL, motifId = null) {
     const item = {
         id: `recon-${Date.now()}`,
         levelName,
         ssim,
         time,
         imageDataURL,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        motifId
     };
     collection.push(item);
     updateCollectionCounter();
@@ -1384,6 +1564,9 @@ function showGallery(highlightLatest = false) {
     }
     
     galleryOverlayEl.classList.add('visible');
+    if (similarityGraphOverlayEl) {
+        similarityGraphOverlayEl.classList.remove('visible');
+    }
 }
 
 function hideGallery() {
@@ -1453,8 +1636,17 @@ async function initGame() {
     // Set up event listeners
     setupGameEvents();
     
-    // Set up start button
-    $('#startGameBtn').addEventListener('click', startRandomGame);
+    // Set up start button (support ?play=MotifId from graph to start that motif)
+    $('#startGameBtn').addEventListener('click', () => {
+        const playId = new URLSearchParams(window.location.search).get('play');
+        if (playId && gameEngine) {
+            const idx = gameEngine.getLevels().findIndex(l => l.id === playId);
+            if (idx >= 0) startLevel(idx);
+            else startRandomGame();
+        } else {
+            startRandomGame();
+        }
+    });
     
     // Help (?)
     const helpOverlayEl = $('#helpOverlay');
@@ -1469,6 +1661,13 @@ async function initGame() {
     
     // Load saved collection
     loadCollection();
+    
+    // If opened from graph with ?play=MotifId, auto-start that level
+    const playId = new URLSearchParams(window.location.search).get('play');
+    if (playId && gameEngine) {
+        const idx = gameEngine.getLevels().findIndex(l => l.id === playId);
+        if (idx >= 0) setTimeout(() => startLevel(idx), 0);
+    }
     
     // Start animation loop
     requestAnimationFrame(animate);
@@ -1628,6 +1827,31 @@ function setupGameEvents() {
             pauseOverlayEl.classList.add('visible');
         }
     });
+
+    const similarityGraphBackBtn = $('#similarityGraphBackBtn');
+    if (similarityGraphBackBtn) {
+        similarityGraphBackBtn.addEventListener('click', () => {
+            similarityGraphOverlayEl.classList.remove('visible');
+            galleryOverlayEl.classList.add('visible');
+        });
+    }
+    
+    const galleryGraphBtn = $('#galleryGraphBtn');
+    if (galleryGraphBtn) {
+        galleryGraphBtn.addEventListener('click', () => {
+            window.location.href = 'graph.html';
+        });
+    }
+
+    const similarityThresholdSlider = $('#similarityThresholdSlider');
+    if (similarityThresholdSlider) {
+        similarityThresholdSlider.addEventListener('input', () => {
+            // Rebuild graph when threshold changes
+            if (similarityGraphOverlayEl.classList.contains('visible')) {
+                showSimilarityGraph();
+            }
+        });
+    }
     
     // Collection button in HUD (only if present)
     const collectionBtn = $('#collectionBtn');
@@ -1709,6 +1933,189 @@ function handleKeyDown(e) {
     }
     
     // Note: Render mode keys (1-4) and debug keys are intentionally disabled in play mode
+}
+
+/**
+ * Resolve motif id for a collection item. Uses item.motifId if set; otherwise
+ * infers from levelName by matching game levels (so legacy collection entries
+ * without motifId can still get embeddings).
+ */
+function getMotifIdForCollectionItem(item) {
+    if (item.motifId) return item.motifId;
+    if (!gameEngine) return null;
+    const name = (item.levelName || '').trim();
+    if (!name) return null;
+    const levels = gameEngine.getLevels();
+    const match = levels.find(l => (l.name || '').trim() === name);
+    return match ? match.id : null;
+}
+
+function showSimilarityGraph() {
+    if (!similarityGraphOverlayEl) return;
+    
+    // Build graph nodes from collection items. Use stored motifId or infer from levelName.
+    const items = collection && collection.length ? [...collection].reverse() : [];
+    const withMotifId = items.filter(i => getMotifIdForCollectionItem(i)).length;
+
+    const svg = document.getElementById('similarityGraphSvg');
+    if (!svg) return;
+    
+    // Clear previous content
+    while (svg.firstChild) {
+        svg.removeChild(svg.firstChild);
+    }
+    
+    if (!gameEngine || items.length === 0) {
+        similarityGraphOverlayEl.classList.add('visible');
+        return;
+    }
+    
+    const width = svg.clientWidth || svg.parentElement.clientWidth || 800;
+    const height = svg.clientHeight || svg.parentElement.clientHeight || 600;
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    
+    const nodes = items.map((item, index) => {
+        const motifId = getMotifIdForCollectionItem(item);
+        const angle = (index / Math.max(1, items.length)) * Math.PI * 2;
+        return {
+            id: item.id,
+            motifId: motifId,
+            label: item.levelName,
+            imageDataURL: item.imageDataURL,
+            x: width / 2 + (Math.cos(angle) * width * 0.25),
+            y: height / 2 + (Math.sin(angle) * height * 0.25)
+        };
+    });
+    
+    // Build links based on cosine similarity between embeddings
+    const links = [];
+    const slider = document.getElementById('similarityThresholdSlider');
+    let threshold = 0.7;
+    if (slider) {
+        const parsed = parseFloat(slider.value);
+        if (!Number.isNaN(parsed)) threshold = parsed;
+    }
+    const thresholdLabelEl = document.getElementById('similarityThresholdValue');
+    if (thresholdLabelEl) thresholdLabelEl.textContent = threshold.toFixed(2);
+    
+    let maxSimilarity = -Infinity;
+    let missingEmbeddingPairs = 0;
+    let comparedPairs = 0;
+    for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i];
+            const b = nodes[j];
+            if (!a.motifId || !b.motifId) {
+                missingEmbeddingPairs++;
+                continue;
+            }
+            const sim = gameEngine.getCosineSimilarityBetweenIds(a.motifId, b.motifId);
+            if (sim == null) {
+                missingEmbeddingPairs++;
+                continue;
+            }
+            comparedPairs++;
+            if (sim > maxSimilarity) maxSimilarity = sim;
+            if (sim >= threshold) {
+                links.push({ source: a.id, target: b.id, similarity: sim });
+            }
+        }
+    }
+    
+    // If d3-force is available, use it; otherwise we keep the initial positions
+    let simulation = null;
+    if (window.d3 && d3.forceSimulation) {
+        simulation = d3.forceSimulation(nodes)
+            .force('charge', d3.forceManyBody().strength(-120))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('link', d3.forceLink(links).id(d => d.id).distance(l => 200 - 80 * Math.min(1, l.similarity)))
+            .force('collision', d3.forceCollide().radius(48))
+            .on('tick', ticked);
+    }
+    
+    const linkGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const nodeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    svg.appendChild(linkGroup);
+    svg.appendChild(nodeGroup);
+    
+    const linkElements = links.map(link => {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.classList.add('similarity-link');
+        linkGroup.appendChild(line);
+        return Object.assign({ element: line }, link);
+    });
+    
+    const nodeRadius = 36;
+    const nodeElements = nodes.map(node => {
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        nodeGroup.appendChild(group);
+        
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('r', nodeRadius);
+        circle.classList.add('similarity-node-circle');
+        group.appendChild(circle);
+        
+        if (node.imageDataURL) {
+            const clipId = `clip-${node.id}`;
+            const defs = svg.querySelector('defs') || (() => {
+                const d = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                svg.insertBefore(d, svg.firstChild);
+                return d;
+            })();
+            const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+            clipPath.setAttribute('id', clipId);
+            const clipCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            clipCircle.setAttribute('r', nodeRadius);
+            clipCircle.setAttribute('cx', 0);
+            clipCircle.setAttribute('cy', 0);
+            clipPath.appendChild(clipCircle);
+            defs.appendChild(clipPath);
+            
+            const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+            image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', node.imageDataURL);
+            image.setAttribute('x', -nodeRadius);
+            image.setAttribute('y', -nodeRadius);
+            image.setAttribute('width', nodeRadius * 2);
+            image.setAttribute('height', nodeRadius * 2);
+            image.setAttribute('clip-path', `url(#${clipId})`);
+            group.appendChild(image);
+        }
+        
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('dy', nodeRadius + 14);
+        label.setAttribute('fill', '#ddd');
+        label.setAttribute('font-size', '10');
+        label.textContent = node.label;
+        group.appendChild(label);
+        
+        return Object.assign({ group }, node);
+    });
+    
+    function ticked() {
+        nodeElements.forEach(n => {
+            const x = n.x;
+            const y = n.y;
+            n.group.setAttribute('transform', `translate(${x}, ${y})`);
+        });
+        linkElements.forEach(l => {
+            const source = nodes.find(n => n.id === l.source);
+            const target = nodes.find(n => n.id === l.target);
+            if (!source || !target) return;
+            l.element.setAttribute('x1', source.x);
+            l.element.setAttribute('y1', source.y);
+            l.element.setAttribute('x2', target.x);
+            l.element.setAttribute('y2', target.y);
+        });
+    }
+    
+    if (!simulation) {
+        // No d3: still position nodes roughly in a circle
+        ticked();
+    }
+    
+    similarityGraphOverlayEl.classList.add('visible');
+    galleryOverlayEl.classList.remove('visible');
 }
 
 // Auto-camera state for smooth following
@@ -1848,8 +2255,9 @@ function showWinScreen(ssim, elapsedTime, cellCount, levelIndex) {
     
     // Add to collection
     const levelName = gameEngine.currentLevel?.name || 'Unknown';
+    const motifId = gameEngine.currentLevel?.id || gameEngine.currentResource?.id || null;
     if (imageDataURL) {
-        addToCollection(levelName, ssim, elapsedTime, imageDataURL);
+        addToCollection(levelName, ssim, elapsedTime, imageDataURL, motifId);
     }
     
     // Store latest win data for gallery back button
@@ -1860,6 +2268,16 @@ function showWinScreen(ssim, elapsedTime, cellCount, levelIndex) {
     
     winOverlayEl.classList.add('visible');
 }
+
+// Load D3 force layout from CDN (if available). This is appended late so the
+// rest of the game does not depend on it to start.
+(function loadD3Force() {
+    if (window.d3 && d3.forceSimulation) return;
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js';
+    script.async = true;
+    document.head.appendChild(script);
+})();
 
 // ============================================================
 // Snapshot UI Functions
@@ -2026,6 +2444,8 @@ function showSnapshotResult(ssim, meetsThreshold, chargesLeft) {
     
     // Set final colors/messages once; SSIM text will drift up into place.
     // Reset buttons visibility
+    const viewInGraphBtn = $('#viewInGraphBtn');
+    if (viewInGraphBtn) viewInGraphBtn.classList.add('hidden');
     if (continueBtn) continueBtn.classList.add('hidden');
     if (nextMotifBtn) nextMotifBtn.classList.add('hidden');
     
@@ -2034,6 +2454,10 @@ function showSnapshotResult(ssim, meetsThreshold, chargesLeft) {
         messageEl.className = 'result-message success';
         messageEl.textContent = 'Target reached! Level complete!';
         if (nextMotifBtn) nextMotifBtn.classList.remove('hidden');
+        if (viewInGraphBtn && lastAddedCollectionId) {
+            viewInGraphBtn.href = 'graph.html?focus=' + encodeURIComponent(lastAddedCollectionId);
+            viewInGraphBtn.classList.remove('hidden');
+        }
     } else {
         ssimEl.style.color = ssim >= 0.4 ? '#ffd93d' : '#ff6b6b';
         if (chargesLeft > 0) {
@@ -2163,12 +2587,35 @@ function finishSnapshotAnimation(snapshot, reconstruction) {
         gameEngine.completeDigest(snapshot);
         const meetsThreshold = snapshot.ssim >= gameEngine.winCondition.threshold;
         const chargesLeft = gameEngine.getRemainingCharges();
+
+        // Set lastAddedCollectionId before showing the result so "View in graph" can use it
+        if (meetsThreshold && snapshot.imageDataURL) {
+            const levelName = gameEngine.currentLevel?.name || 'Unknown';
+            const motifId = gameEngine.currentLevel?.id || gameEngine.currentResource?.id || null;
+            const elapsedTime = gameEngine.startTime != null ? Date.now() - gameEngine.startTime : 0;
+            const idx = collection.findIndex(i => i.motifId === motifId && i.suggested);
+            if (idx >= 0) {
+                const existing = collection[idx];
+                existing.levelName = levelName;
+                existing.ssim = snapshot.ssim;
+                existing.time = elapsedTime;
+                existing.imageDataURL = snapshot.imageDataURL;
+                delete existing.suggested;
+                lastAddedCollectionId = existing.id;
+                updateCollectionCounter();
+                saveCollection();
+            } else {
+                const item = addToCollection(levelName, snapshot.ssim, elapsedTime, snapshot.imageDataURL, motifId);
+                lastAddedCollectionId = item ? item.id : null;
+            }
+        } else {
+            lastAddedCollectionId = null;
+        }
         
         showSnapshotResult(snapshot.ssim, meetsThreshold, chargesLeft);
         
         if (meetsThreshold) {
-            // For wins, keep the reconstruction overlay visible so the
-            // player can enjoy the result and advance via the button.
+            // Keep the reconstruction overlay visible so the player can enjoy the result and advance via the button.
         } else if (chargesLeft === 0) {
             // Motif failed: wait for user to click "Next motif →" (no auto-advance)
         } else {

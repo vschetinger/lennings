@@ -2399,7 +2399,7 @@ class ParticleLenia {
         in vec3 color;
         void main() {
             float r = length(uv);
-            float a = smoothstep(1.0, 0.0, r) * 0.05;  // Subtle paint accumulation
+            float a = smoothstep(1.0, 0.0, r) * 0.065;  // Trail paint accumulation (~30% more visible)
             out0 = vec4(color * a, a);
         }`, {n: this.max_point_n, dst: this.trailTex, blend: [gl.ONE, gl.ONE]});
     }

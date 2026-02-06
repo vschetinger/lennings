@@ -24,6 +24,8 @@ class LenningsGameEngine {
         // Available resources (from level pack manifest or legacy image+json pairs)
         this.availableResources = [];
         this.playedResources = []; // Track which resources have been played this session
+        /** Map of motifId -> rich metadata (including embeddings) loaded from GBG dataset when available */
+        this.motifMetadataById = new Map();
         
         // Game state
         this.levels = []; // For compatibility
@@ -148,6 +150,8 @@ class LenningsGameEngine {
             // Discover available resources
             // We'll try to load known resources - in a real setup this could be a manifest
             await this.discoverResources();
+            // Optionally enrich resources with Glass Bead Game motif metadata + embeddings
+            await this.loadMotifMetadataIfAvailable();
             
             console.log(`[GameEngine] Found ${this.availableResources.length} resources`);
             this.emit('resourcesLoaded', { resources: this.availableResources });
@@ -168,13 +172,13 @@ class LenningsGameEngine {
             this.registerSkill({
                 key: 'w',
                 label: 'Speed burst',
-                cooldownMs: 3000,
+                cooldownMs: 1100,
                 action: () => this.startSpeedBurst()
             });
             this.registerSkill({
                 key: 'e',
                 label: 'Evolve',
-                cooldownMs: 3000,
+                cooldownMs: 6600,
                 action: () => this.triggerEvolve()
             });
             this.registerSkill({
@@ -188,7 +192,7 @@ class LenningsGameEngine {
             this.registerSkill({
                 key: 'q',
                 label: 'Split',
-                cooldownMs: 3000,
+                cooldownMs: 4400,
                 action: () => this.triggerSplitReproduction()
             });
             
@@ -919,6 +923,119 @@ class LenningsGameEngine {
             if (this.params) this.params.paused = false;
             this.emit('digestCancelled', {});
         }
+    }
+    
+    // ============================================================
+    // Glass Bead Game Motif Metadata & Embeddings
+    // ============================================================
+    
+    /**
+     * Attempt to load rich motif metadata (including embeddings and Tarot/I Ching links)
+     * from a GBG dataset that lives alongside the level pack.
+     * 
+     * This is intentionally best-effort and will not break the game if the file is missing.
+     */
+    async loadMotifMetadataIfAvailable() {
+        if (!this.levelPackPath) {
+            return;
+        }
+        
+        const motifsUrl = `${this.levelPackPath}/gbg-motifs.json`;
+        try {
+            const res = await fetch(motifsUrl);
+            if (!res.ok) {
+                // File is optional; just log a brief note at debug level
+                console.info(`[GameEngine] No GBG motif metadata found at ${motifsUrl} (status ${res.status})`);
+                return;
+            }
+            
+            const motifs = await res.json();
+            const map = new Map();
+            if (Array.isArray(motifs)) {
+                for (const motif of motifs) {
+                    if (!motif || !motif.id) continue;
+                    map.set(motif.id, motif);
+                }
+            }
+            this.motifMetadataById = map;
+            
+            // Enrich any already-discovered resources with this metadata
+            this.enrichResourcesFromMetadata();
+            
+            console.log(`[GameEngine] Loaded GBG motif metadata with embeddings for ${this.motifMetadataById.size} motifs`);
+        } catch (error) {
+            console.warn('[GameEngine] Failed to load GBG motif metadata:', error);
+        }
+    }
+    
+    /**
+     * Attach any loaded motif metadata (including embeddings) to available resources
+     * so game logic and UI can access it easily.
+     */
+    enrichResourcesFromMetadata() {
+        if (!this.motifMetadataById || this.motifMetadataById.size === 0) {
+            return;
+        }
+        for (const res of this.availableResources) {
+            if (!res || !res.id) continue;
+            const meta = this.motifMetadataById.get(res.id);
+            if (!meta) continue;
+            res.metadata = meta;
+            if (Array.isArray(meta.embedding)) {
+                res.embedding = meta.embedding;
+            }
+        }
+    }
+    
+    /**
+     * Get rich motif metadata by id (if available).
+     */
+    getMotifById(id) {
+        if (!id || !this.motifMetadataById) return null;
+        return this.motifMetadataById.get(id) || null;
+    }
+    
+    /**
+     * Get an embedding vector for a given motif/resource id, or null if unavailable.
+     */
+    getEmbeddingForId(id) {
+        const motif = this.getMotifById(id);
+        if (motif && Array.isArray(motif.embedding)) {
+            return motif.embedding;
+        }
+        return null;
+    }
+    
+    /**
+     * Compute cosine similarity between two numeric vectors.
+     * Returns a value in [-1, 1], or null if inputs are invalid.
+     */
+    static cosineSimilarity(vecA, vecB) {
+        if (!Array.isArray(vecA) || !Array.isArray(vecB)) return null;
+        const len = Math.min(vecA.length, vecB.length);
+        if (len === 0) return null;
+        let dot = 0;
+        let normA = 0;
+        let normB = 0;
+        for (let i = 0; i < len; i++) {
+            const a = vecA[i] || 0;
+            const b = vecB[i] || 0;
+            dot += a * b;
+            normA += a * a;
+            normB += b * b;
+        }
+        if (normA === 0 || normB === 0) return null;
+        return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+    }
+    
+    /**
+     * Convenience helper: cosine similarity between two motif/resource ids.
+     */
+    getCosineSimilarityBetweenIds(idA, idB) {
+        const a = this.getEmbeddingForId(idA);
+        const b = this.getEmbeddingForId(idB);
+        if (!a || !b) return null;
+        return LenningsGameEngine.cosineSimilarity(a, b);
     }
     
     getSnapshots() {

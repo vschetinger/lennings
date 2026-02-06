@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motif Similarity — Lennings</title>
+<style>
+    * { box-sizing: border-box; }
+    :root {
+        --bg: #0a0a1a;
+        --panel: #1a1a2e;
+        --text: #e8d4c8;
+        --muted: #9aa0a6;
+        --accent: #4af2a1;
+        --paper: rgba(232, 212, 200, 0.95);
+        --paper-mid: rgba(214, 191, 176, 0.95);
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Consolas, SFMono-Regular, Menlo, Monaco, monospace;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .header {
+        width: 100%;
+        max-width: 960px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .header h1 {
+        font-size: 1.75rem;
+        margin: 0;
+        background: linear-gradient(90deg, var(--accent), #6af);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .header .subtitle {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+    .controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .controls label {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+    .controls input[type="range"] {
+        width: 140px;
+        accent-color: var(--accent);
+    }
+    .controls .threshold-value {
+        min-width: 2.5rem;
+        font-variant-numeric: tabular-nums;
+        color: var(--accent);
+    }
+    #graph-container {
+        flex: 1;
+        width: 100%;
+        max-width: 960px;
+        min-height: 480px;
+        /* Simple warm \"old paper\" background without vignette */
+        background: var(--paper);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.12);
+        position: relative;
+        overflow: hidden;
+    }
+    #graph-container svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    .link {
+        stroke: rgba(34, 139, 34, 0.6);
+        stroke-width: 2;
+        fill: none;
+    }
+    .node-circle {
+        fill: none;
+        stroke: #000;
+        stroke-width: 2;
+    }
+    .node-label {
+        font-size: 10px;
+        fill: #333;
+        text-anchor: middle;
+        pointer-events: none;
+    }
+    .node-halo {
+        fill: none;
+        stroke: var(--accent);
+        stroke-width: 3;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+    .node-halo.selected {
+        opacity: 1;
+        animation: halo-pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes halo-pulse {
+        0%, 100% { stroke-width: 3; opacity: 0.9; }
+        50% { stroke-width: 4; opacity: 0.6; }
+    }
+    .footer {
+        width: 100%;
+        max-width: 960px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+    .footer .stats {
+        color: var(--accent);
+    }
+    .btn {
+        background: rgba(255,255,255,0.1);
+        color: var(--text);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 8px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font: inherit;
+        text-decoration: none;
+        transition: background 0.2s, border-color 0.2s;
+    }
+    .btn:hover {
+        background: rgba(74, 242, 161, 0.15);
+        border-color: var(--accent);
+    }
+    .empty-state {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        font-size: 1rem;
+        padding: 24px;
+    }
+</style>
+
+<div class="header">
+    <div>
+        <h1>Motif Similarity</h1>
+        <div class="subtitle">Collected motifs linked by cosine similarity in embedding space</div>
+    </div>
+    <div class="controls">
+        <label for="threshold">Threshold</label>
+        <input type="range" id="threshold" min="0" max="1" step="0.05" value="0.5">
+        <span class="threshold-value" id="thresholdValue">0.50</span>
+    </div>
+</div>
+
+<div id="graph-container">
+    <svg id="graph-svg"></svg>
+    <div class="empty-state" id="emptyState">No collection data. Play and win motifs in <a href="play.html" class="btn">Play</a> to build your graph.</div>
+</div>
+
+<div class="footer">
+    <span class="stats" id="stats">—</span>
+    <div>
+        <button type="button" class="btn" id="clearCollectionBtn">Clear collection</button>
+        <a href="play.html" class="btn">Back to Play</a>
+    </div>
+</div>
+
+<script src="game-engine.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+(function () {
+    const COLLECTION_KEY = 'lennings_collection';
+    const LEVEL_PACK = 'levels/GlassBeadGame';
+
+    let gameEngine = null;
+    let collection = [];
+    let simulation = null;
+    // Current zoom/pan for the main graph view so threshold changes don't reset the camera
+    let lastTransform = d3.zoomIdentity;
+    let selectedNodeId = null;
+    // Persist node positions between renders so the layout feels stable as we add motifs
+    let savedPositions = {};
+    let pendingAddPosition = null;
+    // When set (e.g. from \"play.html?focus=...\"), the graph will center on this
+    // collection node once the layout has settled.
+    let focusIdFromUrl = null;
+
+    function loadCollection() {
+        try {
+            const raw = localStorage.getItem(COLLECTION_KEY);
+            collection = raw ? JSON.parse(raw) : [];
+        } catch (e) {
+            collection = [];
+        }
+        return collection;
+    }
+
+    /** Split label into lines by words so each line is at most maxChars (approx). */
+    function wrapLabel(text, maxChars) {
+        if (!text.trim()) return [];
+        const words = text.trim().split(/\s+/);
+        const lines = [];
+        let line = '';
+        for (const w of words) {
+            const next = line ? line + ' ' + w : w;
+            if (next.length <= maxChars) {
+                line = next;
+            } else {
+                if (line) lines.push(line);
+                line = w; // allow long word on its own line
+            }
+        }
+        if (line) lines.push(line);
+        return lines.slice(0, 4); // cap at 4 lines so nodes don't get huge
+    }
+
+    function getMotifIdForItem(item) {
+        if (item.motifId) return item.motifId;
+        if (!gameEngine) return null;
+        const name = (item.levelName || '').trim();
+        if (!name) return null;
+        const levels = gameEngine.getLevels();
+        const level = levels.find(l => (l.name || '').trim() === name);
+        return level ? level.id : null;
+    }
+
+    function saveCollection() {
+        try {
+            localStorage.setItem(COLLECTION_KEY, JSON.stringify(collection));
+        } catch (e) {
+            console.warn('Could not save collection:', e);
+        }
+    }
+
+    function getImageUrlForMotifId(id) {
+        if (!gameEngine) return null;
+        const res = gameEngine.getAvailableResources().find(r => r.id === id);
+        if (res && res.imagePath) return res.imagePath;
+        return LEVEL_PACK + '/images/' + id + '.png';
+    }
+
+    /** Return { id, name } for the motif (with embedding) closest to motifId that is not already in the collection. */
+    function getNearestMotifNotInCollection(motifId) {
+        if (!gameEngine || !motifId || !gameEngine.motifMetadataById.size) return null;
+        const inCollection = new Set(collection.map(item => getMotifIdForItem(item)).filter(Boolean));
+        let best = null;
+        let bestSim = -Infinity;
+        for (const [id, meta] of gameEngine.motifMetadataById) {
+            if (id === motifId || inCollection.has(id)) continue;
+            const sim = gameEngine.getCosineSimilarityBetweenIds(motifId, id);
+            if (sim != null && sim > bestSim) {
+                bestSim = sim;
+                const level = gameEngine.getLevels().find(l => l.id === id);
+                best = { id, name: (level && level.name) || (meta.name) || id };
+            }
+        }
+        return best;
+    }
+
+    /** Generate a data URL for a small random pixel noise image. */
+    function createNoiseImageDataURL(size = 128) {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.createImageData(size, size);
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            data[i] = Math.floor(Math.random() * 256);
+            data[i + 1] = Math.floor(Math.random() * 256);
+            data[i + 2] = Math.floor(Math.random() * 256);
+            data[i + 3] = 255;
+        }
+        ctx.putImageData(imageData, 0, 0);
+        return canvas.toDataURL('image/png');
+    }
+
+    /** Add suggested motif to collection with noise image; save and re-render.
+     *  sourcePosition: optional { x, y } to place the new node near the selected node. */
+    function addMotifToCollectionAndRefresh(motifId, levelName, sourcePosition) {
+        const imageDataURL = createNoiseImageDataURL();
+        collection.push({
+            id: 'recon-' + Date.now(),
+            levelName,
+            ssim: 0,
+            time: 0,
+            imageDataURL,
+            timestamp: Date.now(),
+            motifId,
+            suggested: true
+        });
+        saveCollection();
+        selectedNodeId = null;
+        pendingAddPosition = sourcePosition || null;
+        render();
+    }
+
+    function buildGraphData(threshold) {
+        const items = collection.length ? [...collection].reverse() : [];
+        const nodes = items.map((item, i) => {
+            const motifId = getMotifIdForItem(item);
+            return {
+                id: item.id,
+                motifId,
+                label: item.levelName || item.id,
+                imageDataURL: item.imageDataURL,
+                suggested: !!item.suggested,
+                x: 0,
+                y: 0
+            };
+        });
+
+        const links = [];
+        let maxSim = -Infinity;
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const a = nodes[i], b = nodes[j];
+                if (!a.motifId || !b.motifId) continue;
+                const sim = gameEngine.getCosineSimilarityBetweenIds(a.motifId, b.motifId);
+                if (sim == null) continue;
+                if (sim > maxSim) maxSim = sim;
+                if (sim >= threshold) {
+                    links.push({ source: a.id, target: b.id, similarity: sim });
+                }
+            }
+        }
+
+        return { nodes, links, maxSimilarity: maxSim === -Infinity ? null : maxSim };
+    }
+
+    function render() {
+        const container = document.getElementById('graph-container');
+        const svgEl = document.getElementById('graph-svg');
+        const emptyEl = document.getElementById('emptyState');
+        const thresholdInput = document.getElementById('threshold');
+        const thresholdValueEl = document.getElementById('thresholdValue');
+        const statsEl = document.getElementById('stats');
+
+        const threshold = Math.max(0, Math.min(1, parseFloat(thresholdInput.value) || 0.5));
+        thresholdValueEl.textContent = threshold.toFixed(2);
+
+        if (!gameEngine || collection.length === 0) {
+            emptyEl.style.display = 'flex';
+            svgEl.innerHTML = '';
+            statsEl.textContent = 'No collection data';
+            return;
+        }
+
+        emptyEl.style.display = 'none';
+
+        const { nodes, links, maxSimilarity } = buildGraphData(threshold);
+        const width = container.clientWidth || 800;
+        const height = Math.max(400, container.clientHeight || 480);
+
+        // Restore saved positions so layout is preserved when re-rendering (e.g. after adding a node or changing threshold)
+        nodes.forEach(n => {
+            if (savedPositions[n.id]) {
+                n.x = savedPositions[n.id].x;
+                n.y = savedPositions[n.id].y;
+            }
+        });
+        const newNodes = nodes.filter(n => !savedPositions[n.id]);
+        const wasAdd = !!pendingAddPosition;
+        if (pendingAddPosition && newNodes.length === 1) {
+            newNodes[0].x = pendingAddPosition.x + 28;
+            newNodes[0].y = pendingAddPosition.y;
+            pendingAddPosition = null;
+        }
+
+        svgEl.setAttribute('viewBox', `0 0 ${width} ${height}`);
+        svgEl.innerHTML = '';
+
+        if (nodes.length === 0) {
+            statsEl.textContent = 'No nodes';
+            return;
+        }
+
+        // D3 expects link source/target to be node indices or objects; we pass ids and use .id()
+        const linkData = links.map(l => ({ ...l }));
+        const nodeData = nodes.map(n => ({ ...n }));
+
+        const svg = d3.select(svgEl);
+
+        const defs = svg.append('defs');
+        const nodeRadius = 40;
+        nodeData.forEach((n, i) => {
+            defs.append('clipPath').attr('id', 'clip-' + n.id.replace(/[^a-zA-Z0-9-]/g, '_'))
+                .append('circle').attr('r', nodeRadius).attr('cx', 0).attr('cy', 0);
+        });
+
+        const g = svg.append('g');
+        const zoom = d3.zoom()
+            .scaleExtent([0.2, 4])
+            .on('zoom', event => {
+                lastTransform = event.transform;
+                g.attr('transform', event.transform);
+            });
+        svg.call(zoom);
+
+        // If we are arriving with a focus id, start from the default view (no
+        // extra camera jump); we'll move the camera once, after the layout
+        // stabilizes. Otherwise, restore the last camera transform.
+        if (!focusIdFromUrl) {
+            svg.call(zoom.transform, lastTransform);
+        }
+
+        const link = g.append('g').attr('class', 'links')
+            .selectAll('line')
+            .data(linkData)
+            .join('line')
+            .attr('class', 'link');
+
+        const node = g.append('g').attr('class', 'nodes')
+            .selectAll('g')
+            .data(nodeData)
+            .join('g')
+            .attr('class', 'node')
+            .call(d3.drag()
+                .on('start', dragstarted)
+                .on('drag', dragged)
+                .on('end', dragended));
+
+        node.append('circle')
+            .attr('class', 'node-halo')
+            .attr('r', nodeRadius + 6);
+        node.append('circle')
+            .attr('r', nodeRadius)
+            .attr('class', 'node-circle');
+
+        node.on('dblclick', (event, d) => {
+            event.stopPropagation();
+            event.preventDefault();
+            if (d.suggested && d.motifId) {
+                window.location.href = 'play.html?play=' + encodeURIComponent(d.motifId);
+                return;
+            }
+            if (selectedNodeId === d.id) {
+                if (!d.motifId) {
+                    selectedNodeId = null;
+                    node.select('.node-halo').classed('selected', false);
+                    return;
+                }
+                const nearest = getNearestMotifNotInCollection(d.motifId);
+                if (!nearest) {
+                    selectedNodeId = null;
+                    node.select('.node-halo').classed('selected', false);
+                    return;
+                }
+                addMotifToCollectionAndRefresh(nearest.id, nearest.name, { x: d.x, y: d.y });
+            } else {
+                selectedNodeId = d.id;
+                node.select('.node-halo').classed('selected', (n) => n.id === selectedNodeId);
+            }
+        });
+
+        node.each(function (d) {
+            const g = d3.select(this);
+            if (d.imageDataURL) {
+                const clipId = 'clip-' + d.id.replace(/[^a-zA-Z0-9-]/g, '_');
+                g.append('image')
+                    .attr('href', d.imageDataURL)
+                    .attr('x', -nodeRadius)
+                    .attr('y', -nodeRadius)
+                    .attr('width', nodeRadius * 2)
+                    .attr('height', nodeRadius * 2)
+                    .attr('clip-path', 'url(#' + clipId + ')');
+            }
+            const labelText = d.label != null ? String(d.label) : '';
+            const lines = wrapLabel(labelText, 18);
+            const textEl = g.append('text')
+                .attr('class', 'node-label')
+                .attr('text-anchor', 'middle')
+                .attr('y', nodeRadius + 10);
+            textEl.selectAll('tspan')
+                .data(lines)
+                .join('tspan')
+                .attr('x', 0)
+                .attr('dy', (_, i) => i === 0 ? 0 : '1.1em')
+                .text(line => line);
+        });
+
+        node.select('.node-halo').classed('selected', (n) => n.id === selectedNodeId);
+
+        if (simulation) simulation.stop();
+        simulation = d3.forceSimulation(nodeData)
+            .force('link', d3.forceLink(linkData).id(d => d.id).distance(d => Math.max(60, 160 - 80 * (d.similarity || 0))))
+            .force('charge', d3.forceManyBody().strength(-100))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(nodeRadius + 6))
+            .on('tick', ticked);
+
+        // Converge the layout faster when we know we'll zoom to a focus node,
+        // so the camera move happens quickly and only once.
+        if (focusIdFromUrl) {
+            simulation.alpha(0.7).alphaDecay(0.12);
+        } else if (wasAdd) {
+            simulation.alpha(0.3);
+        }
+
+        // If we have a focus id (e.g. coming from \"View in graph\"), focus once
+        // the layout has settled, so there is a single, smooth camera move.
+        if (focusIdFromUrl) {
+            simulation.on('end', () => {
+                const nodeToFocus = nodeData.find(n => n.id === focusIdFromUrl);
+                if (nodeToFocus && nodeToFocus.x != null && nodeToFocus.y != null) {
+                    const k = 1.6;
+                    const t = d3.zoomIdentity
+                        .translate(width / 2 - k * nodeToFocus.x, height / 2 - k * nodeToFocus.y)
+                        .scale(k);
+                    svg.call(zoom.transform, t);
+                }
+                focusIdFromUrl = null;
+            });
+        }
+
+        function ticked() {
+            link
+                .attr('x1', d => (d.source && typeof d.source === 'object' ? d.source : nodeData.find(n => n.id === d.source))?.x ?? 0)
+                .attr('y1', d => (d.source && typeof d.source === 'object' ? d.source : nodeData.find(n => n.id === d.source))?.y ?? 0)
+                .attr('x2', d => (d.target && typeof d.target === 'object' ? d.target : nodeData.find(n => n.id === d.target))?.x ?? 0)
+                .attr('y2', d => (d.target && typeof d.target === 'object' ? d.target : nodeData.find(n => n.id === d.target))?.y ?? 0);
+            node.attr('transform', d => 'translate(' + (d.x ?? 0) + ',' + (d.y ?? 0) + ')');
+            nodeData.forEach(n => { savedPositions[n.id] = { x: n.x, y: n.y }; });
+        }
+
+        function dragstarted(event) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+        }
+        function dragged(event) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
+        }
+        function dragended(event) {
+            if (!event.active) simulation.alphaTarget(0);
+            event.subject.fx = null;
+            event.subject.fy = null;
+        }
+
+        const withMotif = nodeData.filter(n => n.motifId).length;
+        statsEl.textContent = nodes.length + ' nodes, ' + links.length + ' edges (threshold ' + threshold.toFixed(2) + (maxSimilarity != null ? ', max sim ' + maxSimilarity.toFixed(2) : '') + ')';
+    }
+
+    (async function init() {
+        const params = new URLSearchParams(window.location.search);
+        focusIdFromUrl = params.get('focus') || null;
+
+        gameEngine = new LenningsGameEngine({ levelPackPath: LEVEL_PACK });
+        await gameEngine.initialize();
+        loadCollection();
+
+        document.getElementById('threshold').addEventListener('input', render);
+        const clearBtn = document.getElementById('clearCollectionBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                localStorage.removeItem(COLLECTION_KEY);
+                collection = [];
+                savedPositions = {};
+                if (simulation) simulation.stop();
+                document.getElementById('graph-svg').innerHTML = '';
+                document.getElementById('emptyState').style.display = 'flex';
+                document.getElementById('stats').textContent = 'Collection cleared';
+            });
+        }
+        window.addEventListener('resize', render);
+        render();
+    })();
+})();
+</script>
