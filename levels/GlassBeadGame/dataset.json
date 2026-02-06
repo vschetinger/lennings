@@ -1,7 +1,7 @@
 {
   "name": "Glass Bead Game",
   "description": "Motif beads from the Thompson Motif Index of Folk Literature",
-  "ssimThreshold": 0.7,
+  "ssimThreshold": 0.1,
   "motifs": [
     {
       "id": "A1012.2",
