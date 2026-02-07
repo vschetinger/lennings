@@ -1497,6 +1497,9 @@ function calcNormCoef(m, s) {
 let lenia = null;
 let params = null;
 let gameEngine = null;
+// Previous gamepad button state for edge detection
+// Right: 0=X, 2=Square, 3=Triangle, 5=R1, 7=R2. Left mirror: 4=L1, 6=L2, 12=D-up, 13=D-down, 14=D-left, 15=D-right
+let prevGamepadButtons = { 0: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false, 12: false, 13: false, 14: false, 15: false };
 
 // Helper to get param value from JSON
 function getParamValue(paramMap, paramName, defaultValue) {
@@ -2859,6 +2862,51 @@ function animate(currentTime) {
     if (canvas.width < 768) {
         canvas.width = canvas.clientWidth * window.devicePixelRatio;
         canvas.height = canvas.clientHeight * window.devicePixelRatio;
+    }
+    
+    // Gamepad: poll first connected pad and trigger skills on button press (edge detection)
+    if (gameEngine && gameEngine.isPlayMode() && (gameEngine.gameState === 'playing' || gameEngine.gameState === 'paused')) {
+        const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let gp = null;
+        for (let i = 0; i < (pads.length || 0); i++) {
+            if (pads[i] && pads[i].connected) {
+                gp = pads[i];
+                break;
+            }
+        }
+        if (gp && gp.connected) {
+            const pressed = (i) => {
+                const b = gp.buttons[i];
+                if (!b) return false;
+                return b.pressed || (typeof b.value === 'number' && b.value > 0.5);
+            };
+            const idx = [0, 2, 3, 4, 5, 6, 7, 12, 13, 14, 15];
+            for (const i of idx) {
+                const now = pressed(i);
+                if (now && !prevGamepadButtons[i]) {
+                    if (i === 5 || i === 4) {
+                        gameEngine.triggerSkill('w');
+                    } else if (i === 7 || i === 6) {
+                        gameEngine.triggerSkill('q');
+                    } else if (i === 0 || i === 15 || i === 13) {
+                        gameEngine.triggerSkill('e');
+                    } else if (i === 2 || i === 14) {
+                        if (gameEngine.canTakeDigest()) gameEngine.triggerSkill('d');
+                    } else if (i === 3 || i === 12) {
+                        if (gameEngine.gameState !== 'won') {
+                            hideSnapshotOverlay();
+                            if (gameEngine.triggerSkill('r')) {
+                                resetCameraToSpawn();
+                            }
+                        }
+                    }
+                }
+                prevGamepadButtons[i] = now;
+            }
+        }
+    } else {
+        const keys = [0, 2, 3, 4, 5, 6, 7, 12, 13, 14, 15];
+        for (const k of keys) prevGamepadButtons[k] = false;
     }
     
     // Skip simulation when paused or not actively playing
