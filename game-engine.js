@@ -83,6 +83,9 @@ class LenningsGameEngine {
             [0.58, 0, 0.83]   // Violet
         ];
         this.spawnCount = 7;
+
+        // Shared embedding space (multi-layer embedding registry). Created lazily.
+        this.embeddingSpace = null;
         
         // Skills: key -> { key, label, cooldownMs, cooldownEndAt, action }
         this.skills = new Map();
@@ -180,13 +183,13 @@ class LenningsGameEngine {
             this.registerSkill({
                 key: 'w',
                 label: 'Speed burst',
-                cooldownMs: 1100,
+                cooldownMs: 100,
                 action: () => this.startSpeedBurst()
             });
             this.registerSkill({
                 key: 'e',
                 label: 'Evolve',
-                cooldownMs: 6600,
+                cooldownMs: 100,
                 action: () => this.triggerEvolve()
             });
             this.registerSkill({
@@ -200,7 +203,7 @@ class LenningsGameEngine {
             this.registerSkill({
                 key: 'q',
                 label: 'Split',
-                cooldownMs: 4400,
+                cooldownMs: 200,
                 action: () => this.triggerSplitReproduction()
             });
             
@@ -948,15 +951,19 @@ class LenningsGameEngine {
             return;
         }
         
-        const motifsUrl = `${this.levelPackPath}/gbg-motifs.json`;
+        // Prefer LM Studio–regenerated motifs (768-d, same space as tales); fallback to legacy gbg-motifs.json
+        const primaryUrl = `${this.levelPackPath}/gbg-motifs.lmstudio.json`;
+        const fallbackUrl = `${this.levelPackPath}/gbg-motifs.json`;
         try {
-            const res = await fetch(motifsUrl);
+            let res = await fetch(primaryUrl);
             if (!res.ok) {
-                // File is optional; just log a brief note at debug level
-                console.info(`[GameEngine] No GBG motif metadata found at ${motifsUrl} (status ${res.status})`);
+                console.info(`[GameEngine] ${primaryUrl} not available (${res.status}), trying ${fallbackUrl}`);
+                res = await fetch(fallbackUrl);
+            }
+            if (!res.ok) {
+                console.info(`[GameEngine] No GBG motif metadata found (status ${res.status})`);
                 return;
             }
-            
             const motifs = await res.json();
             const map = new Map();
             if (Array.isArray(motifs)) {
@@ -969,8 +976,19 @@ class LenningsGameEngine {
             
             // Enrich any already-discovered resources with this metadata
             this.enrichResourcesFromMetadata();
-            
-            console.log(`[GameEngine] Loaded GBG motif metadata with embeddings for ${this.motifMetadataById.size} motifs`);
+
+            // Register the motifs layer in the shared embedding space, if helpers are available.
+            try {
+                if (typeof getGlobalEmbeddingSpace === 'function') {
+                    this.embeddingSpace = getGlobalEmbeddingSpace();
+                }
+                if (typeof createMotifLayerFromGameEngine === 'function' && this.embeddingSpace) {
+                    createMotifLayerFromGameEngine(this, this.embeddingSpace);
+                }
+                console.log(`[GameEngine] Loaded GBG motif metadata with embeddings for ${this.motifMetadataById.size} motifs`);
+            } catch (e) {
+                console.warn('[GameEngine] Failed to register motifs layer in EmbeddingSpace:', e);
+            }
         } catch (error) {
             console.warn('[GameEngine] Failed to load GBG motif metadata:', error);
         }
@@ -1043,6 +1061,23 @@ class LenningsGameEngine {
         const motif = this.getMotifById(id);
         if (!motif || typeof motif.iching_hexagram_number !== 'number') return null;
         return motif.iching_hexagram_number;
+    }
+
+    /**
+     * Accessor for the shared EmbeddingSpace instance so UI code can
+     * perform higher-level queries (e.g. nearest tales to a motif).
+     */
+    getEmbeddingSpace() {
+        if (this.embeddingSpace) return this.embeddingSpace;
+        if (typeof getGlobalEmbeddingSpace === 'function') {
+            this.embeddingSpace = getGlobalEmbeddingSpace();
+            return this.embeddingSpace;
+        }
+        if (typeof EmbeddingSpace === 'function') {
+            this.embeddingSpace = new EmbeddingSpace();
+            return this.embeddingSpace;
+        }
+        return null;
     }
     
     /**

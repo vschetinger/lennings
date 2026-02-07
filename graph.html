@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Motif Similarity — Lennings</title>
+<title>Collection Graph — Lennings</title>
 <style>
     * { box-sizing: border-box; }
     :root {
@@ -26,26 +26,21 @@
     }
     .header {
         width: 100%;
-        max-width: 960px;
+        max-width: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 16px 20px;
+        padding: 10px 16px;
         flex-wrap: wrap;
         gap: 12px;
     }
     .header h1 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         margin: 0;
         background: linear-gradient(90deg, var(--accent), #6af);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-    }
-    .header .subtitle {
-        font-size: 0.9rem;
-        color: var(--muted);
-        margin-top: 2px;
     }
     .controls {
         display: flex;
@@ -54,9 +49,9 @@
     }
     .lang-switch {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         margin-left: 12px;
-        gap: 4px;
+        gap: 6px;
     }
     .lang-flag-btn {
         width: 28px;
@@ -97,14 +92,23 @@
         font-variant-numeric: tabular-nums;
         color: var(--accent);
     }
+    .collection-stats {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin: 0;
+        font-variant-numeric: tabular-nums;
+    }
+    .collection-stats strong {
+        color: var(--accent);
+    }
     #graph-container {
         flex: 1;
         width: 100%;
-        max-width: 960px;
-        min-height: 480px;
+        max-width: 100%;
+        min-height: 60vh;
         /* Simple warm \"old paper\" background without vignette */
         background: var(--paper);
-        border-radius: 16px;
+        border-radius: 12px;
         border: 1px solid rgba(255,255,255,0.12);
         position: relative;
         overflow: hidden;
@@ -115,9 +119,15 @@
         height: 100%;
     }
     .link {
-        stroke: rgba(34, 139, 34, 0.6);
-        stroke-width: 2;
+        stroke: rgba(34, 139, 34, 0.7);
         fill: none;
+    }
+    .link-label {
+        font-size: 9px;
+        fill: rgba(34, 100, 34, 0.95);
+        text-anchor: middle;
+        dominant-baseline: middle;
+        pointer-events: none;
     }
     .node-circle {
         fill: none;
@@ -148,11 +158,11 @@
     }
     .footer {
         width: 100%;
-        max-width: 960px;
+        max-width: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 12px 20px;
+        padding: 10px 16px;
         font-size: 0.85rem;
         color: var(--muted);
     }
@@ -185,7 +195,16 @@
         padding: 10px 14px 12px;
         color: var(--text);
         font-size: 0.8rem;
-        pointer-events: none;
+        pointer-events: auto;
+    }
+    #motifMetaPanel .meta-value-clickable {
+        cursor: pointer;
+        border-radius: 4px;
+        padding: 2px 4px;
+        margin: -2px -4px;
+    }
+    #motifMetaPanel .meta-value-clickable:hover {
+        background: rgba(255, 255, 255, 0.08);
     }
     #motifMetaPanel h3 {
         margin: 0 0 6px 0;
@@ -203,6 +222,153 @@
     #motifMetaPanel .meta-value {
         white-space: normal;
     }
+    #objectMetaPanel {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        max-width: 400px;
+        max-height: 80vh;
+        background: rgba(10, 10, 20, 0.96);
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.16);
+        padding: 10px 14px 12px;
+        color: var(--text);
+        font-size: 0.8rem;
+        pointer-events: auto;
+        overflow-y: auto;
+        z-index: 20;
+    }
+    #objectMetaPanel h3 {
+        margin: 0 0 6px 0;
+        font-size: 0.9rem;
+        color: var(--accent);
+    }
+    #objectMetaPanel .meta-line {
+        margin-top: 3px;
+    }
+    #objectMetaPanel .meta-description {
+        margin-top: 8px;
+    }
+    #objectMetaPanel .meta-description .meta-value {
+        margin-top: 4px;
+        line-height: 1.5;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    #tarotIchingDetailPanel {
+        position: absolute;
+        top: 16px;
+        right: 308px;
+        max-width: 380px;
+        max-height: 80vh;
+        background: rgba(10, 10, 20, 0.96);
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.16);
+        padding: 10px 14px 12px;
+        color: var(--text);
+        font-size: 0.8rem;
+        pointer-events: auto;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        z-index: 21;
+    }
+    #tarotIchingDetailPanel .detail-panel-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+    #tarotIchingDetailPanel .detail-panel-header h3 {
+        margin: 0 0 6px 0;
+        font-size: 0.9rem;
+        color: var(--accent);
+    }
+    #tarotIchingDetailPanel .detail-panel-close {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 1.2rem;
+        line-height: 1;
+        padding: 0 4px;
+        cursor: pointer;
+    }
+    #tarotIchingDetailPanel .detail-panel-close:hover {
+        color: var(--text);
+    }
+    #tarotIchingDetailPanel .detail-panel-body {
+        margin-top: 4px;
+        line-height: 1.5;
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+    #tarotIchingDetailPanel .detail-section {
+        margin-top: 10px;
+    }
+    #tarotIchingDetailPanel .detail-section:first-child {
+        margin-top: 0;
+    }
+    #tarotIchingDetailPanel .detail-section-title {
+        font-weight: 600;
+        color: var(--muted);
+        font-size: 0.75rem;
+        margin-bottom: 4px;
+    }
+    #tarotIchingDetailPanel .detail-comments {
+        color: var(--muted);
+        font-size: 0.75rem;
+        margin-top: 4px;
+    }
+    #tarotIchingDetailPanel ul {
+        margin: 4px 0 0 0;
+        padding-left: 1.2rem;
+    }
+    .object-square {
+        cursor: move;
+    }
+    .object-square rect {
+        fill: rgba(26, 26, 46, 0.9);
+        stroke: rgba(74, 242, 161, 0.5);
+        stroke-width: 2;
+        rx: 8;
+        ry: 8;
+    }
+    .object-square text {
+        fill: var(--accent);
+        font-size: 10px;
+        font-weight: 500;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        pointer-events: none;
+    }
+    .object-square text tspan {
+        fill: var(--accent);
+    }
+    .object-square.selected rect {
+        stroke: var(--accent);
+        stroke-width: 3;
+    }
+    .object-square .resize-handle {
+        fill: rgba(74, 242, 161, 0.4);
+        stroke: var(--accent);
+        stroke-width: 1;
+        cursor: nwse-resize;
+    }
+    .object-square .resize-handle:hover {
+        fill: rgba(74, 242, 161, 0.7);
+    }
+    .fable-aura-circle {
+        fill: none;
+        stroke: rgba(86, 156, 214, 0.5);
+        pointer-events: none;
+    }
+    .fable-aura-label {
+        font-size: 9px;
+        fill: rgba(86, 156, 214, 0.95);
+        text-anchor: middle;
+        pointer-events: none;
+    }
     .empty-state {
         position: absolute;
         inset: 0;
@@ -213,14 +379,34 @@
         font-size: 1rem;
         padding: 24px;
     }
+    .object-edge {
+        stroke: rgba(86, 156, 214, 0.6);
+        stroke-dasharray: 4, 4;
+        fill: none;
+        pointer-events: none;
+    }
+    .object-to-motif-edge {
+        stroke: rgba(160, 100, 200, 0.7);
+        fill: none;
+        pointer-events: none;
+    }
+    .object-to-motif-label {
+        font-size: 9px;
+        fill: rgba(160, 100, 200, 0.95);
+        text-anchor: middle;
+        dominant-baseline: middle;
+        pointer-events: none;
+    }
 </style>
 
 <div class="header">
     <div>
-        <h1>Motif Similarity</h1>
-        <div class="subtitle">Collected motifs linked by cosine similarity in embedding space</div>
+        <h1>Collection Graph</h1>
     </div>
     <div class="controls">
+        <div>
+            <div class="collection-stats">Motifs: <strong id="motifStats">0 / 0</strong> &middot; Objects: <strong id="objectStats">0 / 0</strong></div>
+        </div>
         <label for="threshold">Threshold</label>
         <input type="range" id="threshold" min="0" max="1" step="0.05" value="0.5">
         <span class="threshold-value" id="thresholdValue">0.50</span>
@@ -236,13 +422,47 @@
     <div class="empty-state" id="emptyState">No collection data. Play and win motifs in <a href="play.html" class="btn">Play</a> to build your graph.</div>
     <div id="motifMetaPanel" style="display: none;">
         <h3 id="metaMotifName">—</h3>
-        <div class="meta-line">
+        <div class="meta-line meta-value-clickable" id="metaTarotRow" role="button" tabindex="0">
             <span class="meta-label">Tarot:</span>
             <span class="meta-value" id="metaTarot">—</span>
         </div>
-        <div class="meta-line">
+        <div class="meta-line meta-value-clickable" id="metaIChingRow" role="button" tabindex="0">
             <span class="meta-label">I Ching:</span>
             <span class="meta-value" id="metaIChing">—</span>
+        </div>
+    </div>
+    <div id="tarotIchingDetailPanel" style="display: none;">
+        <div class="detail-panel-header">
+            <h3 id="tarotIchingDetailTitle">—</h3>
+            <button type="button" class="detail-panel-close" id="tarotIchingDetailClose" aria-label="Close">×</button>
+        </div>
+        <div class="detail-panel-body" id="tarotIchingDetailBody">—</div>
+    </div>
+    <div id="objectMetaPanel" style="display: none;">
+        <h3 id="objectMetaName">—</h3>
+        <div class="meta-line">
+            <span class="meta-label">Origin:</span>
+            <span class="meta-value" id="objectMetaOrigin">—</span>
+        </div>
+        <div class="meta-line">
+            <span class="meta-label">Source:</span>
+            <span class="meta-value" id="objectMetaSource">—</span>
+        </div>
+        <div class="meta-line">
+            <span class="meta-label">Data Source:</span>
+            <span class="meta-value" id="objectMetaDataSource">—</span>
+        </div>
+        <div class="meta-line">
+            <span class="meta-label">Date:</span>
+            <span class="meta-value" id="objectMetaDate">—</span>
+        </div>
+        <div class="meta-line">
+            <span class="meta-label">Similarity:</span>
+            <span class="meta-value" id="objectMetaSimilarity">—</span>
+        </div>
+        <div class="meta-line meta-description">
+            <span class="meta-label">Description:</span>
+            <div class="meta-value" id="objectMetaDescription">—</div>
         </div>
     </div>
 </div>
@@ -255,11 +475,18 @@
     </div>
 </div>
 
+<script src="embedding-space.js"></script>
+<script src="embedding-datasets.js"></script>
 <script src="game-engine.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script>
 (function () {
     const COLLECTION_KEY = 'lennings_collection';
+    const OBJECT_NODES_KEY = 'lennings_object_nodes';
+    const GRAPH_THRESHOLD_KEY = 'lennings_graph_threshold';
+    const GRAPH_POSITIONS_KEY = 'lennings_graph_positions';
+    const GRAPH_ZOOM_KEY = 'lennings_graph_zoom';
+    const GRAPH_OBJECT_EDGES_KEY = 'lennings_graph_object_edges';
     const LANGUAGE_STORAGE_KEY = 'gbg-language-preference';
     const LEVEL_PACK = 'levels/GlassBeadGame';
 
@@ -269,12 +496,47 @@
     // Current zoom/pan for the main graph view so threshold changes don't reset the camera
     let lastTransform = d3.zoomIdentity;
     let selectedNodeId = null;
+    let selectedObjectId = null;
     // Persist node positions between renders so the layout feels stable as we add motifs
     let savedPositions = {};
+    let savedObjectPositions = {};
     let pendingAddPosition = null;
     // When set (e.g. from \"play.html?focus=...\"), the graph will center on this
     // collection node once the layout has settled.
     let focusIdFromUrl = null;
+    // Object layer: external text objects (e.g. tales) displayed as SVG squares
+    let objectNodes = []; // Array of { id, label, metadata, x, y, similarity, motifId }
+    let lastObjectQueryTime = 0;
+    const objectQueryCooldownMs = 2000;
+    let embeddingSpace = null;
+    // When adding a suggested motif, show an aura for its closest fable match (cleared after delay)
+    let lastSuggestedFableAura = null;
+    let fableAuraTimeoutId = null;
+    const FABLE_AURA_DURATION_MS = 6000;
+    // Fable -> motif edges (summoned/reflected when pressing O on a fable)
+    let objectToMotifEdges = []; // { objectId, motifId, similarity }
+    // Tarot / I-Ching resource data (loaded once)
+    let tarotCards = null;
+    let ichingHexagrams = null;
+    // Current motif context when meta panel is shown (for detail dialog lookup)
+    let currentMotifTarotIndex = null;
+    let currentMotifMeta = null;
+
+    function loadTarotIchingResources() {
+        if (tarotCards !== null && ichingHexagrams !== null) return;
+        Promise.all([
+            fetch('datasets/tarot_cards.json').then(r => r.ok ? r.json() : null),
+            fetch('datasets/iching_hexagrams.json').then(r => r.ok ? r.json() : null)
+        ]).then(([tarot, iching]) => {
+            tarotCards = Array.isArray(tarot) ? tarot : null;
+            ichingHexagrams = Array.isArray(iching) ? iching : null;
+        }).catch(() => {});
+    }
+
+    function closeTarotIchingDetailPanel() {
+        const panel = document.getElementById('tarotIchingDetailPanel');
+        if (panel) panel.style.display = 'none';
+    }
 
     function getCurrentLanguage() {
         try {
@@ -342,6 +604,140 @@
         }
     }
 
+    function saveObjectNodes() {
+        try {
+            const payload = objectNodes.map(o => ({
+                id: o.id,
+                label: o.label,
+                metadata: o.metadata,
+                x: o.x,
+                y: o.y,
+                width: o.width,
+                height: o.height,
+                similarity: o.similarity,
+                motifId: o.motifId
+            }));
+            localStorage.setItem(OBJECT_NODES_KEY, JSON.stringify(payload));
+        } catch (e) {
+            console.warn('Could not save object nodes:', e);
+        }
+    }
+
+    function loadObjectNodes() {
+        try {
+            const raw = localStorage.getItem(OBJECT_NODES_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            if (!Array.isArray(data) || data.length === 0) return;
+            objectNodes = data.map(o => ({
+                id: o.id,
+                label: o.label,
+                metadata: o.metadata || {},
+                x: o.x,
+                y: o.y,
+                width: o.width != null ? o.width : 90,
+                height: o.height != null ? o.height : 90,
+                similarity: o.similarity,
+                motifId: o.motifId
+            }));
+            objectNodes.forEach(obj => {
+                savedObjectPositions[obj.id] = { x: obj.x, y: obj.y };
+            });
+        } catch (e) {
+            console.warn('Could not load object nodes:', e);
+        }
+    }
+
+    function loadObjectEdges() {
+        try {
+            const raw = localStorage.getItem(GRAPH_OBJECT_EDGES_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            if (Array.isArray(data)) objectToMotifEdges = data;
+        } catch (e) {
+            console.warn('Could not load object edges:', e);
+        }
+    }
+
+    function saveObjectEdges() {
+        try {
+            localStorage.setItem(GRAPH_OBJECT_EDGES_KEY, JSON.stringify(objectToMotifEdges));
+        } catch (e) {
+            console.warn('Could not save object edges:', e);
+        }
+    }
+
+    function loadGraphPositions() {
+        try {
+            const raw = localStorage.getItem(GRAPH_POSITIONS_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            if (data && typeof data === 'object') savedPositions = data;
+        } catch (e) {
+            console.warn('Could not load graph positions:', e);
+        }
+    }
+
+    function saveGraphPositions() {
+        try {
+            localStorage.setItem(GRAPH_POSITIONS_KEY, JSON.stringify(savedPositions));
+        } catch (e) {
+            console.warn('Could not save graph positions:', e);
+        }
+    }
+
+    function loadGraphZoom() {
+        try {
+            const raw = localStorage.getItem(GRAPH_ZOOM_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            if (data && typeof data.k === 'number' && typeof data.x === 'number' && typeof data.y === 'number') {
+                const k = Math.max(0.2, Math.min(4, data.k));
+                lastTransform = d3.zoomIdentity.translate(data.x, data.y).scale(k);
+            }
+        } catch (e) {
+            console.warn('Could not load graph zoom:', e);
+        }
+    }
+
+    let zoomSaveTimeoutId = null;
+    function saveGraphZoom() {
+        try {
+            const payload = { k: lastTransform.k, x: lastTransform.x, y: lastTransform.y };
+            localStorage.setItem(GRAPH_ZOOM_KEY, JSON.stringify(payload));
+        } catch (e) {
+            console.warn('Could not save graph zoom:', e);
+        }
+    }
+
+    function loadGraphThreshold() {
+        const thresholdInput = document.getElementById('threshold');
+        const thresholdValueEl = document.getElementById('thresholdValue');
+        if (!thresholdInput || !thresholdValueEl) return;
+        try {
+            const raw = localStorage.getItem(GRAPH_THRESHOLD_KEY);
+            if (raw == null) return;
+            const v = parseFloat(raw);
+            if (!Number.isNaN(v) && v >= 0 && v <= 1) {
+                thresholdInput.value = v;
+                thresholdValueEl.textContent = v.toFixed(2);
+            }
+        } catch (e) {
+            console.warn('Could not load graph threshold:', e);
+        }
+    }
+
+    function saveGraphThreshold() {
+        const thresholdInput = document.getElementById('threshold');
+        if (!thresholdInput) return;
+        try {
+            const v = Math.max(0, Math.min(1, parseFloat(thresholdInput.value) || 0.5));
+            localStorage.setItem(GRAPH_THRESHOLD_KEY, String(v));
+        } catch (e) {
+            console.warn('Could not save graph threshold:', e);
+        }
+    }
+
     function getImageUrlForMotifId(id) {
         if (!gameEngine) return null;
         const res = gameEngine.getAvailableResources().find(r => r.id === id);
@@ -349,10 +745,43 @@
         return LEVEL_PACK + '/images/' + id + '.png';
     }
 
-    /** Return { id, name } for the motif (with embedding) closest to motifId that is not already in the collection. */
+    /** Return { id, name } for the motif (with embedding) closest to motifId that is not already in the collection.
+     *  Uses the shared EmbeddingSpace motifs layer when available, and falls back
+     *  to the gameEngine cosineSimilarity helper otherwise.
+     */
     function getNearestMotifNotInCollection(motifId) {
         if (!gameEngine || !motifId || !gameEngine.motifMetadataById.size) return null;
         const inCollection = new Set(collection.map(item => getMotifIdForItem(item)).filter(Boolean));
+
+        // Prefer EmbeddingSpace motifs layer when available
+        let space = null;
+        if (typeof gameEngine.getEmbeddingSpace === 'function') {
+            space = gameEngine.getEmbeddingSpace();
+        } else if (typeof getGlobalEmbeddingSpace === 'function') {
+            space = getGlobalEmbeddingSpace();
+        }
+        try {
+            if (space && typeof space.hasLayer === 'function' && space.hasLayer('motifs')) {
+                const results = space.nearestToItem('motifs', 'motifs', motifId, 8, function (item) {
+                    const id = item.id;
+                    return id !== motifId && !inCollection.has(id);
+                });
+                if (results && results.length) {
+                    const bestItem = results[0].item;
+                    const id = bestItem.id;
+                    const meta = bestItem.metadata || gameEngine.getMotifById(id);
+                    const level = gameEngine.getLevels().find(l => l.id === id);
+                    return {
+                        id: id,
+                        name: (level && level.name) || (meta && meta.name) || id
+                    };
+                }
+            }
+        } catch (e) {
+            console.warn('[Graph] EmbeddingSpace nearest motif lookup failed, falling back to engine similarity:', e);
+        }
+
+        // Fallback: engine-driven cosine similarity over motifMetadataById
         let best = null;
         let bestSim = -Infinity;
         for (const [id, meta] of gameEngine.motifMetadataById) {
@@ -389,8 +818,9 @@
      *  sourcePosition: optional { x, y } to place the new node near the selected node. */
     function addMotifToCollectionAndRefresh(motifId, levelName, sourcePosition) {
         const imageDataURL = createNoiseImageDataURL();
+        const newId = 'recon-' + Date.now();
         collection.push({
-            id: 'recon-' + Date.now(),
+            id: newId,
             levelName,
             ssim: 0,
             time: 0,
@@ -403,6 +833,7 @@
         selectedNodeId = null;
         pendingAddPosition = sourcePosition || null;
         render();
+        return newId;
     }
 
     // ===== Tarot and I Ching mapping (compact JS ports of gbg-miro-app utilities) =====
@@ -495,9 +926,17 @@
         const thresholdInput = document.getElementById('threshold');
         const thresholdValueEl = document.getElementById('thresholdValue');
         const statsEl = document.getElementById('stats');
+        const motifStatsEl = document.getElementById('motifStats');
+        const objectStatsEl = document.getElementById('objectStats');
 
         const threshold = Math.max(0, Math.min(1, parseFloat(thresholdInput.value) || 0.5));
         thresholdValueEl.textContent = threshold.toFixed(2);
+
+        var totalMotifs = gameEngine ? gameEngine.getAvailableResources().length : 0;
+        if (motifStatsEl) motifStatsEl.textContent = collection.length + ' / ' + totalMotifs;
+        var aftLayer = embeddingSpace && embeddingSpace.getLayer ? embeddingSpace.getLayer('aft_motifs') : null;
+        var totalObjects = aftLayer && aftLayer.items ? aftLayer.items.length : 0;
+        if (objectStatsEl) objectStatsEl.textContent = objectNodes.length + ' / ' + totalObjects;
 
         if (!gameEngine || collection.length === 0) {
             emptyEl.style.display = 'flex';
@@ -555,6 +994,9 @@
             .on('zoom', event => {
                 lastTransform = event.transform;
                 g.attr('transform', event.transform);
+                updateObjectEdges();
+                if (zoomSaveTimeoutId) clearTimeout(zoomSaveTimeoutId);
+                zoomSaveTimeoutId = setTimeout(saveGraphZoom, 400);
             });
         svg.call(zoom);
 
@@ -565,11 +1007,33 @@
             svg.call(zoom.transform, lastTransform);
         }
 
+        // Create object edges group first (so it's behind nodes)
+        const objectEdgeGroup = g.append('g').attr('class', 'object-edges');
+        
         const link = g.append('g').attr('class', 'links')
             .selectAll('line')
             .data(linkData)
             .join('line')
-            .attr('class', 'link');
+            .attr('class', 'link')
+            .attr('stroke-width', d => {
+                var sim = d.similarity != null ? d.similarity : 0;
+                var t = threshold;
+                var norm = t >= 1 ? 1 : Math.max(0, (sim - t) / (1 - t));
+                return 1.5 + norm * 4.5;
+            })
+            .attr('stroke-opacity', d => {
+                var sim = d.similarity != null ? d.similarity : 0;
+                var t = threshold;
+                var norm = t >= 1 ? 1 : Math.max(0, (sim - t) / (1 - t));
+                return 0.5 + norm * 0.45;
+            });
+
+        const linkLabels = g.append('g').attr('class', 'link-labels')
+            .selectAll('text')
+            .data(linkData)
+            .join('text')
+            .attr('class', 'link-label')
+            .text(d => (d.similarity != null ? d.similarity : 0).toFixed(2));
 
         const node = g.append('g').attr('class', 'nodes')
             .selectAll('g')
@@ -595,6 +1059,9 @@
 
         function updateMetaPanelForNode(nodeDatum) {
             if (!metaPanelEl || !metaNameEl || !metaTarotEl || !metaIChingEl || !nodeDatum) {
+                currentMotifTarotIndex = null;
+                currentMotifMeta = null;
+                closeTarotIchingDetailPanel();
                 if (metaPanelEl) metaPanelEl.style.display = 'none';
                 return;
             }
@@ -614,18 +1081,138 @@
                 const tarotIndex = typeof gameEngine.getTarotIndexForId === 'function'
                     ? gameEngine.getTarotIndexForId(motifId)
                     : motifMeta.tarot_index;
+                currentMotifTarotIndex = typeof tarotIndex === 'number' && tarotIndex >= 0 ? tarotIndex : null;
+                currentMotifMeta = motifMeta;
                 metaTarotEl.textContent = getTarotDisplay(tarotIndex);
                 metaIChingEl.textContent = getIChingDisplay(motifMeta);
             } else {
+                currentMotifTarotIndex = null;
+                currentMotifMeta = null;
                 metaTarotEl.textContent = '—';
                 metaIChingEl.textContent = '—';
             }
             metaPanelEl.style.display = 'block';
         }
 
+        function openTarotDetail() {
+            const panel = document.getElementById('tarotIchingDetailPanel');
+            const titleEl = document.getElementById('tarotIchingDetailTitle');
+            const bodyEl = document.getElementById('tarotIchingDetailBody');
+            if (!panel || !titleEl || !bodyEl) return;
+            if (tarotCards === null) {
+                titleEl.textContent = 'Tarot';
+                bodyEl.textContent = 'Loading…';
+                panel.style.display = 'block';
+                return;
+            }
+            const idx = currentMotifTarotIndex;
+            if (typeof idx !== 'number' || idx < 0 || idx >= tarotCards.length) {
+                titleEl.textContent = 'Tarot';
+                bodyEl.textContent = 'No data for this motif.';
+                panel.style.display = 'block';
+                return;
+            }
+            const card = tarotCards[idx];
+            titleEl.textContent = card.name || ('Card ' + idx);
+            const parts = [];
+            if (card.keywords && card.keywords.length) {
+                parts.push('<div class="detail-section"><div class="detail-section-title">Keywords</div><p>' + escapeHtml(card.keywords.join(', ')) + '</p></div>');
+            }
+            if (card.fortune_telling && card.fortune_telling.length) {
+                parts.push('<div class="detail-section"><div class="detail-section-title">Fortune telling</div><p>' + escapeHtml(card.fortune_telling.join(' ')) + '</p></div>');
+            }
+            if (card.meanings) {
+                if (card.meanings.light && card.meanings.light.length) {
+                    parts.push('<div class="detail-section"><div class="detail-section-title">Light</div><ul><li>' + card.meanings.light.map(function (s) { return escapeHtml(s); }).join('</li><li>') + '</li></ul></div>');
+                }
+                if (card.meanings.shadow && card.meanings.shadow.length) {
+                    parts.push('<div class="detail-section"><div class="detail-section-title">Shadow</div><ul><li>' + card.meanings.shadow.map(function (s) { return escapeHtml(s); }).join('</li><li>') + '</li></ul></div>');
+                }
+            }
+            if (card.Archetype) parts.push('<div class="detail-section"><div class="detail-section-title">Archetype</div><p>' + escapeHtml(card.Archetype) + '</p></div>');
+            if (card.Elemental) parts.push('<div class="detail-section"><div class="detail-section-title">Elemental</div><p>' + escapeHtml(card.Elemental) + '</p></div>');
+            if (card['Mythical/Spiritual']) parts.push('<div class="detail-section"><div class="detail-section-title">Mythical / Spiritual</div><p>' + escapeHtml(card['Mythical/Spiritual']) + '</p></div>');
+            if (card['Questions to Ask'] && card['Questions to Ask'].length) {
+                parts.push('<div class="detail-section"><div class="detail-section-title">Questions to ask</div><ul><li>' + card['Questions to Ask'].map(function (s) { return escapeHtml(s); }).join('</li><li>') + '</li></ul></div>');
+            }
+            bodyEl.innerHTML = parts.length ? parts.join('') : '<p>No further details.</p>';
+            panel.style.display = 'block';
+        }
+
+        function openIChingDetail() {
+            const panel = document.getElementById('tarotIchingDetailPanel');
+            const titleEl = document.getElementById('tarotIchingDetailTitle');
+            const bodyEl = document.getElementById('tarotIchingDetailBody');
+            if (!panel || !titleEl || !bodyEl) return;
+            if (ichingHexagrams === null) {
+                titleEl.textContent = 'I Ching';
+                bodyEl.textContent = 'Loading…';
+                panel.style.display = 'block';
+                return;
+            }
+            const num = currentMotifMeta && typeof currentMotifMeta.iching_hexagram_number === 'number' ? currentMotifMeta.iching_hexagram_number : null;
+            if (num == null || num < 1 || num > 64) {
+                titleEl.textContent = 'I Ching';
+                bodyEl.textContent = 'No hexagram for this motif.';
+                panel.style.display = 'block';
+                return;
+            }
+            const hex = ichingHexagrams.find(function (h) { return h.hex === num; });
+            if (!hex) {
+                titleEl.textContent = 'I Ching';
+                bodyEl.textContent = 'Hexagram not found.';
+                panel.style.display = 'block';
+                return;
+            }
+            titleEl.textContent = 'Hexagram ' + hex.hex + ': ' + (hex.english || '') + (hex.pinyin ? ' (' + hex.pinyin + ')' : '');
+            const parts = [];
+            if (hex.symbolic) {
+                parts.push('<div class="detail-section"><div class="detail-section-title">Symbolic</div><p>' + escapeHtml(hex.symbolic) + '</p></div>');
+            }
+            if (hex.judgment && hex.judgment.text) {
+                parts.push('<div class="detail-section"><div class="detail-section-title">Judgment</div><p>' + escapeHtml(hex.judgment.text) + '</p>');
+                if (hex.judgment.comments) parts.push('<p class="detail-comments">' + escapeHtml(hex.judgment.comments) + '</p>');
+                parts.push('</div>');
+            }
+            if (hex.image && hex.image.text) {
+                parts.push('<div class="detail-section"><div class="detail-section-title">Image</div><p>' + escapeHtml(hex.image.text.replace(/\n/g, '<br>')) + '</p>');
+                if (hex.image.comments) parts.push('<p class="detail-comments">' + escapeHtml(hex.image.comments) + '</p>');
+                parts.push('</div>');
+            }
+            if (hex.lines && hex.lines.length) {
+                parts.push('<div class="detail-section"><div class="detail-section-title">Lines</div>');
+                hex.lines.forEach(function (line) {
+                    parts.push('<p><strong>Line ' + line.line + '</strong> ' + escapeHtml(line.text || '') + '</p>');
+                    if (line.comments) parts.push('<p class="detail-comments">' + escapeHtml(line.comments) + '</p>');
+                });
+                parts.push('</div>');
+            }
+            bodyEl.innerHTML = parts.length ? parts.join('') : '<p>No further details.</p>';
+            panel.style.display = 'block';
+        }
+
+        function escapeHtml(s) {
+            if (s == null) return '';
+            var div = document.createElement('div');
+            div.textContent = s;
+            return div.innerHTML;
+        }
+
+        document.getElementById('tarotIchingDetailClose').addEventListener('click', closeTarotIchingDetailPanel);
+        document.getElementById('metaTarotRow').addEventListener('click', function () { openTarotDetail(); });
+        document.getElementById('metaIChingRow').addEventListener('click', function () { openIChingDetail(); });
+        document.getElementById('metaTarotRow').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openTarotDetail(); } });
+        document.getElementById('metaIChingRow').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openIChingDetail(); } });
+
         node.on('dblclick', (event, d) => {
             event.stopPropagation();
             event.preventDefault();
+            closeTarotIchingDetailPanel();
+            // Hide object panel when selecting a motif
+            if (selectedObjectId) {
+                selectedObjectId = null;
+                document.getElementById('objectMetaPanel').style.display = 'none';
+            }
             if (d.suggested && d.motifId) {
                 window.location.href = 'play.html?play=' + encodeURIComponent(d.motifId);
                 return;
@@ -641,6 +1228,28 @@
                     selectedNodeId = null;
                     node.select('.node-halo').classed('selected', false);
                     return;
+                }
+                // Show aura on the newly spawned node (suggested motif); aura stays until user spawns the fable (presses O)
+                if (embeddingSpace && embeddingSpace.hasLayer && embeddingSpace.hasLayer('aft_motifs')) {
+                    try {
+                        const fableResults = embeddingSpace.nearestToItem('aft_motifs', 'motifs', nearest.id, 1);
+                        if (fableResults && fableResults.length > 0) {
+                            const r = fableResults[0];
+                            if (fableAuraTimeoutId) clearTimeout(fableAuraTimeoutId);
+                            fableAuraTimeoutId = null;
+                            const addedNodeId = addMotifToCollectionAndRefresh(nearest.id, nearest.name, { x: d.x, y: d.y });
+                            lastSuggestedFableAura = {
+                                addedNodeId,
+                                motifId: nearest.id,
+                                fableLabel: r.item.label || r.item.id,
+                                fableId: r.item.id,
+                                similarity: r.score
+                            };
+                            return;
+                        }
+                    } catch (e) {
+                        console.warn('[Graph] Fable aura:', e);
+                    }
                 }
                 addMotifToCollectionAndRefresh(nearest.id, nearest.name, { x: d.x, y: d.y });
             } else {
@@ -683,8 +1292,11 @@
                 updateMetaPanelForNode(initiallySelected);
             }
         } else if (metaPanelEl) {
+            closeTarotIchingDetailPanel();
             metaPanelEl.style.display = 'none';
         }
+
+        const fableAuraGroup = g.append('g').attr('class', 'fable-aura');
 
         if (simulation) simulation.stop();
         simulation = d3.forceSimulation(nodeData)
@@ -704,8 +1316,8 @@
 
         // If we have a focus id (e.g. coming from \"View in graph\"), focus once
         // the layout has settled, so there is a single, smooth camera move.
-        if (focusIdFromUrl) {
-            simulation.on('end', () => {
+        simulation.on('end', () => {
+            if (focusIdFromUrl) {
                 const nodeToFocus = nodeData.find(n => n.id === focusIdFromUrl);
                 if (nodeToFocus && nodeToFocus.x != null && nodeToFocus.y != null) {
                     const k = 1.6;
@@ -715,17 +1327,45 @@
                     svg.call(zoom.transform, t);
                 }
                 focusIdFromUrl = null;
-            });
-        }
+            }
+            saveGraphPositions();
+        });
 
+        function getLinkEndpoints(d) {
+            var src = d.source && typeof d.source === 'object' ? d.source : nodeData.find(n => n.id === d.source);
+            var tgt = d.target && typeof d.target === 'object' ? d.target : nodeData.find(n => n.id === d.target);
+            var x1 = src?.x ?? 0, y1 = src?.y ?? 0, x2 = tgt?.x ?? 0, y2 = tgt?.y ?? 0;
+            return { x1, y1, x2, y2, midX: (x1 + x2) / 2, midY: (y1 + y2) / 2 };
+        }
         function ticked() {
             link
-                .attr('x1', d => (d.source && typeof d.source === 'object' ? d.source : nodeData.find(n => n.id === d.source))?.x ?? 0)
-                .attr('y1', d => (d.source && typeof d.source === 'object' ? d.source : nodeData.find(n => n.id === d.source))?.y ?? 0)
-                .attr('x2', d => (d.target && typeof d.target === 'object' ? d.target : nodeData.find(n => n.id === d.target))?.x ?? 0)
-                .attr('y2', d => (d.target && typeof d.target === 'object' ? d.target : nodeData.find(n => n.id === d.target))?.y ?? 0);
+                .attr('x1', d => getLinkEndpoints(d).x1)
+                .attr('y1', d => getLinkEndpoints(d).y1)
+                .attr('x2', d => getLinkEndpoints(d).x2)
+                .attr('y2', d => getLinkEndpoints(d).y2);
+            linkLabels
+                .attr('x', d => getLinkEndpoints(d).midX)
+                .attr('y', d => getLinkEndpoints(d).midY);
             node.attr('transform', d => 'translate(' + (d.x ?? 0) + ',' + (d.y ?? 0) + ')');
             nodeData.forEach(n => { savedPositions[n.id] = { x: n.x, y: n.y }; });
+            updateObjectEdges();
+            if (lastSuggestedFableAura) {
+                const src = nodeData.find(n => n.id === lastSuggestedFableAura.addedNodeId);
+                if (src && src.x != null && src.y != null) {
+                    const sim = lastSuggestedFableAura.similarity;
+                    const norm = (sim + 1) / 2;
+                    const r1 = 52 + norm * 28;
+                    const r2 = 78 + norm * 32;
+                    const opacity = 0.35 + norm * 0.45;
+                    fableAuraGroup.selectAll('*').remove();
+                    fableAuraGroup.append('circle').attr('class', 'fable-aura-circle').attr('cx', src.x).attr('cy', src.y).attr('r', r1).attr('stroke-width', 2).attr('stroke-opacity', opacity);
+                    fableAuraGroup.append('circle').attr('class', 'fable-aura-circle').attr('cx', src.x).attr('cy', src.y).attr('r', r2).attr('stroke-width', 1).attr('stroke-opacity', opacity * 0.5);
+                    const label = (lastSuggestedFableAura.fableLabel.length > 24 ? lastSuggestedFableAura.fableLabel.substring(0, 21) + '…' : lastSuggestedFableAura.fableLabel) + ' ' + (sim * 100).toFixed(0) + '%';
+                    fableAuraGroup.append('text').attr('class', 'fable-aura-label').attr('x', src.x).attr('y', src.y + r2 + 16).text(label);
+                }
+            } else {
+                fableAuraGroup.selectAll('*').remove();
+            }
         }
 
         function dragstarted(event) {
@@ -741,10 +1381,495 @@
             if (!event.active) simulation.alphaTarget(0);
             event.subject.fx = null;
             event.subject.fy = null;
+            saveGraphPositions();
         }
 
-        const withMotif = nodeData.filter(n => n.motifId).length;
-        statsEl.textContent = nodes.length + ' nodes, ' + links.length + ' edges (threshold ' + threshold.toFixed(2) + (maxSimilarity != null ? ', max sim ' + maxSimilarity.toFixed(2) : '') + ')';
+        var numObjEdges = objectToMotifEdges.length;
+        var statsParts = [
+            nodes.length + ' motifs',
+            objectNodes.length + ' objects',
+            links.length + ' motif edges',
+            numObjEdges + ' object edges'
+        ];
+        statsParts.push('threshold ' + threshold.toFixed(2));
+        if (maxSimilarity != null) statsParts.push('max motif sim ' + maxSimilarity.toFixed(2));
+        statsEl.textContent = statsParts.join(' · ');
+        
+        // Render object squares AFTER nodes so they appear on top
+        renderObjectSquares(g);
+        
+        // Update object edges after rendering squares (so positions are set)
+        updateObjectEdges();
+        
+        // Click outside to deselect (aura stays until O is pressed on that node)
+        svg.on('click', function(event) {
+            if (event.target === svgEl || event.target.tagName === 'svg') {
+                selectedNodeId = null;
+                selectedObjectId = null;
+                node.select('.node-halo').classed('selected', false);
+                closeTarotIchingDetailPanel();
+                document.getElementById('motifMetaPanel').style.display = 'none';
+                document.getElementById('objectMetaPanel').style.display = 'none';
+                render();
+            }
+        });
+    }
+
+    function renderObjectSquares(g) {
+        if (!g || objectNodes.length === 0) {
+            g.selectAll('.object-square').remove();
+            return;
+        }
+        
+        // Restore saved positions
+        objectNodes.forEach(obj => {
+            if (savedObjectPositions[obj.id]) {
+                obj.x = savedObjectPositions[obj.id].x;
+                obj.y = savedObjectPositions[obj.id].y;
+            }
+        });
+        
+        const objectGroup = g.selectAll('.object-squares').data([0]);
+        const objectGroupEnter = objectGroup.enter().append('g').attr('class', 'object-squares');
+        const objectGroupMerged = objectGroupEnter.merge(objectGroup);
+        
+        const squares = objectGroupMerged.selectAll('.object-square')
+            .data(objectNodes, d => d.id);
+        
+        const squaresEnter = squares.enter()
+            .append('g')
+            .attr('class', 'object-square')
+            .call(d3.drag()
+                .on('start', function(event, d) {
+                    if (!event.active) {
+                        // No force simulation for objects, just update position
+                    }
+                    event.subject.fx = d.x;
+                    event.subject.fy = d.y;
+                })
+                .on('drag', function(event, d) {
+                    d.x = event.x;
+                    d.y = event.y;
+                    d3.select(this).attr('transform', 'translate(' + d.x + ',' + d.y + ')');
+                    savedObjectPositions[d.id] = { x: d.x, y: d.y };
+                    // Update edges immediately during drag
+                    updateObjectEdges();
+                })
+                .on('end', function(event, d) {
+                    event.subject.fx = null;
+                    event.subject.fy = null;
+                    savedObjectPositions[d.id] = { x: d.x, y: d.y };
+                    saveObjectNodes();
+                }));
+        
+        const minSize = 60;
+        const maxSize = 200;
+        
+        squaresEnter.append('rect')
+            .attr('class', 'object-square-rect');
+        
+        squaresEnter.append('text')
+            .attr('dy', 0)
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle');
+        
+        squaresEnter.append('circle')
+            .attr('class', 'resize-handle')
+            .attr('r', 6)
+            .on('mousedown', function(event) {
+                event.stopPropagation();
+            })
+            .on('dblclick', function(event) {
+                event.stopPropagation();
+            });
+        
+        const squaresMerged = squaresEnter.merge(squares);
+        
+        function updateSquareSize(sel) {
+            sel.select('rect')
+                .attr('width', d => d.width || 90)
+                .attr('height', d => d.height || 90)
+                .attr('x', d => -(d.width || 90) / 2)
+                .attr('y', d => -(d.height || 90) / 2);
+            sel.select('.resize-handle')
+                .attr('cx', d => (d.width || 90) / 2 - 4)
+                .attr('cy', d => (d.height || 90) / 2 - 4);
+        }
+        
+        squaresMerged.attr('transform', d => 'translate(' + (d.x ?? 0) + ',' + (d.y ?? 0) + ')');
+        updateSquareSize(squaresMerged);
+        
+        squaresMerged.each(function(d) {
+            const w = d.width || 90;
+            const h = d.height || 90;
+            const label = d.label || d.id;
+            const textEl = d3.select(this).select('text');
+            textEl.selectAll('tspan').remove();
+            const maxCharsPerLine = Math.max(6, Math.floor(w / 7));
+            const maxLines = Math.max(1, Math.floor(h / 14));
+            const lineHeight = 12;
+            const words = label.split(/\s+/);
+            const lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                const testLine = currentLine ? currentLine + ' ' + word : word;
+                if (testLine.length <= maxCharsPerLine) currentLine = testLine;
+                else {
+                    if (currentLine) lines.push(currentLine);
+                    currentLine = word;
+                }
+            });
+            if (currentLine) lines.push(currentLine);
+            const displayLines = lines.slice(0, maxLines);
+            const startY = -(displayLines.length - 1) * lineHeight / 2;
+            displayLines.forEach((line, i) => {
+                textEl.append('tspan')
+                    .attr('x', 0)
+                    .attr('dy', i === 0 ? startY : lineHeight)
+                    .text(line);
+            });
+        });
+        
+        squaresMerged.select('.resize-handle')
+            .call(d3.drag()
+                .on('start', function(event) {
+                    event.sourceEvent.stopPropagation();
+                })
+                .on('drag', function(event, d) {
+                    const newW = Math.max(minSize, Math.min(maxSize, (d.width || 90) + event.dx));
+                    const newH = Math.max(minSize, Math.min(maxSize, (d.height || 90) + event.dy));
+                    d.width = newW;
+                    d.height = newH;
+                    const g = d3.select(this.parentNode);
+                    g.select('rect')
+                        .attr('width', newW)
+                        .attr('height', newH)
+                        .attr('x', -newW / 2)
+                        .attr('y', -newH / 2);
+                    g.select('.resize-handle')
+                        .attr('cx', newW / 2 - 4)
+                        .attr('cy', newH / 2 - 4);
+                    const textEl = g.select('text');
+                    textEl.selectAll('tspan').remove();
+                    const maxCharsPerLine = Math.max(6, Math.floor(newW / 7));
+                    const maxLines = Math.max(1, Math.floor(newH / 14));
+                    const lineHeight = 12;
+                    const words = (d.label || d.id).split(/\s+/);
+                    const lines = [];
+                    let currentLine = '';
+                    words.forEach(word => {
+                        const testLine = currentLine ? currentLine + ' ' + word : word;
+                        if (testLine.length <= maxCharsPerLine) currentLine = testLine;
+                        else {
+                            if (currentLine) lines.push(currentLine);
+                            currentLine = word;
+                        }
+                    });
+                    if (currentLine) lines.push(currentLine);
+                    const displayLines = lines.slice(0, maxLines);
+                    const startY = -(displayLines.length - 1) * lineHeight / 2;
+                    displayLines.forEach((line, i) => {
+                        textEl.append('tspan')
+                            .attr('x', 0)
+                            .attr('dy', i === 0 ? startY : lineHeight)
+                            .text(line);
+                    });
+                })
+                .on('end', function(event, d) {
+                    saveObjectNodes();
+                }));
+        
+        squaresMerged.select('rect')
+            .classed('selected', d => d.id === selectedObjectId);
+        
+        // Double-click to show detailed panel
+        squaresMerged.on('dblclick', (event, d) => {
+            event.stopPropagation();
+            event.preventDefault();
+            if (selectedObjectId === d.id) {
+                selectedObjectId = null;
+                squaresMerged.select('rect').classed('selected', false);
+                document.getElementById('objectMetaPanel').style.display = 'none';
+            } else {
+                selectedObjectId = d.id;
+                squaresMerged.select('rect').classed('selected', obj => obj.id === selectedObjectId);
+                // Hide motif panel when selecting an object
+                selectedNodeId = null;
+                closeTarotIchingDetailPanel();
+                document.getElementById('motifMetaPanel').style.display = 'none';
+                updateObjectMetaPanel(d);
+            }
+        });
+        
+        squares.exit().remove();
+        
+        // Save positions
+        objectNodes.forEach(obj => {
+            savedObjectPositions[obj.id] = { x: obj.x, y: obj.y };
+        });
+    }
+    
+    function updateObjectMetaPanel(obj) {
+        const panel = document.getElementById('objectMetaPanel');
+        const nameEl = document.getElementById('objectMetaName');
+        const originEl = document.getElementById('objectMetaOrigin');
+        const sourceEl = document.getElementById('objectMetaSource');
+        const dataSourceEl = document.getElementById('objectMetaDataSource');
+        const dateEl = document.getElementById('objectMetaDate');
+        const similarityEl = document.getElementById('objectMetaSimilarity');
+        const descriptionEl = document.getElementById('objectMetaDescription');
+        
+        if (!panel || !obj) {
+            if (panel) panel.style.display = 'none';
+            return;
+        }
+        
+        const metadata = obj.metadata || {};
+        
+        nameEl.textContent = obj.label || metadata.name || obj.id;
+        originEl.textContent = metadata.provenance || '—';
+        sourceEl.textContent = metadata.source || '—';
+        dataSourceEl.textContent = metadata.data_source || '—';
+        dateEl.textContent = metadata.date_obtained || '—';
+        similarityEl.textContent = obj.similarity != null ? (obj.similarity * 100).toFixed(1) + '%' : '—';
+        descriptionEl.textContent = metadata.description || '—';
+        
+        panel.style.display = 'block';
+    }
+
+    function updateObjectEdges() {
+        if (!simulation || !embeddingSpace || objectNodes.length === 0) {
+            const svgEl = document.getElementById('graph-svg');
+            if (svgEl) {
+                const g = d3.select(svgEl).select('g');
+                if (!g.empty()) {
+                    g.selectAll('.object-edges').selectAll('line').remove();
+                }
+            }
+            return;
+        }
+        
+        const svgEl = document.getElementById('graph-svg');
+        if (!svgEl) return;
+        const g = d3.select(svgEl).select('g');
+        if (g.empty()) return;
+        
+        let objectEdgeGroup = g.select('.object-edges');
+        if (objectEdgeGroup.empty()) {
+            // If group doesn't exist, create it (shouldn't happen, but safety check)
+            objectEdgeGroup = g.append('g').attr('class', 'object-edges');
+        }
+        
+        // Motif-to-object edges (generator edges) - always show, encode similarity strength
+        const nodeData = Array.from(simulation.nodes() || []);
+        
+        const edges = [];
+        objectNodes.forEach(obj => {
+            if (!obj.motifId) return;
+            const motifNode = nodeData.find(n => n.motifId === obj.motifId);
+            if (!motifNode || motifNode.x == null || motifNode.y == null) return;
+            if (obj.x == null || obj.y == null) return;
+            
+            edges.push({
+                motifX: motifNode.x,
+                motifY: motifNode.y,
+                objX: obj.x,
+                objY: obj.y,
+                similarity: obj.similarity
+            });
+        });
+        
+        // Render motif-object edges with similarity-encoded thickness and opacity
+        const lines = objectEdgeGroup.selectAll('line.motif-object-edge')
+            .data(edges, d => d.motifX + ',' + d.motifY + ',' + d.objX + ',' + d.objY);
+        lines.enter()
+            .append('line')
+            .attr('class', 'object-edge motif-object-edge')
+            .merge(lines)
+            .attr('x1', d => d.motifX)
+            .attr('y1', d => d.motifY)
+            .attr('x2', d => d.objX)
+            .attr('y2', d => d.objY)
+            .attr('stroke-width', d => {
+                // Encode similarity strength: thicker = stronger similarity
+                // Map similarity (-1 to 1) to stroke-width (1 to 3)
+                const normalized = (d.similarity + 1) / 2; // Normalize to 0-1
+                return 1 + (normalized * 2); // Range: 1-3px
+            })
+            .attr('stroke-opacity', d => {
+                // Also encode in opacity: stronger = more opaque
+                const normalized = (d.similarity + 1) / 2;
+                return 0.4 + (normalized * 0.4); // Range: 0.4-0.8
+            });
+        lines.exit().remove();
+        
+        // Fable -> motif edges (purple, thickness = similarity); summoned or reflected via O on fable
+        const objToMotifData = [];
+        objectToMotifEdges.forEach(e => {
+            const obj = objectNodes.find(o => o.id === e.objectId);
+            const motifNode = nodeData.find(n => n.motifId === e.motifId);
+            if (!obj || obj.x == null || obj.y == null) return;
+            if (!motifNode || motifNode.x == null || motifNode.y == null) return;
+            objToMotifData.push({
+                key: e.objectId + '\0' + e.motifId,
+                objX: obj.x,
+                objY: obj.y,
+                motifX: motifNode.x,
+                motifY: motifNode.y,
+                similarity: e.similarity
+            });
+        });
+        const objToMotifLines = objectEdgeGroup.selectAll('line.object-to-motif-edge')
+            .data(objToMotifData, d => d.key);
+        objToMotifLines.enter()
+            .append('line')
+            .attr('class', 'object-to-motif-edge')
+            .merge(objToMotifLines)
+            .attr('x1', d => d.objX)
+            .attr('y1', d => d.objY)
+            .attr('x2', d => d.motifX)
+            .attr('y2', d => d.motifY)
+            .attr('stroke-width', d => {
+                const normalized = (d.similarity + 1) / 2;
+                return 1 + (normalized * 2.5);
+            })
+            .attr('stroke-opacity', d => {
+                const normalized = (d.similarity + 1) / 2;
+                return 0.5 + (normalized * 0.4);
+            });
+        objToMotifLines.exit().remove();
+        
+        const objToMotifLabels = objectEdgeGroup.selectAll('text.object-to-motif-label')
+            .data(objToMotifData, d => d.key);
+        objToMotifLabels.enter()
+            .append('text')
+            .attr('class', 'object-to-motif-label')
+            .merge(objToMotifLabels)
+            .attr('x', d => (d.objX + d.motifX) / 2)
+            .attr('y', d => (d.objY + d.motifY) / 2)
+            .text(d => d.similarity.toFixed(2));
+        objToMotifLabels.exit().remove();
+    }
+
+    function queryNearestObjects(motifId) {
+        if (!embeddingSpace || !motifId) return;
+        if (!embeddingSpace.hasLayer || !embeddingSpace.hasLayer('aft_motifs')) {
+            console.warn('[Graph] aft_motifs layer not loaded');
+            return;
+        }
+        
+        const now = Date.now();
+        if (now - lastObjectQueryTime < objectQueryCooldownMs) {
+            console.log('[Graph] Object query on cooldown');
+            return;
+        }
+        lastObjectQueryTime = now;
+        
+        try {
+            console.log('[Graph] Querying nearest objects for motif:', motifId);
+            // Only get the single closest object (like double-click behavior)
+            const results = embeddingSpace.nearestToItem('aft_motifs', 'motifs', motifId, 1);
+            console.log('[Graph] Query returned', results ? results.length : 0, 'results');
+            
+            if (!results || results.length === 0) {
+                console.log('[Graph] No objects found for motif', motifId);
+                return;
+            }
+            
+            // Find the selected node from the current simulation state
+            const simNodes = simulation ? simulation.nodes() : [];
+            const selectedNode = simNodes.find(n => n.motifId === motifId);
+            if (!selectedNode || selectedNode.x == null || selectedNode.y == null) {
+                console.warn('[Graph] Selected node not found or has no position');
+                return;
+            }
+            
+            // Only create ONE object card (the closest one)
+            const result = results[0];
+            console.log('[Graph] Result:', result.score, result.item.id, result.item.label);
+            const item = result.item;
+            const metadata = item.metadata || {};
+            
+            // If this object is already displayed, add the purple edge (fable → motif) for consistency
+            const existingIndex = objectNodes.findIndex(o => o.id === item.id);
+            if (existingIndex >= 0) {
+                objectToMotifEdges = objectToMotifEdges.filter(e => !(e.objectId === item.id && e.motifId === motifId));
+                objectToMotifEdges.push({ objectId: item.id, motifId, similarity: result.score });
+                saveObjectEdges();
+                render();
+                return;
+            }
+            
+            // Add the new object square, positioned to the right of the motif node
+            objectNodes.push({
+                id: item.id,
+                label: item.label || metadata.name || item.id,
+                metadata: metadata,
+                x: (selectedNode.x || 0) + 180,
+                y: selectedNode.y || 0,
+                width: 90,
+                height: 90,
+                similarity: result.score,
+                motifId: motifId
+            });
+            
+            // Purple edge from this fable to the motif that spawned it
+            objectToMotifEdges = objectToMotifEdges.filter(e => !(e.objectId === item.id && e.motifId === motifId));
+            objectToMotifEdges.push({ objectId: item.id, motifId, similarity: result.score });
+            saveObjectEdges();
+            
+            // Save initial position
+            const newObj = objectNodes[objectNodes.length - 1];
+            savedObjectPositions[newObj.id] = { x: newObj.x, y: newObj.y };
+            saveObjectNodes();
+            
+            console.log('[Graph] Created 1 object card');
+            if (lastSuggestedFableAura && selectedNodeId === lastSuggestedFableAura.addedNodeId) {
+                lastSuggestedFableAura = null;
+                if (fableAuraTimeoutId) clearTimeout(fableAuraTimeoutId);
+                fableAuraTimeoutId = null;
+            }
+            render();
+        } catch (e) {
+            console.error('[Graph] Failed to query nearest objects:', e);
+            console.error(e.stack);
+        }
+    }
+
+    /** When a fable object is selected (tale dialog open), summon the closest motif to that fable (or just draw edge if motif already exists). */
+    function summonClosestMotifForFable() {
+        if (!selectedObjectId || !embeddingSpace) return;
+        if (!embeddingSpace.hasLayer('motifs') || !embeddingSpace.hasLayer('aft_motifs')) return;
+        
+        const now = Date.now();
+        if (now - lastObjectQueryTime < objectQueryCooldownMs) return;
+        lastObjectQueryTime = now;
+        
+        const obj = objectNodes.find(o => o.id === selectedObjectId);
+        if (!obj || !obj.id) return;
+        
+        try {
+            const results = embeddingSpace.nearestToItem('motifs', 'aft_motifs', obj.id, 1);
+            if (!results || results.length === 0) return;
+            
+            const r = results[0];
+            const motifId = r.item.id;
+            const similarity = r.score;
+            const motifName = r.item.label || (gameEngine && gameEngine.getMotifById && gameEngine.getMotifById(motifId) && gameEngine.getMotifById(motifId).name) || motifId;
+            
+            // Add or update purple edge: fable -> motif (thickness = similarity)
+            objectToMotifEdges = objectToMotifEdges.filter(e => !(e.objectId === obj.id && e.motifId === motifId));
+            objectToMotifEdges.push({ objectId: obj.id, motifId, similarity });
+            saveObjectEdges();
+            
+            const motifAlreadyInCollection = collection.some(item => getMotifIdForItem(item) === motifId);
+            if (!motifAlreadyInCollection) {
+                addMotifToCollectionAndRefresh(motifId, motifName, { x: obj.x - 180, y: obj.y });
+            }
+            render();
+        } catch (e) {
+            console.warn('[Graph] Summon motif for fable:', e);
+        }
     }
 
     (async function init() {
@@ -754,6 +1879,29 @@
         gameEngine = new LenningsGameEngine({ levelPackPath: LEVEL_PACK });
         await gameEngine.initialize();
         loadCollection();
+        loadTarotIchingResources();
+        loadObjectNodes();
+        loadObjectEdges();
+        loadGraphPositions();
+        loadGraphZoom();
+        loadGraphThreshold();
+        
+        // Get the shared EmbeddingSpace instance
+        if (typeof gameEngine.getEmbeddingSpace === 'function') {
+            embeddingSpace = gameEngine.getEmbeddingSpace();
+        } else if (typeof getGlobalEmbeddingSpace === 'function') {
+            embeddingSpace = getGlobalEmbeddingSpace();
+        }
+        
+        // Load the aft_motifs dataset layer
+        if (embeddingSpace && typeof loadAftMotifsLayer === 'function') {
+            try {
+                await loadAftMotifsLayer(embeddingSpace);
+                console.log('[Graph] Loaded aft_motifs layer');
+            } catch (e) {
+                console.warn('[Graph] Failed to load aft_motifs layer:', e);
+            }
+        }
 
         const langEnBtn = document.getElementById('graphLangEnBtn');
         const langPtBrBtn = document.getElementById('graphLangPtBrBtn');
@@ -778,19 +1926,62 @@
             });
         }
 
-        document.getElementById('threshold').addEventListener('input', render);
+        document.getElementById('threshold').addEventListener('input', () => {
+            saveGraphThreshold();
+            render();
+        });
         const clearBtn = document.getElementById('clearCollectionBtn');
         if (clearBtn) {
             clearBtn.addEventListener('click', () => {
                 localStorage.removeItem(COLLECTION_KEY);
+                localStorage.removeItem(OBJECT_NODES_KEY);
+                localStorage.removeItem(GRAPH_THRESHOLD_KEY);
+                localStorage.removeItem(GRAPH_POSITIONS_KEY);
+                localStorage.removeItem(GRAPH_ZOOM_KEY);
+                localStorage.removeItem(GRAPH_OBJECT_EDGES_KEY);
                 collection = [];
                 savedPositions = {};
+                savedObjectPositions = {};
+                objectNodes = [];
+                objectToMotifEdges = [];
+                selectedNodeId = null;
+                selectedObjectId = null;
+                if (fableAuraTimeoutId) clearTimeout(fableAuraTimeoutId);
+                fableAuraTimeoutId = null;
+                lastSuggestedFableAura = null;
+                closeTarotIchingDetailPanel();
+                document.getElementById('motifMetaPanel').style.display = 'none';
+                document.getElementById('objectMetaPanel').style.display = 'none';
                 if (simulation) simulation.stop();
                 document.getElementById('graph-svg').innerHTML = '';
                 document.getElementById('emptyState').style.display = 'flex';
                 document.getElementById('stats').textContent = 'Collection cleared';
+                render();
             });
         }
+        
+        // Keyboard handler for 'o' key: motif selected -> nearest fable; fable selected -> nearest motif
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            if (e.key === 'o' || e.key === 'O') {
+                e.preventDefault();
+                if (selectedObjectId) {
+                    // Fable/tale is selected (object dialog open): summon closest motif to this fable
+                    summonClosestMotifForFable();
+                    return;
+                }
+                if (selectedNodeId) {
+                    // Motif node is selected: spawn closest fable
+                    const simNodes = simulation ? simulation.nodes() : [];
+                    const selectedNode = simNodes.find(n => n.id === selectedNodeId);
+                    if (selectedNode && selectedNode.motifId) {
+                        queryNearestObjects(selectedNode.motifId);
+                    }
+                }
+            }
+        });
+        
         window.addEventListener('resize', render);
         render();
     })();
