@@ -101,6 +101,58 @@
     .collection-stats strong {
         color: var(--accent);
     }
+    .graph-skill-btn {
+        position: relative;
+        min-width: 52px;
+        min-height: 44px;
+        padding: 6px 8px;
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 8px;
+        background: rgba(0,0,0,0.4);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.85rem;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: border-color 0.2s, background 0.2s, opacity 0.2s;
+    }
+    .graph-skill-btn .graph-skill-key {
+        font-weight: bold;
+        font-size: 1rem;
+        color: var(--accent);
+    }
+    .graph-skill-btn .graph-skill-label {
+        font-size: 0.65rem;
+        color: var(--muted);
+    }
+    .graph-skill-btn:hover:not(.on-cooldown) {
+        border-color: var(--accent);
+        background: rgba(74, 242, 161, 0.1);
+    }
+    .graph-skill-btn:active:not(.on-cooldown) {
+        transform: scale(0.97);
+    }
+    .graph-skill-btn.on-cooldown {
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+    .graph-skill-btn .graph-skill-cooldown {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 0%;
+        background: rgba(0,0,0,0.5);
+        pointer-events: none;
+        transition: height 0.05s linear;
+    }
+    .graph-skill-btn.on-cooldown .graph-skill-cooldown {
+        box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+    }
     #graph-container {
         flex: 1;
         width: 100%;
@@ -397,6 +449,42 @@
         dominant-baseline: middle;
         pointer-events: none;
     }
+    .graph-skill-bar {
+        position: absolute;
+        left: 16px;
+        bottom: 16px;
+        display: flex;
+        gap: 8px;
+        z-index: 15;
+        pointer-events: auto;
+    }
+    @media (max-width: 640px) {
+        .footer {
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px;
+        }
+        .footer .stats {
+            display: none;
+        }
+        .footer > div {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+        }
+        .footer .btn {
+            flex: 1;
+            min-width: 0;
+            text-align: center;
+            padding: 12px 8px;
+        }
+        .graph-skill-bar {
+            left: 0;
+            right: 0;
+            bottom: 12px;
+            justify-content: center;
+        }
+    }
 </style>
 
 <div class="header">
@@ -419,6 +507,13 @@
 
 <div id="graph-container">
     <svg id="graph-svg"></svg>
+    <div class="graph-skill-bar">
+        <button type="button" class="graph-skill-btn" id="objectifyBtn" title="Objectify: open nearest object (fable) from motif, or nearest motif from fable (0.5s cooldown)">
+            <span class="graph-skill-key">O</span>
+            <span class="graph-skill-label">Objectify</span>
+            <div class="graph-skill-cooldown" id="objectifyCooldown"></div>
+        </button>
+    </div>
     <div class="empty-state" id="emptyState">No collection data. Play and win motifs in <a href="play.html" class="btn">Play</a> to build your graph.</div>
     <div id="motifMetaPanel" style="display: none;">
         <h3 id="metaMotifName">—</h3>
@@ -507,7 +602,7 @@
     // Object layer: external text objects (e.g. tales) displayed as SVG squares
     let objectNodes = []; // Array of { id, label, metadata, x, y, similarity, motifId }
     let lastObjectQueryTime = 0;
-    const objectQueryCooldownMs = 2000;
+    const objectQueryCooldownMs = 500;
     let embeddingSpace = null;
     // When adding a suggested motif, show an aura for its closest fable match (cleared after delay)
     let lastSuggestedFableAura = null;
@@ -1960,25 +2055,53 @@
             });
         }
         
+        function startObjectifyCooldownUI() {
+            const btn = document.getElementById('objectifyBtn');
+            const cooldownEl = document.getElementById('objectifyCooldown');
+            if (!btn || !cooldownEl) return;
+            btn.classList.add('on-cooldown');
+            cooldownEl.style.height = '100%';
+            const start = Date.now();
+            const duration = objectQueryCooldownMs;
+            const tick = () => {
+                const elapsed = Date.now() - start;
+                const pct = Math.max(0, 100 - (elapsed / duration) * 100);
+                cooldownEl.style.height = pct + '%';
+                if (pct > 0) requestAnimationFrame(tick);
+                else {
+                    btn.classList.remove('on-cooldown');
+                    cooldownEl.style.height = '0%';
+                }
+            };
+            requestAnimationFrame(tick);
+        }
+
+        function triggerObjectify() {
+            if (Date.now() - lastObjectQueryTime < objectQueryCooldownMs) return;
+            if (selectedObjectId) {
+                summonClosestMotifForFable();
+                startObjectifyCooldownUI();
+                return;
+            }
+            if (selectedNodeId) {
+                const simNodes = simulation ? simulation.nodes() : [];
+                const selectedNode = simNodes.find(n => n.id === selectedNodeId);
+                if (selectedNode && selectedNode.motifId) {
+                    queryNearestObjects(selectedNode.motifId);
+                    startObjectifyCooldownUI();
+                }
+            }
+        }
+
+        document.getElementById('objectifyBtn').addEventListener('click', () => triggerObjectify());
+
         // Keyboard handler for 'o' key: motif selected -> nearest fable; fable selected -> nearest motif
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             
             if (e.key === 'o' || e.key === 'O') {
                 e.preventDefault();
-                if (selectedObjectId) {
-                    // Fable/tale is selected (object dialog open): summon closest motif to this fable
-                    summonClosestMotifForFable();
-                    return;
-                }
-                if (selectedNodeId) {
-                    // Motif node is selected: spawn closest fable
-                    const simNodes = simulation ? simulation.nodes() : [];
-                    const selectedNode = simNodes.find(n => n.id === selectedNodeId);
-                    if (selectedNode && selectedNode.motifId) {
-                        queryNearestObjects(selectedNode.motifId);
-                    }
-                }
+                triggerObjectify();
             }
         });
         
