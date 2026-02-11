@@ -1,0 +1,17 @@
+{
+  "namespace": "deity",
+  "description": "Deity dataset: all records belong to the 'deity' namespace; pantheon identifies the tradition.",
+  "pantheon_values": ["roman", "slavic", "american"],
+  "fields": {
+    "id": { "required": true, "description": "Stable id (e.g. Wikidata Q-id)" },
+    "namespace": { "required": true, "description": "Always 'deity' for this dataset" },
+    "pantheon": { "required": true, "description": "One of roman, slavic, american" },
+    "name": { "required": true, "description": "Display name" },
+    "description_short": { "required": false, "description": "Short description" },
+    "aliases": { "required": false, "description": "Array of alternate names" },
+    "text": { "required": true, "description": "Text sent to embedding model (name + description + aliases)" },
+    "source": { "required": false, "description": "e.g. { wikidata: url }" },
+    "facts": { "required": false, "description": "Extra key-value facts" },
+    "type": { "required": false, "description": "Legacy; e.g. 'deity'" }
+  }
+}

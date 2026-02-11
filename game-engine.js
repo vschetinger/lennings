@@ -87,11 +87,16 @@ class LenningsGameEngine {
         // Shared embedding space (multi-layer embedding registry). Created lazily.
         this.embeddingSpace = null;
         
-        // Skills: key -> { key, label, cooldownMs, cooldownEndAt, action }
+        // Skills:
+        // - this.skills: keyed by physical input key (e.g. 'q', 'w', 'e')
+        // - this.skillsById: keyed by logical id (e.g. 'split', 'burst', 'evolve')
+        // This allows us to drive skills from rhythm patterns without caring about the exact key binding.
         this.skills = new Map();
+        this.skillsById = new Map();
         this.skillCooldownEnd = new Map(); // key -> timestamp
-        // Speed burst state (W skill)
-        this.speedBurstEndAt = null;
+        // Buff system: buffId -> Array of { endsAt }
+        this.buffInstances = new Map();
+        this.beatDurationMs = 500; // default 120 BPM; set by play.ts when beat loop starts
         this.baseStepN = null;
         this.baseResourceAttraction = null;
     }
@@ -175,24 +180,39 @@ class LenningsGameEngine {
             
             // Glass Bead Game skills (key-triggered, with cooldowns)
             this.registerSkill({
+                id: 'respawn',
                 key: 'r',
                 label: 'Respawn',
                 cooldownMs: 5000,
                 action: () => this.respawnAtRandom()
             });
             this.registerSkill({
+                id: 'burst',
                 key: 'w',
                 label: 'Speed burst',
                 cooldownMs: 100,
-                action: () => this.startSpeedBurst()
+                strudelSample: '808mt',
+                buff: {
+                    id: 'burst',
+                    durationBeats: 2,
+                    modifiers: {
+                        stepN: 3,
+                        resourceAttraction: 8,
+                        angularRotationSpeed: 0.03
+                    }
+                },
+                action: () => this.addBuffInstance('burst')
             });
             this.registerSkill({
+                id: 'evolve',
                 key: 'e',
                 label: 'Evolve',
                 cooldownMs: 100,
+                strudelSample: '808ht',
                 action: () => this.triggerEvolve()
             });
             this.registerSkill({
+                id: 'digest',
                 key: 'd',
                 label: 'Digest',
                 cooldownMs: 0,
@@ -201,9 +221,11 @@ class LenningsGameEngine {
 
             // Q - Split: trigger reproduction for all particles above threshold (with cooldown)
             this.registerSkill({
+                id: 'split',
                 key: 'q',
                 label: 'Split',
                 cooldownMs: 200,
+                strudelSample: '808lt',
                 action: () => this.triggerSplitReproduction()
             });
             
@@ -508,10 +530,10 @@ class LenningsGameEngine {
             this.params.paused = false;
         }
         
-        // Baseline for speed-burst skill (revert to these when burst ends)
+        // Clear buffs on level reset
+        this.buffInstances.clear();
         this.baseStepN = this.params.stepN;
         this.baseResourceAttraction = this.lenia.U.resourceAttraction;
-        this.speedBurstEndAt = null;
         
         // Start playing
         this.gameState = 'playing';
@@ -561,8 +583,67 @@ class LenningsGameEngine {
      * Register a skill (key-triggered action with optional cooldown)
      */
     registerSkill(config) {
-        const { key, label, cooldownMs = 0, action } = config;
-        this.skills.set(key.toLowerCase(), { key: key.toLowerCase(), label: label || key, cooldownMs, action });
+        const {
+            id,
+            key,
+            label,
+            cooldownMs = 0,
+            action,
+            strudelSample,
+            gamepadButtons = []
+        } = config;
+        const k = String(key || '').toLowerCase();
+        const logicalId = id || k;
+        if (!k) {
+            console.warn('[GameEngine] registerSkill called without key', config);
+            return;
+        }
+        const entry = {
+            id: logicalId,
+            key: k,
+            label: label || key || logicalId,
+            cooldownMs,
+            action,
+            strudelSample,
+            buff: config.buff || null,
+            gamepadButtons: Array.isArray(gamepadButtons) ? gamepadButtons.slice() : []
+        };
+        this.skills.set(k, entry);
+        this.skillsById.set(logicalId, entry);
+    }
+
+    /**
+     * Optional Strudel sample name for this skill (e.g. 'lt', 'mt', 'ht'). Play when skill is triggered.
+     */
+    getSkillStrudelSample(key) {
+        const skill = this.skills.get(String(key).toLowerCase());
+        return skill && skill.strudelSample;
+    }
+    
+    /**
+     * Get a skill definition by logical id (e.g. 'split', 'burst', 'evolve').
+     */
+    getSkillById(id) {
+        if (!id) return null;
+        return this.skillsById.get(String(id));
+    }
+    
+    /**
+     * Trigger a skill by logical id. Returns true if the underlying key-based
+     * skill ran successfully, false otherwise.
+     */
+    triggerSkillById(id) {
+        const skill = this.getSkillById(id);
+        if (!skill) return false;
+        return this.triggerSkill(skill.key);
+    }
+    
+    /**
+     * Optional Strudel sample name for this skill, looked up by logical id.
+     */
+    getSkillStrudelSampleById(id) {
+        const skill = this.getSkillById(id);
+        return skill && skill.strudelSample;
     }
     
     /**
@@ -592,33 +673,75 @@ class LenningsGameEngine {
     }
     
     /**
-     * Start speed burst: for 5s add 3 to stepN and boost resourceAttraction
+     * Set beat duration in ms (called from play.ts when beat loop starts)
      */
-    startSpeedBurst() {
-        if (!this.params || !this.lenia) return;
-        if (this.speedBurstEndAt && Date.now() < this.speedBurstEndAt) return; // already active
-        this.baseStepN = this.baseStepN ?? this.params.stepN;
-        this.baseResourceAttraction = this.baseResourceAttraction ?? this.lenia.U.resourceAttraction;
-        const durationMs = 3000;
-        this.speedBurstEndAt = Date.now() + durationMs;
-        this.params.stepN = this.baseStepN + 3;
-        this.lenia.U.resourceAttraction = Math.min(50, this.baseResourceAttraction + 8);
-        this.emit('skillUsed', { key: 'w', name: 'speedBurst', durationMs });
+    setBeatDurationMs(ms) {
+        this.beatDurationMs = Math.max(50, ms);
     }
-    
+
     /**
-     * Update speed burst: revert when duration ends. Call each frame.
+     * Add a buff instance (stack). Looks up buff def from the skill that applies it.
      */
-    updateSpeedBurst() {
-        if (this.speedBurstEndAt == null) return;
-        if (Date.now() >= this.speedBurstEndAt) {
-            this.speedBurstEndAt = null;
-            if (this.params && this.baseStepN != null) this.params.stepN = this.baseStepN;
-            if (this.lenia && this.baseResourceAttraction != null) this.lenia.U.resourceAttraction = this.baseResourceAttraction;
+    addBuffInstance(buffId) {
+        if (!this.params || !this.lenia) return;
+        const skill = this.skillsById.get(buffId) || this.skills.get(buffId);
+        const buffDef = skill && skill.buff;
+        if (!buffDef) return;
+        const durationMs = (buffDef.durationBeats || 2) * this.beatDurationMs;
+        const instance = { endsAt: Date.now() + durationMs };
+        if (!this.buffInstances.has(buffId)) {
+            this.buffInstances.set(buffId, []);
+        }
+        this.buffInstances.get(buffId).push(instance);
+        this.emit('skillUsed', { key: skill && skill.key, name: buffId, durationMs });
+    }
+
+    /**
+     * Update buffs: remove expired, apply modifiers. Call each frame.
+     */
+    updateBuffs() {
+        const now = Date.now();
+        let burstWasActive = this.getBurstStackCount() > 0;
+        for (const [buffId, instances] of this.buffInstances.entries()) {
+            const remaining = instances.filter((i) => i.endsAt > now);
+            this.buffInstances.set(buffId, remaining);
+            if (buffId === 'burst' && remaining.length === 0 && burstWasActive) {
+                this.emit('skillEnd', { key: 'w', name: 'speedBurst' });
+            }
+        }
+        this.applyBurstModifiers();
+    }
+
+    applyBurstModifiers() {
+        const stacks = this.getBurstStackCount();
+        if (stacks === 0) {
+            if (this.baseStepN != null && this.params) this.params.stepN = this.baseStepN;
+            if (this.baseResourceAttraction != null && this.lenia) this.lenia.U.resourceAttraction = this.baseResourceAttraction;
             this.baseStepN = null;
             this.baseResourceAttraction = null;
-            this.emit('skillEnd', { key: 'w', name: 'speedBurst' });
+            return;
         }
+        const skill = this.skillsById.get('burst');
+        const mod = skill && skill.buff && skill.buff.modifiers;
+        if (!mod || !this.params || !this.lenia) return;
+        if (this.baseStepN == null) this.baseStepN = this.params.stepN;
+        if (this.baseResourceAttraction == null) this.baseResourceAttraction = this.lenia.U.resourceAttraction;
+        this.params.stepN = this.baseStepN + (mod.stepN || 0) * stacks;
+        this.lenia.U.resourceAttraction = Math.min(50, this.baseResourceAttraction + (mod.resourceAttraction || 0) * stacks);
+    }
+
+    getBurstStackCount() {
+        const instances = this.buffInstances.get('burst') || [];
+        return instances.filter((i) => i.endsAt > Date.now()).length;
+    }
+
+    getBurstAngularSpeed() {
+        const stacks = this.getBurstStackCount();
+        if (stacks === 0) return 0;
+        const skill = this.skillsById.get('burst');
+        const mod = skill && skill.buff && skill.buff.modifiers;
+        const perStack = (mod && mod.angularRotationSpeed) || 0.03;
+        return stacks * perStack;
     }
     
     /**
@@ -745,7 +868,7 @@ class LenningsGameEngine {
      * Called each frame to update game state
      */
     update() {
-        this.updateSpeedBurst();
+        this.updateBuffs();
         if (this.gameState === 'playing') {
             this.checkWinCondition();
         }
@@ -1187,4 +1310,7 @@ class LenningsGameEngine {
 // Export for use in different module systems
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = LenningsGameEngine;
+}
+if (typeof window !== 'undefined') {
+    window.LenningsGameEngine = LenningsGameEngine;
 }

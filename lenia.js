@@ -30,6 +30,7 @@ uniform float reproThreshold;     //! 0.8
 uniform float reproCost;          //! 0.4
 uniform float reproMinAge;        //! 100.0
 uniform float currentStep;        //! 0.0  // Global simulation step counter
+uniform float burstAngularSpeed;  //! 0.0  // Rad/step for particle spin when burst skill active
 uniform float deathDissolveRadius; //! 5.0
 uniform float deathEnergyAmount;  //! 0.3
 uniform float deathEnergyFalloff; //! 2.0
@@ -145,9 +146,9 @@ Particle getParticle() {
         else if (isTouched(res.pos)) {res.color = vec3(1.5, 0.5, 0.5);}
     }
     
-    // Radius based on repulsion and energy - smaller when hungry
+    // Radius based on repulsion and energy - grow noticeably with food/energy (was 0.6-1.0, now 0.45-1.25)
     float baseRadius = (0.25 + 0.75/(repulsionPotential*2.0))*0.5;
-    float energyScale = 0.6 + 0.4 * clamp(particleEnergy, 0.0, 1.0);
+    float energyScale = 0.45 + 0.8 * clamp(particleEnergy, 0.0, 1.0);
     res.radius = baseRadius * energyScale;
 
     // Mark whether particle is ready to split (energy above threshold)
@@ -2232,14 +2233,14 @@ class ParticleLenia {
 
     render(target, {viewCenter=[0,0], viewExtent=50.0, 
             selectedOnly=false, flipUD=false,
-            touchPos=[0,0], touchRadius=0.0}={}) {
+            touchPos=[0,0], touchRadius=0.0, burstAngularSpeed=0}={}) {
         const gl = this.gl;
         const {width, height} = target || gl.canvas;
         const viewAspect = width / Math.max(1.0, height);
         const minDim = Math.min(width, height)
         const fieldScale = Math.min(32.0*viewExtent/this.U.s1/minDim, 1.0);
         Object.assign(this.U, {viewCenter, viewExtent, viewAspect, selectedOnly,
-            touchPos, touchRadius, fieldScale});
+            touchPos, touchRadius, fieldScale, burstAngularSpeed});
         this.adjustFB(this.fieldU, Math.round(width/4), Math.round(height/4), this.fieldFormat);
         this.adjustFB(this.fieldR, Math.round(width/2), Math.round(height/2), this.fieldFormat);
         // accumulate field U
@@ -2312,7 +2313,7 @@ class ParticleLenia {
                 out0.rgb = mix(out0.rgb, vec3(1.0), 0.1);
             }
         }`, {dst:target}, {flipUD});
-        // render particles as square pixels; \"pregnant\" (ready-to-split) cells spin slowly
+        // render particles as square pixels; size grows with energy; burst skill makes them spin
         this.runProgram(`
         uniform bool flipUD;
         out vec3 color;
@@ -2322,11 +2323,11 @@ class ParticleLenia {
               gl_Position = vec4(0.0);
               return;
             }
-            // Base quad
+            // Base quad (size already reflects energy via p.radius in getParticle)
             vec2 local = quad * 1.0;
-            // If particle is ready to split, spin its square based on global step
-            if (p.readyToSplit) {
-                float angle = currentStep * 0.03;
+            // When burst skill is active, spin all particles
+            if (burstAngularSpeed > 0.0) {
+                float angle = currentStep * burstAngularSpeed;
                 float ca = cos(angle);
                 float sa = sin(angle);
                 mat2 R = mat2(ca, -sa, sa, ca);
@@ -2344,7 +2345,7 @@ class ParticleLenia {
             float a = step(abs(uv.x), 1.0) * step(abs(uv.y), 1.0);
             vec3 brightColor = color * 1.2;
             out0 = vec4(brightColor, a) * pointsAlpha;
-        }`, {dst:target, n:this.max_point_n, blend:[gl.ONE, gl.ONE_MINUS_SRC_ALPHA]}, {flipUD});
+        }`, {dst:target, n:this.max_point_n, blend:[gl.ONE, gl.ONE_MINUS_SRC_ALPHA]}, {flipUD, burstAngularSpeed});
         // bleeping dot at exact eating location (resource color at particle position)
         this.runProgram(`
         uniform bool flipUD;
