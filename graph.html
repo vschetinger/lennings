@@ -376,6 +376,93 @@
         margin: 4px 0 0 0;
         padding-left: 1.2rem;
     }
+    #deityMapOverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+    }
+    #deityMapOverlay.show {
+        display: flex;
+    }
+    #deityMapPanel {
+        background: var(--panel);
+        border: 1px solid rgba(255,255,255,0.16);
+        border-radius: 10px;
+        max-width: 96vw;
+        max-height: 94vh;
+        width: 900px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        color: var(--text);
+        font-size: 0.85rem;
+    }
+    #deityMapPanel .deity-map-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        flex-shrink: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    #deityMapPanel .deity-map-header h3 {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--accent);
+    }
+    #deityMapPanel .deity-map-close {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 1.2rem;
+        line-height: 1;
+        padding: 0 4px;
+        cursor: pointer;
+    }
+    #deityMapPanel .deity-map-close:hover {
+        color: var(--text);
+    }
+    #deityMapPanel .deity-map-body {
+        padding: 16px;
+        overflow: auto;
+        flex: 1;
+        min-height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #deityMapPanel .deity-map-message {
+        color: var(--muted);
+        padding: 10px 0;
+    }
+    #deityMapPanel #deityMapSvg {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+    .deity-map-tooltip {
+        display: none;
+        position: fixed;
+        max-width: 280px;
+        padding: 8px 10px;
+        background: rgba(20, 22, 28, 0.97);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 0.8rem;
+        line-height: 1.35;
+        z-index: 101;
+        pointer-events: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    .deity-map-tooltip.show {
+        display: block;
+    }
     .object-square {
         cursor: move;
     }
@@ -525,6 +612,10 @@
             <span class="meta-label">I Ching:</span>
             <span class="meta-value" id="metaIChing">—</span>
         </div>
+        <div class="meta-line meta-value-clickable" id="metaDeityRow" role="button" tabindex="0">
+            <span class="meta-label">Nearest deity:</span>
+            <span class="meta-value" id="metaDeity">—</span>
+        </div>
     </div>
     <div id="tarotIchingDetailPanel" style="display: none;">
         <div class="detail-panel-header">
@@ -532,6 +623,19 @@
             <button type="button" class="detail-panel-close" id="tarotIchingDetailClose" aria-label="Close">×</button>
         </div>
         <div class="detail-panel-body" id="tarotIchingDetailBody">—</div>
+    </div>
+    <div id="deityMapOverlay">
+        <div id="deityMapPanel">
+            <div class="deity-map-header">
+                <h3>Deity map</h3>
+                <button type="button" class="deity-map-close" id="deityMapClose" aria-label="Close">×</button>
+            </div>
+            <div class="deity-map-body">
+                <p class="deity-map-message" id="deityMapMessage"></p>
+                <svg id="deityMapSvg" width="640" height="480" style="display: none;"></svg>
+                <div id="deityMapTooltip" class="deity-map-tooltip" aria-hidden="true"></div>
+            </div>
+        </div>
     </div>
     <div id="objectMetaPanel" style="display: none;">
         <h3 id="objectMetaName">—</h3>
@@ -573,7 +677,9 @@
 <script src="embedding-space.js"></script>
 <script src="embedding-datasets.js"></script>
 <script src="game-engine.js"></script>
+<script src="collection-storage.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-delaunay@6"></script>
 <script>
 (function () {
     const COLLECTION_KEY = 'lennings_collection';
@@ -616,6 +722,9 @@
     // Current motif context when meta panel is shown (for detail dialog lookup)
     let currentMotifTarotIndex = null;
     let currentMotifMeta = null;
+    let currentNearestDeity = null; // { item, score } when deities layer is loaded
+    // Deity currently selected from the deity map (double-clicked region)
+    let currentMapDeity = null;
 
     function loadTarotIchingResources() {
         if (tarotCards !== null && ichingHexagrams !== null) return;
@@ -653,13 +762,14 @@
     }
 
     function loadCollection() {
-        try {
-            const raw = localStorage.getItem(COLLECTION_KEY);
-            collection = raw ? JSON.parse(raw) : [];
-        } catch (e) {
+        if (!window.LenningsStorage) {
             collection = [];
+            return Promise.resolve();
         }
-        return collection;
+        return window.LenningsStorage.loadCollection().then(c => {
+            collection = c;
+            return c;
+        });
     }
 
     /** Split label into lines by words so each line is at most maxChars (approx). */
@@ -692,37 +802,31 @@
     }
 
     function saveCollection() {
-        try {
-            localStorage.setItem(COLLECTION_KEY, JSON.stringify(collection));
-        } catch (e) {
-            console.warn('Could not save collection:', e);
+        if (window.LenningsStorage) {
+            window.LenningsStorage.saveCollection(collection).catch(e => console.warn('Could not save collection:', e));
         }
     }
 
     function saveObjectNodes() {
-        try {
-            const payload = objectNodes.map(o => ({
-                id: o.id,
-                label: o.label,
-                metadata: o.metadata,
-                x: o.x,
-                y: o.y,
-                width: o.width,
-                height: o.height,
-                similarity: o.similarity,
-                motifId: o.motifId
-            }));
-            localStorage.setItem(OBJECT_NODES_KEY, JSON.stringify(payload));
-        } catch (e) {
-            console.warn('Could not save object nodes:', e);
+        const payload = objectNodes.map(o => ({
+            id: o.id,
+            label: o.label,
+            metadata: o.metadata,
+            x: o.x,
+            y: o.y,
+            width: o.width,
+            height: o.height,
+            similarity: o.similarity,
+            motifId: o.motifId
+        }));
+        if (window.LenningsStorage) {
+            window.LenningsStorage.setItem(OBJECT_NODES_KEY, payload).catch(e => console.warn('Could not save object nodes:', e));
         }
     }
 
     function loadObjectNodes() {
-        try {
-            const raw = localStorage.getItem(OBJECT_NODES_KEY);
-            if (!raw) return;
-            const data = JSON.parse(raw);
+        if (!window.LenningsStorage) return Promise.resolve();
+        return window.LenningsStorage.getItem(OBJECT_NODES_KEY).then(data => {
             if (!Array.isArray(data) || data.length === 0) return;
             objectNodes = data.map(o => ({
                 id: o.id,
@@ -738,98 +842,74 @@
             objectNodes.forEach(obj => {
                 savedObjectPositions[obj.id] = { x: obj.x, y: obj.y };
             });
-        } catch (e) {
-            console.warn('Could not load object nodes:', e);
-        }
+        }).catch(e => console.warn('Could not load object nodes:', e));
     }
 
     function loadObjectEdges() {
-        try {
-            const raw = localStorage.getItem(GRAPH_OBJECT_EDGES_KEY);
-            if (!raw) return;
-            const data = JSON.parse(raw);
+        if (!window.LenningsStorage) return Promise.resolve();
+        return window.LenningsStorage.getItem(GRAPH_OBJECT_EDGES_KEY).then(data => {
             if (Array.isArray(data)) objectToMotifEdges = data;
-        } catch (e) {
-            console.warn('Could not load object edges:', e);
-        }
+        }).catch(e => console.warn('Could not load object edges:', e));
     }
 
     function saveObjectEdges() {
-        try {
-            localStorage.setItem(GRAPH_OBJECT_EDGES_KEY, JSON.stringify(objectToMotifEdges));
-        } catch (e) {
-            console.warn('Could not save object edges:', e);
+        if (window.LenningsStorage) {
+            window.LenningsStorage.setItem(GRAPH_OBJECT_EDGES_KEY, objectToMotifEdges).catch(e => console.warn('Could not save object edges:', e));
         }
     }
 
     function loadGraphPositions() {
-        try {
-            const raw = localStorage.getItem(GRAPH_POSITIONS_KEY);
-            if (!raw) return;
-            const data = JSON.parse(raw);
+        if (!window.LenningsStorage) return Promise.resolve();
+        return window.LenningsStorage.getItem(GRAPH_POSITIONS_KEY).then(data => {
             if (data && typeof data === 'object') savedPositions = data;
-        } catch (e) {
-            console.warn('Could not load graph positions:', e);
-        }
+        }).catch(e => console.warn('Could not load graph positions:', e));
     }
 
     function saveGraphPositions() {
-        try {
-            localStorage.setItem(GRAPH_POSITIONS_KEY, JSON.stringify(savedPositions));
-        } catch (e) {
-            console.warn('Could not save graph positions:', e);
+        if (window.LenningsStorage) {
+            window.LenningsStorage.setItem(GRAPH_POSITIONS_KEY, savedPositions).catch(e => console.warn('Could not save graph positions:', e));
         }
     }
 
     function loadGraphZoom() {
-        try {
-            const raw = localStorage.getItem(GRAPH_ZOOM_KEY);
-            if (!raw) return;
-            const data = JSON.parse(raw);
+        if (!window.LenningsStorage) return Promise.resolve();
+        return window.LenningsStorage.getItem(GRAPH_ZOOM_KEY).then(data => {
             if (data && typeof data.k === 'number' && typeof data.x === 'number' && typeof data.y === 'number') {
                 const k = Math.max(0.2, Math.min(4, data.k));
                 lastTransform = d3.zoomIdentity.translate(data.x, data.y).scale(k);
             }
-        } catch (e) {
-            console.warn('Could not load graph zoom:', e);
-        }
+        }).catch(e => console.warn('Could not load graph zoom:', e));
     }
 
     let zoomSaveTimeoutId = null;
     function saveGraphZoom() {
-        try {
-            const payload = { k: lastTransform.k, x: lastTransform.x, y: lastTransform.y };
-            localStorage.setItem(GRAPH_ZOOM_KEY, JSON.stringify(payload));
-        } catch (e) {
-            console.warn('Could not save graph zoom:', e);
+        const payload = { k: lastTransform.k, x: lastTransform.x, y: lastTransform.y };
+        if (window.LenningsStorage) {
+            window.LenningsStorage.setItem(GRAPH_ZOOM_KEY, payload).catch(e => console.warn('Could not save graph zoom:', e));
         }
     }
 
     function loadGraphThreshold() {
         const thresholdInput = document.getElementById('threshold');
         const thresholdValueEl = document.getElementById('thresholdValue');
-        if (!thresholdInput || !thresholdValueEl) return;
-        try {
-            const raw = localStorage.getItem(GRAPH_THRESHOLD_KEY);
+        if (!thresholdInput || !thresholdValueEl) return Promise.resolve();
+        if (!window.LenningsStorage) return Promise.resolve();
+        return window.LenningsStorage.getItem(GRAPH_THRESHOLD_KEY).then(raw => {
             if (raw == null) return;
             const v = parseFloat(raw);
             if (!Number.isNaN(v) && v >= 0 && v <= 1) {
                 thresholdInput.value = v;
                 thresholdValueEl.textContent = v.toFixed(2);
             }
-        } catch (e) {
-            console.warn('Could not load graph threshold:', e);
-        }
+        }).catch(e => console.warn('Could not load graph threshold:', e));
     }
 
     function saveGraphThreshold() {
         const thresholdInput = document.getElementById('threshold');
         if (!thresholdInput) return;
-        try {
-            const v = Math.max(0, Math.min(1, parseFloat(thresholdInput.value) || 0.5));
-            localStorage.setItem(GRAPH_THRESHOLD_KEY, String(v));
-        } catch (e) {
-            console.warn('Could not save graph threshold:', e);
+        const v = Math.max(0, Math.min(1, parseFloat(thresholdInput.value) || 0.5));
+        if (window.LenningsStorage) {
+            window.LenningsStorage.setItem(GRAPH_THRESHOLD_KEY, String(v)).catch(e => console.warn('Could not save graph threshold:', e));
         }
     }
 
@@ -909,20 +989,35 @@
         return canvas.toDataURL('image/png');
     }
 
-    /** Add suggested motif to collection with noise image; save and re-render.
-     *  sourcePosition: optional { x, y } to place the new node near the selected node. */
-    function addMotifToCollectionAndRefresh(motifId, levelName, sourcePosition) {
-        const imageDataURL = createNoiseImageDataURL();
+    /** Add motif to collection; save and re-render.
+     *  sourcePosition: optional { x, y } to place the new node near the selected node.
+     *  options: { useStandardImage?: boolean, suggested?: boolean, ssim?: number, time?: number } */
+    function addMotifToCollectionAndRefresh(motifId, levelName, sourcePosition, options) {
+        options = options || {};
+        let imageDataURL = null;
+        if (options.useStandardImage && gameEngine && typeof gameEngine.getMotifById === 'function') {
+            const meta = gameEngine.getMotifById(motifId);
+            if (meta) {
+                if (meta.image) {
+                    imageDataURL = 'levels/GlassBeadGame/images/' + meta.image;
+                } else if (meta.id) {
+                    imageDataURL = 'levels/GlassBeadGame/images/' + meta.id + '.png';
+                }
+            }
+        }
+        if (!imageDataURL) {
+            imageDataURL = createNoiseImageDataURL();
+        }
         const newId = 'recon-' + Date.now();
         collection.push({
             id: newId,
             levelName,
-            ssim: 0,
-            time: 0,
+            ssim: typeof options.ssim === 'number' ? options.ssim : 0,
+            time: typeof options.time === 'number' ? options.time : 0,
             imageDataURL,
             timestamp: Date.now(),
             motifId,
-            suggested: true
+            suggested: options.suggested !== undefined ? options.suggested : true
         });
         saveCollection();
         selectedNodeId = null;
@@ -1012,6 +1107,532 @@
         }
 
         return { nodes, links, maxSimilarity: maxSim === -Infinity ? null : maxSim };
+    }
+
+    function cosineSim(a, b) {
+        var len = Math.min(a.length, b.length);
+        if (!len) return 0;
+        var dot = 0, nA = 0, nB = 0;
+        for (var i = 0; i < len; i++) {
+            var x = a[i] || 0, y = b[i] || 0;
+            dot += x * y;
+            nA += x * x;
+            nB += y * y;
+        }
+        if (!nA || !nB) return 0;
+        return dot / (Math.sqrt(nA) * Math.sqrt(nB));
+    }
+
+    function mds2d(vectors) {
+        var n = vectors.length;
+        if (n === 0) return [];
+        if (n === 1) return [[0, 0]];
+        var i, j, k;
+        var D2 = [];
+        for (i = 0; i < n; i++) {
+            D2[i] = [];
+            for (j = 0; j < n; j++) {
+                var d = 1 - cosineSim(vectors[i], vectors[j]);
+                if (i === j) d = 0;
+                D2[i][j] = d * d;
+            }
+        }
+        var rowMean = [], colMean = [], total = 0;
+        for (i = 0; i < n; i++) {
+            rowMean[i] = 0;
+            for (j = 0; j < n; j++) rowMean[i] += D2[i][j];
+            rowMean[i] /= n;
+            total += rowMean[i];
+        }
+        var grandMean = total / n;
+        for (j = 0; j < n; j++) {
+            colMean[j] = 0;
+            for (i = 0; i < n; i++) colMean[j] += D2[i][j];
+            colMean[j] /= n;
+        }
+        var B = [];
+        for (i = 0; i < n; i++) {
+            B[i] = [];
+            for (j = 0; j < n; j++) {
+                B[i][j] = -0.5 * (D2[i][j] - rowMean[i] - colMean[j] + grandMean);
+            }
+        }
+        function matVec(M, v) {
+            var out = [];
+            for (i = 0; i < n; i++) {
+                out[i] = 0;
+                for (j = 0; j < n; j++) out[i] += M[i][j] * v[j];
+            }
+            return out;
+        }
+        function norm(v) {
+            var s = 0;
+            for (i = 0; i < n; i++) s += v[i] * v[i];
+            return Math.sqrt(s) || 1;
+        }
+        function normalize(v) {
+            var s = norm(v);
+            for (i = 0; i < n; i++) v[i] /= s;
+        }
+        var v1 = [];
+        for (i = 0; i < n; i++) v1[i] = 1;
+        for (k = 0; k < 40; k++) {
+            v1 = matVec(B, v1);
+            normalize(v1);
+        }
+        var lambda1 = 0;
+        var Bv1 = matVec(B, v1);
+        for (i = 0; i < n; i++) lambda1 += v1[i] * Bv1[i];
+        if (lambda1 < 0) lambda1 = 0;
+        var B2 = [];
+        for (i = 0; i < n; i++) {
+            B2[i] = [];
+            for (j = 0; j < n; j++) B2[i][j] = B[i][j] - lambda1 * v1[i] * v1[j];
+        }
+        var v2 = [];
+        for (i = 0; i < n; i++) v2[i] = 1;
+        for (k = 0; k < 40; k++) {
+            v2 = matVec(B2, v2);
+            normalize(v2);
+        }
+        var lambda2 = 0;
+        var B2v2 = matVec(B2, v2);
+        for (i = 0; i < n; i++) lambda2 += v2[i] * B2v2[i];
+        if (lambda2 < 0) lambda2 = 0;
+        var coords = [];
+        for (i = 0; i < n; i++) {
+            coords.push([
+                Math.sqrt(lambda1) * v1[i],
+                Math.sqrt(lambda2) * v2[i]
+            ]);
+        }
+        return coords;
+    }
+
+    /** Signed distance from point (x,y) to polygon outline. Positive = inside. Polygon = [ring], ring = [[x,y],...]. */
+    function pointToPolygonDist(x, y, polygon) {
+        var inside = false;
+        var minDistSq = Infinity;
+        var rings = polygon;
+        for (var r = 0; r < rings.length; r++) {
+            var ring = rings[r];
+            for (var i = 0, len = ring.length, j = len - 1; i < len; j = i++) {
+                var a = ring[i], b = ring[j];
+                var a0 = Number(a[0]), a1 = Number(a[1]), b0 = Number(b[0]), b1 = Number(b[1]);
+                if ((a1 > y) !== (b1 > y) && (x < (b0 - a0) * (y - a1) / (b1 - a1 + 1e-10) + a0)) inside = !inside;
+                var dx = b0 - a0, dy = b1 - a1;
+                var t = ((x - a0) * dx + (y - a1) * dy) / (dx * dx + dy * dy + 1e-10);
+                var sx = t <= 0 ? a0 : t >= 1 ? b0 : a0 + t * dx;
+                var sy = t <= 0 ? a1 : t >= 1 ? b1 : a1 + t * dy;
+                var dSq = (x - sx) * (x - sx) + (y - sy) * (y - sy);
+                if (dSq < minDistSq) minDistSq = dSq;
+            }
+        }
+        if (minDistSq === 0) return 0;
+        return (inside ? 1 : -1) * Math.sqrt(minDistSq);
+    }
+
+    /** Pole of inaccessibility: point inside the polygon with largest distance to boundary. ring = [[x,y],...]. Returns { x, y, distance }. */
+    function poleOfInaccessibility(ring) {
+        if (!ring || ring.length < 3) {
+            var cx = ring && ring[0] ? ring[0][0] : 0;
+            var cy = ring && ring[0] ? ring[0][1] : 0;
+            return { x: cx, y: cy, distance: 0 };
+        }
+        var polygon = [ring];
+        var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        for (var i = 0; i < ring.length; i++) {
+            var p = ring[i];
+            if (p[0] < minX) minX = p[0];
+            if (p[1] < minY) minY = p[1];
+            if (p[0] > maxX) maxX = p[0];
+            if (p[1] > maxY) maxY = p[1];
+        }
+        var width = maxX - minX, height = maxY - minY;
+        var area = 0, cx = 0, cy = 0;
+        for (var i = 0, len = ring.length, j = len - 1; i < len; j = i++) {
+            var a = ring[i], b = ring[j];
+            var ax = Number(a[0]), ay = Number(a[1]), bx = Number(b[0]), by = Number(b[1]);
+            var f = ax * by - bx * ay;
+            cx += (ax + bx) * f;
+            cy += (ay + by) * f;
+            area += f;
+        }
+        var absArea = Math.abs(area);
+        var bestX = minX + width / 2, bestY = minY + height / 2, bestD = -Infinity;
+        if (absArea >= 1e-10) {
+            bestX = cx / (3 * area);
+            bestY = cy / (3 * area);
+            var dCentroid = pointToPolygonDist(bestX, bestY, polygon);
+            if (dCentroid > 0) bestD = dCentroid;
+        }
+        if (bestD < 0) {
+            bestX = minX + width / 2;
+            bestY = minY + height / 2;
+            bestD = pointToPolygonDist(bestX, bestY, polygon);
+        }
+        if (bestD < 0) {
+            var n = 12;
+            for (var si = 0; si <= n && bestD < 0; si++) {
+                for (var sj = 0; sj <= n && bestD < 0; sj++) {
+                    var px = minX + (width * si) / n;
+                    var py = minY + (height * sj) / n;
+                    var d = pointToPolygonDist(px, py, polygon);
+                    if (d > bestD) {
+                        bestD = d;
+                        bestX = px;
+                        bestY = py;
+                    }
+                }
+            }
+        }
+        var precision = 1;
+        var cellSize = Math.min(width, height) / 3;
+        if (cellSize < precision) cellSize = precision;
+        for (var pass = 0; pass < 4; pass++) {
+            var half = cellSize / 2;
+            for (var gx = -1; gx <= 1; gx++) {
+                for (var gy = -1; gy <= 1; gy++) {
+                    var px = bestX + gx * cellSize;
+                    var py = bestY + gy * cellSize;
+                    var d = pointToPolygonDist(px, py, polygon);
+                    if (d > bestD) {
+                        bestD = d;
+                        bestX = px;
+                        bestY = py;
+                    }
+                }
+            }
+            cellSize = half;
+        }
+        if (bestD <= 0 && absArea >= 1e-10) {
+            bestX = cx / (3 * area);
+            bestY = cy / (3 * area);
+        }
+        return { x: bestX, y: bestY, distance: bestD > 0 ? bestD : 0 };
+    }
+
+    /** Optionally split label into two lines for tight cells. Returns [label] or [line1, line2]. */
+    function labelLinesForCell(label, fontSize, dist) {
+        if (!label || label.length <= 14) return [label];
+        var spaceIndices = [];
+        for (var i = 0; i < label.length; i++) { if (label.charAt(i) === ' ') spaceIndices.push(i); }
+        if (spaceIndices.length === 0) return [label];
+        var useBreak = (fontSize <= 10 || (dist > 0 && dist < 8)) && label.length > 18;
+        if (!useBreak) return [label];
+        var bestIdx = 0, bestDiff = Infinity;
+        for (var s = 0; s < spaceIndices.length; s++) {
+            var len1 = spaceIndices[s];
+            var len2 = label.length - len1 - 1;
+            var diff = Math.abs(len1 - len2);
+            if (diff < bestDiff) { bestDiff = diff; bestIdx = s; }
+        }
+        var pos = spaceIndices[bestIdx];
+        var line1 = label.slice(0, pos).trim();
+        var line2 = label.slice(pos + 1).trim();
+        if (!line1 || !line2) return [label];
+        return [line1, line2];
+    }
+
+    /** Preferred label rotation in degrees for an elongated cell (principal axis). ring = [[x,y],...]. Returns angle in [-90, 90] or null if cell is not elongated. */
+    function labelAngleForRing(ring) {
+        if (!ring || ring.length < 3) return null;
+        var n = ring.length;
+        var cx = 0, cy = 0;
+        for (var i = 0; i < n; i++) {
+            cx += ring[i][0];
+            cy += ring[i][1];
+        }
+        cx /= n;
+        cy /= n;
+        var covxx = 0, covyy = 0, covxy = 0;
+        for (var i = 0; i < n; i++) {
+            var dx = ring[i][0] - cx, dy = ring[i][1] - cy;
+            covxx += dx * dx;
+            covyy += dy * dy;
+            covxy += dx * dy;
+        }
+        var minCov = Math.min(covxx, covyy);
+        var maxCov = Math.max(covxx, covyy);
+        if (minCov < 1e-6 || maxCov / minCov < 1.4) return null;
+        var angleRad = 0.5 * Math.atan2(2 * covxy, covxx - covyy);
+        var angleDeg = angleRad * 180 / Math.PI;
+        if (angleDeg > 90) angleDeg -= 180;
+        if (angleDeg < -90) angleDeg += 180;
+        return angleDeg;
+    }
+
+    function showDeityDetail(item, score) {
+        const panel = document.getElementById('tarotIchingDetailPanel');
+        const titleEl = document.getElementById('tarotIchingDetailTitle');
+        const bodyEl = document.getElementById('tarotIchingDetailBody');
+        if (!panel || !titleEl || !bodyEl) return;
+        function esc(s) {
+            if (s == null) return '';
+            var div = document.createElement('div');
+            div.textContent = s;
+            return div.innerHTML;
+        }
+        const meta = item.metadata || item;
+        const name = item.label || meta.name || item.id;
+        titleEl.textContent = name + (score != null ? ' (similarity: ' + score.toFixed(3) + ')' : '');
+        const parts = [];
+        if (meta.pantheon) {
+            var pantheonLabel = meta.pantheon.charAt(0).toUpperCase() + meta.pantheon.slice(1);
+            parts.push('<div class="detail-section"><div class="detail-section-title">Pantheon</div><p>' + esc(pantheonLabel) + '</p></div>');
+        }
+        if (meta.description_short) {
+            parts.push('<div class="detail-section"><div class="detail-section-title">Description</div><p>' + esc(meta.description_short) + '</p></div>');
+        }
+        if (meta.aliases && meta.aliases.length) {
+            parts.push('<div class="detail-section"><div class="detail-section-title">Aliases</div><p>' + esc(meta.aliases.join(', ')) + '</p></div>');
+        }
+        if (meta.source && meta.source.wikidata) {
+            var urlEsc = esc(meta.source.wikidata);
+            parts.push('<div class="detail-section"><div class="detail-section-title">Wikidata</div><p><a href=\"' + urlEsc + '\" target=\"_blank\" rel=\"noopener\">' + urlEsc + '</a></p></div>');
+        }
+        bodyEl.innerHTML = parts.length ? parts.join('') : '<p>No further details.</p>';
+        panel.style.display = 'block';
+    }
+
+    function summonClosestMotifForDeity(deityItem) {
+        if (!deityItem || !deityItem.id || !embeddingSpace) return;
+        if (!embeddingSpace.hasLayer('motifs') || !embeddingSpace.hasLayer('deities')) return;
+        const now = Date.now();
+        if (now - lastObjectQueryTime < objectQueryCooldownMs) return;
+        lastObjectQueryTime = now;
+
+        const inCollection = new Set();
+        for (var i = 0; i < collection.length; i++) {
+            var mid = getMotifIdForItem(collection[i]);
+            if (mid) inCollection.add(mid);
+        }
+
+        let best = null;
+        try {
+            const k = 24;
+            const results = embeddingSpace.nearestToItem('motifs', 'deities', deityItem.id, k);
+            if (results && results.length) {
+                for (var rIdx = 0; rIdx < results.length; rIdx++) {
+                    var r = results[rIdx];
+                    var motifId = r && r.item && r.item.id;
+                    if (!motifId || inCollection.has(motifId)) continue;
+                    var motifName = (r.item && r.item.label) ||
+                        (gameEngine && gameEngine.getMotifById && gameEngine.getMotifById(motifId) && gameEngine.getMotifById(motifId).name) ||
+                        motifId;
+                    best = { motifId: motifId, motifName: motifName, similarity: r.score };
+                    break;
+                }
+            }
+        } catch (e) {
+            console.warn('[Graph] Summon motif for deity:', e);
+        }
+
+        if (!best) return;
+
+        const motifAlreadyInCollection = collection.some(function (item) { return getMotifIdForItem(item) === best.motifId; });
+        if (!motifAlreadyInCollection) {
+            addMotifToCollectionAndRefresh(best.motifId, best.motifName, null, {
+                useStandardImage: true,
+                suggested: false,
+                ssim: 1,
+                time: 0
+            });
+        }
+        // Recompute deity map colors with updated collection
+        openDeityMap();
+    }
+
+    function closeDeityMapPanel() {
+        var overlay = document.getElementById('deityMapOverlay');
+        var tooltip = document.getElementById('deityMapTooltip');
+        if (tooltip) tooltip.classList.remove('show');
+        if (overlay) overlay.classList.remove('show');
+    }
+
+    function openDeityMap() {
+        var overlay = document.getElementById('deityMapOverlay');
+        var messageEl = document.getElementById('deityMapMessage');
+        var svgEl = document.getElementById('deityMapSvg');
+        if (!overlay || !messageEl || !svgEl) return;
+        messageEl.style.display = 'block';
+        svgEl.style.display = 'none';
+        messageEl.textContent = '';
+
+        if (!collection || collection.length === 0) {
+            messageEl.textContent = 'No motifs in collection.';
+            overlay.classList.add('show');
+            return;
+        }
+        var space = embeddingSpace;
+        if (!space || !space.hasLayer || !space.hasLayer('deities')) {
+            messageEl.textContent = 'Deity layer not loaded.';
+            overlay.classList.add('show');
+            return;
+        }
+
+        var bins = {};
+        for (var c = 0; c < collection.length; c++) {
+            var motifId = getMotifIdForItem(collection[c]);
+            if (!motifId) continue;
+            var results = space.nearestToItem('deities', 'motifs', motifId, 1);
+            if (!results || results.length === 0) continue;
+            var deityId = results[0].item.id;
+            if (!bins[deityId]) {
+                bins[deityId] = { deityItem: results[0].item, count: 0 };
+            }
+            bins[deityId].count += 1;
+        }
+        var entries = [];
+        for (var id in bins) entries.push(bins[id]);
+        if (entries.length === 0) {
+            messageEl.textContent = 'No deities found for motifs in collection.';
+            overlay.classList.add('show');
+            return;
+        }
+
+        var vectors = entries.map(function (e) { return e.deityItem.embedding; });
+        var coords = mds2d(vectors);
+        var width = 640;
+        var height = 480;
+        var margin = 28;
+        var xMin = 1e30, xMax = -1e30, yMin = 1e30, yMax = -1e30;
+        for (var i = 0; i < coords.length; i++) {
+            if (coords[i][0] < xMin) xMin = coords[i][0];
+            if (coords[i][0] > xMax) xMax = coords[i][0];
+            if (coords[i][1] < yMin) yMin = coords[i][1];
+            if (coords[i][1] > yMax) yMax = coords[i][1];
+        }
+        var pad = 0.1;
+        var rangeX = (xMax - xMin) || 1;
+        var rangeY = (yMax - yMin) || 1;
+        var scaleX = (width - 2 * margin) / rangeX;
+        var scaleY = (height - 2 * margin) / rangeY;
+        var scale = Math.min(scaleX, scaleY) * (1 - pad);
+        var cx = (xMin + xMax) / 2;
+        var cy = (yMin + yMax) / 2;
+        var points = coords.map(function (c) {
+            return [
+                margin + width / 2 + (c[0] - cx) * scale,
+                margin + height / 2 - (c[1] - cy) * scale
+            ];
+        });
+
+        var bounds = [0, 0, width, height];
+        var Delaunay = typeof window.Delaunay !== 'undefined' ? window.Delaunay : (typeof d3 !== 'undefined' && d3.Delaunay ? d3.Delaunay : null);
+        if (!Delaunay) {
+            messageEl.textContent = 'Delaunay not available.';
+            overlay.classList.add('show');
+            return;
+        }
+        var flat = [];
+        for (i = 0; i < points.length; i++) {
+            flat.push(points[i][0], points[i][1]);
+        }
+        var delaunay = Delaunay.from(points);
+        var voronoi = delaunay.voronoi(bounds);
+
+        svgEl.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+        svgEl.innerHTML = '';
+        var svg = d3.select(svgEl);
+        svg.append('defs').append('filter').attr('id', 'deityMapTextShadow')
+            .append('feDropShadow').attr('dx', 0).attr('dy', 0).attr('stdDeviation', 1.5).attr('flood-color', '#000').attr('flood-opacity', 0.65);
+        var cellColor = function (i) {
+            var count = entries[i].count;
+            var maxCount = 1;
+            for (var j = 0; j < entries.length; j++) if (entries[j].count > maxCount) maxCount = entries[j].count;
+            var t = maxCount > 1 ? (count - 1) / (maxCount - 1) : 0;
+            var r = Math.round(26 + t * 80);
+            var g = Math.round(42 + t * 180);
+            var b = Math.round(46 + t * 120);
+            return 'rgb(' + r + ',' + g + ',' + b + ')';
+        };
+        var tooltipEl = document.getElementById('deityMapTooltip');
+        var idx = 0;
+            for (var poly of voronoi.cellPolygons()) {
+                var pathData = 'M' + Array.from(poly).map(function (p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
+                svg.append('path')
+                    .attr('d', pathData)
+                    .attr('fill', cellColor(idx))
+                    .attr('stroke', 'rgba(255,255,255,0.3)')
+                    .attr('stroke-width', 1.2);
+                var ring = Array.from(poly, function (p) { return [Number(p[0]), Number(p[1])]; });
+                var visualCenter = poleOfInaccessibility(ring);
+                var cx_ = visualCenter.x;
+                var cy_ = visualCenter.y;
+                var dist = visualCenter.distance;
+                if (dist <= 0 || isNaN(dist)) {
+                    cx_ = points[idx][0];
+                    cy_ = points[idx][1];
+                    dist = 0;
+                }
+                var fontSize = 10;
+                if (dist > 0) {
+                    var k = 0.45;
+                    fontSize = Math.round(Math.min(11, Math.max(2, dist * k)));
+                }
+                var label = entries[idx].deityItem.label || entries[idx].deityItem.id;
+                var lines = labelLinesForCell(label, fontSize, dist);
+                var angle = labelAngleForRing(ring);
+                var textEl = svg.append('text')
+                    .attr('x', cx_)
+                    .attr('y', cy_)
+                    .attr('text-anchor', 'middle')
+                    .attr('dominant-baseline', 'middle')
+                    .attr('fill', '#fff')
+                    .attr('font-size', fontSize + 'px')
+                    .attr('font-weight', '500')
+                    .attr('font-family', 'inherit')
+                    .attr('filter', 'url(#deityMapTextShadow)');
+                if (lines.length === 1) {
+                    textEl.text(lines[0]);
+                } else {
+                    textEl.text(null);
+                    textEl.selectAll('tspan').data(lines).enter().append('tspan')
+                        .attr('x', cx_)
+                        .attr('dy', function (_, i) { return i === 0 ? '-0.55em' : '1.1em'; })
+                        .attr('text-anchor', 'middle')
+                        .text(function (d) { return d; });
+                }
+                if (angle != null && Math.abs(angle) >= 4) {
+                    textEl.attr('transform', 'rotate(' + angle + ',' + cx_ + ',' + cy_ + ')');
+                }
+                (function (deityItem) {
+                    var meta = deityItem.metadata || deityItem;
+                    var rawSummary = (meta && meta.description_short) != null ? meta.description_short : '';
+                    var summary = '';
+                    if (typeof rawSummary === 'string') {
+                        summary = rawSummary.trim();
+                    } else if (Array.isArray(rawSummary) && rawSummary.length > 0) {
+                        summary = rawSummary.map(function (s) { return String(s).trim(); }).filter(Boolean).join(' ');
+                    }
+                    if (tooltipEl) {
+                        textEl.on('mouseenter', function (ev) {
+                            var e = (ev && (ev.clientX != null)) ? ev : (typeof d3 !== 'undefined' && d3.event) ? d3.event : ev;
+                            tooltipEl.innerHTML = '';
+                            tooltipEl.textContent = summary;
+                            if (summary && e && (e.clientX != null)) {
+                                tooltipEl.style.left = (e.clientX + 12) + 'px';
+                                tooltipEl.style.top = (e.clientY + 12) + 'px';
+                                tooltipEl.classList.add('show');
+                            }
+                        });
+                        textEl.on('mouseleave', function () {
+                            tooltipEl.classList.remove('show');
+                        });
+                        textEl.style('cursor', summary ? 'help' : 'default');
+                    }
+                    // Double-click: summon closest motif for this deity and refresh map
+                    textEl.on('dblclick', function () {
+                        summonClosestMotifForDeity(deityItem);
+                    });
+                })(entries[idx].deityItem);
+                idx++;
+            }
+
+        messageEl.style.display = 'none';
+        svgEl.style.display = 'block';
+        overlay.classList.add('show');
     }
 
     function render() {
@@ -1151,11 +1772,13 @@
         const metaNameEl = document.getElementById('metaMotifName');
         const metaTarotEl = document.getElementById('metaTarot');
         const metaIChingEl = document.getElementById('metaIChing');
+        const metaDeityEl = document.getElementById('metaDeity');
 
         function updateMetaPanelForNode(nodeDatum) {
             if (!metaPanelEl || !metaNameEl || !metaTarotEl || !metaIChingEl || !nodeDatum) {
                 currentMotifTarotIndex = null;
                 currentMotifMeta = null;
+                currentNearestDeity = null;
                 closeTarotIchingDetailPanel();
                 if (metaPanelEl) metaPanelEl.style.display = 'none';
                 return;
@@ -1185,6 +1808,20 @@
                 currentMotifMeta = null;
                 metaTarotEl.textContent = '—';
                 metaIChingEl.textContent = '—';
+            }
+            currentNearestDeity = null;
+            if (metaDeityEl) metaDeityEl.textContent = '—';
+            if (motifId && embeddingSpace && embeddingSpace.hasLayer && embeddingSpace.hasLayer('deities')) {
+                try {
+                    const deityResults = embeddingSpace.nearestToItem('deities', 'motifs', motifId, 1);
+                    if (deityResults && deityResults.length > 0) {
+                        const r = deityResults[0];
+                        currentNearestDeity = { item: r.item, score: r.score };
+                        if (metaDeityEl) metaDeityEl.textContent = r.item.label || r.item.id || '—';
+                    }
+                } catch (e) {
+                    console.warn('[Graph] Nearest deity lookup:', e);
+                }
             }
             metaPanelEl.style.display = 'block';
         }
@@ -1286,6 +1923,20 @@
             panel.style.display = 'block';
         }
 
+        function openDeityDetail() {
+            if (!currentNearestDeity || !currentNearestDeity.item) {
+                const panel = document.getElementById('tarotIchingDetailPanel');
+                const titleEl = document.getElementById('tarotIchingDetailTitle');
+                const bodyEl = document.getElementById('tarotIchingDetailBody');
+                if (!panel || !titleEl || !bodyEl) return;
+                titleEl.textContent = 'Nearest deity';
+                bodyEl.textContent = 'No deity data for this motif.';
+                panel.style.display = 'block';
+                return;
+            }
+            showDeityDetail(currentNearestDeity.item, currentNearestDeity.score);
+        }
+
         function escapeHtml(s) {
             if (s == null) return '';
             var div = document.createElement('div');
@@ -1296,8 +1947,10 @@
         document.getElementById('tarotIchingDetailClose').addEventListener('click', closeTarotIchingDetailPanel);
         document.getElementById('metaTarotRow').addEventListener('click', function () { openTarotDetail(); });
         document.getElementById('metaIChingRow').addEventListener('click', function () { openIChingDetail(); });
+        document.getElementById('metaDeityRow').addEventListener('click', function () { openDeityDetail(); });
         document.getElementById('metaTarotRow').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openTarotDetail(); } });
         document.getElementById('metaIChingRow').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openIChingDetail(); } });
+        document.getElementById('metaDeityRow').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDeityDetail(); } });
 
         node.on('dblclick', (event, d) => {
             event.stopPropagation();
@@ -1973,13 +2626,13 @@
 
         gameEngine = new LenningsGameEngine({ levelPackPath: LEVEL_PACK });
         await gameEngine.initialize();
-        loadCollection();
+        await loadCollection();
         loadTarotIchingResources();
-        loadObjectNodes();
-        loadObjectEdges();
-        loadGraphPositions();
-        loadGraphZoom();
-        loadGraphThreshold();
+        await loadObjectNodes();
+        await loadObjectEdges();
+        await loadGraphPositions();
+        await loadGraphZoom();
+        await loadGraphThreshold();
         
         // Get the shared EmbeddingSpace instance
         if (typeof gameEngine.getEmbeddingSpace === 'function') {
@@ -1997,7 +2650,15 @@
                 console.warn('[Graph] Failed to load aft_motifs layer:', e);
             }
         }
-
+        // Load the deities dataset layers
+        if (embeddingSpace && typeof loadDeitiesLayer === 'function') {
+            try {
+                await loadDeitiesLayer(embeddingSpace);
+                console.log('[Graph] Loaded deities layer');
+            } catch (e) {
+                console.warn('[Graph] Failed to load deities layer:', e);
+            }
+        }
         const langEnBtn = document.getElementById('graphLangEnBtn');
         const langPtBrBtn = document.getElementById('graphLangPtBrBtn');
         function updateLangButtons(current) {
@@ -2028,30 +2689,28 @@
         const clearBtn = document.getElementById('clearCollectionBtn');
         if (clearBtn) {
             clearBtn.addEventListener('click', () => {
-                localStorage.removeItem(COLLECTION_KEY);
-                localStorage.removeItem(OBJECT_NODES_KEY);
-                localStorage.removeItem(GRAPH_THRESHOLD_KEY);
-                localStorage.removeItem(GRAPH_POSITIONS_KEY);
-                localStorage.removeItem(GRAPH_ZOOM_KEY);
-                localStorage.removeItem(GRAPH_OBJECT_EDGES_KEY);
-                collection = [];
-                savedPositions = {};
-                savedObjectPositions = {};
-                objectNodes = [];
-                objectToMotifEdges = [];
-                selectedNodeId = null;
-                selectedObjectId = null;
-                if (fableAuraTimeoutId) clearTimeout(fableAuraTimeoutId);
-                fableAuraTimeoutId = null;
-                lastSuggestedFableAura = null;
-                closeTarotIchingDetailPanel();
-                document.getElementById('motifMetaPanel').style.display = 'none';
-                document.getElementById('objectMetaPanel').style.display = 'none';
-                if (simulation) simulation.stop();
-                document.getElementById('graph-svg').innerHTML = '';
-                document.getElementById('emptyState').style.display = 'flex';
-                document.getElementById('stats').textContent = 'Collection cleared';
-                render();
+                const clearThenReset = () => {
+                    collection = [];
+                    savedPositions = {};
+                    savedObjectPositions = {};
+                    objectNodes = [];
+                    objectToMotifEdges = [];
+                    selectedNodeId = null;
+                    selectedObjectId = null;
+                    if (fableAuraTimeoutId) clearTimeout(fableAuraTimeoutId);
+                    fableAuraTimeoutId = null;
+                    lastSuggestedFableAura = null;
+                    currentNearestDeity = null;
+                    closeTarotIchingDetailPanel();
+                    document.getElementById('motifMetaPanel').style.display = 'none';
+                    document.getElementById('objectMetaPanel').style.display = 'none';
+                    if (simulation) simulation.stop();
+                    document.getElementById('graph-svg').innerHTML = '';
+                    document.getElementById('emptyState').style.display = 'flex';
+                    document.getElementById('stats').textContent = 'Collection cleared';
+                    render();
+                };
+                (window.LenningsStorage ? window.LenningsStorage.clearGameStorage() : Promise.resolve()).then(clearThenReset);
             });
         }
         
@@ -2095,10 +2754,22 @@
 
         document.getElementById('objectifyBtn').addEventListener('click', () => triggerObjectify());
 
-        // Keyboard handler for 'o' key: motif selected -> nearest fable; fable selected -> nearest motif
+        document.getElementById('deityMapClose').addEventListener('click', closeDeityMapPanel);
+
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            
+            if (e.key === 'Escape') {
+                if (document.getElementById('deityMapOverlay').classList.contains('show')) {
+                    e.preventDefault();
+                    closeDeityMapPanel();
+                }
+                return;
+            }
+            if (e.key === 'm' || e.key === 'M') {
+                e.preventDefault();
+                openDeityMap();
+                return;
+            }
             if (e.key === 'o' || e.key === 'O') {
                 e.preventDefault();
                 triggerObjectify();

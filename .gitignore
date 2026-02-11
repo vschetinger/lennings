@@ -1,2 +1,4 @@
+dist/
 dist-pages/
+node_modules/
 datasets/iching-wilhelm-dataset/

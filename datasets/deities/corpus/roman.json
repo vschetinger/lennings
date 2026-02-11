@@ -1,0 +1,7179 @@
+[
+  {
+    "id": "Q4649",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Jupiter",
+    "aliases": [
+      "Diespiter",
+      "Dju Pater",
+      "Ioue",
+      "Jupiter (mythology)",
+      "Juppiter",
+      "Jove"
+    ],
+    "description_short": "chief deity of Roman state religion",
+    "text": "Jupiter. chief deity of Roman state religion\nAliases: Diespiter, Dju Pater, Ioue, Jupiter (mythology), Juppiter, Jove",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4649"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q83992",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cardea",
+    "aliases": [
+      "Carda",
+      "Cardina"
+    ],
+    "description_short": "Roman deity",
+    "text": "Cardea. Roman deity\nAliases: Carda, Cardina",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q83992"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q93172",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Gaia",
+    "aliases": [
+      "Ge",
+      "Gaea"
+    ],
+    "description_short": "Greek primordial deity, the personification of the Earth",
+    "text": "Gaia. Greek primordial deity, the personification of the Earth\nAliases: Ge, Gaea",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q93172"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q125046",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Juno",
+    "aliases": [
+      "Regina",
+      "Iuno",
+      "Juno (Giunone)"
+    ],
+    "description_short": "ancient Roman goddess",
+    "text": "Juno. ancient Roman goddess\nAliases: Regina, Iuno, Juno (Giunone)",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q125046"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1150",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mercury",
+    "aliases": [
+      "Mercurius",
+      "Mercury (mythology)"
+    ],
+    "description_short": "Roman god of trade, merchants, thieves and travel",
+    "text": "Mercury. Roman god of trade, merchants, thieves and travel\nAliases: Mercurius, Mercury (mythology)",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1150"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3954",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Neptune",
+    "aliases": [
+      "Neptunus",
+      "Poseidon"
+    ],
+    "description_short": "Roman god of water, particularly the sea, considered equivalent to the Greek Poseidon",
+    "text": "Neptune. Roman god of water, particularly the sea, considered equivalent to the Greek Poseidon\nAliases: Neptunus, Poseidon",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3954"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4640",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vulcan",
+    "aliases": [
+      "Hephaestus",
+      "Volcanus",
+      "Mulciber",
+      "Iunonigena",
+      "Iūnōnigena",
+      "Junonigena",
+      "Molsiber",
+      "Vulcan (mythology)",
+      "Vulcānus"
+    ],
+    "description_short": "god of both beneficial and hindering fire",
+    "text": "Vulcan. god of both beneficial and hindering fire\nAliases: Hephaestus, Volcanus, Mulciber, Iunonigena, Iūnōnigena, Junonigena, Molsiber, Vulcan (mythology), Vulcānus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4640"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q112",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mars",
+    "aliases": [
+      "god Mars",
+      "Mars (mythology)",
+      "Roman god Mars"
+    ],
+    "description_short": "Roman god of war, guardian of agriculture",
+    "text": "Mars. Roman god of war, guardian of agriculture\nAliases: god Mars, Mars (mythology), Roman god Mars",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q112"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q37340",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Apollo",
+    "aliases": [
+      "Apeilōn",
+      "Apellōn",
+      "Aploun",
+      "Apollōn",
+      "Apollon",
+      "Phoebus"
+    ],
+    "description_short": "god in Greek and later Roman mythology",
+    "text": "Apollo. god in Greek and later Roman mythology\nAliases: Apeilōn, Apellōn, Aploun, Apollōn, Apollon, Phoebus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q37340"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1339921",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Agonius",
+    "aliases": [
+      "Enagonios",
+      "Enagonius"
+    ],
+    "description_short": "ancient Greek divine epithet",
+    "text": "Agonius. ancient Greek divine epithet\nAliases: Enagonios, Enagonius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1339921"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1367680",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Iuventas",
+    "aliases": [
+      "Juventas"
+    ],
+    "description_short": "Roman goddess",
+    "text": "Iuventas. Roman goddess\nAliases: Juventas",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1367680"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1479084",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mater Matuta",
+    "aliases": [
+      "Mother Matuta"
+    ],
+    "description_short": "Latin goddess of the sunrise",
+    "text": "Mater Matuta. Latin goddess of the sunrise\nAliases: Mother Matuta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1479084"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1482478",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Spes",
+    "aliases": [
+      "Hope"
+    ],
+    "description_short": "goddess/personification of hope in ancient Roman religion",
+    "text": "Spes. goddess/personification of hope in ancient Roman religion\nAliases: Hope",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1482478"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1490210",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Levana",
+    "aliases": [
+      "dea Levana"
+    ],
+    "description_short": "Roman childbirth goddess",
+    "text": "Levana. Roman childbirth goddess\nAliases: dea Levana",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1490210"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1630871",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Manth",
+    "aliases": [
+      "Mantus"
+    ],
+    "description_short": "Etruscan deity",
+    "text": "Manth. Etruscan deity\nAliases: Mantus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1630871"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1752057",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mutunus Tutunus",
+    "aliases": [
+      "Mutinus Titinus"
+    ],
+    "description_short": "Roman phallic marriage deity",
+    "text": "Mutunus Tutunus. Roman phallic marriage deity\nAliases: Mutinus Titinus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1752057"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1753275",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sancus",
+    "aliases": [
+      "Semo Sancus Sanctus Deus Fidius"
+    ],
+    "description_short": "Roman deity",
+    "text": "Sancus. Roman deity\nAliases: Semo Sancus Sanctus Deus Fidius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1753275"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1787622",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nerio",
+    "aliases": [
+      "Neriene"
+    ],
+    "description_short": "Nerio was an ancient war goddess and the personification of valor",
+    "text": "Nerio. Nerio was an ancient war goddess and the personification of valor\nAliases: Neriene",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1787622"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1806391",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Larunda",
+    "aliases": [
+      "Lara",
+      "Laranda",
+      "Larentina",
+      "Larunde"
+    ],
+    "description_short": "naiad nymph, daughter of the river Almo in Ovid's Fasti",
+    "text": "Larunda. naiad nymph, daughter of the river Almo in Ovid's Fasti\nAliases: Lara, Laranda, Larentina, Larunde",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1806391"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q57520120",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cinxia",
+    "aliases": [
+      "Virginiensis"
+    ],
+    "description_short": "Roman goddess of the bridal belt",
+    "text": "Cinxia. Roman goddess of the bridal belt\nAliases: Virginiensis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q57520120"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q58618952",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Consevius",
+    "aliases": [
+      "Consivius",
+      "Deus Consevius"
+    ],
+    "description_short": "Roman god of propagation and insemination",
+    "text": "Consevius. Roman god of propagation and insemination\nAliases: Consivius, Deus Consevius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q58618952"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q75491130",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Caelestis",
+    "aliases": [
+      "Dea Caelestis"
+    ],
+    "description_short": "Romanization of the Punic goddess Tanit",
+    "text": "Caelestis. Romanization of the Punic goddess Tanit\nAliases: Dea Caelestis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q75491130"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599404",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Leucimalicus",
+    "aliases": [
+      "Mars Leucimalicus"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Leucimalicus. equivalent of Mars\nAliases: Mars Leucimalicus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599404"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599410",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Leusdrinus",
+    "aliases": [
+      "Mars Leusdrinus"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Leusdrinus. equivalent of Mars\nAliases: Mars Leusdrinus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599410"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599438",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Albarinus",
+    "aliases": [
+      "Mars Albarinus"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Albarinus. equivalent of Mars\nAliases: Mars Albarinus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599438"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599446",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lacavus",
+    "aliases": [
+      "Mars Lacavus"
+    ],
+    "description_short": "Mars at Nimes",
+    "text": "Lacavus. Mars at Nimes\nAliases: Mars Lacavus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599446"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599462",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Beladon",
+    "aliases": [
+      "Mars Beladon"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Beladon. equivalent of Mars\nAliases: Mars Beladon",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599462"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599467",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Exalbiovix",
+    "aliases": [
+      "Mars Exalbiovix"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Exalbiovix. equivalent of Mars\nAliases: Mars Exalbiovix",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599467"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599473",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Giarinus",
+    "aliases": [
+      "Mars Giarinus"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Giarinus. equivalent of Mars\nAliases: Mars Giarinus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599473"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599480",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lelhunnus",
+    "aliases": [
+      "Mars Lelhunnus"
+    ],
+    "description_short": "equivalent of Mars (TM God 179)",
+    "text": "Lelhunnus. equivalent of Mars (TM God 179)\nAliases: Mars Lelhunnus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599480"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599485",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Marmogius",
+    "aliases": [
+      "Mars Marmogius"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Marmogius. equivalent of Mars\nAliases: Mars Marmogius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599485"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126618004",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Singilis",
+    "aliases": [
+      "Mars Singilis"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Singilis. equivalent of Mars\nAliases: Mars Singilis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126618004"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126618009",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Smertulitanus",
+    "aliases": [
+      "Mars Smertulitanus"
+    ],
+    "description_short": "equivalent of Mars; possibly identical with Smertrius",
+    "text": "Smertulitanus. equivalent of Mars; possibly identical with Smertrius\nAliases: Mars Smertulitanus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126618009"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126631244",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tarbucelis",
+    "aliases": [
+      "Mars Tarbucelis"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Tarbucelis. equivalent of Mars\nAliases: Mars Tarbucelis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126631244"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126631667",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tillenus",
+    "aliases": [
+      "Tilenus",
+      "Mars Tillenus"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Tillenus. equivalent of Mars\nAliases: Tilenus, Mars Tillenus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126631667"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126631989",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tritullus",
+    "aliases": [
+      "Mars Tritullus"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Tritullus. equivalent of Mars\nAliases: Mars Tritullus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126631989"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126632305",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cimiacinus",
+    "aliases": [
+      "Mercurius Cimiacinus"
+    ],
+    "description_short": "equivalent of Mercurius",
+    "text": "Cimiacinus. equivalent of Mercurius\nAliases: Mercurius Cimiacinus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126632305"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126633160",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Arcecius",
+    "aliases": [
+      "Mercurius Arcecius"
+    ],
+    "description_short": "equivalent of Mercurius",
+    "text": "Arcecius. equivalent of Mercurius\nAliases: Mercurius Arcecius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126633160"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126633614",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Aguaecus",
+    "aliases": [
+      "Mercurius Aguaecus"
+    ],
+    "description_short": "equivalent of Mercurius",
+    "text": "Aguaecus. equivalent of Mercurius\nAliases: Mercurius Aguaecus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126633614"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126633890",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dubnocaratiacus",
+    "aliases": [
+      "Mercurius Dubnocaratiacus"
+    ],
+    "description_short": "equivalent of Mercurius (TM God 174)",
+    "text": "Dubnocaratiacus. equivalent of Mercurius (TM God 174)\nAliases: Mercurius Dubnocaratiacus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126633890"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126634186",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Excingiorigiatus",
+    "aliases": [
+      "Mercurius Excingiorigiatus"
+    ],
+    "description_short": "equivalent of Mercurius",
+    "text": "Excingiorigiatus. equivalent of Mercurius\nAliases: Mercurius Excingiorigiatus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126634186"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126634354",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Solitumarus",
+    "aliases": [
+      "Mercurius Solitumarus"
+    ],
+    "description_short": "equivalent of Mercurius",
+    "text": "Solitumarus. equivalent of Mercurius\nAliases: Mercurius Solitumarus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126634354"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126635165",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cimistenus",
+    "aliases": [
+      "Jupiter Cimistenus",
+      "Zeus Cimistenus"
+    ],
+    "description_short": "equivalent of Zeus/Iuppiter",
+    "text": "Cimistenus. equivalent of Zeus/Iuppiter\nAliases: Jupiter Cimistenus, Zeus Cimistenus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126635165"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126642565",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Maleciabrudes",
+    "aliases": [
+      "Jupiter Maleciabrudes"
+    ],
+    "description_short": "equivalent of Zeus/Iuppiter",
+    "text": "Maleciabrudes. equivalent of Zeus/Iuppiter\nAliases: Jupiter Maleciabrudes",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126642565"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126642697",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Magianus",
+    "aliases": [
+      "Mars Magianus"
+    ],
+    "description_short": "equivalent of Mars",
+    "text": "Magianus. equivalent of Mars\nAliases: Mars Magianus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126642697"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126642802",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Assaecus",
+    "aliases": [
+      "Jupiter Assaecus"
+    ],
+    "description_short": "Equivalent to Jupiter; possibly a local deity connected to the river Asseca",
+    "text": "Assaecus. Equivalent to Jupiter; possibly a local deity connected to the river Asseca\nAliases: Jupiter Assaecus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126642802"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126666979",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Adceneicus",
+    "aliases": [
+      "Mars Adceneicus"
+    ],
+    "description_short": "equivalent of Zeus/Iuppiter",
+    "text": "Adceneicus. equivalent of Zeus/Iuppiter\nAliases: Mars Adceneicus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126666979"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126667121",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nennicus",
+    "aliases": [
+      "Jupiter Nennicus"
+    ],
+    "description_short": "equivalent of Zeus/Iuppiter",
+    "text": "Nennicus. equivalent of Zeus/Iuppiter\nAliases: Jupiter Nennicus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126667121"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126667656",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Bassoledulitanus",
+    "aliases": [
+      "Apollo Bassoledulitanus"
+    ],
+    "description_short": "equivalent of Apollon",
+    "text": "Bassoledulitanus. equivalent of Apollon\nAliases: Apollo Bassoledulitanus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126667656"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126668139",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Kendrisos",
+    "aliases": [
+      "Apollo Cendrissenus",
+      "Cendrissenus"
+    ],
+    "description_short": "equivalent of Apollon",
+    "text": "Kendrisos. equivalent of Apollon\nAliases: Apollo Cendrissenus, Cendrissenus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126668139"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126668730",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pirunenus",
+    "aliases": [
+      "Apollo Pirunenus"
+    ],
+    "description_short": "equivalent of Apollon",
+    "text": "Pirunenus. equivalent of Apollon\nAliases: Apollo Pirunenus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126668730"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126668982",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dysprus",
+    "aliases": [
+      "Apollo Dysprus"
+    ],
+    "description_short": "equivalent of Apollon",
+    "text": "Dysprus. equivalent of Apollon\nAliases: Apollo Dysprus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126668982"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126669119",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Britovius",
+    "aliases": [
+      "Mars Britovius"
+    ],
+    "description_short": "Mars at Nîmes",
+    "text": "Britovius. Mars at Nîmes\nAliases: Mars Britovius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126669119"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126680685",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tamitenus",
+    "aliases": [
+      "Jupiter Tamitenus"
+    ],
+    "description_short": "Gallic god in Bulgaria equivalent to Jupiter",
+    "text": "Tamitenus. Gallic god in Bulgaria equivalent to Jupiter\nAliases: Jupiter Tamitenus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126680685"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126916",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Minerva",
+    "aliases": [
+      "Menrva"
+    ],
+    "description_short": "Roman goddess of wisdom and sponsor of arts, trade, and defense",
+    "text": "Minerva. Roman goddess of wisdom and sponsor of arts, trade, and defense\nAliases: Menrva",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126916"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1928517",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Volturnus",
+    "aliases": [
+      "Vulturnus"
+    ],
+    "description_short": "Roman god of the Tiber",
+    "text": "Volturnus. Roman god of the Tiber\nAliases: Vulturnus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1928517"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1989704",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Strenua",
+    "aliases": [
+      "Strenia"
+    ],
+    "description_short": "Sabine and Roman goddess",
+    "text": "Strenua. Sabine and Roman goddess\nAliases: Strenia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1989704"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2062262",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tiburtine Sibyl",
+    "aliases": [
+      "Albunea"
+    ],
+    "description_short": "Roman Sibyl",
+    "text": "Tiburtine Sibyl. Roman Sibyl\nAliases: Albunea",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2062262"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2295136",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Smertrios",
+    "aliases": [
+      "Smertrius"
+    ],
+    "description_short": "God in Gaul and Noricum equated with Mars",
+    "text": "Smertrios. God in Gaul and Noricum equated with Mars\nAliases: Smertrius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2295136"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2499514",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Unxia",
+    "aliases": [
+      "Juno Unxia"
+    ],
+    "description_short": "epithet for Roman god Juno as protector and wedding",
+    "text": "Unxia. epithet for Roman god Juno as protector and wedding\nAliases: Juno Unxia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2499514"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2518565",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sterquilinus",
+    "aliases": [
+      "Stercutus",
+      "Sterculius",
+      "Stercutius"
+    ],
+    "description_short": "Roman god of manure",
+    "text": "Sterquilinus. Roman god of manure\nAliases: Stercutus, Sterculius, Stercutius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2518565"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2575982",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Rumina",
+    "aliases": [
+      "Diva Rumina"
+    ],
+    "description_short": "Roman goddess of breastfeeding",
+    "text": "Rumina. Roman goddess of breastfeeding\nAliases: Diva Rumina",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2575982"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2643299",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "pietas",
+    "aliases": [
+      "filial piety"
+    ],
+    "description_short": "ancient Roman virtue personified",
+    "text": "pietas. ancient Roman virtue personified\nAliases: filial piety",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2643299"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3074497",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fluonia",
+    "aliases": [
+      "Fluvionia"
+    ],
+    "description_short": "Roman goddess of uterine blood",
+    "text": "Fluonia. Roman goddess of uterine blood\nAliases: Fluvionia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3074497"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3086735",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fraus",
+    "aliases": [
+      "Fraus (mythology)"
+    ],
+    "description_short": "Roman goddess and personification of treachery and fraud",
+    "text": "Fraus. Roman goddess and personification of treachery and fraud\nAliases: Fraus (mythology)",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3086735"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q152262",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pluto",
+    "aliases": [
+      "Pluton",
+      "Plouton"
+    ],
+    "description_short": "god in Roman religion, Plouton in Greek",
+    "text": "Pluto. god in Roman religion, Plouton in Greek\nAliases: Pluton, Plouton",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q152262"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q167685",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Janus",
+    "aliases": [
+      "Ianus",
+      "Ianus Bifrons",
+      "Ianus Quadrifrons",
+      "Ianuspater"
+    ],
+    "description_short": "Roman deity",
+    "text": "Janus. Roman deity\nAliases: Ianus, Ianus Bifrons, Ianus Quadrifrons, Ianuspater",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q167685"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q178710",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vesta",
+    "aliases": [
+      "Veſta"
+    ],
+    "description_short": "goddess of the hearth, home, and family in Roman religion",
+    "text": "Vesta. goddess of the hearth, home, and family in Roman religion\nAliases: Veſta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q178710"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q178831",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Aurora",
+    "aliases": [
+      "Dawn",
+      "Goddess Aurora"
+    ],
+    "description_short": "goddess of dawn in Roman mythology",
+    "text": "Aurora. goddess of dawn in Roman mythology\nAliases: Dawn, Goddess Aurora",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q178831"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q128606559",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Adferenda",
+    "aliases": [
+      "ab adferendis dotibus"
+    ],
+    "description_short": "Roman deity, one of the Indigitamenta",
+    "text": "Adferenda. Roman deity, one of the Indigitamenta\nAliases: ab adferendis dotibus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q128606559"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q129261434",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Albensis pater",
+    "aliases": [
+      "Albsis pater"
+    ],
+    "description_short": "deity worshipped in Alba Fucens",
+    "text": "Albensis pater. deity worshipped in Alba Fucens\nAliases: Albsis pater",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q129261434"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343520",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Oriens",
+    "aliases": [
+      "The Orient"
+    ],
+    "description_short": "Roman personfication of the East, sometimes depicted as a woman wearing a mural crown",
+    "text": "Oriens. Roman personfication of the East, sometimes depicted as a woman wearing a mural crown\nAliases: The Orient",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343520"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343611",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Rhine",
+    "aliases": [
+      "Rhenus"
+    ],
+    "description_short": "Roman personification of the Rhine River",
+    "text": "Rhine. Roman personification of the Rhine River\nAliases: Rhenus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343611"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343668",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Venus Felix",
+    "aliases": [
+      "Lucky Venus"
+    ],
+    "description_short": "Venus Felix, probably a traditional epithet, combining aspects of Venus and Fortuna, goddess of both good and bad fortune and personification of luck",
+    "text": "Venus Felix. Venus Felix, probably a traditional epithet, combining aspects of Venus and Fortuna, goddess of both good and bad fortune and personification of luck\nAliases: Lucky Venus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343668"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q131538263",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mala Fortuna",
+    "aliases": [
+      "Bad Fortune",
+      "Evil Fortune"
+    ],
+    "description_short": "Roman deity with altar on the Esquiline Hill",
+    "text": "Mala Fortuna. Roman deity with altar on the Esquiline Hill\nAliases: Bad Fortune, Evil Fortune",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q131538263"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q47652",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Venus",
+    "aliases": [
+      "Venus (mythology)",
+      "Venus (goddess)"
+    ],
+    "description_short": "Roman goddess of love, sexuality, procreation and pleasure",
+    "text": "Venus. Roman goddess of love, sexuality, procreation and pleasure\nAliases: Venus (mythology), Venus (goddess)",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q47652"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4692047",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Agenoria",
+    "aliases": [
+      "Agerona"
+    ],
+    "description_short": "Roman goddess",
+    "text": "Agenoria. Roman goddess\nAliases: Agerona",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4692047"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5283763",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dius Fidius",
+    "aliases": [
+      "Dius Fidus"
+    ],
+    "description_short": "god of oaths associated with Jupiter",
+    "text": "Dius Fidius. god of oaths associated with Jupiter\nAliases: Dius Fidus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5283763"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5990997",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mana Genita",
+    "aliases": [
+      "Geneta",
+      "Genita Mana"
+    ],
+    "description_short": "Roman Goddess",
+    "text": "Mana Genita. Roman Goddess\nAliases: Geneta, Genita Mana",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5990997"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7451355",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sentinus",
+    "aliases": [
+      "Sentinus deus"
+    ],
+    "description_short": "Roman divinity",
+    "text": "Sentinus. Roman divinity\nAliases: Sentinus deus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7451355"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q10752043",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Robigus",
+    "aliases": [
+      "Robigo and Robigus"
+    ],
+    "description_short": "ancient Roman god of crops",
+    "text": "Robigus. ancient Roman god of crops\nAliases: Robigo and Robigus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q10752043"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q14515330",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Proserpina",
+    "aliases": [
+      "Proserpine",
+      "Cora"
+    ],
+    "description_short": "ancient Roman goddess",
+    "text": "Proserpina. ancient Roman goddess\nAliases: Proserpine, Cora",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q14515330"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q16144017",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Aescolanus",
+    "aliases": [
+      "Aes",
+      "Aesculanus"
+    ],
+    "description_short": "Roman deity, personification of copper money",
+    "text": "Aescolanus. Roman deity, personification of copper money\nAliases: Aes, Aesculanus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q16144017"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q16835368",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Empanda",
+    "aliases": [
+      "Panda"
+    ],
+    "description_short": "Roman goddess of bread",
+    "text": "Empanda. Roman goddess of bread\nAliases: Panda",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q16835368"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q20747538",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Bellum",
+    "aliases": [
+      "Polemos"
+    ],
+    "description_short": "",
+    "text": "Bellum.\nAliases: Polemos",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q20747538"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q29654288",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Helernus",
+    "aliases": [
+      "Alernus"
+    ],
+    "description_short": "Archaic Roman deity",
+    "text": "Helernus. Archaic Roman deity\nAliases: Alernus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q29654288"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q33140193",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Paventia",
+    "aliases": [
+      "Paventina"
+    ],
+    "description_short": "Roman deity who averts fear from the children",
+    "text": "Paventia. Roman deity who averts fear from the children\nAliases: Paventina",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q33140193"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q43268561",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Avaritia",
+    "aliases": [
+      "Greed",
+      "Avarice"
+    ],
+    "description_short": "human figure personifying greed",
+    "text": "Avaritia. human figure personifying greed\nAliases: Greed, Avarice",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q43268561"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q132543",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Diana",
+    "aliases": [],
+    "description_short": "goddess of the hunt, the moon and birthing, equated with the Greek goddess Artemis",
+    "text": "Diana. goddess of the hunt, the moon and birthing, equated with the Greek goddess Artemis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q132543"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q134388",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Saturn",
+    "aliases": [],
+    "description_short": "god in ancient Roman mythology",
+    "text": "Saturn. god in ancient Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q134388"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q139448",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Juturna",
+    "aliases": [],
+    "description_short": "goddess of fountains, wells and springs, and the mother of Fontus by Janus",
+    "text": "Juturna. goddess of fountains, wells and springs, and the mother of Fontus by Janus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q139448"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q171239",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pomona",
+    "aliases": [],
+    "description_short": "nymph and goddess of fertility",
+    "text": "Pomona. nymph and goddess of fertility",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q171239"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q209644",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Flora",
+    "aliases": [],
+    "description_short": "goddess of prosperity in Roman mythology",
+    "text": "Flora. goddess of prosperity in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q209644"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q214494",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sol Invictus",
+    "aliases": [],
+    "description_short": "ancient Roman solar deity",
+    "text": "Sol Invictus. ancient Roman solar deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q214494"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q235724",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Picus",
+    "aliases": [],
+    "description_short": "Greek and Roman mythological figure",
+    "text": "Picus. Greek and Roman mythological figure",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q235724"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q240679",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Hercules",
+    "aliases": [],
+    "description_short": "Roman adaptation of the Greek divine hero Heracles",
+    "text": "Hercules. Roman adaptation of the Greek divine hero Heracles",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q240679"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q305110",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Insitor",
+    "aliases": [],
+    "description_short": "god of the sowing of crops, assistant to Ceres in Roman mythology",
+    "text": "Insitor. god of the sowing of crops, assistant to Ceres in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q305110"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q319280",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Abeona",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Abeona. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q319280"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q336003",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Abundantia",
+    "aliases": [],
+    "description_short": "Roman personification of abundance",
+    "text": "Abundantia. Roman personification of abundance",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q336003"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q404133",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cura",
+    "aliases": [],
+    "description_short": "personification of care in Roman mythology",
+    "text": "Cura. personification of care in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q404133"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q467594",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mefitis",
+    "aliases": [],
+    "description_short": "Samnite goddess of the foul-smelling gases of the earth",
+    "text": "Mefitis. Samnite goddess of the foul-smelling gases of the earth",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q467594"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q472766",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sequana",
+    "aliases": [],
+    "description_short": "goddess of the river Seine in Gallo-Roman religion",
+    "text": "Sequana. goddess of the river Seine in Gallo-Roman religion",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q472766"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q538339",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Angerona",
+    "aliases": [],
+    "description_short": "Roman goddess",
+    "text": "Angerona. Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q538339"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q539796",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Anna Perenna",
+    "aliases": [],
+    "description_short": "deity of the circle of the year in Ancient Rome, legendary sister of queen Dido",
+    "text": "Anna Perenna. deity of the circle of the year in Ancient Rome, legendary sister of queen Dido",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q539796"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q548445",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Silvanus",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Silvanus. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q548445"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q580723",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Terminus",
+    "aliases": [],
+    "description_short": "Roman god, protector of boundary markers",
+    "text": "Terminus. Roman god, protector of boundary markers",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q580723"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q581656",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Annona",
+    "aliases": [],
+    "description_short": "Roman divinity of grain supply to the city of Rome",
+    "text": "Annona. Roman divinity of grain supply to the city of Rome",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q581656"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q582177",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Virtus",
+    "aliases": [],
+    "description_short": "Roman deity and personification of bravery and military strength",
+    "text": "Virtus. Roman deity and personification of bravery and military strength",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q582177"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q582268",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Egeria",
+    "aliases": [],
+    "description_short": "legendary wife of Roman king Numa and minor goddess",
+    "text": "Egeria. legendary wife of Roman king Numa and minor goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q582268"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q582918",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fontus",
+    "aliases": [],
+    "description_short": "water deity",
+    "text": "Fontus. water deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q582918"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q591826",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Providentia",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Providentia. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q591826"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q604898",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lucina",
+    "aliases": [],
+    "description_short": "Roman goddess of childbirth",
+    "text": "Lucina. Roman goddess of childbirth",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q604898"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q605139",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fides",
+    "aliases": [],
+    "description_short": "Roman goddess of trust",
+    "text": "Fides. Roman goddess of trust",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q605139"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q611138",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Auster",
+    "aliases": [],
+    "description_short": "Roman the embodiment of the sirocco south wind",
+    "text": "Auster. Roman the embodiment of the sirocco south wind",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q611138"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q624783",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Bubona",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Bubona. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q624783"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q645312",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Bacchus",
+    "aliases": [],
+    "description_short": "ancient Roman deity of wine",
+    "text": "Bacchus. ancient Roman deity of wine",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q645312"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q659594",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tages",
+    "aliases": [],
+    "description_short": "Etruscan deity",
+    "text": "Tages. Etruscan deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q659594"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q746321",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Concordia",
+    "aliases": [],
+    "description_short": "goddess in ancient Roman religion",
+    "text": "Concordia. goddess in ancient Roman religion",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q746321"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q772554",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Talasius",
+    "aliases": [],
+    "description_short": "Roman deity associated with matrimony",
+    "text": "Talasius. Roman deity associated with matrimony",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q772554"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q781780",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Bonus Eventus",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Bonus Eventus. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q781780"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q836016",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Danuvius",
+    "aliases": [],
+    "description_short": "Celtic river deity",
+    "text": "Danuvius. Celtic river deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q836016"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q858652",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q858652",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q858652.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q858652"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q860314",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Orcus",
+    "aliases": [],
+    "description_short": "Roman death deity",
+    "text": "Orcus. Roman death deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q860314"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q868923",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Consus",
+    "aliases": [],
+    "description_short": "Roman god of grains",
+    "text": "Consus. Roman god of grains",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q868923"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q942906",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Summanus",
+    "aliases": [],
+    "description_short": "Roman nocturnal storm deity",
+    "text": "Summanus. Roman nocturnal storm deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q942906"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q953033",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Roma",
+    "aliases": [],
+    "description_short": "female deity in ancient Roman religion",
+    "text": "Roma. female deity in ancient Roman religion",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q953033"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1001348",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Budenicus",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Budenicus. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1001348"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1024984",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Caca",
+    "aliases": [],
+    "description_short": "Roman mythical character",
+    "text": "Caca. Roman mythical character",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1024984"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1031786",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Camulus",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Camulus. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1031786"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1093874",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vica Pota",
+    "aliases": [],
+    "description_short": "goddess of conquering and gaining mastery",
+    "text": "Vica Pota. goddess of conquering and gaining mastery",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1093874"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1100314",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Clementia",
+    "aliases": [],
+    "description_short": "Roman goddess of forgiveness and mercy",
+    "text": "Clementia. Roman goddess of forgiveness and mercy",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1100314"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1114593",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Viduus",
+    "aliases": [],
+    "description_short": "",
+    "text": "Viduus.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1114593"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1132674",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pax",
+    "aliases": [],
+    "description_short": "Roman goddess of peace",
+    "text": "Pax. Roman goddess of peace",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1132674"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1199937",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sol",
+    "aliases": [],
+    "description_short": "Roman god of the Sun",
+    "text": "Sol. Roman god of the Sun",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1199937"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1225418",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fulgora",
+    "aliases": [],
+    "description_short": "Personification of lightning in Roman mythology",
+    "text": "Fulgora. Personification of lightning in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1225418"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1227721",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Moneta",
+    "aliases": [],
+    "description_short": "epithet of Juno and Mnemosyne",
+    "text": "Moneta. epithet of Juno and Mnemosyne",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1227721"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1232375",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Libitina",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Libitina. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1232375"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1235172",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Luna",
+    "aliases": [],
+    "description_short": "Roman goddess of the Moon",
+    "text": "Luna. Roman goddess of the Moon",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1235172"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1242673",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Adeona",
+    "aliases": [],
+    "description_short": "Roman god",
+    "text": "Adeona. Roman god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1242673"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1246589",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Laetitia",
+    "aliases": [],
+    "description_short": "Minor Roman goddess of gaiety",
+    "text": "Laetitia. Minor Roman goddess of gaiety",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1246589"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1284182",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Morta",
+    "aliases": [],
+    "description_short": "goddess",
+    "text": "Morta. goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1284182"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1399384",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Februus",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Februus. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1399384"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1403069",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Felicitas",
+    "aliases": [],
+    "description_short": "divinity in ancient Roman culture",
+    "text": "Felicitas. divinity in ancient Roman culture",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1403069"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1407528",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Feronia",
+    "aliases": [],
+    "description_short": "italic goddess of wilderness and liberty",
+    "text": "Feronia. italic goddess of wilderness and liberty",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1407528"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1417853",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Laverna",
+    "aliases": [],
+    "description_short": "Roman goddess of thiefs, cheats and the underworld",
+    "text": "Laverna. Roman goddess of thiefs, cheats and the underworld",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1417853"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1459682",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Suadela",
+    "aliases": [],
+    "description_short": "goddess of persuasion, particularly in romance, seduction and love",
+    "text": "Suadela. goddess of persuasion, particularly in romance, seduction and love",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1459682"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1493870",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Garamantis",
+    "aliases": [],
+    "description_short": "",
+    "text": "Garamantis.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1493870"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1546675",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Marica",
+    "aliases": [],
+    "description_short": "nymph in Roman mythology, mother of Latinus",
+    "text": "Marica. nymph in Roman mythology, mother of Latinus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1546675"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1606645",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mors",
+    "aliases": [],
+    "description_short": "personification of death in Roman mythology",
+    "text": "Mors. personification of death in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1606645"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1643443",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Ferentina",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Ferentina. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1643443"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1651665",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nox",
+    "aliases": [],
+    "description_short": "goddess in Roman mythology",
+    "text": "Nox. goddess in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1651665"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1770908",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Stimula",
+    "aliases": [],
+    "description_short": "Roman deity of childhood, in the indigitamenta",
+    "text": "Stimula. Roman deity of childhood, in the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1770908"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1885106",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q1885106",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q1885106.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1885106"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2117350",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pudicitia",
+    "aliases": [],
+    "description_short": "Roman divinity of modesty",
+    "text": "Pudicitia. Roman divinity of modesty",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2117350"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2261732",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Canens",
+    "aliases": [],
+    "description_short": "Roman personification of song",
+    "text": "Canens. Roman personification of song",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2261732"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2265440",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fabulinus",
+    "aliases": [],
+    "description_short": "Roman god who taught children to speak",
+    "text": "Fabulinus. Roman god who taught children to speak",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2265440"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2276605",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Angitia",
+    "aliases": [],
+    "description_short": "goddess among the Marsi, the Paeligni and other Oscan-Umbrian peoples of central Italy",
+    "text": "Angitia. goddess among the Marsi, the Paeligni and other Oscan-Umbrian peoples of central Italy",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2276605"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2417527",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dea Africa",
+    "aliases": [],
+    "description_short": "goddess of Roman Africa and personification of the continent Africa",
+    "text": "Dea Africa. goddess of Roman Africa and personification of the continent Africa",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2417527"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2485201",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q2485201",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q2485201.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2485201"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2527609",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Febris",
+    "aliases": [],
+    "description_short": "Roman goddess of fever and malaria",
+    "text": "Febris. Roman goddess of fever and malaria",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2527609"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2527646",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pilumnus",
+    "aliases": [],
+    "description_short": "Roman nature deity",
+    "text": "Pilumnus. Roman nature deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2527646"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2527866",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Viriplaca",
+    "aliases": [],
+    "description_short": "Ancient Roman goddess",
+    "text": "Viriplaca. Ancient Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2527866"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2528300",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Visidianus",
+    "aliases": [],
+    "description_short": "ancient Umbrian divinity",
+    "text": "Visidianus. ancient Umbrian divinity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2528300"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2622041",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Trivia",
+    "aliases": [],
+    "description_short": "Roman goddess of sorcery and witchcraft",
+    "text": "Trivia. Roman goddess of sorcery and witchcraft",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2622041"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2633166",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Libera",
+    "aliases": [],
+    "description_short": "goddess of Roman mythology",
+    "text": "Libera. goddess of Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2633166"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2713122",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lupercus",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Lupercus. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2713122"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2737253",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nenia Dea",
+    "aliases": [],
+    "description_short": "Roman goddess",
+    "text": "Nenia Dea. Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2737253"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2832660",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Alemona",
+    "aliases": [],
+    "description_short": "Roman goddess nourishing unborn children in the womb",
+    "text": "Alemona. Roman goddess nourishing unborn children in the womb",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2832660"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2859290",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Aquilon",
+    "aliases": [],
+    "description_short": "Roman god of the north wind",
+    "text": "Aquilon. Roman god of the north wind",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2859290"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2879107",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cloacina",
+    "aliases": [],
+    "description_short": "Roman goddess or attribute of Venus, whose image was found in the Cloaca Maxima",
+    "text": "Cloacina. Roman goddess or attribute of Venus, whose image was found in the Cloaca Maxima",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2879107"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2982738",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q2982738",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q2982738.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2982738"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2987780",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Salacia",
+    "aliases": [],
+    "description_short": "Roman goddess of salt water",
+    "text": "Salacia. Roman goddess of salt water",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2987780"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2992303",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Conditor",
+    "aliases": [],
+    "description_short": "god of storing the grain, assistant to Ceres in Roman mythology",
+    "text": "Conditor. god of storing the grain, assistant to Ceres in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2992303"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3002468",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Crepitus",
+    "aliases": [],
+    "description_short": "Alleged Roman god of flatulence",
+    "text": "Crepitus. Alleged Roman god of flatulence",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3002468"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3006663",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cuba",
+    "aliases": [],
+    "description_short": "figure from Roman mythology",
+    "text": "Cuba. figure from Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3006663"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3007560",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cunina",
+    "aliases": [],
+    "description_short": "Roman goddess of young infants",
+    "text": "Cunina. Roman goddess of young infants",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3007560"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3025430",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Deverra",
+    "aliases": [],
+    "description_short": "Roman childbirth goddess",
+    "text": "Deverra. Roman childbirth goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3025430"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3030152",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Discordia",
+    "aliases": [],
+    "description_short": "Roman goddess",
+    "text": "Discordia. Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3030152"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3058437",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fornax",
+    "aliases": [],
+    "description_short": "ancient Roman goddess",
+    "text": "Fornax. ancient Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3058437"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3081070",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lua",
+    "aliases": [],
+    "description_short": "goddess in Roman mythology",
+    "text": "Lua. goddess in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3081070"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3089703",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Faunus",
+    "aliases": [],
+    "description_short": "Roman horned god of the forest, plains and fields",
+    "text": "Faunus. Roman horned god of the forest, plains and fields",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3089703"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3091027",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q3091027",
+    "aliases": [],
+    "description_short": "personification of envy",
+    "text": "Q3091027. personification of envy",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3091027"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3141035",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Hostilina",
+    "aliases": [],
+    "description_short": "Roman deity associated with grain quality",
+    "text": "Hostilina. Roman deity associated with grain quality",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3141035"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3142105",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mellona",
+    "aliases": [],
+    "description_short": "ancient Roman goddess",
+    "text": "Mellona. ancient Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3142105"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3173852",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Liberalitas",
+    "aliases": [],
+    "description_short": "personification of giving freely",
+    "text": "Liberalitas. personification of giving freely",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3173852"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3188064",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q3188064",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q3188064.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3188064"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3240989",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lima",
+    "aliases": [],
+    "description_short": "goddess",
+    "text": "Lima. goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3240989"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3276498",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q3276498",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q3276498.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3276498"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3346833",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Necessitas",
+    "aliases": [],
+    "description_short": "personification of inevitability, compulsion and necessity in ancient Roman mythology",
+    "text": "Necessitas. personification of inevitability, compulsion and necessity in ancient Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3346833"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3347916",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Obarator",
+    "aliases": [],
+    "description_short": "god of the last ploughing, assistant to Ceres in Roman mythology",
+    "text": "Obarator. god of the last ploughing, assistant to Ceres in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3347916"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3348590",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Occator",
+    "aliases": [],
+    "description_short": "assistant-god to Ceres in roman mythology",
+    "text": "Occator. assistant-god to Ceres in roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3348590"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3355220",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Orbona",
+    "aliases": [],
+    "description_short": "Roman goddess who granted new children to parents who had become childless",
+    "text": "Orbona. Roman goddess who granted new children to parents who had become childless",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3355220"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3382582",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Picumnus",
+    "aliases": [],
+    "description_short": "Roman nature god",
+    "text": "Picumnus. Roman nature god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3382582"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3407422",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Promitor",
+    "aliases": [],
+    "description_short": "god of distributing the grain, assistant to Ceres in Roman mythology",
+    "text": "Promitor. god of distributing the grain, assistant to Ceres in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3407422"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3408428",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Convector",
+    "aliases": [],
+    "description_short": "god of carrying the grain, assistant to Ceres in Roman mythology",
+    "text": "Convector. god of carrying the grain, assistant to Ceres in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3408428"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3427202",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Rederator",
+    "aliases": [],
+    "description_short": "",
+    "text": "Rederator.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3427202"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3453384",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q3453384",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q3453384.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3453384"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3495260",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Disciplina",
+    "aliases": [],
+    "description_short": "minor deity in Roman mythology",
+    "text": "Disciplina. minor deity in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3495260"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3502332",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fama",
+    "aliases": [],
+    "description_short": "",
+    "text": "Fama.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3502332"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3502626",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Subruncinator",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Subruncinator. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3502626"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3502725",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q3502725",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q3502725.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3502725"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3556290",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vervactor",
+    "aliases": [],
+    "description_short": "god of the first ploughing, assistant to Ceres in Roman mythology",
+    "text": "Vervactor. god of the first ploughing, assistant to Ceres in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3556290"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3560591",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Virbius",
+    "aliases": [],
+    "description_short": "Roman divinity, aspect of Hippolytus",
+    "text": "Virbius. Roman divinity, aspect of Hippolytus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3560591"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3563035",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Volupia",
+    "aliases": [],
+    "description_short": "Roman godess of pleasure",
+    "text": "Volupia. Roman godess of pleasure",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3563035"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3622563",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Edusa",
+    "aliases": [],
+    "description_short": "",
+    "text": "Edusa.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3622563"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3704814",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Deiopea",
+    "aliases": [],
+    "description_short": "nymph in Roman mythology",
+    "text": "Deiopea. nymph in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3704814"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3738525",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Falacer",
+    "aliases": [],
+    "description_short": "ancient Italic god",
+    "text": "Falacer. ancient Italic god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3738525"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3889398",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Palatua",
+    "aliases": [],
+    "description_short": "Roman goddess",
+    "text": "Palatua. Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3889398"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3898559",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pecunia",
+    "aliases": [],
+    "description_short": "Roman goddess of making money",
+    "text": "Pecunia. Roman goddess of making money",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3898559"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3920788",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Aesculapius",
+    "aliases": [],
+    "description_short": "",
+    "text": "Aesculapius.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3920788"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4202143",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Intercidona",
+    "aliases": [],
+    "description_short": "Roman goddess who provides the axe without which trees cannot be cut",
+    "text": "Intercidona. Roman goddess who provides the axe without which trees cannot be cut",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4202143"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4270105",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lucifer",
+    "aliases": [],
+    "description_short": "\"Morning star\" (the planet Venus) in ancient Roman mythology",
+    "text": "Lucifer. \"Morning star\" (the planet Venus) in ancient Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4270105"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4286521",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Caligo",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Caligo. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4286521"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4347724",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Favonius",
+    "aliases": [],
+    "description_short": "Roman god of the west wind",
+    "text": "Favonius. Roman god of the west wind",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4347724"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4733856",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Almo",
+    "aliases": [],
+    "description_short": "Ancient Roman river god",
+    "text": "Almo. Ancient Roman river god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4733856"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4790686",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Arimanius",
+    "aliases": [],
+    "description_short": "deity of darkness in Greek and Latin texts",
+    "text": "Arimanius. deity of darkness in Greek and Latin texts",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4790686"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4828341",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Averruncus",
+    "aliases": [],
+    "description_short": "",
+    "text": "Averruncus.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4828341"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4993381",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Puta",
+    "aliases": [],
+    "description_short": "figure in Roman mythology",
+    "text": "Puta. figure in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4993381"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5249162",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Decima",
+    "aliases": [],
+    "description_short": "Roman goddess",
+    "text": "Decima. Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5249162"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5290278",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Domiduca",
+    "aliases": [],
+    "description_short": "",
+    "text": "Domiduca.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5290278"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5438319",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Faustitas",
+    "aliases": [],
+    "description_short": "Roman goddess of livestock",
+    "text": "Faustitas. Roman goddess of livestock",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5438319"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5439882",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fecunditas",
+    "aliases": [],
+    "description_short": "Roman goddess; personifcation of fertility",
+    "text": "Fecunditas. Roman goddess; personifcation of fertility",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5439882"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5472789",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fortuna Huiusce Diei",
+    "aliases": [],
+    "description_short": "Roman divinity, the Fortune of this Day",
+    "text": "Fortuna Huiusce Diei. Roman divinity, the Fortune of this Day",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5472789"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5472794",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fortuna Redux",
+    "aliases": [],
+    "description_short": "Roman goddess, Fortune the \"leader back\"",
+    "text": "Fortuna Redux. Roman goddess, Fortune the \"leader back\"",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5472794"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5519034",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Gallia",
+    "aliases": [],
+    "description_short": "Romano-Gallic goddess",
+    "text": "Gallia. Romano-Gallic goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5519034"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5733340",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Africus",
+    "aliases": [],
+    "description_short": "Roman south wind deity",
+    "text": "Africus. Roman south wind deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5733340"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5820351",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Egestas",
+    "aliases": [],
+    "description_short": "",
+    "text": "Egestas.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5820351"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5864024",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Formido",
+    "aliases": [],
+    "description_short": "Roman goddess of fear, daughter of Mars and Venus",
+    "text": "Formido. Roman goddess of fear, daughter of Mars and Venus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5864024"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5976500",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Limen",
+    "aliases": [],
+    "description_short": "divinity that protects homes",
+    "text": "Limen. divinity that protects homes",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5976500"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5983345",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Iana",
+    "aliases": [],
+    "description_short": "ancient Roman goddess of arches and the moon",
+    "text": "Iana. ancient Roman goddess of arches and the moon",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5983345"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q6006878",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Copia",
+    "aliases": [],
+    "description_short": "",
+    "text": "Copia.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q6006878"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q6073054",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pertunda",
+    "aliases": [],
+    "description_short": "Roman goddess of sexual penetration",
+    "text": "Pertunda. Roman goddess of sexual penetration",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q6073054"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q6154076",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tutela",
+    "aliases": [],
+    "description_short": "Roman goddess of \"guardianship\"",
+    "text": "Tutela. Roman goddess of \"guardianship\"",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q6154076"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q6495761",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lateranus",
+    "aliases": [],
+    "description_short": "satirical ancient Roman god of hearths",
+    "text": "Lateranus. satirical ancient Roman god of hearths",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q6495761"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q6586593",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lympha",
+    "aliases": [],
+    "description_short": "spirit overseeing fresh water in ancient Roman belief",
+    "text": "Lympha. spirit overseeing fresh water in ancient Roman belief",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q6586593"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q6895640",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Molae",
+    "aliases": [],
+    "description_short": "",
+    "text": "Molae.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q6895640"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q6937575",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Murcia",
+    "aliases": [],
+    "description_short": "goddess in ancient Rome",
+    "text": "Murcia. goddess in ancient Rome",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q6937575"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q6966647",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nascio",
+    "aliases": [],
+    "description_short": "Roman goddess of childbirth",
+    "text": "Nascio. Roman goddess of childbirth",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q6966647"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7049161",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nona",
+    "aliases": [],
+    "description_short": "Roman goddess of pregnancy",
+    "text": "Nona. Roman goddess of pregnancy",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7049161"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7271377",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Querquetulanae",
+    "aliases": [],
+    "description_short": "Roman nymphs associated with oak trees",
+    "text": "Querquetulanae. Roman nymphs associated with oak trees",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7271377"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7305935",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Rediculus",
+    "aliases": [],
+    "description_short": "ancient Roman divinity",
+    "text": "Rediculus. ancient Roman divinity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7305935"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7449748",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Semonia",
+    "aliases": [],
+    "description_short": "goddess of sowing in Roman mythology",
+    "text": "Semonia. goddess of sowing in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7449748"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7563745",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sors",
+    "aliases": [],
+    "description_short": "",
+    "text": "Sors.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7563745"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7602975",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Stata Mater",
+    "aliases": [],
+    "description_short": "ancient Roman goddess",
+    "text": "Stata Mater. ancient Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7602975"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7698375",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tempestas",
+    "aliases": [],
+    "description_short": "ancient Roman goddess of weather",
+    "text": "Tempestas. ancient Roman goddess of weather",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7698375"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7800393",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tibertus",
+    "aliases": [],
+    "description_short": "",
+    "text": "Tibertus.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7800393"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7833470",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tranquillitas",
+    "aliases": [],
+    "description_short": "Roman Personification of Tranquility",
+    "text": "Tranquillitas. Roman Personification of Tranquility",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7833470"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7856922",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tutelina",
+    "aliases": [],
+    "description_short": "Ancient Roman goddess",
+    "text": "Tutelina. Ancient Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7856922"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7912449",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vallonia",
+    "aliases": [],
+    "description_short": "Roman goddess",
+    "text": "Vallonia. Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7912449"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7921647",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Verminus",
+    "aliases": [],
+    "description_short": "Roman god",
+    "text": "Verminus. Roman god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7921647"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q8962912",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fructesea",
+    "aliases": [],
+    "description_short": "",
+    "text": "Fructesea.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q8962912"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q9334903",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Segetia",
+    "aliases": [],
+    "description_short": "Roman goddess of agriculture",
+    "text": "Segetia. Roman goddess of agriculture",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q9334903"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q10379327",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tellumo",
+    "aliases": [],
+    "description_short": "",
+    "text": "Tellumo.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q10379327"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q10513969",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fames",
+    "aliases": [],
+    "description_short": "Roman personification/deity of hunger",
+    "text": "Fames. Roman personification/deity of hunger",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q10513969"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q10979868",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Poena",
+    "aliases": [],
+    "description_short": "Roman goddess of punishment",
+    "text": "Poena. Roman goddess of punishment",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q10979868"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q11698746",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q11698746",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q11698746.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q11698746"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q11709783",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Hilaritas",
+    "aliases": [],
+    "description_short": "Roman goddess",
+    "text": "Hilaritas. Roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q11709783"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q11914074",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q11914074",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q11914074.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q11914074"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q11923296",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Furrina",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Furrina. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q11923296"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q11926111",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q11926111",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q11926111.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q11926111"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q11934766",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mamers",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Mamers. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q11934766"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q11950437",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q11950437",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q11950437.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q11950437"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q12053109",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fatum",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Fatum. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q12053109"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q12076690",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Agylle",
+    "aliases": [],
+    "description_short": "nymph of Lake Trasimeno",
+    "text": "Agylle. nymph of Lake Trasimeno",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q12076690"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q12137419",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pavor",
+    "aliases": [],
+    "description_short": "deity in Roman mythology",
+    "text": "Pavor. deity in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q12137419"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q12221246",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Volumna",
+    "aliases": [],
+    "description_short": "roman deity",
+    "text": "Volumna. roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q12221246"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q12902470",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vibilia",
+    "aliases": [],
+    "description_short": "roman goddess",
+    "text": "Vibilia. roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q12902470"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q13550765",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Abeona and Adeona",
+    "aliases": [],
+    "description_short": "Roman dieties",
+    "text": "Abeona and Adeona. Roman dieties",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q13550765"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q14524392",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Securitas",
+    "aliases": [],
+    "description_short": "goddess of security and stability",
+    "text": "Securitas. goddess of security and stability",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q14524392"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q15270377",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Spiniensis",
+    "aliases": [],
+    "description_short": "Roman god of thorns",
+    "text": "Spiniensis. Roman god of thorns",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q15270377"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q15285037",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vitula",
+    "aliases": [],
+    "description_short": "Roman goddess of joy",
+    "text": "Vitula. Roman goddess of joy",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q15285037"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q16532372",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Argentinus",
+    "aliases": [],
+    "description_short": "Roman deity, personification of silver money",
+    "text": "Argentinus. Roman deity, personification of silver money",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q16532372"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q16664163",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Messor",
+    "aliases": [],
+    "description_short": "god of reaping, assistant to Ceres in Roman mythology",
+    "text": "Messor. god of reaping, assistant to Ceres in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q16664163"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q16902681",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pellonia (mythology)",
+    "aliases": [],
+    "description_short": "",
+    "text": "Pellonia (mythology).",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q16902681"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q18029370",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q18029370",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q18029370.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q18029370"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q18206465",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dies",
+    "aliases": [],
+    "description_short": "personification of day, and the Roman counterpart of the Greek goddess Hemera",
+    "text": "Dies. personification of day, and the Roman counterpart of the Greek goddess Hemera",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q18206465"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q18548363",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Forculus",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Forculus. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q18548363"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q18659372",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nodutus",
+    "aliases": [],
+    "description_short": "",
+    "text": "Nodutus.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q18659372"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q19610038",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Favor",
+    "aliases": [],
+    "description_short": "divine personification of goodwill",
+    "text": "Favor. divine personification of goodwill",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q19610038"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q20100548",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Farinus",
+    "aliases": [],
+    "description_short": "",
+    "text": "Farinus.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q20100548"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q20872002",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Serritor",
+    "aliases": [],
+    "description_short": "god of digging, assistant to Ceres in Roman mythology",
+    "text": "Serritor. god of digging, assistant to Ceres in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q20872002"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q20872001",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Imporcitor",
+    "aliases": [],
+    "description_short": "god of the third ploughing, assistant to Ceres in Roman mythology",
+    "text": "Imporcitor. god of the third ploughing, assistant to Ceres in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q20872001"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q21030618",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Somnus",
+    "aliases": [],
+    "description_short": "Roman deity, god of sleep",
+    "text": "Somnus. Roman deity, god of sleep",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q21030618"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q21095840",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q21095840",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q21095840.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q21095840"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q21548006",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Aescvlánvs",
+    "aliases": [],
+    "description_short": "",
+    "text": "Aescvlánvs.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q21548006"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q21705165",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q21705165",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q21705165.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q21705165"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q21721426",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Potina",
+    "aliases": [],
+    "description_short": "Roman divinity",
+    "text": "Potina. Roman divinity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q21721426"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q21856033",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Furor",
+    "aliases": [],
+    "description_short": "",
+    "text": "Furor.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q21856033"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q25416941",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lacturnus",
+    "aliases": [],
+    "description_short": "Roman divinity",
+    "text": "Lacturnus. Roman divinity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q25416941"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q30029572",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Insidia",
+    "aliases": [],
+    "description_short": "",
+    "text": "Insidia.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q30029572"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q30038687",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Insania",
+    "aliases": [],
+    "description_short": "personification of insanity",
+    "text": "Insania. personification of insanity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q30038687"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q30055681",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Misericordia",
+    "aliases": [],
+    "description_short": "personification of mercy",
+    "text": "Misericordia. personification of mercy",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q30055681"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q32619213",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pollentia",
+    "aliases": [],
+    "description_short": "Roman goddess of power",
+    "text": "Pollentia. Roman goddess of power",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q32619213"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q33229365",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Natura",
+    "aliases": [],
+    "description_short": "personification of nature, Roman deity and equivalent of the Greek Physis",
+    "text": "Natura. personification of nature, Roman deity and equivalent of the Greek Physis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q33229365"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q43268368",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Arno",
+    "aliases": [],
+    "description_short": "river deity, personification of the River Arno",
+    "text": "Arno. river deity, personification of the River Arno",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q43268368"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q43273918",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pudor",
+    "aliases": [],
+    "description_short": "human figure personifying modesty",
+    "text": "Pudor. human figure personifying modesty",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q43273918"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q55423668",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q55423668",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q55423668.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q55423668"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q55528226",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q55528226",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q55528226.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q55528226"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q56036020",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Appias",
+    "aliases": [],
+    "description_short": "",
+    "text": "Appias.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q56036020"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q56036048",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Appiades",
+    "aliases": [],
+    "description_short": "",
+    "text": "Appiades.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q56036048"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q57040959",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q57040959",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q57040959.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q57040959"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q57664736",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q57664736",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q57664736.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q57664736"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q58315709",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Iocus",
+    "aliases": [],
+    "description_short": "in Roman mythology the god of joke",
+    "text": "Iocus. in Roman mythology the god of joke",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q58315709"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q60182698",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q60182698",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q60182698.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q60182698"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q60182729",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q60182729",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q60182729.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q60182729"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q60240864",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Egnatia",
+    "aliases": [],
+    "description_short": "",
+    "text": "Egnatia.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q60240864"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q60845719",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sarritor",
+    "aliases": [],
+    "description_short": "Roman god",
+    "text": "Sarritor. Roman god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q60845719"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q61456534",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q61456534",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q61456534.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q61456534"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q61601897",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q61601897",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q61601897.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q61601897"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q61640802",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q61640802",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q61640802.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q61640802"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q63532530",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Hymen",
+    "aliases": [],
+    "description_short": "Roman deity presiding over matrimony",
+    "text": "Hymen. Roman deity presiding over matrimony",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q63532530"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q65027579",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pallor",
+    "aliases": [],
+    "description_short": "",
+    "text": "Pallor.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q65027579"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q86665122",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q86665122",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q86665122.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q86665122"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q99744425",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nundina",
+    "aliases": [],
+    "description_short": "Roman deity",
+    "text": "Nundina. Roman deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q99744425"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q104845868",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Valetudo",
+    "aliases": [],
+    "description_short": "roman goddess",
+    "text": "Valetudo. roman goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q104845868"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q110401864",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q110401864",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q110401864.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q110401864"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q110458315",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q110458315",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q110458315.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q110458315"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q110469170",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fabius",
+    "aliases": [],
+    "description_short": "son of Hercules, legendary founder of the Roman gens Fabia",
+    "text": "Fabius. son of Hercules, legendary founder of the Roman gens Fabia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q110469170"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q117860170",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Q117860170",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q117860170.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q117860170"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q120580918",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Horta",
+    "aliases": [],
+    "description_short": "Roman deity, also identified as Stimula",
+    "text": "Horta. Roman deity, also identified as Stimula",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q120580918"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126022472",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Limentinus",
+    "aliases": [],
+    "description_short": "",
+    "text": "Limentinus.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126022472"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126350638",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Adolenda",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Adolenda. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126350638"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126552920",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Afferenda",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Afferenda. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126552920"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126552959",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Altor",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Altor. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126552959"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553040",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Catius pater",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Catius pater. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553040"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553108",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cela",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Cela. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553108"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553154",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Coinquenda",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Coinquenda. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553154"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553194",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Coluber",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Coluber. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553194"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553216",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Commolenda",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Commolenda. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553216"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553283",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cuba",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Cuba. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553283"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553329",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Deferunda",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Deferunda. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553329"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553432",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Domiducus",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Domiducus. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553432"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553532",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Domitius",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Domitius. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553532"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553624",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fessona",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Fessona. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553624"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553676",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Inporcitor",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Inporcitor. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553676"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553751",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Interduca",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Interduca. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553751"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553825",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Iuga",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Iuga. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553825"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126553865",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Iugatinus",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Iugatinus. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126553865"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126554107",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Limi",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Limi. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126554107"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597086",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Messia",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Messia. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597086"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597087",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Montinus",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Montinus. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597087"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597084",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Manturna",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Manturna. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597084"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597090",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nemestrinus",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Nemestrinus. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597090"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597095",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Noduterensis",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Noduterensis. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597095"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597103",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Numeria",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Numeria. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597103"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597106",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Ossipago",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Ossipago. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597106"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597104",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Odoria",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Odoria. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597104"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597108",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pantica",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Pantica. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597108"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597112",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Partula",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Partula. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597112"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597116",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Patella",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Patella. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597116"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597121",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Peragenor",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Peragenor. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597121"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597898",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Perfica",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Perfica. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597898"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597904",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Peta",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Peta. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597904"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597917",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Potua",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Potua. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597917"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597921",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Praestana",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Praestana. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597921"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597924",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Praestitia",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Praestitia. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597924"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597935",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Prema mater",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Prema mater. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597935"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597965",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Rumon",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Rumon. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597965"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126597982",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Runcina",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Runcina. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126597982"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126598002",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sator",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Sator. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126598002"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126599429",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Rigonemetis",
+    "aliases": [],
+    "description_short": "guardian of the sacred grove, equivalent to Roman Mars",
+    "text": "Rigonemetis. guardian of the sacred grove, equivalent to Roman Mars",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126599429"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126667268",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Frugifer",
+    "aliases": [],
+    "description_short": "fruit-bearing deity",
+    "text": "Frugifer. fruit-bearing deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126667268"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126667542",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Isityche",
+    "aliases": [],
+    "description_short": "combination of Isis and Tyche",
+    "text": "Isityche. combination of Isis and Tyche",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126667542"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126713578",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Voleta",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Voleta. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126713578"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126713642",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Volutina",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Volutina. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126713642"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126713703",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Volumnus",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Volumnus. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126713703"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126908031",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Segesta",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Segesta. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126908031"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126908035",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Seia",
+    "aliases": [],
+    "description_short": "divinity dealing with agricultural matters",
+    "text": "Seia. divinity dealing with agricultural matters",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126908035"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126908038",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sentia",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Sentia. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126908038"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126908042",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Septimontius",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Septimontius. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126908042"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126908046",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Serra",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Serra. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126908046"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126908049",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Subigus pater",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Subigus pater. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126908049"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126908053",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Victa",
+    "aliases": [],
+    "description_short": "one of the indigitamenta",
+    "text": "Victa. one of the indigitamenta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126908053"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126908059",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Virginiensis",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Virginiensis. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126908059"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126924531",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Anio",
+    "aliases": [],
+    "description_short": "god of the river Anio in Latium",
+    "text": "Anio. god of the river Anio in Latium",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126924531"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126924573",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vitumnus",
+    "aliases": [],
+    "description_short": "divinity dealing with conception, birth, and child development",
+    "text": "Vitumnus. divinity dealing with conception, birth, and child development",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126924573"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126924939",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Canappharis",
+    "aliases": [],
+    "description_short": "equivalent of Mars (TM God 179)",
+    "text": "Canappharis. equivalent of Mars (TM God 179)",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126924939"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126924968",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Uxlemitanus",
+    "aliases": [],
+    "description_short": "Celtic weather god",
+    "text": "Uxlemitanus. Celtic weather god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126924968"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q128715023",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Caritas",
+    "aliases": [],
+    "description_short": "The Roman personification of charity",
+    "text": "Caritas. The Roman personification of charity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q128715023"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130221053",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Achaea",
+    "aliases": [],
+    "description_short": "personification of the Roman province Achaea",
+    "text": "Achaea. personification of the Roman province Achaea",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130221053"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130221074",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Africa",
+    "aliases": [],
+    "description_short": "personification of the historical region and Roman province of Africa",
+    "text": "Africa. personification of the historical region and Roman province of Africa",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130221074"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130237041",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Alexandria",
+    "aliases": [],
+    "description_short": "Roman personification of the city of Alexandria in Egypt",
+    "text": "Alexandria. Roman personification of the city of Alexandria in Egypt",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130237041"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130237098",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Arabia",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Arabia",
+    "text": "Arabia. Roman personification of the region and province of Arabia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130237098"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130237121",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Armenia",
+    "aliases": [],
+    "description_short": "personification of the Roman province of Armenia",
+    "text": "Armenia. personification of the Roman province of Armenia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130237121"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130237141",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Artemis of Perge",
+    "aliases": [],
+    "description_short": "aspect of Artemis in the ancient city of Perge",
+    "text": "Artemis of Perge. aspect of Artemis in the ancient city of Perge",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130237141"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130237163",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Asia",
+    "aliases": [],
+    "description_short": "Roman personification of the province of Asia",
+    "text": "Asia. Roman personification of the province of Asia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130237163"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130237170",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Bithynia",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Bithynia",
+    "text": "Bithynia. Roman personification of the region and province of Bithynia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130237170"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262215",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cappadocia",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Cappadocia",
+    "text": "Cappadocia. Roman personification of the region and province of Cappadocia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262215"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262231",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Colapis",
+    "aliases": [],
+    "description_short": "Roman personification of the Colapis (modern Kupa) River in modern Croatia and Slovenia",
+    "text": "Colapis. Roman personification of the Colapis (modern Kupa) River in modern Croatia and Slovenia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262231"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262256",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Constantia",
+    "aliases": [],
+    "description_short": "Roman personification of perserverance",
+    "text": "Constantia. Roman personification of perserverance",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262256"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262262",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Constantinopolis",
+    "aliases": [],
+    "description_short": "Roman personification of the city of Constantinople",
+    "text": "Constantinopolis. Roman personification of the city of Constantinople",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262262"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262271",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dacia",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Dacia",
+    "text": "Dacia. Roman personification of the region and province of Dacia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262271"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262306",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Euphrates",
+    "aliases": [],
+    "description_short": "personification of the Euphrates River of Mesopotamia",
+    "text": "Euphrates. personification of the Euphrates River of Mesopotamia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262306"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262354",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Francia",
+    "aliases": [],
+    "description_short": "personfication of the \"Franks,\" or Germanic tribes settled along the northern Rhine during the Roman imperial period",
+    "text": "Francia. personfication of the \"Franks,\" or Germanic tribes settled along the northern Rhine during the Roman imperial period",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262354"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262362",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Gallia",
+    "aliases": [],
+    "description_short": "personification of the historical region of Gaul or the Roman province of Gallia",
+    "text": "Gallia. personification of the historical region of Gaul or the Roman province of Gallia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262362"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262392",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Hispania",
+    "aliases": [],
+    "description_short": "personification of the historical region and Roman province of Hispania",
+    "text": "Hispania. personification of the historical region and Roman province of Hispania",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262392"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130262433",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Indulgentia",
+    "aliases": [],
+    "description_short": "personification of indulgence, clemency, pardon",
+    "text": "Indulgentia. personification of indulgence, clemency, pardon",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130262433"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130265289",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Italia",
+    "aliases": [],
+    "description_short": "Roman personification of the peninsula of Italy",
+    "text": "Italia. Roman personification of the peninsula of Italy",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130265289"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130265292",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Jucunditas",
+    "aliases": [],
+    "description_short": "Roman personification of gaiety",
+    "text": "Jucunditas. Roman personification of gaiety",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130265292"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130265293",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Judea",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Judaea",
+    "text": "Judea. Roman personification of the region and province of Judaea",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130265293"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130265322",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Macedonia",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Macedonia",
+    "text": "Macedonia. Roman personification of the region and province of Macedonia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130265322"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130279095",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mauretania",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Mauretania in North Africa",
+    "text": "Mauretania. Roman personification of the region and province of Mauretania in North Africa",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130279095"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130279102",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nicomedia",
+    "aliases": [],
+    "description_short": "Roman personification of the city of Nicomedia in Bithynia",
+    "text": "Nicomedia. Roman personification of the city of Nicomedia in Bithynia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130279102"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130279100",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Moesia",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Moesia",
+    "text": "Moesia. Roman personification of the region and province of Moesia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130279100"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130279109",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Nobilitas",
+    "aliases": [],
+    "description_short": "Roman personification of nobility",
+    "text": "Nobilitas. Roman personification of nobility",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130279109"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343509",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Noricum",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Noricum",
+    "text": "Noricum. Roman personification of the region and province of Noricum",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343509"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343512",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Orbis",
+    "aliases": [],
+    "description_short": "Roman personification of the world",
+    "text": "Orbis. Roman personification of the world",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343512"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343526",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pannonia",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Pannonia",
+    "text": "Pannonia. Roman personification of the region and province of Pannonia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343526"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343524",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Orontes",
+    "aliases": [],
+    "description_short": "Roman personification of the River Orontes, which flows through Antioch. Orontes is often depicted as a male swimmer at the feet of Tyche of Antioch",
+    "text": "Orontes. Roman personification of the River Orontes, which flows through Antioch. Orontes is often depicted as a male swimmer at the feet of Tyche of Antioch",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343524"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343538",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Parthia",
+    "aliases": [],
+    "description_short": "Roman personification of the Parthian Empire",
+    "text": "Parthia. Roman personification of the Parthian Empire",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343538"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343556",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Patientia",
+    "aliases": [],
+    "description_short": "Roman personification of patience and endurance",
+    "text": "Patientia. Roman personification of patience and endurance",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343556"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343562",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Perpetuitas",
+    "aliases": [],
+    "description_short": "Roman personification of permanence",
+    "text": "Perpetuitas. Roman personification of permanence",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343562"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343575",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Phrygia",
+    "aliases": [],
+    "description_short": "Roman personification of the region and province of Phrygia",
+    "text": "Phrygia. Roman personification of the region and province of Phrygia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343575"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343579",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Quies",
+    "aliases": [],
+    "description_short": "Roman personification of tranquility",
+    "text": "Quies. Roman personification of tranquility",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343579"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343586",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Ravenna",
+    "aliases": [],
+    "description_short": "n the Late Roman and Early Medieval periods Ravenna is the personification representing the city and residence of Ravenna",
+    "text": "Ravenna. n the Late Roman and Early Medieval periods Ravenna is the personification representing the city and residence of Ravenna",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343586"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343589",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Res Publica",
+    "aliases": [],
+    "description_short": "Res Publica is the personfication of the Roman state. It appears mainly on some coin types of Constantine in conjunction with Pax and Victory",
+    "text": "Res Publica. Res Publica is the personfication of the Roman state. It appears mainly on some coin types of Constantine in conjunction with Pax and Victory",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343589"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343619",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sarmatia",
+    "aliases": [],
+    "description_short": "Roman personification of the region and people of Sarmatia, on the Pontic steppe",
+    "text": "Sarmatia. Roman personification of the region and people of Sarmatia, on the Pontic steppe",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343619"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343616",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Saeculum Frugiferum",
+    "aliases": [],
+    "description_short": "embodiment of a \"fruitful era\" in the Roman period",
+    "text": "Saeculum Frugiferum. embodiment of a \"fruitful era\" in the Roman period",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343616"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343622",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Savus",
+    "aliases": [],
+    "description_short": "Roman personification of a river near Siscia (modern Sava River), the longest tributary of the Danube",
+    "text": "Savus. Roman personification of a river near Siscia (modern Sava River), the longest tributary of the Danube",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343622"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343625",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Sicilia",
+    "aliases": [],
+    "description_short": "Roman personification of the island of Sicily, identifiable by a triskeles headress",
+    "text": "Sicilia. Roman personification of the island of Sicily, identifiable by a triskeles headress",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343625"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343628",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tigris",
+    "aliases": [],
+    "description_short": "Roman personification of the Mesopotamian river, the Tigris",
+    "text": "Tigris. Roman personification of the Mesopotamian river, the Tigris",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343628"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343634",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Tres Monetae",
+    "aliases": [],
+    "description_short": "Roman personifications of gold, silver, and bronze, the three metals used to strike coinage",
+    "text": "Tres Monetae. Roman personifications of gold, silver, and bronze, the three metals used to strike coinage",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343634"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130343663",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Utilitas",
+    "aliases": [],
+    "description_short": "Roman personification of utility",
+    "text": "Utilitas. Roman personification of utility",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130343663"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130520309",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dea Viriplaca",
+    "aliases": [],
+    "description_short": "Goddess in Roman religion",
+    "text": "Dea Viriplaca. Goddess in Roman religion",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130520309"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130642393",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Carthage",
+    "aliases": [],
+    "description_short": "Roman personification of the city of Carthage in Africa",
+    "text": "Carthage. Roman personification of the city of Carthage in Africa",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130642393"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130642508",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Via Trajana",
+    "aliases": [],
+    "description_short": "personification of the Via Trajana or Traiana, which was an ancient Roman road",
+    "text": "Via Trajana. personification of the Via Trajana or Traiana, which was an ancient Roman road",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130642508"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130647505",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Arelate",
+    "aliases": [],
+    "description_short": "Roman personification of the city of Arelate (Arles) in Gallia",
+    "text": "Arelate. Roman personification of the city of Arelate (Arles) in Gallia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130647505"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q130647512",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Siscia",
+    "aliases": [],
+    "description_short": "Roman personification of the city of Siscia",
+    "text": "Siscia. Roman personification of the city of Siscia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q130647512"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q131798902",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Bregans",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Bregans. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q131798902"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q131798999",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Hammia",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Hammia. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q131798999"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q131799119",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dea Nutrix",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Dea Nutrix. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q131799119"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q137739404",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Maia",
+    "aliases": [],
+    "description_short": "ancient Italic spring goddess and later Roman earth goddess",
+    "text": "Maia. ancient Italic spring goddess and later Roman earth goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q137739404"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q137768161",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Beneficium",
+    "aliases": [],
+    "description_short": "Roman personification of Reward or Benefaction",
+    "text": "Beneficium. Roman personification of Reward or Benefaction",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q137768161"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q32102",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Ceres",
+    "aliases": [],
+    "description_short": "Roman goddess of agriculture",
+    "text": "Ceres. Roman goddess of agriculture",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q32102"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3088222",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Inuus",
+    "aliases": [
+      "Fatulcus",
+      "Fatuus"
+    ],
+    "description_short": "Roman god of animalistic mating",
+    "text": "Inuus. Roman god of animalistic mating\nAliases: Fatulcus, Fatuus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3088222"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3140425",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Hora",
+    "aliases": [
+      "Hora Quirini"
+    ],
+    "description_short": "Roman godess, wife of Quirinus",
+    "text": "Hora. Roman godess, wife of Quirinus\nAliases: Hora Quirini",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3140425"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3360794",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Caelus",
+    "aliases": [
+      "Caelum",
+      "Coelus"
+    ],
+    "description_short": "Roman god of the sky",
+    "text": "Caelus. Roman god of the sky\nAliases: Caelum, Coelus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3360794"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3370206",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Patelana",
+    "aliases": [
+      "Patellana"
+    ],
+    "description_short": "",
+    "text": "Patelana.\nAliases: Patellana",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3370206"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3545810",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Veritas",
+    "aliases": [
+      "Truth"
+    ],
+    "description_short": "goddess of truth in Roman mythology and personification of truth",
+    "text": "Veritas. goddess of truth in Roman mythology and personification of truth\nAliases: Truth",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3545810"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3615151",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Ancaria",
+    "aliases": [
+      "Ancharia"
+    ],
+    "description_short": "Roman goddess",
+    "text": "Ancaria. Roman goddess\nAliases: Ancharia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3615151"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3768510",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Juppiter Latialis",
+    "aliases": [
+      "Iuppiter Latialis",
+      "Jupiter Latiaris",
+      "Latiaris",
+      "Latialis"
+    ],
+    "description_short": "aspect of the Roman god Jupiter",
+    "text": "Juppiter Latialis. aspect of the Roman god Jupiter\nAliases: Iuppiter Latialis, Jupiter Latiaris, Latiaris, Latialis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3768510"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q182002",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Olloudius",
+    "aliases": [
+      "Mars Olloudius",
+      "Olludius"
+    ],
+    "description_short": "Celtic god",
+    "text": "Olloudius. Celtic god\nAliases: Mars Olloudius, Olludius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q182002"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q185498",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lucifer",
+    "aliases": [
+      "Morning Star",
+      "Eosphoros",
+      "Helel",
+      "Heosphoros",
+      "Eôsphoros",
+      "Hêlēl",
+      "Light-Bringer",
+      "The shining one"
+    ],
+    "description_short": "name for the \"Morning star\" (the planet Venus, or other stars) in Latin, sometimes used as a name for the devil or Satan",
+    "text": "Lucifer. name for the \"Morning star\" (the planet Venus, or other stars) in Latin, sometimes used as a name for the devil or Satan\nAliases: Morning Star, Eosphoros, Helel, Heosphoros, Eôsphoros, Hêlēl, Light-Bringer, The shining one",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q185498"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q188236",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cybele",
+    "aliases": [
+      "Kibele",
+      "Kybele",
+      "Cibeles",
+      "Cybebe",
+      "Kuvava",
+      "Kybebe",
+      "Matar Kubileya",
+      "Turrigera"
+    ],
+    "description_short": "Anatolian mother goddess",
+    "text": "Cybele. Anatolian mother goddess\nAliases: Kibele, Kybele, Cibeles, Cybebe, Kuvava, Kybebe, Matar Kubileya, Turrigera",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q188236"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4654",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fortuna",
+    "aliases": [
+      "Lady Luck",
+      "Lady Fortune",
+      "Virilis",
+      "Annnonaria",
+      "Annonaria",
+      "Fors Fortuna",
+      "Muliebris",
+      "Primigenia",
+      "Respiciens",
+      "Vortumna"
+    ],
+    "description_short": "Roman goddess of fortune",
+    "text": "Fortuna. Roman goddess of fortune\nAliases: Lady Luck, Lady Fortune, Virilis, Annnonaria, Annonaria, Fors Fortuna, Muliebris, Primigenia, Respiciens, Vortumna",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4654"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5011",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Cupid",
+    "aliases": [
+      "Amor",
+      "Cupido",
+      "Amore"
+    ],
+    "description_short": "Roman deity, counterpart of Eros",
+    "text": "Cupid. Roman deity, counterpart of Eros\nAliases: Amor, Cupido, Amore",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5011"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q207234",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Bellona",
+    "aliases": [
+      "Duellona"
+    ],
+    "description_short": "ancient Roman goddess of war, similar to the ancient Greek Enyo",
+    "text": "Bellona. ancient Roman goddess of war, similar to the ancient Greek Enyo\nAliases: Duellona",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q207234"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q270867",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Terra",
+    "aliases": [
+      "Mother Earth",
+      "Tellus",
+      "Terra Mater",
+      "Tellus Mater"
+    ],
+    "description_short": "personification of the Earth in ancient Roman religion and mythology",
+    "text": "Terra. personification of the Earth in ancient Roman religion and mythology\nAliases: Mother Earth, Tellus, Terra Mater, Tellus Mater",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q270867"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q282628",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Salus",
+    "aliases": [
+      "Salus populi Romani",
+      "Salus publica"
+    ],
+    "description_short": "roman goddess of wellbeing",
+    "text": "Salus. roman goddess of wellbeing\nAliases: Salus populi Romani, Salus publica",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q282628"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q290298",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Honos",
+    "aliases": [
+      "Honor"
+    ],
+    "description_short": "Roman deity",
+    "text": "Honos. Roman deity\nAliases: Honor",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q290298"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q308902",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Victoria",
+    "aliases": [
+      "Victory",
+      "Winged Victory",
+      "Diva Victoria",
+      "Winged Nike"
+    ],
+    "description_short": "Roman goddess of victory",
+    "text": "Victoria. Roman goddess of victory\nAliases: Victory, Winged Victory, Diva Victoria, Winged Nike",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q308902"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q320333",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Quirinus",
+    "aliases": [
+      "Quilinus"
+    ],
+    "description_short": "deified Romulus",
+    "text": "Quirinus. deified Romulus\nAliases: Quilinus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q320333"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q338298",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Acca Larentia",
+    "aliases": [
+      "Laurentia",
+      "Acca Larentina",
+      "Acca Laurentia",
+      "Acca-Larentia",
+      "Acca-Laurentia",
+      "Arca-Laurentia"
+    ],
+    "description_short": "foster mother of Romulus and Remus",
+    "text": "Acca Larentia. foster mother of Romulus and Remus\nAliases: Laurentia, Acca Larentina, Acca Laurentia, Acca-Larentia, Acca-Laurentia, Arca-Laurentia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q338298"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q374311",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vertumnus",
+    "aliases": [
+      "Vertimnus",
+      "Vortumnus"
+    ],
+    "description_short": "In Roman mythology, is the god of seasons, change and plant growth, as well as gardens and fruit trees",
+    "text": "Vertumnus. In Roman mythology, is the god of seasons, change and plant growth, as well as gardens and fruit trees\nAliases: Vertimnus, Vortumnus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q374311"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q26236",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vagitanus",
+    "aliases": [
+      "Vaticanus"
+    ],
+    "description_short": "childbirth deity in ancient Roman religion",
+    "text": "Vagitanus. childbirth deity in ancient Roman religion\nAliases: Vaticanus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q26236"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q381061",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Aequitas",
+    "aliases": [
+      "Aequitatis"
+    ],
+    "description_short": "Roman deity",
+    "text": "Aequitas. Roman deity\nAliases: Aequitatis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q381061"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q381914",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Aeternitas",
+    "aliases": [
+      "Aeternitas Imperii"
+    ],
+    "description_short": "personification of eternity in Roman religion",
+    "text": "Aeternitas. personification of eternity in Roman religion\nAliases: Aeternitas Imperii",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q381914"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q411066",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Aius Locutius",
+    "aliases": [
+      "Locutius",
+      "Aius Loquens"
+    ],
+    "description_short": "Ancient Roman deity",
+    "text": "Aius Locutius. Ancient Roman deity\nAliases: Locutius, Aius Loquens",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q411066"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q453534",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Diana Nemorensis",
+    "aliases": [
+      "Cult of Diana Nemorensis",
+      "Diana of Nemi",
+      "Diana of the Wood"
+    ],
+    "description_short": "mythical goddess version from Diana in the Ancient Roman religion",
+    "text": "Diana Nemorensis. mythical goddess version from Diana in the Ancient Roman religion\nAliases: Cult of Diana Nemorensis, Diana of Nemi, Diana of the Wood",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q453534"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q651660",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Voluptas",
+    "aliases": [
+      "Volupia",
+      "Volupta"
+    ],
+    "description_short": "Roman deity, personification of pleasure",
+    "text": "Voluptas. Roman deity, personification of pleasure\nAliases: Volupia, Volupta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q651660"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q654604",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Pales",
+    "aliases": [
+      "Pale"
+    ],
+    "description_short": "Roman divinity",
+    "text": "Pales. Roman divinity\nAliases: Pale",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q654604"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q668286",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dea Dia",
+    "aliases": [
+      "Divine Goddess"
+    ],
+    "description_short": "goddess of fertility and growth in ancient Roman religion",
+    "text": "Dea Dia. goddess of fertility and growth in ancient Roman religion\nAliases: Divine Goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q668286"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q684225",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Carmenta",
+    "aliases": [
+      "Nicostrata",
+      "Carmentis"
+    ],
+    "description_short": "Roman goddess of childbirth and prophecy",
+    "text": "Carmenta. Roman goddess of childbirth and prophecy\nAliases: Nicostrata, Carmentis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q684225"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q751867",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fascinus",
+    "aliases": [
+      "fascinum"
+    ],
+    "description_short": "personification of the phallus in Roman religion",
+    "text": "Fascinus. personification of the phallus in Roman religion\nAliases: fascinum",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q751867"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q767293",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mania",
+    "aliases": [
+      "Manea"
+    ],
+    "description_short": "Etruscan goddess of the dead",
+    "text": "Mania. Etruscan goddess of the dead\nAliases: Manea",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q767293"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q782481",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Clitumnus",
+    "aliases": [
+      "Clitunno"
+    ],
+    "description_short": "Roman river deity",
+    "text": "Clitumnus. Roman river deity\nAliases: Clitunno",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q782481"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q857144",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Camena",
+    "aliases": [
+      "Camenae",
+      "Casmena",
+      "Camenæ",
+      "Camenae (Pl.)",
+      "Camoena"
+    ],
+    "description_short": "water deity",
+    "text": "Camena. water deity\nAliases: Camenae, Casmena, Camenæ, Camenae (Pl.), Camoena",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q857144"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q859392",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Ops",
+    "aliases": [
+      "Opis"
+    ],
+    "description_short": "Roman goddess of earth and fertility",
+    "text": "Ops. Roman goddess of earth and fertility\nAliases: Opis",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q859392"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q890208",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Jupiter Dolichenus",
+    "aliases": [
+      "Dolichenus",
+      "Iupiter Dolichenus",
+      "Iuppiter Dolichenus"
+    ],
+    "description_short": "roman deity",
+    "text": "Jupiter Dolichenus. roman deity\nAliases: Dolichenus, Iupiter Dolichenus, Iuppiter Dolichenus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q890208"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q900649",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Apollo",
+    "aliases": [
+      "Phoebus",
+      "Apollo in Roman mythology"
+    ],
+    "description_short": "god in Roman mythology",
+    "text": "Apollo. god in Roman mythology\nAliases: Phoebus, Apollo in Roman mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q900649"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q942519",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Śuri",
+    "aliases": [
+      "Suri",
+      "Soranus",
+      "Šuri"
+    ],
+    "description_short": "Etruscan deity",
+    "text": "Śuri. Etruscan deity\nAliases: Suri, Soranus, Šuri",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q942519"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q966042",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Postverta",
+    "aliases": [
+      "Postvorta"
+    ],
+    "description_short": "Roman goddess",
+    "text": "Postverta. Roman goddess\nAliases: Postvorta",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q966042"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1145491",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Liber",
+    "aliases": [
+      "Father Liber"
+    ],
+    "description_short": "Roman god of wine and fertility",
+    "text": "Liber. Roman god of wine and fertility\nAliases: Father Liber",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1145491"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1228338",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dis Pater",
+    "aliases": [
+      "Pluto",
+      "Dis",
+      "Dispater",
+      "Father Dis",
+      "King of the Underworld",
+      "Rex Infernus"
+    ],
+    "description_short": "Roman god of the underworld",
+    "text": "Dis Pater. Roman god of the underworld\nAliases: Pluto, Dis, Dispater, Father Dis, King of the Underworld, Rex Infernus",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1228338"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1231621",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Divus Iulius",
+    "aliases": [
+      "Divus Julius",
+      "Devine Julius",
+      "Divius Iulius",
+      "Divius Julius",
+      "Divvs Ivlivs"
+    ],
+    "description_short": "Julius Caesar after his deification",
+    "text": "Divus Iulius. Julius Caesar after his deification\nAliases: Divus Julius, Devine Julius, Divius Iulius, Divius Julius, Divvs Ivlivs",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1231621"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1233746",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Dea Tacita",
+    "aliases": [
+      "Lara",
+      "Muta",
+      "Tacita",
+      "Dea Muta",
+      "Muta Tacita"
+    ],
+    "description_short": "Roman goddess of the dead",
+    "text": "Dea Tacita. Roman goddess of the dead\nAliases: Lara, Muta, Tacita, Dea Muta, Muta Tacita",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1233746"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1250207",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Antevorta",
+    "aliases": [
+      "Porrima",
+      "Prosa",
+      "Proversa",
+      "Prorsa"
+    ],
+    "description_short": "Roman goddess of the future",
+    "text": "Antevorta. Roman goddess of the future\nAliases: Porrima, Prosa, Proversa, Prorsa",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1250207"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1042300",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Fauna",
+    "aliases": [
+      "Favna"
+    ],
+    "description_short": "Roman goddess; either the wife, sister, or daughter of Faunus",
+    "text": "Fauna. Roman goddess; either the wife, sister, or daughter of Faunus\nAliases: Favna",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1042300"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1043871",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Carna",
+    "aliases": [
+      "Cranaë",
+      "Cranê",
+      "Cranea"
+    ],
+    "description_short": "Roman goddess",
+    "text": "Carna. Roman goddess\nAliases: Cranaë, Cranê, Cranea",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1043871"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1058110",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Vejovis",
+    "aliases": [
+      "Vediovis",
+      "Vedius"
+    ],
+    "description_short": "Etruscan and Roman deity",
+    "text": "Vejovis. Etruscan and Roman deity\nAliases: Vediovis, Vedius",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1058110"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1102307",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Lady Justice",
+    "aliases": [
+      "Justitia"
+    ],
+    "description_short": "deity",
+    "text": "Lady Justice. deity\nAliases: Justitia",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1102307"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1129855",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Libertas",
+    "aliases": [
+      "Dea Libertas"
+    ],
+    "description_short": "Roman Goddess of Liberty",
+    "text": "Libertas. Roman Goddess of Liberty\nAliases: Dea Libertas",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1129855"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1133048",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Mens",
+    "aliases": [
+      "Bona Mens",
+      "Mens Bona"
+    ],
+    "description_short": "Roman divinity, personification of thought, consciousness and the mind",
+    "text": "Mens. Roman divinity, personification of thought, consciousness and the mind\nAliases: Bona Mens, Mens Bona",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1133048"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1133514",
+    "namespace": "deity",
+    "pantheon": "roman",
+    "type": "deity",
+    "name": "Venilia",
+    "aliases": [
+      "Venília"
+    ],
+    "description_short": "Roman goddess of sea winds",
+    "text": "Venilia. Roman goddess of sea winds\nAliases: Venília",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1133514"
+    },
+    "facts": {}
+  }
+]

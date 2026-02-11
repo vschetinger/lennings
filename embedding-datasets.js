@@ -121,11 +121,28 @@
     }
   }
 
+  /**
+   * Load the deities dataset (all pantheons, namespace "deity") from
+   * datasets/deities/deities.json into the EmbeddingSpace as the 'deities' layer.
+   */
+  async function loadDeitiesLayer(space) {
+    try {
+      return await createJsonDatasetLayer('datasets/deities/deities.json', 'deities', {
+        model: 'lmstudio-embedding',
+        description: 'Deities (all pantheons) with embeddings from Wikidata + LM Studio'
+      }, space);
+    } catch (e) {
+      console.warn('[EmbeddingDatasets] Failed to load deities layer:', e);
+      return null;
+    }
+  }
+
   // Export helpers to the global namespace
   global.createMotifLayerFromGameEngine = createMotifLayerFromGameEngine;
   global.createJsonDatasetLayer = createJsonDatasetLayer;
   global.createCsvDatasetLayer = createCsvDatasetLayer;
   global.loadAftMotifsLayer = loadAftMotifsLayer;
+  global.loadDeitiesLayer = loadDeitiesLayer;
 
 })(typeof window !== 'undefined' ? window : this);
 

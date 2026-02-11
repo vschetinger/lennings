@@ -1,0 +1,920 @@
+[
+  {
+    "id": "Q149042",
+    "type": "deity",
+    "name": "Xochiquetzal",
+    "aliases": [
+      "Xochiketsalli",
+      "Xochiquétzal",
+      "Xochiquetzalli",
+      "Xōchiquetzalli"
+    ],
+    "description_short": "Mexic deity of beauty, flowers, loving pleasure, arts and love.",
+    "text": "Xochiquetzal. Mexic deity of beauty, flowers, loving pleasure, arts and love.\nAliases: Xochiketsalli, Xochiquétzal, Xochiquetzalli, Xōchiquetzalli",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q149042"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q232870",
+    "type": "deity",
+    "name": "Tlaloc",
+    "aliases": [
+      "Tlāloc"
+    ],
+    "description_short": "Mexic Deity of water, rain, fertility and storms",
+    "text": "Tlaloc. Mexic Deity of water, rain, fertility and storms\nAliases: Tlāloc",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q232870"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q516456",
+    "type": "deity",
+    "name": "Ōmeteōtl",
+    "aliases": [
+      "Ometeotl"
+    ],
+    "description_short": "Aztec dual deity",
+    "text": "Ōmeteōtl. Aztec dual deity\nAliases: Ometeotl",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q516456"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q591056",
+    "type": "deity",
+    "name": "Mictlantecuhtli",
+    "aliases": [
+      "Mictlantecutli"
+    ],
+    "description_short": "Aztec death god",
+    "text": "Mictlantecuhtli. Aztec death god\nAliases: Mictlantecutli",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q591056"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1092591",
+    "type": "deity",
+    "name": "Centeotl",
+    "aliases": [
+      "Cinteotl"
+    ],
+    "description_short": "mexica god of maize",
+    "text": "Centeotl. mexica god of maize\nAliases: Cinteotl",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1092591"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1467781",
+    "type": "deity",
+    "name": "Tlahuizcalpantecuhtli",
+    "aliases": [
+      "64 + 446 + 3"
+    ],
+    "description_short": "deity",
+    "text": "Tlahuizcalpantecuhtli. deity\nAliases: 64 + 446 + 3",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1467781"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1471691",
+    "type": "deity",
+    "name": "Huehueteotl",
+    "aliases": [
+      "Huehuetéotl"
+    ],
+    "description_short": "Pre-Colombian (Aztec) deity",
+    "text": "Huehueteotl. Pre-Colombian (Aztec) deity\nAliases: Huehuetéotl",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1471691"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1621750",
+    "type": "deity",
+    "name": "Chimalma",
+    "aliases": [
+      "Chimalman",
+      "Chimalmatl"
+    ],
+    "description_short": "aztec deity",
+    "text": "Chimalma. aztec deity\nAliases: Chimalman, Chimalmatl",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1621750"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2039163",
+    "type": "deity",
+    "name": "Mictlancihuatl",
+    "aliases": [
+      "Mictecacihuatl"
+    ],
+    "description_short": "aztec deity",
+    "text": "Mictlancihuatl. aztec deity\nAliases: Mictecacihuatl",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2039163"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2441598",
+    "type": "deity",
+    "name": "Tonatiuh",
+    "aliases": [
+      "Ōllin Tōnatiuh"
+    ],
+    "description_short": "Aztec sun deity of the day sky",
+    "text": "Tonatiuh. Aztec sun deity of the day sky\nAliases: Ōllin Tōnatiuh",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2441598"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2703840",
+    "type": "deity",
+    "name": "Tōnacātēcuhtli",
+    "aliases": [
+      "Tonacatecuhtli"
+    ],
+    "description_short": "Aztec creator and fertility deity",
+    "text": "Tōnacātēcuhtli. Aztec creator and fertility deity\nAliases: Tonacatecuhtli",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2703840"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3069134",
+    "type": "deity",
+    "name": "Piltzintecuhtli",
+    "aliases": [
+      "Piltzintecutli"
+    ],
+    "description_short": "Aztec god of storms and fungi",
+    "text": "Piltzintecuhtli. Aztec god of storms and fungi\nAliases: Piltzintecutli",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3069134"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3359069",
+    "type": "deity",
+    "name": "Oxomoco",
+    "aliases": [
+      "Oxomo"
+    ],
+    "description_short": "Aztec goddess of night",
+    "text": "Oxomoco. Aztec goddess of night\nAliases: Oxomo",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3359069"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q149197",
+    "type": "deity",
+    "name": "Xochipilli",
+    "aliases": [],
+    "description_short": "Aztec deity of art, games and flowers",
+    "text": "Xochipilli. Aztec deity of art, games and flowers",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q149197"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q179818",
+    "type": "deity",
+    "name": "Quetzalcoatl",
+    "aliases": [],
+    "description_short": "deity in Mesoamerican culture and literature",
+    "text": "Quetzalcoatl. deity in Mesoamerican culture and literature",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q179818"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q219412",
+    "type": "deity",
+    "name": "Huitzilopochtli",
+    "aliases": [],
+    "description_short": "deity in Aztec mythology",
+    "text": "Huitzilopochtli. deity in Aztec mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q219412"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q279639",
+    "type": "deity",
+    "name": "Xolotl",
+    "aliases": [],
+    "description_short": "Aztec god",
+    "text": "Xolotl. Aztec god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q279639"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q524654",
+    "type": "deity",
+    "name": "Tlaltecuhtli",
+    "aliases": [],
+    "description_short": "Mexican female deity of the earth and fertility",
+    "text": "Tlaltecuhtli. Mexican female deity of the earth and fertility",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q524654"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q558970",
+    "type": "deity",
+    "name": "Xipe Totec",
+    "aliases": [],
+    "description_short": "Aztec deity",
+    "text": "Xipe Totec. Aztec deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q558970"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q650572",
+    "type": "deity",
+    "name": "Tzitzimitl",
+    "aliases": [],
+    "description_short": "Female fertility deities",
+    "text": "Tzitzimitl. Female fertility deities",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q650572"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q662067",
+    "type": "deity",
+    "name": "Itztlacoliuhqui",
+    "aliases": [],
+    "description_short": "aztec god",
+    "text": "Itztlacoliuhqui. aztec god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q662067"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q752213",
+    "type": "deity",
+    "name": "Chalchiuhtlicue",
+    "aliases": [],
+    "description_short": "Aztec goddess",
+    "text": "Chalchiuhtlicue. Aztec goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q752213"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q756797",
+    "type": "deity",
+    "name": "Tezcatlipoca",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Tezcatlipoca. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q756797"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q850249",
+    "type": "deity",
+    "name": "Tlazolteotl",
+    "aliases": [],
+    "description_short": "goddess of sex in Aztec mythology",
+    "text": "Tlazolteotl. goddess of sex in Aztec mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q850249"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q872943",
+    "type": "deity",
+    "name": "Chicomecoatl",
+    "aliases": [],
+    "description_short": "aztec deity",
+    "text": "Chicomecoatl. aztec deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q872943"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q936324",
+    "type": "deity",
+    "name": "Coyolxauhqui",
+    "aliases": [],
+    "description_short": "Aztec goddess",
+    "text": "Coyolxauhqui. Aztec goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q936324"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q936993",
+    "type": "deity",
+    "name": "Huixtocihuatl",
+    "aliases": [],
+    "description_short": "water deity",
+    "text": "Huixtocihuatl. water deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q936993"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q956931",
+    "type": "deity",
+    "name": "Patecatl",
+    "aliases": [],
+    "description_short": "Aztec god of pulque, lord of healing and fertility",
+    "text": "Patecatl. Aztec god of pulque, lord of healing and fertility",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q956931"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1074582",
+    "type": "deity",
+    "name": "Tonacacihuatl",
+    "aliases": [],
+    "description_short": "Central deity in Aztec religion",
+    "text": "Tonacacihuatl. Central deity in Aztec religion",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1074582"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1085316",
+    "type": "deity",
+    "name": "Mayahuel",
+    "aliases": [],
+    "description_short": "Aztec goddess",
+    "text": "Mayahuel. Aztec goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1085316"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1124258",
+    "type": "deity",
+    "name": "Ehecatl",
+    "aliases": [],
+    "description_short": "Deity",
+    "text": "Ehecatl. Deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1124258"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1326558",
+    "type": "deity",
+    "name": "Mixcoatl",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Mixcoatl. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1326558"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1410466",
+    "type": "deity",
+    "name": "Xiuhtecuhtli",
+    "aliases": [],
+    "description_short": "Aztec deity of fire; father of the gods and goddesses",
+    "text": "Xiuhtecuhtli. Aztec deity of fire; father of the gods and goddesses",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1410466"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1425920",
+    "type": "deity",
+    "name": "Huehuecoyotl",
+    "aliases": [],
+    "description_short": "Aztec god of the arts, lord of music and ceremonial dance, guide of adulthood and adolescence",
+    "text": "Huehuecoyotl. Aztec god of the arts, lord of music and ceremonial dance, guide of adulthood and adolescence",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1425920"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1470895",
+    "type": "deity",
+    "name": "Tepoztecatl",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Tepoztecatl. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1470895"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1520171",
+    "type": "deity",
+    "name": "Yacatecuhtli",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Yacatecuhtli. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1520171"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1641431",
+    "type": "deity",
+    "name": "Macuiltochtli",
+    "aliases": [],
+    "description_short": "Aztec god of song, dance, and games",
+    "text": "Macuiltochtli. Aztec god of song, dance, and games",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1641431"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1876916",
+    "type": "deity",
+    "name": "Metztli",
+    "aliases": [],
+    "description_short": "Mexica god of the Moon who became a goddess",
+    "text": "Metztli. Mexica god of the Moon who became a goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1876916"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1970179",
+    "type": "deity",
+    "name": "Malinalxochitl",
+    "aliases": [],
+    "description_short": "aztec sorceress & goddess of snakes, & scorpions, & insects of the desert.",
+    "text": "Malinalxochitl. aztec sorceress & goddess of snakes, & scorpions, & insects of the desert.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1970179"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2027010",
+    "type": "deity",
+    "name": "Opochtli",
+    "aliases": [],
+    "description_short": "",
+    "text": "Opochtli.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2027010"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2052073",
+    "type": "deity",
+    "name": "Chantico",
+    "aliases": [],
+    "description_short": "Aztec goddess of fires and volcanoes",
+    "text": "Chantico. Aztec goddess of fires and volcanoes",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2052073"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2085599",
+    "type": "deity",
+    "name": "Tepeyollotl",
+    "aliases": [],
+    "description_short": "aztec god of darkened caves, earthquakes, echoes and jaguars",
+    "text": "Tepeyollotl. aztec god of darkened caves, earthquakes, echoes and jaguars",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2085599"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2088018",
+    "type": "deity",
+    "name": "Cihuacoatl",
+    "aliases": [],
+    "description_short": "Aztec deity",
+    "text": "Cihuacoatl. Aztec deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2088018"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2098982",
+    "type": "deity",
+    "name": "Ometecuhtli",
+    "aliases": [],
+    "description_short": "Aztec male deity",
+    "text": "Ometecuhtli. Aztec male deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2098982"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2248816",
+    "type": "deity",
+    "name": "Atl",
+    "aliases": [],
+    "description_short": "god of water in Aztec mythology",
+    "text": "Atl. god of water in Aztec mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2248816"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2349305",
+    "type": "deity",
+    "name": "Toci",
+    "aliases": [],
+    "description_short": "Aztec goddess - heart of the Earth",
+    "text": "Toci. Aztec goddess - heart of the Earth",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2349305"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2376964",
+    "type": "deity",
+    "name": "Painal",
+    "aliases": [],
+    "description_short": "",
+    "text": "Painal.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2376964"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2402507",
+    "type": "deity",
+    "name": "Temazcalteci",
+    "aliases": [],
+    "description_short": "aztec Goddess of steam baths and medicine",
+    "text": "Temazcalteci. aztec Goddess of steam baths and medicine",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2402507"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2476532",
+    "type": "deity",
+    "name": "Tonantzin",
+    "aliases": [],
+    "description_short": "Aztec goddess present day virgin mary",
+    "text": "Tonantzin. Aztec goddess present day virgin mary",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2476532"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2480320",
+    "type": "deity",
+    "name": "Ixtlilton",
+    "aliases": [],
+    "description_short": "Aztec god of medicine and healing",
+    "text": "Ixtlilton. Aztec god of medicine and healing",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2480320"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2619569",
+    "type": "deity",
+    "name": "Itzpapalotl",
+    "aliases": [],
+    "description_short": "goddess in Aztec mythology",
+    "text": "Itzpapalotl. goddess in Aztec mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2619569"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2620261",
+    "type": "deity",
+    "name": "Citlalicue",
+    "aliases": [],
+    "description_short": "aztec goddess",
+    "text": "Citlalicue. aztec goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2620261"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2703831",
+    "type": "deity",
+    "name": "Chalchiuhtotolin",
+    "aliases": [],
+    "description_short": "Aztec god of disease and plague",
+    "text": "Chalchiuhtotolin. Aztec god of disease and plague",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2703831"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2888346",
+    "type": "deity",
+    "name": "Ilamatecuhtli",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Ilamatecuhtli. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2888346"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2972375",
+    "type": "deity",
+    "name": "Cihuatecayotl",
+    "aliases": [],
+    "description_short": "Aztec god of the West Wind",
+    "text": "Cihuatecayotl. Aztec god of the West Wind",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2972375"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3068714",
+    "type": "deity",
+    "name": "Tlacotzontli",
+    "aliases": [],
+    "description_short": "",
+    "text": "Tlacotzontli.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3068714"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3071093",
+    "type": "deity",
+    "name": "Cipactonal",
+    "aliases": [],
+    "description_short": "Aztec god of astrology",
+    "text": "Cipactonal. Aztec god of astrology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3071093"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3312596",
+    "type": "deity",
+    "name": "Mictlanpachecatl",
+    "aliases": [],
+    "description_short": "Aztec god of the north wind",
+    "text": "Mictlanpachecatl. Aztec god of the north wind",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3312596"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3351973",
+    "type": "deity",
+    "name": "Omecihuatl",
+    "aliases": [],
+    "description_short": "Aztec female deity",
+    "text": "Omecihuatl. Aztec female deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3351973"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3394793",
+    "type": "deity",
+    "name": "Q3394793",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q3394793.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3394793"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3530057",
+    "type": "deity",
+    "name": "Tlalocayotl",
+    "aliases": [],
+    "description_short": "Aztec god of the East wind",
+    "text": "Tlalocayotl. Aztec god of the East wind",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3530057"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3561382",
+    "type": "deity",
+    "name": "Huitztlampaehecatl",
+    "aliases": [],
+    "description_short": "Aztec god",
+    "text": "Huitztlampaehecatl. Aztec god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3561382"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3571020",
+    "type": "deity",
+    "name": "Q3571020",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q3571020.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3571020"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3574487",
+    "type": "deity",
+    "name": "Zacatzontli",
+    "aliases": [],
+    "description_short": "Aztec deity",
+    "text": "Zacatzontli. Aztec deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3574487"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4021849",
+    "type": "deity",
+    "name": "Xocotl (Aztec god)",
+    "aliases": [],
+    "description_short": "aztec god of the planet Venus and of fire",
+    "text": "Xocotl (Aztec god). aztec god of the planet Venus and of fire",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4021849"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5068600",
+    "type": "deity",
+    "name": "Chalchihuihtotolin",
+    "aliases": [],
+    "description_short": "",
+    "text": "Chalchihuihtotolin.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5068600"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7810744",
+    "type": "deity",
+    "name": "Tlilhua",
+    "aliases": [],
+    "description_short": "minor Aztec deity",
+    "text": "Tlilhua. minor Aztec deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7810744"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7814646",
+    "type": "deity",
+    "name": "Toltecatl",
+    "aliases": [],
+    "description_short": "minor god in Aztec mythology",
+    "text": "Toltecatl. minor god in Aztec mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7814646"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q9055257",
+    "type": "deity",
+    "name": "Q9055257",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q9055257.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q9055257"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q9358865",
+    "type": "deity",
+    "name": "Q9358865",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q9358865.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q9358865"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q10392131",
+    "type": "deity",
+    "name": "Vitzliputzli",
+    "aliases": [],
+    "description_short": "Aztec War goddess",
+    "text": "Vitzliputzli. Aztec War goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q10392131"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q11045881",
+    "type": "deity",
+    "name": "Q11045881",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q11045881.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q11045881"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q12905016",
+    "type": "deity",
+    "name": "Q12905016",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q12905016.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q12905016"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q12912060",
+    "type": "deity",
+    "name": "Q12912060",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q12912060.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q12912060"
+    },
+    "facts": {}
+  }
+]

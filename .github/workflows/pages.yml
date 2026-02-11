@@ -13,27 +13,23 @@ jobs:
           lfs: true
       - name: Pull LFS files
         run: git lfs pull
-      - name: Build static site for Pages (no LFS in output)
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Copy static assets to dist
         run: |
-          rm -rf dist-pages
-          mkdir -p dist-pages
-          rsync -av \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='.gitattributes' \
-            ./ dist-pages/
-      # Uncomment to verify LFS images are real files on deploy (not pointers)
-      # - name: Verify LFS images
-      #   run: |
-      #     F="dist-pages/levels/GlassBeadGame/images/A1012.2.png"
-      #     echo "=== $F ==="
-      #     ls -la "$F"
-      #     echo "First 20 bytes (hex):"
-      #     head -c 20 "$F" | xxd
-      #     # Real PNG starts with 89 50 4E 47. LFS pointer starts with "version https://"
-      #     if head -c 5 "$F" | grep -q "version"; then echo "LFS POINTER - images will not load on Pages"; exit 1; fi
-      #     echo "OK: real image file"
+          cp twgl.min.js zoo.js serialize.js PNGView.js embedding-space.js embedding-datasets.js \
+             lenia.js game-engine.js collection-storage.js names.js parameters.json \
+             reconstruction-worker.js dist/
+          cp graph.html dist/
+          cp -r levels datasets resources dist/
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist-pages
+          publish_dir: ./dist

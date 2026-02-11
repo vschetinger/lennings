@@ -1,0 +1,617 @@
+[
+  {
+    "id": "Q147914",
+    "type": "deity",
+    "name": "Svetovit",
+    "aliases": [
+      "Sventovit",
+      "Svantevit",
+      "Svetovid"
+    ],
+    "description_short": "god of Polabian Slavs",
+    "text": "Svetovit. god of Polabian Slavs\nAliases: Sventovit, Svantevit, Svetovid",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q147914"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q226831",
+    "type": "deity",
+    "name": "Zorya",
+    "aliases": [
+      "Zarya",
+      "Zora",
+      "Zaria",
+      "Zorza",
+      "Zvezda",
+      "Zory",
+      "Zore",
+      "Zara-Zaranica",
+      "Zwezda"
+    ],
+    "description_short": "Slavic guardian deities of the dawn",
+    "text": "Zorya. Slavic guardian deities of the dawn\nAliases: Zarya, Zora, Zaria, Zorza, Zvezda, Zory, Zore, Zara-Zaranica, Zwezda",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q226831"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q570611",
+    "type": "deity",
+    "name": "Radogost",
+    "aliases": [
+      "Radegast",
+      "Redigast",
+      "Redigost",
+      "Riedegost"
+    ],
+    "description_short": "epithet of Svarozhits",
+    "text": "Radogost. epithet of Svarozhits\nAliases: Radegast, Redigast, Redigost, Riedegost",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q570611"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q587825",
+    "type": "deity",
+    "name": "Chernobog",
+    "aliases": [
+      "Chernabog",
+      "Černobog",
+      "Chernebog",
+      "Chornoboh",
+      "Crnobog",
+      "Czernobog",
+      "Czernobóg",
+      "Zcerneboch",
+      "Zcerneboth",
+      "Zernebog"
+    ],
+    "description_short": "Slavic deity of darkness",
+    "text": "Chernobog. Slavic deity of darkness\nAliases: Chernabog, Černobog, Chernebog, Chornoboh, Crnobog, Czernobog, Czernobóg, Zcerneboch, Zcerneboth, Zernebog",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q587825"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q591914",
+    "type": "deity",
+    "name": "Triglav",
+    "aliases": [
+      "Tri Bog",
+      "Tribog"
+    ],
+    "description_short": "deity",
+    "text": "Triglav. deity\nAliases: Tri Bog, Tribog",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q591914"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q824249",
+    "type": "deity",
+    "name": "Veles",
+    "aliases": [
+      "Volos"
+    ],
+    "description_short": "Slavic god of earth, waters and the underworld",
+    "text": "Veles. Slavic god of earth, waters and the underworld\nAliases: Volos",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q824249"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1144144",
+    "type": "deity",
+    "name": "Dažbog",
+    "aliases": [
+      "Dajbog",
+      "Dabog",
+      "Daybog",
+      "Daždbog",
+      "Daždźboh",
+      "Dazhbog",
+      "Dazhdbog"
+    ],
+    "description_short": "deity",
+    "text": "Dažbog. deity\nAliases: Dajbog, Dabog, Daybog, Daždbog, Daždźboh, Dazhbog, Dazhdbog",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1144144"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1144150",
+    "type": "deity",
+    "name": "Jarilo",
+    "aliases": [
+      "Yarilo",
+      "Gerovit",
+      "Iarilo",
+      "Jaryla",
+      "Yarylo"
+    ],
+    "description_short": "Slavic deity",
+    "text": "Jarilo. Slavic deity\nAliases: Yarilo, Gerovit, Iarilo, Jaryla, Yarylo",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1144150"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1473144",
+    "type": "deity",
+    "name": "Rugiaevit",
+    "aliases": [
+      "Rinvit",
+      "Rugievit",
+      "Rujevit",
+      "Ruyevit"
+    ],
+    "description_short": "deity",
+    "text": "Rugiaevit. deity\nAliases: Rinvit, Rugievit, Rujevit, Ruyevit",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1473144"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1560623",
+    "type": "deity",
+    "name": "Svarozhich",
+    "aliases": [
+      "Svaražic",
+      "Svarožic",
+      "Svarožič"
+    ],
+    "description_short": "Slavic deity",
+    "text": "Svarozhich. Slavic deity\nAliases: Svaražic, Svarožic, Svarožič",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1560623"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1986441",
+    "type": "deity",
+    "name": "Rod",
+    "aliases": [
+      "Sud"
+    ],
+    "description_short": "Slavic deity",
+    "text": "Rod. Slavic deity\nAliases: Sud",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1986441"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2087421",
+    "type": "deity",
+    "name": "Raróg",
+    "aliases": [
+      "Rarog"
+    ],
+    "description_short": "fire demon in Slavic mythology",
+    "text": "Raróg. fire demon in Slavic mythology\nAliases: Rarog",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2087421"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2266787",
+    "type": "deity",
+    "name": "Porevit",
+    "aliases": [
+      "Borevit",
+      "Borovit",
+      "Porovit"
+    ],
+    "description_short": "slavonic god",
+    "text": "Porevit. slavonic god\nAliases: Borevit, Borovit, Porovit",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2266787"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4303414",
+    "type": "deity",
+    "name": "The Sea Tsar",
+    "aliases": [
+      "The King of the Sea"
+    ],
+    "description_short": "character of Russian folk tales, tutelary deity",
+    "text": "The Sea Tsar. character of Russian folk tales, tutelary deity\nAliases: The King of the Sea",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4303414"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q5117835",
+    "type": "deity",
+    "name": "Dabog",
+    "aliases": [
+      "Dajbog"
+    ],
+    "description_short": "deity",
+    "text": "Dabog. deity\nAliases: Dajbog",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q5117835"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q10578339",
+    "type": "deity",
+    "name": "Mat Zemlya",
+    "aliases": [
+      "Damp Mother Earth",
+      "Mat – Syra Zemlya"
+    ],
+    "description_short": "Slavic mother goddess",
+    "text": "Mat Zemlya. Slavic mother goddess\nAliases: Damp Mother Earth, Mat – Syra Zemlya",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q10578339"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q10832412",
+    "type": "deity",
+    "name": "Dogoda",
+    "aliases": [
+      "Pogoda"
+    ],
+    "description_short": "Slavic deity of weather",
+    "text": "Dogoda. Slavic deity of weather\nAliases: Pogoda",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q10832412"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q206561",
+    "type": "deity",
+    "name": "Perun",
+    "aliases": [],
+    "description_short": "Slavic supreme god of the sky and war",
+    "text": "Perun. Slavic supreme god of the sky and war",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q206561"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q279852",
+    "type": "deity",
+    "name": "Varpulis",
+    "aliases": [],
+    "description_short": "",
+    "text": "Varpulis.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q279852"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q689826",
+    "type": "deity",
+    "name": "Svarog",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Svarog. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q689826"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q817358",
+    "type": "deity",
+    "name": "Mokosh",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Mokosh. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q817358"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1143220",
+    "type": "deity",
+    "name": "Božić",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Božić. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1143220"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1298222",
+    "type": "deity",
+    "name": "Lada",
+    "aliases": [],
+    "description_short": "goddess in Baltic and Slavic mythology",
+    "text": "Lada. goddess in Baltic and Slavic mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1298222"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q1335234",
+    "type": "deity",
+    "name": "Simargl",
+    "aliases": [],
+    "description_short": "deity",
+    "text": "Simargl. deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q1335234"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2038067",
+    "type": "deity",
+    "name": "Troyan",
+    "aliases": [],
+    "description_short": "figure in Slavic mythology",
+    "text": "Troyan. figure in Slavic mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2038067"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q2989077",
+    "type": "deity",
+    "name": "Porenut",
+    "aliases": [],
+    "description_short": "Slavic god",
+    "text": "Porenut. Slavic god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q2989077"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3027237",
+    "type": "deity",
+    "name": "Q3027237",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q3027237.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3027237"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3408256",
+    "type": "deity",
+    "name": "Q3408256",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q3408256.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3408256"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q3408263",
+    "type": "deity",
+    "name": "Prono",
+    "aliases": [],
+    "description_short": "God in Baltic-Slavic mythology",
+    "text": "Prono. God in Baltic-Slavic mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q3408263"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4161258",
+    "type": "deity",
+    "name": "Q4161258",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q4161258.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4161258"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4171546",
+    "type": "deity",
+    "name": "Q4171546",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q4171546.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4171546"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4179231",
+    "type": "deity",
+    "name": "Q4179231",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q4179231.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4179231"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4202964",
+    "type": "deity",
+    "name": "Ipabog",
+    "aliases": [],
+    "description_short": "",
+    "text": "Ipabog.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4202964"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4205840",
+    "type": "deity",
+    "name": "Jessa",
+    "aliases": [],
+    "description_short": "Alleged Polish god",
+    "text": "Jessa. Alleged Polish god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4205840"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4257767",
+    "type": "deity",
+    "name": "Lelya",
+    "aliases": [],
+    "description_short": "mythological character among the Eastern Slavs",
+    "text": "Lelya. mythological character among the Eastern Slavs",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4257767"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4338010",
+    "type": "deity",
+    "name": "Uslad",
+    "aliases": [],
+    "description_short": "Slavic pseudo-deity",
+    "text": "Uslad. Slavic pseudo-deity",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4338010"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4350777",
+    "type": "deity",
+    "name": "Pereplut",
+    "aliases": [],
+    "description_short": "deity in the Slavic mythology",
+    "text": "Pereplut. deity in the Slavic mythology",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4350777"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q4421636",
+    "type": "deity",
+    "name": "Q4421636",
+    "aliases": [],
+    "description_short": "",
+    "text": "Q4421636.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q4421636"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q6471253",
+    "type": "deity",
+    "name": "Nya (God)",
+    "aliases": [],
+    "description_short": "Slavic god or death god",
+    "text": "Nya (God). Slavic god or death god",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q6471253"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q7585766",
+    "type": "deity",
+    "name": "Sreća",
+    "aliases": [],
+    "description_short": "",
+    "text": "Sreća.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q7585766"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q10354013",
+    "type": "deity",
+    "name": "Pripegala",
+    "aliases": [],
+    "description_short": "",
+    "text": "Pripegala.",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q10354013"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q11821103",
+    "type": "deity",
+    "name": "Pozvizd",
+    "aliases": [],
+    "description_short": "bóstwo słowiańskie",
+    "text": "Pozvizd. bóstwo słowiańskie",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q11821103"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q21559031",
+    "type": "deity",
+    "name": "Korochun",
+    "aliases": [],
+    "description_short": "The ritual character of the Slavs, Moldavians and Romanians",
+    "text": "Korochun. The ritual character of the Slavs, Moldavians and Romanians",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q21559031"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q104008170",
+    "type": "deity",
+    "name": "Kyi (mythology)",
+    "aliases": [],
+    "description_short": "",
+    "text": "Kyi (mythology).",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q104008170"
+    },
+    "facts": {}
+  },
+  {
+    "id": "Q126616115",
+    "type": "deity",
+    "name": "Chowanna",
+    "aliases": [],
+    "description_short": "ancient Slavic goddess",
+    "text": "Chowanna. ancient Slavic goddess",
+    "source": {
+      "wikidata": "https://www.wikidata.org/wiki/Q126616115"
+    },
+    "facts": {}
+  }
+]
