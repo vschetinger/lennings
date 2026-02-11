@@ -5,7 +5,7 @@ import path from 'path';
 // When repo root is particle-lenia-web, root is '.' and we build play.html
 export default defineConfig({
   root: '.',
-  base: '/Lennings/',
+  base: '/lennings/',
   build: {
     rollupOptions: {
       input: path.resolve(__dirname, 'play.html'),
