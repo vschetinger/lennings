@@ -26,9 +26,10 @@ jobs:
         run: |
           cp twgl.min.js zoo.js serialize.js PNGView.js embedding-space.js embedding-datasets.js \
              lenia.js game-engine.js collection-storage.js names.js parameters.json \
-             reconstruction-worker.js dist/
-          cp graph.html dist/
-          cp -r levels datasets resources dist/
+             reconstruction-worker.js dat.gui.min.js audiosys.js webm-writer2.js videowriter.js dist/
+          cp graph.html index.html dist/
+          cp touch.svg herd.svg doubleclick.svg mouse.svg pinch.svg space.svg lenia_card.jpg dist/
+          cp -r levels datasets resources simulation dist/
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
